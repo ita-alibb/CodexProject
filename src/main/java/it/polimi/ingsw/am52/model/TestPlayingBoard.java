@@ -49,14 +49,14 @@ public class TestPlayingBoard {
         displayPlacedSlots(board.getCoveredSlots().toList());
 
 
-        cardId = 5;
+        cardId = 4;
         kingCard = GoldCard.getCards().get(cardId).getFrontFace();
 
         points = board.placeCard(new BoardSlot(-1, 1), kingCard);
 
         System.out.println("Gained points: " + points);
 
-        System.out.println("Resources: " + board.getResources());
+        System.out.println("Resources test CONFLICT: " + board.getResources());
         System.out.println("Items: " + board.getItems());
         displayAvailableSlots(board.getAvailableSlots().toList());
         displayPlacedSlots(board.getCoveredSlots().toList());
