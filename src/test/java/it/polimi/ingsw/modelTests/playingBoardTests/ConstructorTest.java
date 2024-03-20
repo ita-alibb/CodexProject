@@ -495,7 +495,7 @@ public class ConstructorTest
         // Back face statistics
         // top-right corner:    FUNGI
         // bottom-right corner: ANIMAL
-        // bottom-left corner:  PALANT
+        // bottom-left corner:  PLANT
         // top-left corner:     INSECT
         // permanent resource:  <NONE>
 

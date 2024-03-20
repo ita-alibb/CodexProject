@@ -2,7 +2,6 @@ package it.polimi.ingsw.modelTests.cardsTest;
 
 import it.polimi.ingsw.am52.model.cards.Resource;
 import it.polimi.ingsw.am52.model.cards.ResourcesCounter;
-import it.polimi.ingsw.am52.model.decks.RandomDealer;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;

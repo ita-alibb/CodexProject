@@ -44,7 +44,7 @@ public class ItemsCounter {
      * Subtract together two items counters and return a new items
      * counter with the result of the calculation.
      * @param i1 The first items counter.
-     * @param i2 The second items counter..
+     * @param i2 The second items counter.
      * @return A new items counter with the result of subtracting the second
      * counter from the first counter.
      */

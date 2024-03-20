@@ -46,7 +46,7 @@ public class ResourcesCounter {
      * Subtract together two resources counters and return a new resources
      * counter with the result of the calculation.
      * @param r1 The first resources counter.
-     * @param r2 The second resources counter..
+     * @param r2 The second resources counter.
      * @return A new resources counter with the result of subtracting the second
      * counter from the first counter.
      */
@@ -59,7 +59,7 @@ public class ResourcesCounter {
 
     //endregion
 
-    //region Cosntructors
+    //region Constructors
 
     /**
      * Creates a resource counter with no-resources.

@@ -316,9 +316,9 @@ public class PlayingBoard implements BoardInfo {
             candidates.add(neighbor);
 
             // Check each candidate.
-            for (BoardSlot cand : candidates) {
-                if (isLinkable(cand)) {
-                    availableSlots.add(cand);
+            for (BoardSlot card : candidates) {
+                if (isLinkable(card)) {
+                    availableSlots.add(card);
                 }
             }
         }

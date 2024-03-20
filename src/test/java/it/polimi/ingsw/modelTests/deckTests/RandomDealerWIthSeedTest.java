@@ -97,7 +97,7 @@ public class RandomDealerWIthSeedTest
         // Asking for a new item triggers an exception of type IllegalStateException.
         try {
             // Illegal method call.
-            int value = dealer.getNextItem();
+            dealer.getNextItem();
             assert(false);
         } catch (IllegalStateException ex) {
             assert(true);

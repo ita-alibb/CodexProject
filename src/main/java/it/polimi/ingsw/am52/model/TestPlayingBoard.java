@@ -72,7 +72,6 @@ public class TestPlayingBoard {
     }
 
     private static void displaySlots(String title, List<BoardSlot> slots) {
-
         System.out.println(title);
         if (slots.isEmpty()) {
             System.out.println("None");

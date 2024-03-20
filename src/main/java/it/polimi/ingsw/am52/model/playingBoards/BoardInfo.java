@@ -27,7 +27,7 @@ public interface BoardInfo extends ResourcesProvider, ItemsProvider {
 
     /**
      * Check if there is a card placed on the neighbor slot and return that
-     * card. If there isn't a card, return a Optional.empty().
+     * card. If there isn't a card, return an Optional.empty().
      * @param refSlot The reference slot.
      * @param location The relative location of the neighbor slot.
      * @return The (optional) card placed on the specified relative location.

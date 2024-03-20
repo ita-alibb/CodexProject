@@ -2,8 +2,6 @@ package it.polimi.ingsw.modelTests.cardsTest;
 
 import it.polimi.ingsw.am52.model.cards.Item;
 import it.polimi.ingsw.am52.model.cards.ItemsCounter;
-import it.polimi.ingsw.am52.model.cards.Resource;
-import it.polimi.ingsw.am52.model.cards.ResourcesCounter;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;

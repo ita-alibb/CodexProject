@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static it.polimi.ingsw.am52.model.cards.BlankCorner.BLANK_CORNER;
-import static it.polimi.ingsw.am52.model.cards.ItemCorner.INK_CORNER;
 import static it.polimi.ingsw.am52.model.cards.ResourceCorner.ANIMAL_CORNER;
 import static it.polimi.ingsw.am52.model.cards.ResourceCorner.FUNGI_CORNER;
 import static it.polimi.ingsw.am52.model.cards.ResourceCorner.INSECT_CORNER;

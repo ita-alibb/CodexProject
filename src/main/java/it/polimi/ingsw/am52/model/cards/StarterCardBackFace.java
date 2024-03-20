@@ -3,7 +3,6 @@ package it.polimi.ingsw.am52.model.cards;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.polimi.ingsw.am52.model.cards.ItemCorner.INK_CORNER;
 import static it.polimi.ingsw.am52.model.cards.ResourceCorner.*;
 
 public abstract class StarterCardBackFace extends StarterCardFace {
