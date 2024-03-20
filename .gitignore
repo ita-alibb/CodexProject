@@ -1,0 +1,13 @@
+### IntelliJ IDEA ###
+.idea/
+.mvn/
+target/
+AM52.iml
+mvnw
+mvnw.cmd
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+.DS_Store
