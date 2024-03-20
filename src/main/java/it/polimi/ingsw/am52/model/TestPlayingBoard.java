@@ -52,7 +52,7 @@ public class TestPlayingBoard {
         cardId = 5;
         kingCard = GoldCard.getCards().get(cardId).getFrontFace();
 
-        points = board.placeCard(new BoardSlot(1, 3), kingCard);
+        points = board.placeCard(new BoardSlot(-1, 1), kingCard);
 
         System.out.println("Gained points: " + points);
 
