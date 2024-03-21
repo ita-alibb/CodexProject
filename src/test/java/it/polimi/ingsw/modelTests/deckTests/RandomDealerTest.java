@@ -1,6 +1,7 @@
 package it.polimi.ingsw.modelTests.deckTests;
 
 import it.polimi.ingsw.am52.model.decks.RandomDealer;
+import it.polimi.ingsw.am52.model.exceptions.DeckException;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -114,7 +115,7 @@ public class RandomDealerTest
             // Illegal method call.
             dealer.getNextItem();
             assert(false);
-        } catch (IllegalStateException ex) {
+        } catch (DeckException ex) {
             assert(true);
         } catch (Exception allEx) {
             assert(false);

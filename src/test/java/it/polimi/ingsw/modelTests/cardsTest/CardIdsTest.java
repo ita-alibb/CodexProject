@@ -1,6 +1,7 @@
 package it.polimi.ingsw.modelTests.cardsTest;
 
 import it.polimi.ingsw.am52.model.cards.*;
+import it.polimi.ingsw.am52.model.exceptions.CardException;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -52,7 +53,7 @@ public class CardIdsTest
         try {
             StarterCard.getCardWithId(startId-1);
             assert(false);
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (CardException ex) {
             assert(true);
         } catch (Exception allEx) {
             assert(false);
@@ -62,7 +63,7 @@ public class CardIdsTest
         try {
             StarterCard.getCardWithId(lastId+1);
             assert(false);
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (CardException ex) {
             assert (true);
         } catch (Exception allEx) {
             assert(false);
@@ -88,7 +89,7 @@ public class CardIdsTest
         try {
             ResourceCard.getCardWithId(startId-1);
             assert(false);
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (CardException ex) {
             assert(true);
         } catch (Exception allEx) {
             assert(false);
@@ -98,7 +99,7 @@ public class CardIdsTest
         try {
             ResourceCard.getCardWithId(lastId+1);
             assert(false);
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (CardException ex) {
             assert (true);
         } catch (Exception allEx) {
             assert(false);
@@ -124,7 +125,7 @@ public class CardIdsTest
         try {
             GoldCard.getCardWithId(startId-1);
             assert(false);
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (CardException ex) {
             assert(true);
         } catch (Exception allEx) {
             assert(false);
@@ -134,7 +135,7 @@ public class CardIdsTest
         try {
             GoldCard.getCardWithId(lastId+1);
             assert(false);
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (CardException ex) {
             assert (true);
         } catch (Exception allEx) {
             assert(false);
@@ -163,7 +164,7 @@ public class CardIdsTest
         try {
             KingdomCard.getCardWithId(startId-1);
             assert(false);
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (CardException ex) {
             assert(true);
         } catch (Exception allEx) {
             assert(false);
@@ -173,7 +174,7 @@ public class CardIdsTest
         try {
             KingdomCard.getCardWithId(lastId+1);
             assert(false);
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (CardException ex) {
             assert (true);
         } catch (Exception allEx) {
             assert(false);

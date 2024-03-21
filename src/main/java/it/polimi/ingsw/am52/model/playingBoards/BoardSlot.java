@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am52.model.playingBoards;
 
 import it.polimi.ingsw.am52.model.cards.CornerLocation;
+import it.polimi.ingsw.am52.model.exceptions.PlayingBoardException;
 
 /**
  * Immutable class that represents the position of a slot in the Playing board.
@@ -130,7 +131,7 @@ public class BoardSlot {
 
         // Check if the coordinate pair is valid.
         if (!validateCoords(horiz, vert)) {
-            throw new IllegalArgumentException("The coordinates of a board slot must be both even or both odd.");
+            throw new PlayingBoardException("The coordinates of a board slot must be both even or both odd.");
         }
 
         // Initialize the private fields that store the coordinates.

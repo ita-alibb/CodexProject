@@ -1,5 +1,7 @@
 package it.polimi.ingsw.am52.model.decks;
 
+import it.polimi.ingsw.am52.model.exceptions.DeckException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -169,7 +171,7 @@ public class RandomDealer<TItem> {
 
         // If there are no more items, throw an exception.
         if (!this.hasNext()) {
-            throw new IllegalStateException("There are no more items in the dealer.");
+            throw new DeckException("There are no more items in the dealer.");
         }
 
         // Return the item and decrement the counter.

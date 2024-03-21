@@ -1,5 +1,7 @@
 package it.polimi.ingsw.am52.model.cards;
 
+import it.polimi.ingsw.am52.model.exceptions.CardException;
+
 /**
  * The base class of all Kingdom cards (Gold and Resource cards).
  * Every kingdom card has a Kingdom associated to it, and on the
@@ -20,7 +22,7 @@ public abstract class KingdomCard extends Card {
 
         // Check if the card identifier is valid.
         if (cardId < ResourceCard.START_INDEX || cardId > GoldCard.LAST_INDEX) {
-            throw new IndexOutOfBoundsException(
+            throw new CardException(
                     String.format("Id of kingdom card out of bounds [%d,%d].", ResourceCard.START_INDEX, GoldCard.LAST_INDEX)
             );
         }

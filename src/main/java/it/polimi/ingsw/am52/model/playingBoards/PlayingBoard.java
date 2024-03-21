@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import it.polimi.ingsw.am52.model.cards.*;
+import it.polimi.ingsw.am52.model.exceptions.PlayingBoardException;
 
 /**
  * The playing board of a player. The playing board is created from
@@ -80,7 +81,30 @@ public class PlayingBoard implements BoardInfo {
         BoardSlot candidate = refSlot.getSlotAt(location);
 
         // Return the card placed on the slot (if any), or an empty optional.
-        return /* Is there a car? */    cards.containsKey(candidate) ?
+        return /* Is there a card? */   cards.containsKey(candidate) ?
+               /* Yes, return it */     Optional.of(cards.get(candidate)) :
+               /* No, return empty() */ Optional.empty();
+    }
+
+    /**
+     * This method takes a Map of placed cards and their positions, and return the (optional)
+     * card placed at the specified neighbor position at the corner relative to the specified reference
+     * board slot. If there isn't any card at the neighbor slot position, the method returns
+     * an Optional.empty() instance.
+     * @param cards A Map of placed cards and their slot position.
+     * @param refSlot The reference slot position.
+     * @param location The corner location of the card to get, relative to the reference slot.
+     * @return The card placed at the specified location. If there is non cord at the specified
+     * location, the method returns an Optional.Empty().
+     * @implNote This method is static because it is used also by the nexted class PlayingBoardInfo.
+     */
+    private static Optional<KingdomCardFace> getNeighborCard(Map<BoardSlot, KingdomCardFace> cards, BoardSlot refSlot, CornerLocation location) {
+        
+        // Get the candidate slot position.
+        BoardSlot candidate = refSlot.getSlotAt(location);
+
+        // Return the card placed on the slot (if any), or an empty optional.
+        return /* Is there a card? */   cards.containsKey(candidate) ?
                /* Yes, return it */     Optional.of(cards.get(candidate)) :
                /* No, return empty() */ Optional.empty();
     }
@@ -173,12 +197,12 @@ public class PlayingBoard implements BoardInfo {
          */
         // Check if the slot is available, otherwise throw an exception.
         if (!this.availableSlots.contains(slot)) {
-            throw new IllegalArgumentException("The specified slot is not available on the playing board.");
+            throw new PlayingBoardException("The specified slot is not available on the playing board.");
         }
 
         // Check if the card can be placed.
         if (!card.canPlace(this)) {
-            throw new IllegalArgumentException("The specified card cannot be placed on the playing board.");
+            throw new PlayingBoardException("The specified card cannot be placed on the playing board.");
         }
 
         /*
@@ -247,15 +271,15 @@ public class PlayingBoard implements BoardInfo {
         List<CardCorner> hiddenCorners = new ArrayList<>();
 
         // The list of corners to check.
-        RelativeLocation[] locations = new RelativeLocation[] {
-                RelativeLocation.TOP_RIGHT,
-                RelativeLocation.BOTTOM_RIGHT,
-                RelativeLocation.BOTTOM_LEFT,
-                RelativeLocation.TOP_LEFT,
+        CornerLocation[] locations = new CornerLocation[] {
+                CornerLocation.TOP_RIGHT,
+                CornerLocation.BOTTOM_RIGHT,
+                CornerLocation.BOTTOM_LEFT,
+                CornerLocation.TOP_LEFT,
         };
 
         // Check all corners.
-        for (RelativeLocation cornerLocation : locations) {
+        for (CornerLocation cornerLocation : locations) {
             Optional<CardCorner> hidden = getHiddenCorner(slot, cornerLocation);
             // If there is a hidden corner, add it to the collection.
             hidden.ifPresent(hiddenCorners::add);
@@ -423,7 +447,7 @@ public class PlayingBoard implements BoardInfo {
      * @param location The corner location to check.
      * @return The (optional) corner hidden by the card.
      */
-    private Optional<CardCorner> getHiddenCorner(BoardSlot refSlot, RelativeLocation location) {
+    private Optional<CardCorner> getHiddenCorner(BoardSlot refSlot, CornerLocation location) {
 
         // Get the slot that is a candidate to have its corner hidden.
         BoardSlot candidate = refSlot.getSlotAt(location);
@@ -456,7 +480,6 @@ public class PlayingBoard implements BoardInfo {
             case BOTTOM_RIGHT -> card.getTopLeftCorner();
             case BOTTOM_LEFT -> card.getTopRightCorner();
             case TOP_LEFT -> card.getBottomRightCorner();
-            default -> throw new IllegalArgumentException("Invalid corner location");
         };
 
     }
@@ -502,8 +525,31 @@ public class PlayingBoard implements BoardInfo {
         return new ImmutableList<>(new ArrayList<>(this.availableSlots));
     }
 
+    /**
+     * Check if there is a card placed on the specified slot and return that
+     * card.
+     * @param location The slot where the card is placed.
+     * @return The card placed on the specified slot.
+     * @throws IllegalArgumentException If the specified slot does not contain a card.
+     */
+    public KingdomCardFace getCardAt(BoardSlot location) throws IllegalArgumentException {
+
+        // Check if the specified slot contains a card.
+        if (!this.placedCards.containsKey(location)) {
+            throw new PlayingBoardException(String.format("The specified slot (%s) does not contains a card.", location));
+        }
+
+        // Return the card placed on the specified slot.
+        return this.placedCards.get(location);
+    }
+
     @Override
     public Optional<KingdomCardFace> getNeighborCard(BoardSlot refSlot, RelativeLocation location) {
+        return getNeighborCard(this.placedCards, refSlot, location);
+    }
+
+    @Override
+    public Optional<KingdomCardFace> getNeighborCard(BoardSlot refSlot, CornerLocation location) {
         return getNeighborCard(this.placedCards, refSlot, location);
     }
 
@@ -553,7 +599,24 @@ public class PlayingBoard implements BoardInfo {
         }
 
         @Override
+        public KingdomCardFace getCardAt(BoardSlot location) throws IllegalArgumentException {
+
+            if (!this.placedCards.containsKey(location)) {
+                throw new PlayingBoardException(
+                        String.format("The specified slot (%s) does not contains a card.", location));
+            }
+            
+            return this.placedCards.get(location);
+
+        }
+
+        @Override
         public Optional<KingdomCardFace> getNeighborCard(BoardSlot refSlot, RelativeLocation location) {
+            return PlayingBoard.getNeighborCard(this.placedCards, refSlot, location);
+        }
+
+        @Override
+        public Optional<KingdomCardFace> getNeighborCard(BoardSlot refSlot, CornerLocation location) {
             return PlayingBoard.getNeighborCard(this.placedCards, refSlot, location);
         }
 

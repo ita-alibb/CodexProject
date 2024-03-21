@@ -3,6 +3,7 @@ package it.polimi.ingsw.am52.model.cards;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * A collection of items that can be only accessed by index or can be
@@ -75,6 +76,10 @@ public class ImmutableList<T> implements Iterable<T> {
 
     public boolean contains(T item) {
         return this.items.contains(item);
+    }
+
+    public Stream<T> stream() {
+        return this.items.stream();
     }
 
     //endregion

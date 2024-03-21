@@ -1,5 +1,7 @@
 package it.polimi.ingsw.am52.model.cards;
 
+import it.polimi.ingsw.am52.model.exceptions.CardException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,7 +125,7 @@ public abstract class GoldCard extends KingdomCard {
 
         // Check if the card identifier is valid.
         if (cardId < START_INDEX || cardId > LAST_INDEX) {
-            throw new IndexOutOfBoundsException(
+            throw new CardException(
                     String.format("Id of gold card out of bounds [%d,%d].", START_INDEX, LAST_INDEX)
             );
         }
