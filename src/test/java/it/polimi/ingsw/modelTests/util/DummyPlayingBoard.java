@@ -5,14 +5,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import it.polimi.ingsw.am52.model.cards.CornerLocation;
-import it.polimi.ingsw.am52.model.cards.ImmutableList;
-import it.polimi.ingsw.am52.model.cards.ItemsCounter;
-import it.polimi.ingsw.am52.model.cards.KingdomCardFace;
-import it.polimi.ingsw.am52.model.cards.ResourcesCounter;
-import it.polimi.ingsw.am52.model.playingBoards.BoardInfo;
-import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
-import it.polimi.ingsw.am52.model.playingBoards.RelativeLocation;
+import it.polimi.ingsw.am52.Model.cards.CornerLocation;
+import it.polimi.ingsw.am52.Util.ImmutableList;
+import it.polimi.ingsw.am52.Model.cards.ItemsCounter;
+import it.polimi.ingsw.am52.Model.cards.KingdomCardFace;
+import it.polimi.ingsw.am52.Model.cards.ResourcesCounter;
+import it.polimi.ingsw.am52.Model.playingBoards.BoardInfo;
+import it.polimi.ingsw.am52.Model.playingBoards.BoardSlot;
+import it.polimi.ingsw.am52.Model.playingBoards.RelativeLocation;
 
 /**
  * This class is for testing purpose. It represents a playing board
@@ -189,7 +189,6 @@ public class DummyPlayingBoard implements BoardInfo {
         /* No, return empty() */ Optional.empty();
     }
 
-    @Override
     public Optional<KingdomCardFace> getNeighborCard(BoardSlot refSlot, CornerLocation location) {
 
         // Get the candidate slot position.

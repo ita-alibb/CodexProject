@@ -1,9 +1,9 @@
 package it.polimi.ingsw.modelTests.playingBoardTests;
 
-import it.polimi.ingsw.am52.model.cards.StarterCard;
-import it.polimi.ingsw.am52.model.cards.StarterCardFace;
-import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
-import it.polimi.ingsw.am52.model.playingBoards.PlayingBoard;
+import it.polimi.ingsw.am52.Model.cards.StarterCard;
+import it.polimi.ingsw.am52.Model.cards.StarterCardFace;
+import it.polimi.ingsw.am52.Model.playingBoards.BoardSlot;
+import it.polimi.ingsw.am52.Model.playingBoards.PlayingBoard;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;

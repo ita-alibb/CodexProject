@@ -1,9 +1,9 @@
 package it.polimi.ingsw.modelTests.objectivesTests;
 
-import it.polimi.ingsw.am52.model.cards.KingdomCardFace;
-import it.polimi.ingsw.am52.model.cards.ResourceCard;
-import it.polimi.ingsw.am52.model.objectives.Objective;
-import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
+import it.polimi.ingsw.am52.Model.cards.KingdomCardFace;
+import it.polimi.ingsw.am52.Model.cards.ResourceCard;
+import it.polimi.ingsw.am52.Model.objectives.Objective;
+import it.polimi.ingsw.am52.Model.playingBoards.BoardSlot;
 import it.polimi.ingsw.modelTests.util.DummyPlayingBoard;
 import junit.framework.Test;
 import junit.framework.TestCase;

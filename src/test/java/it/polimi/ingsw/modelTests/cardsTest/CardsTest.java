@@ -1,6 +1,7 @@
 package it.polimi.ingsw.modelTests.cardsTest;
 
-import it.polimi.ingsw.am52.model.cards.*;
+import it.polimi.ingsw.am52.Util.ImmutableList;
+import it.polimi.ingsw.am52.Model.cards.*;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;

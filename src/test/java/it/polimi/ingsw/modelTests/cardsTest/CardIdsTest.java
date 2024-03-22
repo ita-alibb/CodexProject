@@ -1,7 +1,7 @@
 package it.polimi.ingsw.modelTests.cardsTest;
 
-import it.polimi.ingsw.am52.model.cards.*;
-import it.polimi.ingsw.am52.model.exceptions.CardException;
+import it.polimi.ingsw.am52.Model.cards.*;
+import it.polimi.ingsw.am52.Exceptions.CardException;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;

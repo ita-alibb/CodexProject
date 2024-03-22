@@ -1,7 +1,7 @@
 package it.polimi.ingsw.modelTests.deckTests;
 
-import it.polimi.ingsw.am52.model.decks.RandomDealer;
-import it.polimi.ingsw.am52.model.exceptions.DeckException;
+import it.polimi.ingsw.am52.Model.decks.RandomDealer;
+import it.polimi.ingsw.am52.Exceptions.DeckException;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
