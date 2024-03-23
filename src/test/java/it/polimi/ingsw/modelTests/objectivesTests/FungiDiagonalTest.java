@@ -5,34 +5,16 @@ import it.polimi.ingsw.am52.Model.cards.ResourceCard;
 import it.polimi.ingsw.am52.Model.objectives.Objective;
 import it.polimi.ingsw.am52.Model.playingBoards.BoardSlot;
 import it.polimi.ingsw.modelTests.util.DummyPlayingBoard;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for simple App.
  */
-public class FungiDiagonalTests
-    extends TestCase
+public class FungiDiagonalTest
 {
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public FungiDiagonalTests(String testName )
-    {
-        super( testName );
-    }
-
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( FungiDiagonalTests.class );
-    }
-
     /**
      * Test the PatternFinder of the diagonal pattern of
      * the fungi kingdom:<ul>
@@ -49,6 +31,8 @@ public class FungiDiagonalTests
      *     <li>One diagonal with 7 cards (two patterns)</li>
      * </ul>
      */
+    @Test
+    @DisplayName("Fungi Diagonal Pattern")
     public void testApp()
     {
         //Get the objective instance to test (Fungi diagonal,

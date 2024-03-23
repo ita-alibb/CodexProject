@@ -4,9 +4,10 @@ import it.polimi.ingsw.am52.Model.cards.StarterCard;
 import it.polimi.ingsw.am52.Model.cards.StarterCardFace;
 import it.polimi.ingsw.am52.Model.playingBoards.BoardSlot;
 import it.polimi.ingsw.am52.Model.playingBoards.PlayingBoard;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
@@ -14,25 +15,7 @@ import java.util.Arrays;
  * Unit test for simple App.
  */
 public class ConstructorTest
-    extends TestCase
 {
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public ConstructorTest(String testName )
-    {
-        super( testName );
-    }
-
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( ConstructorTest.class );
-    }
 
     /**
      * Test the constructor of the PlayingBoard class, passing
@@ -43,6 +26,8 @@ public class ConstructorTest
      * </ul>
      *
      */
+    @Test
+    @DisplayName("Playing Board Preliminary Test")
     public void testApp()
     {
         //region Starter Card #1 (id = 80)

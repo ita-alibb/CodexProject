@@ -1,34 +1,17 @@
 package it.polimi.ingsw.modelTests.cardsTest;
 
-import it.polimi.ingsw.am52.Util.ImmutableList;
 import it.polimi.ingsw.am52.Model.cards.*;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import it.polimi.ingsw.am52.Util.ImmutableList;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 /**
- * Unit test for simple App.
+ * Unit test for Card classes.
  */
 public class CardsTest
-    extends TestCase
 {
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public CardsTest(String testName )
-    {
-        super( testName );
-    }
-
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( CardsTest.class );
-    }
 
     /**
      * For all Starter, Resource, and Gold cards, test if:<ul>
@@ -36,7 +19,9 @@ public class CardsTest
      * <li>all card's identifier is correct
      * <li>the kingdom of Resource/Gold cards is correct
      */
-    public void testApp()
+    @Test
+    @DisplayName("Kingdom/Id/Count Cards")
+    public void resourceCards()
     {
         // The static method ResourceCard.getCards() return a list of
         // all resource cards, sorted as reported in the game manual.

@@ -2,40 +2,22 @@ package it.polimi.ingsw.modelTests.cardsTest;
 
 import it.polimi.ingsw.am52.Model.cards.*;
 import it.polimi.ingsw.am52.Exceptions.CardException;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 /**
- * Unit test for simple App.
+ * Unit test for Card classes.
  */
-public class CardIdsTest
-    extends TestCase
-{
+public class CardIdsTest {
     /**
-     * Create the test case
-     *
-     * @param testName name of the test case
+     * Test if the static methods getCardWithId() works properly
+     * for the starter cards.
      */
-    public CardIdsTest(String testName )
-    {
-        super( testName );
-    }
-
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( CardIdsTest.class );
-    }
-
-    /**
-     * Test if the static methods getCardWithId() works properly.
-     */
-    public void testApp()
-    {
-        //region Starter Cards
+    @Test
+    @DisplayName("Cards Ids of Starter Cards")
+    public void starterCardsIds() {
 
         // Test the static method StarterCard.getCardWithId().
         // Check the method returns the correct card.
@@ -51,32 +33,37 @@ public class CardIdsTest
 
         // Check out of bounds (lower).
         try {
-            StarterCard.getCardWithId(startId-1);
-            assert(false);
+            StarterCard.getCardWithId(startId - 1);
+            assert (false);
         } catch (CardException ex) {
-            assert(true);
+            assert (true);
         } catch (Exception allEx) {
-            assert(false);
+            assert (false);
         }
 
         // Check out of bounds (upper).
         try {
-            StarterCard.getCardWithId(lastId+1);
-            assert(false);
+            StarterCard.getCardWithId(lastId + 1);
+            assert (false);
         } catch (CardException ex) {
             assert (true);
         } catch (Exception allEx) {
-            assert(false);
+            assert (false);
         }
+    }
 
-        //endregion
-
-        //region Resource Cards
+    /**
+     * Test if the static methods getCardWithId() works properly
+     * for the resource cards.
+     */
+    @Test
+    @DisplayName("Cards Ids of Resource Cards")
+    public void resourceCardsIds() {
 
         // Test the static method ResourceCard.getCardWithId().
         // Check the method returns the correct card.
-        startId = 0;
-        lastId = 39;
+        int startId = 0;
+        int lastId = 39;
         for (int id = startId; id <= lastId; id++) {
             int cardId = id;
             ResourceCard card =
@@ -87,32 +74,37 @@ public class CardIdsTest
 
         // Check out of bounds (lower).
         try {
-            ResourceCard.getCardWithId(startId-1);
-            assert(false);
+            ResourceCard.getCardWithId(startId - 1);
+            assert (false);
         } catch (CardException ex) {
-            assert(true);
+            assert (true);
         } catch (Exception allEx) {
-            assert(false);
+            assert (false);
         }
 
         // Check out of bounds (upper).
         try {
-            ResourceCard.getCardWithId(lastId+1);
-            assert(false);
+            ResourceCard.getCardWithId(lastId + 1);
+            assert (false);
         } catch (CardException ex) {
             assert (true);
         } catch (Exception allEx) {
-            assert(false);
+            assert (false);
         }
+    }
 
-        //endregion
-
-        //region Gold Cards
+    /**
+     * Test if the static methods getCardWithId() works properly
+     * for the gold cards.
+     */
+    @Test
+    @DisplayName("Cards Ids of Gold Cards")
+    public void goldCardsIds() {
 
         // Test the static method GoldCard.getCardWithId().
         // Check the method returns the correct card.
-        startId = 40;
-        lastId = 79;
+        int startId = 40;
+        int lastId = 79;
         for (int id = startId; id <= lastId; id++) {
             int cardId = id;
             GoldCard card =
@@ -123,32 +115,38 @@ public class CardIdsTest
 
         // Check out of bounds (lower).
         try {
-            GoldCard.getCardWithId(startId-1);
-            assert(false);
+            GoldCard.getCardWithId(startId - 1);
+            assert (false);
         } catch (CardException ex) {
-            assert(true);
+            assert (true);
         } catch (Exception allEx) {
-            assert(false);
+            assert (false);
         }
 
         // Check out of bounds (upper).
         try {
-            GoldCard.getCardWithId(lastId+1);
-            assert(false);
+            GoldCard.getCardWithId(lastId + 1);
+            assert (false);
         } catch (CardException ex) {
             assert (true);
         } catch (Exception allEx) {
-            assert(false);
+            assert (false);
         }
+    }
 
-        //endregion
 
-        //region Kingdom Cards
+    /**
+     * Test if the static methods getCardWithId() works properly
+     * for the kingdom cards.
+     */
+    @Test
+    @DisplayName("Cards Ids of Kingdom Cards")
+    public void kingdomCardsIds() {
 
         // Test the static method KingdomCard.getCardWithId().
         // Check the method returns the correct card.
-        startId = 0;
-        lastId = 79;
+        int startId = 0;
+        int lastId = 79;
         for (int id = startId; id <= lastId; id++) {
             int cardId = id;
             KingdomCard card =
@@ -162,25 +160,22 @@ public class CardIdsTest
 
         // Check out of bounds (lower).
         try {
-            KingdomCard.getCardWithId(startId-1);
-            assert(false);
+            KingdomCard.getCardWithId(startId - 1);
+            assert (false);
         } catch (CardException ex) {
-            assert(true);
+            assert (true);
         } catch (Exception allEx) {
-            assert(false);
+            assert (false);
         }
 
         // Check out of bounds (upper).
         try {
-            KingdomCard.getCardWithId(lastId+1);
-            assert(false);
+            KingdomCard.getCardWithId(lastId + 1);
+            assert (false);
         } catch (CardException ex) {
             assert (true);
         } catch (Exception allEx) {
-            assert(false);
+            assert (false);
         }
-
-        //endregion
-
     }
 }

@@ -2,46 +2,28 @@ package it.polimi.ingsw.modelTests.cardsTest;
 
 import it.polimi.ingsw.am52.Model.cards.Item;
 import it.polimi.ingsw.am52.Model.cards.ItemsCounter;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
 /**
- * Unit test for simple App.
+ * Unit test for the ItemsCounter class.
  */
 public class ItemsCounterTest
-    extends TestCase
 {
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public ItemsCounterTest(String testName )
-    {
-        super( testName );
-    }
-
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( ItemsCounterTest.class );
-    }
-
     /**
      * Test for class ItemsCounter:<ul>
      *     <li>Default constructor creates a zero-counter</li>
      *     <li>Constructors with int values for each item</li>
      *     <li>Constructor with enum Item</li>
-     *     <li>Static method add(), addition between counters</li>
-     *     <li>Static method subtract(), subtraction between counters</li>
      * </ul>
      */
-    public void testApp()
+    @Test
+    @DisplayName("ItemsCounter constructors")
+    public void constructorsTest()
     {
         // Random numbers generator.
         Random r = new Random();
@@ -100,11 +82,25 @@ public class ItemsCounterTest
         assertEquals(1, counter.getVellumCount());
 
         //endregion
+    }
+
+    /**
+     * Test for class ItemsCounter:<ul>
+     *     <li>Static method add(), addition between counters</li>
+     * </ul>
+     */
+    @Test
+    @DisplayName("ItemsCounter add()")
+    public void addTest() {
+        // Random numbers generator.
+        Random r = new Random();
+        final int origin = -1000;
+        final int bound = 1001;
 
         //region Add() Static Method
 
         // Adding two empty counters gives an empty counter.
-        counter = ItemsCounter.add(new ItemsCounter(), new ItemsCounter());
+        ItemsCounter counter = ItemsCounter.add(new ItemsCounter(), new ItemsCounter());
         // Check all items are set to zero.
         assertEquals(0, counter.getFeatherCount());
         assertEquals(0, counter.getInkCount());
@@ -133,8 +129,43 @@ public class ItemsCounterTest
         assertEquals(vellum1+vellum2, sum.getVellumCount());
 
         //endregion
+    }
+
+    /**
+     * Test for class ItemsCounter:<ul>
+     *     <li>Static method subtract(), subtraction between counters</li>
+     * </ul>
+     */
+    @Test
+    @DisplayName("ItemsCounter subtract()")
+    public void subtractTest() {
+        // Random numbers generator.
+        Random r = new Random();
+        final int origin = -1000;
+        final int bound = 1001;
 
         //region Static Method Subtract
+
+        // Subtracting two empty counters gives an empty counter.
+        ItemsCounter counter = ItemsCounter.add(new ItemsCounter(), new ItemsCounter());
+        // Check all items are set to zero.
+        assertEquals(0, counter.getFeatherCount());
+        assertEquals(0, counter.getInkCount());
+        assertEquals(0, counter.getVellumCount());
+
+        // Items of the first counter.
+        int feathers1 = r.nextInt(origin, bound);
+        int inks1 = r.nextInt(origin, bound);
+        int vellum1 = r.nextInt(origin, bound);
+        // Instantiate the first counter.
+        ItemsCounter c1 = new ItemsCounter(feathers1, inks1, vellum1);
+
+        // Items of the second counter.
+        int feathers2 = r.nextInt(origin, bound);
+        int inks2 = r.nextInt(origin, bound);
+        int vellum2 = r.nextInt(origin, bound);
+        // Instantiate the second counter.
+        ItemsCounter c2 = new ItemsCounter(feathers2, inks2, vellum2);
 
         // Subtract the two counters.
         ItemsCounter sub = ItemsCounter.subtract(c1, c2);

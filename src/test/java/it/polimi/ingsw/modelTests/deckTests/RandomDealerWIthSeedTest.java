@@ -2,9 +2,10 @@ package it.polimi.ingsw.modelTests.deckTests;
 
 import it.polimi.ingsw.am52.Model.decks.RandomDealer;
 import it.polimi.ingsw.am52.Exceptions.DeckException;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
@@ -13,26 +14,7 @@ import java.util.*;
  * for the random numbers' generator.
  */
 public class RandomDealerWIthSeedTest
-    extends TestCase
 {
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public RandomDealerWIthSeedTest(String testName )
-    {
-        super( testName );
-    }
-
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( RandomDealerWIthSeedTest.class );
-    }
-
     /**
      * Test functionality of the RandomDealer class:
      * </ul>
@@ -41,6 +23,8 @@ public class RandomDealerWIthSeedTest
      * <li> Two instances creates with the same seed give same items
      * </ul>
      */
+    @Test
+    @DisplayName("Dealer with seed")
     public void testApp()
     {
         // The seed used.

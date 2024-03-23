@@ -2,46 +2,28 @@ package it.polimi.ingsw.modelTests.cardsTest;
 
 import it.polimi.ingsw.am52.Model.cards.Resource;
 import it.polimi.ingsw.am52.Model.cards.ResourcesCounter;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
- * Unit test for simple App.
+ * Unit test for ResourcesCounter class.
  */
 public class ResourcesCounterTest
-    extends TestCase
 {
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public ResourcesCounterTest(String testName )
-    {
-        super( testName );
-    }
-
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( ResourcesCounterTest.class );
-    }
-
     /**
      * Test for class ResourcesCounter:<ul>
      *     <li>Default constructor creates a zero-counter</li>
      *     <li>Constructors with int values for each resource</li>
      *     <li>Constructor with enum Resource</li>
-     *     <li>Static method add(), addition between counters</li>
-     *     <li>Static method subtract(), subtraction between counters</li>
      * </ul>
      */
-    public void testApp()
+    @Test
+    @DisplayName("ResourcesCounter constructors")
+    public void constructorsTest()
     {
         // Random numbers generator.
         Random r = new Random();
@@ -114,11 +96,26 @@ public class ResourcesCounterTest
         assertEquals(1, counter.getInsectCount());
 
         //endregion
+    }
+
+    /**
+     * Test for class ResourcesCounter:<ul>
+     *     <li>Static method add(), addition between counters</li>
+     * </ul>
+     */
+    @Test
+    @DisplayName("ResourcesCounter add()")
+    public void addTest() {
+
+        // Random numbers generator.
+        Random r = new Random();
+        final int origin = -1000;
+        final int bound = 1001;
 
         //region Add() Static Method
 
         // Adding two empty counters gives an empty counter.
-        counter = ResourcesCounter.add(new ResourcesCounter(), new ResourcesCounter());
+        ResourcesCounter counter = ResourcesCounter.add(new ResourcesCounter(), new ResourcesCounter());
         // Check all resources are set to zero.
         assertEquals(0, counter.getFungiCount());
         assertEquals(0, counter.getPlantCount());
@@ -151,8 +148,47 @@ public class ResourcesCounterTest
         assertEquals(insect1+insect2, sum.getInsectCount());
 
         //endregion
+    }
+
+    /**
+     * Test for class ResourcesCounter:<ul>
+     *     <li>Static method subtract(), subtraction between counters</li>
+     * </ul>
+     */
+    @Test
+    @DisplayName("ResourcesCounter subtract()")
+    public void subtractTest() {
+
+        // Random numbers generator.
+        Random r = new Random();
+        final int origin = -1000;
+        final int bound = 1001;
 
         //region Static Method Subtract
+
+        // Subtracting two empty counters gives an empty counter.
+        ResourcesCounter counter = ResourcesCounter.subtract(new ResourcesCounter(), new ResourcesCounter());
+        // Check all resources are set to zero.
+        assertEquals(0, counter.getFungiCount());
+        assertEquals(0, counter.getPlantCount());
+        assertEquals(0, counter.getAnimalCount());
+        assertEquals(0, counter.getInsectCount());
+
+        // Resources of the first counter.
+        int fungi1 = r.nextInt(origin, bound);
+        int plant1 = r.nextInt(origin, bound);
+        int animal1 = r.nextInt(origin, bound);
+        int insect1 = r.nextInt(origin, bound);
+        // Instantiate the first counter.
+        ResourcesCounter c1 = new ResourcesCounter(fungi1, plant1, animal1, insect1);
+
+        // Resources of the second counter.
+        int fungi2 = r.nextInt(origin, bound);
+        int plant2 = r.nextInt(origin, bound);
+        int animal2 = r.nextInt(origin, bound);
+        int insect2 = r.nextInt(origin, bound);
+        // Instantiate the second counter.
+        ResourcesCounter c2 = new ResourcesCounter(fungi2, plant2, animal2, insect2);
 
         // Subtract the two counters.
         ResourcesCounter sub = ResourcesCounter.subtract(c1, c2);

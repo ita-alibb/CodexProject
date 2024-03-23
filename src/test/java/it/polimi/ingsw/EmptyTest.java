@@ -1,39 +1,22 @@
 package it.polimi.ingsw;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for simple App.
  */
 public class EmptyTest
-    extends TestCase
 {
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public EmptyTest(String testName )
-    {
-        super( testName );
-    }
-
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( EmptyTest.class );
-    }
-
     /**
      * Test description.
      */
+    @Test
+    @DisplayName("Test name")
     public void testApp()
     {
         // Stupid test.
-        assert(true);
+        assertEquals(0, 0);
     }
 }

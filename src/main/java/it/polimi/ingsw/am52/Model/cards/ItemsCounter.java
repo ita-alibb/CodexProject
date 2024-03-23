@@ -1,6 +1,5 @@
 package it.polimi.ingsw.am52.Model.cards;
 
-
 /**
  * Immutable class that maintains the count of all available items.
  */
