@@ -2,12 +2,9 @@ package it.polimi.ingsw.am52.Model.Player;
 
 import it.polimi.ingsw.am52.Exceptions.PlayerException;
 import it.polimi.ingsw.am52.Exceptions.PlayingBoardException;
-import it.polimi.ingsw.am52.Model.cards.KingdomColor;
-import it.polimi.ingsw.am52.Model.cards.StarterCard;
+import it.polimi.ingsw.am52.Model.cards.*;
 import it.polimi.ingsw.am52.Model.objectives.Objective;
 import it.polimi.ingsw.am52.Util.ImmutableList;
-import it.polimi.ingsw.am52.Model.cards.KingdomCard;
-import it.polimi.ingsw.am52.Model.cards.StarterCardFace;
 import it.polimi.ingsw.am52.Model.playingBoards.BoardInfo;
 import it.polimi.ingsw.am52.Model.playingBoards.PlayingBoard;
 
@@ -109,10 +106,18 @@ public class Player implements PlayerBoardSetup, PlayerInfo, PlayerDrawing{
     }
 
     /**
-     * @return The starter card chosen by the Player
+     * @return The starter card Face in the PlayingBoard
      */
     @Override
-    public StarterCardFace getStarterCard() {
+    public StarterCard getStarterCard() {
+        return this.starterCard;
+    }
+
+    /**
+     * @return The starter card Face in the PlayingBoard
+     */
+    @Override
+    public StarterCardFace getPlacedStarterCardFace() {
         return this.playingBoard.getStarerCard();
     }
 
@@ -128,7 +133,11 @@ public class Player implements PlayerBoardSetup, PlayerInfo, PlayerDrawing{
      * @return The BoardInfo interface of the player's PlayingBoard
      */
     @Override
-    public BoardInfo getPlayingBoard() {
+    public BoardInfo getPlayingBoard() throws PlayingBoardException  {
+        if (this.playingBoard == null){
+            throw new PlayingBoardException("The PlayingBoard for the player is not instantiated");
+        }
+
         return this.playingBoard.getInfo();
     }
 
@@ -150,7 +159,7 @@ public class Player implements PlayerBoardSetup, PlayerInfo, PlayerDrawing{
             throw new PlayerException("Trying to add a 4th card");
         }
 
-        if (this.cardHand.contains(drawnCard)){
+        if (this.cardHand.stream().map(Card::getCardId).anyMatch(id -> id == drawnCard.getCardId())){
             throw new PlayerException("Trying to add duplicate card");
         }
 
@@ -163,7 +172,7 @@ public class Player implements PlayerBoardSetup, PlayerInfo, PlayerDrawing{
      */
     @Override
     public void removeCard(KingdomCard placedCard) throws PlayerException {
-        if (!this.cardHand.contains(placedCard)){
+        if (this.cardHand.stream().map(Card::getCardId).noneMatch(id -> id == placedCard.getCardId())){
             throw new PlayerException("Trying to place a card that is not on the player's hand");
         }
 

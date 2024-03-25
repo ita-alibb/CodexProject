@@ -1,9 +1,11 @@
 package it.polimi.ingsw.am52.Model.Player;
 
+import it.polimi.ingsw.am52.Exceptions.PlayingBoardException;
 import it.polimi.ingsw.am52.Model.cards.KingdomColor;
 import it.polimi.ingsw.am52.Model.objectives.Objective;
 import it.polimi.ingsw.am52.Util.ImmutableList;
 import it.polimi.ingsw.am52.Model.cards.KingdomCard;
+import it.polimi.ingsw.am52.Model.cards.StarterCard;
 import it.polimi.ingsw.am52.Model.cards.StarterCardFace;
 import it.polimi.ingsw.am52.Model.playingBoards.BoardInfo;
 
@@ -34,7 +36,13 @@ public interface PlayerInfo {
      *
      * @return The starter card chosen by the Player
      */
-    StarterCardFace getStarterCard();
+    StarterCard getStarterCard();
+
+    /**
+     *
+     * @return The starter card Face in the PlayingBoard
+     */
+    StarterCardFace getPlacedStarterCardFace();
 
     /**
      *
@@ -46,7 +54,7 @@ public interface PlayerInfo {
      *
      * @return The BoardInfo interface of the player's PlayingBoard
      */
-    BoardInfo getPlayingBoard();
+    BoardInfo getPlayingBoard() throws PlayingBoardException;
 
     /**
      *
