@@ -86,7 +86,7 @@ public class PlayerTest {
      * Test player Hand management
      */
     @Test
-    @DisplayName("Player Board setup")
+    @DisplayName("Player Hand management")
     public void manageHand(){
         /*
          * Remove card from empty hand

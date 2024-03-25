@@ -2,8 +2,9 @@ package it.polimi.ingsw.am52.Model.Game;
 
 import it.polimi.ingsw.am52.Exceptions.GameException;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class GameLobby {
     /**
@@ -26,7 +27,7 @@ public class GameLobby {
         }
 
         this.maxPlayers = maxPlayers;
-        this.Players = Arrays.asList(new String[maxPlayers]);
+        this.Players = new ArrayList<>();
     }
 
     /**
@@ -35,12 +36,13 @@ public class GameLobby {
      * @return A bool indicating whether the nickname is valid
      */
     private boolean validateNickName(String nickName){
-        return nickName != null && !nickName.isBlank() && nickName.length() <= 16 && !this.Players.contains(nickName);
+        return nickName != null && !nickName.isBlank() && nickName.length() <= 16 && !this.Players.contains(nickName) && !this.isFull();
     }
 
     /**
      * Method to add a new player to the lobby
      * @param nickName The nickname of the new player
+     * @return A bool indicating whether the Player has been added
      */
     public boolean addPlayer(String nickName){
         if (validateNickName(nickName)){
@@ -53,7 +55,7 @@ public class GameLobby {
      * Method to retrieve all players in lobby
      * @return The list of nicknames of players in lobby
      */
-    public List<String> getPLayers(){
+    public List<String> getPlayers(){
         return this.Players;
     }
 
@@ -61,8 +63,8 @@ public class GameLobby {
      * Method to retrieve the count of players
      * @return The number of players
      */
-    public int getPLayersCount(){
-        return this.Players.size();
+    public long getPlayersCount(){
+        return this.Players.stream().filter(Objects::nonNull).count();
     }
 
     /**
@@ -70,7 +72,7 @@ public class GameLobby {
      * @return A bool indicating whether the lobby is full
      */
     public boolean isFull(){
-        return this.getPLayersCount() == this.maxPlayers;
+        return this.getPlayersCount() == this.maxPlayers;
     }
 }
 
