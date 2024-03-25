@@ -2,6 +2,7 @@ package it.polimi.ingsw.am52.Model.Player;
 
 import it.polimi.ingsw.am52.Exceptions.PlayerException;
 import it.polimi.ingsw.am52.Exceptions.PlayingBoardException;
+import it.polimi.ingsw.am52.Model.cards.KingdomColor;
 import it.polimi.ingsw.am52.Model.cards.StarterCard;
 import it.polimi.ingsw.am52.Model.objectives.Objective;
 import it.polimi.ingsw.am52.Util.ImmutableList;
@@ -21,6 +22,11 @@ public class Player implements PlayerBoardSetup, PlayerInfo, PlayerDrawing{
      * The Nickname chosen by the Player
      */
     private final String nickname;
+
+    /**
+     * The color chosen by the Player for his pawn
+     */
+    private final KingdomColor pawnColor;
 
     /**
      * The Player's Hand of cards
@@ -50,11 +56,13 @@ public class Player implements PlayerBoardSetup, PlayerInfo, PlayerDrawing{
     /**
      *
      * @param nickname The nickname chosen by the player
+     * @param pawnColor The color of the pawn chosen by the player
      * @param secretObjective The secretObjective drawn by the player
      * @param starterCard The starterCard chosen by the player
      */
-    public Player(String nickname, Objective secretObjective, StarterCard starterCard) {
+    public Player(String nickname, KingdomColor pawnColor, Objective secretObjective, StarterCard starterCard) {
         this.nickname = nickname;
+        this.pawnColor = pawnColor;
         this.cardHand = new HashSet<>();
         this.score = new Score();
         this.secretObjective = secretObjective;
@@ -84,9 +92,13 @@ public class Player implements PlayerBoardSetup, PlayerInfo, PlayerDrawing{
      * @return The nickname of the Player
      */
     @Override
-    public String getNickname() {
-        return this.nickname;
-    }
+    public String getNickname() { return this.nickname; }
+
+    /**
+     * @return The color of the pawn of the Player
+     */
+    @Override
+    public KingdomColor getPawnColor() { return this.pawnColor; }
 
     /**
      * @return The list of card in the hand of the player as an ImmutableList

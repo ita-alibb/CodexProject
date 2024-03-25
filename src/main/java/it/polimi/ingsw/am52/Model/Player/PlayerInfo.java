@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am52.Model.Player;
 
+import it.polimi.ingsw.am52.Model.cards.KingdomColor;
 import it.polimi.ingsw.am52.Model.objectives.Objective;
 import it.polimi.ingsw.am52.Util.ImmutableList;
 import it.polimi.ingsw.am52.Model.cards.KingdomCard;
@@ -16,6 +17,12 @@ public interface PlayerInfo {
      * @return The nickname of the Player
      */
     String getNickname();
+
+    /**
+     *
+     * @return The color of the pawn of the Player
+     */
+    KingdomColor getPawnColor();
 
     /**
      *
