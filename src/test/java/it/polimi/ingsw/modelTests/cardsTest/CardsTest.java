@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 /**
  * Unit test for Card classes.
  */
@@ -78,5 +80,26 @@ public class CardsTest
             assertEquals(Kingdom.INSECT_KINGDOM, resourceCards.get(i).getKingdom());
             assertEquals(Kingdom.INSECT_KINGDOM, goldCards.get(i).getKingdom());
         }
+    }
+
+    /**
+     * Test the method to validate Face as part of Card
+     */
+    @Test
+    @DisplayName("Cards getSide check")
+    public void getSide(){
+        var goldCard = GoldCard.getCardWithId(40);
+        var resourceCard = ResourceCard.getCardWithId(0);
+
+        assertEquals(Optional.of(CardSide.FRONT), goldCard.getSide(goldCard.getFrontFace()));
+        assertEquals(Optional.of(CardSide.BACK), goldCard.getSide(goldCard.getBackFace()));
+        assertEquals(Optional.of(CardSide.FRONT), resourceCard.getSide(resourceCard.getFrontFace()));
+        assertEquals(Optional.of(CardSide.BACK), resourceCard.getSide(resourceCard.getBackFace()));
+
+        assertTrue(goldCard.getSide(resourceCard.getFrontFace()).isEmpty());
+        assertTrue(resourceCard.getSide(goldCard.getFrontFace()).isEmpty());
+
+        assertTrue(resourceCard.getSide(ResourceCard.getCardWithId(25).getFrontFace()).isEmpty());
+        assertTrue(goldCard.getSide(GoldCard.getCardWithId(65).getFrontFace()).isEmpty());
     }
 }

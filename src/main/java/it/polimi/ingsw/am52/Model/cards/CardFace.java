@@ -140,4 +140,18 @@ public abstract class CardFace implements Pluggable, ResourcesProvider {
     }
 
     //endregion
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof CardFace f)) {
+            return false;
+        }
+        return (f.getCardSide() == this.getCardSide() &&
+                f.getBottomLeftCorner() == this.getBottomLeftCorner() &&
+                f.getTopLeftCorner() == this.getTopLeftCorner() &&
+                f.getBottomRightCorner() == this.getBottomRightCorner() &&
+                f.getTopRightCorner() == this.getTopRightCorner() &&
+                f.getResources().equals(this.getResources())
+        );
+    }
 }

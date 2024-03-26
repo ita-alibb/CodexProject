@@ -1,7 +1,5 @@
 package it.polimi.ingsw.am52.Model.cards;
 
-import it.polimi.ingsw.am52.Exceptions.CardException;
-
 import java.util.Optional;
 
 /**
@@ -72,6 +70,21 @@ public class Card {
     }
 
     //endregion
+
+    /**
+     * Method used to check if a Face is of a Card
+     * @param  face The Face to check
+     * @return The (optional) card side if the CardFace is present on one of the two side.
+     */
+    public Optional<CardSide> getSide(CardFace face) {
+        if (face.equals(this.getFrontFace()) ){
+            return Optional.of(CardSide.FRONT);
+        } else if (face.equals(this.getBackFace())) {
+            return Optional.of(CardSide.BACK);
+        }
+
+        return Optional.empty();
+    }
 
     /**
      * Compare this Card object with another Card object for equality.

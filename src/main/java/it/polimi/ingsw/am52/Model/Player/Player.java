@@ -4,6 +4,7 @@ import it.polimi.ingsw.am52.Exceptions.PlayerException;
 import it.polimi.ingsw.am52.Exceptions.PlayingBoardException;
 import it.polimi.ingsw.am52.Model.cards.*;
 import it.polimi.ingsw.am52.Model.objectives.Objective;
+import it.polimi.ingsw.am52.Model.playingBoards.BoardSlot;
 import it.polimi.ingsw.am52.Util.ImmutableList;
 import it.polimi.ingsw.am52.Model.playingBoards.BoardInfo;
 import it.polimi.ingsw.am52.Model.playingBoards.PlayingBoard;
@@ -154,7 +155,7 @@ public class Player implements PlayerBoardSetup, PlayerInfo, PlayerDrawing{
      * @param drawnCard The drawnCard to be added in the hand of the player
      */
     @Override
-    public void assignCard(KingdomCard drawnCard) throws PlayerException  {
+    public void drawCard(KingdomCard drawnCard) throws PlayerException  {
         if (this.cardHand.size() >= 3){
             throw new PlayerException("Trying to add a 4th card");
         }
@@ -167,15 +168,26 @@ public class Player implements PlayerBoardSetup, PlayerInfo, PlayerDrawing{
     }
 
     /**
-     * Remove card from Hand
-     * @param placedCard The placedCard that must be removed from the hand of the player
+     * Method to place the card
+     * @param location The location in which the card is placed
+     * @param card The placedCard that must be removed from the hand of the player
+     * @param face The face chosen
+     * @return The points obtained
      */
     @Override
-    public void removeCard(KingdomCard placedCard) throws PlayerException {
-        if (this.cardHand.stream().map(Card::getCardId).noneMatch(id -> id == placedCard.getCardId())){
+    public int placeCard(BoardSlot location, KingdomCard card, KingdomCardFace face) throws PlayerException {
+        if (this.cardHand.stream().map(Card::getCardId).noneMatch(id -> id == card.getCardId())){
             throw new PlayerException("Trying to place a card that is not on the player's hand");
         }
 
-        this.cardHand.remove(placedCard);
+        if (card.getSide(face).isEmpty()){
+            throw new PlayerException("Trying to place a face that does not belong to card");
+        }
+
+        int bonus = this.playingBoard.placeCard(location, face);
+
+        this.cardHand.remove(card);
+
+        return bonus;
     }
 }

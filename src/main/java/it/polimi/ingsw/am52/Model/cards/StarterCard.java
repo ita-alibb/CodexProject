@@ -111,21 +111,6 @@ public abstract class StarterCard extends Card {
 
     //endregion
 
-    /**
-     * Method used to check if a Face is of a Card
-     * @param  face The Face to check
-     * @return The (optional) card side if the CardFace is present on one of the two side.
-     */
-    public Optional<CardSide> getSide(StarterCardFace face) {
-        if (face.equals(this.getFrontFace()) ){
-            return Optional.of(CardSide.FRONT);
-        } else if (face.equals(this.getBackFace())) {
-            return Optional.of(CardSide.BACK);
-        }
-
-        return Optional.empty();
-    }
-
     //region Overrides
 
     @Override
