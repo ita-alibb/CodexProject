@@ -1,7 +1,7 @@
 package it.polimi.ingsw.modelTests.gameTests;
 
-import it.polimi.ingsw.am52.Exceptions.GameException;
-import it.polimi.ingsw.am52.Model.Game.GameLobby;
+import it.polimi.ingsw.am52.exceptions.GameException;
+import it.polimi.ingsw.am52.model.game.GameLobby;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

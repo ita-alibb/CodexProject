@@ -1,7 +1,7 @@
 package it.polimi.ingsw.modelTests.deckTests;
 
-import it.polimi.ingsw.am52.Model.decks.RandomDealer;
-import it.polimi.ingsw.am52.Exceptions.DeckException;
+import it.polimi.ingsw.am52.model.decks.RandomDealer;
+import it.polimi.ingsw.am52.exceptions.DeckException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;

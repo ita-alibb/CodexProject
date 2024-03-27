@@ -1,0 +1,104 @@
+package it.polimi.ingsw.am52.model.cards;
+
+import it.polimi.ingsw.am52.exceptions.CardException;
+
+import java.util.Optional;
+
+/**
+ * The base class of all playing cards. Each card has two faces (sides),
+ * and the player can choose to place the card on the playing board
+ * with one of the two face visible. Each card has a numerical identifier.
+ */
+public class Card {
+
+    //region Private Fields
+
+    /**
+     * The numerical identifier of the card.
+     */
+    private final int cardId;
+
+    /**
+     * The (immutable) front face of this card.
+     */
+    private final CardFace frontFace;
+
+    /**
+     * The (immutable) back face of this card.
+     */
+    private final CardFace backFace;
+
+    //endregion
+
+    //region Constructors
+
+    /**
+     * Instantiate a playing card with the specified front and back faces.
+     * @param frontFace The front face of the card.
+     * @param backFace The back face of the card.
+     */
+    public Card(int cardId, CardFace frontFace, CardFace backFace) {
+        this.cardId = cardId;
+        this.frontFace = frontFace;
+        this.backFace = backFace;
+    }
+
+    //endregion
+
+    //region Getters
+
+    /**
+     *
+     * @return The numerical identifier of this card.
+     */
+    public int getCardId() {
+        return this.cardId;
+    }
+
+    /**
+     *
+     * @return The front face of this card.
+     */
+    public CardFace getFrontFace() {
+        return this.frontFace;
+    }
+
+    /**
+     *
+     * @return The back face of this card.
+     */
+    public CardFace getBackFace() {
+        return this.backFace;
+    }
+
+    //endregion
+
+    /**
+     * Method used to check if a Face is of a Card
+     * @param  face The Face to check
+     * @return The (optional) card side if the CardFace is present on one of the two side.
+     */
+    public Optional<CardSide> getSide(CardFace face) {
+        if (face.equals(this.getFrontFace()) ){
+            return Optional.of(CardSide.FRONT);
+        } else if (face.equals(this.getBackFace())) {
+            return Optional.of(CardSide.BACK);
+        }
+
+        return Optional.empty();
+    }
+
+    /**
+     * Compare this Card object with another Card object for equality.
+     * @param other The object to compare with.
+     * @return True if the other object is equal to this object, false otherwise.
+     */
+    @Override
+    public boolean equals(Object other) {
+
+        if (!(other instanceof Card c)) {
+            return false;
+        }
+        return (c.getCardId() == this.getCardId());
+    }
+}

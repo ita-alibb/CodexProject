@@ -1,4 +1,4 @@
-package it.polimi.ingsw.am52.Util;
+package it.polimi.ingsw.am52.util;
 
 import java.util.ArrayList;
 import java.util.Iterator;

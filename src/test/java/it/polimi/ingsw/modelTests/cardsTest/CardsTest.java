@@ -1,7 +1,7 @@
 package it.polimi.ingsw.modelTests.cardsTest;
 
-import it.polimi.ingsw.am52.Model.cards.*;
-import it.polimi.ingsw.am52.Util.ImmutableList;
+import it.polimi.ingsw.am52.model.cards.*;
+import it.polimi.ingsw.am52.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;

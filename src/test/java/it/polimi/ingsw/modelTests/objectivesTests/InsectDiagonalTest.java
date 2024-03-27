@@ -6,23 +6,23 @@ import it.polimi.ingsw.am52.model.cards.ResourceCard;
 import it.polimi.ingsw.am52.model.objectives.Objective;
 import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
 import it.polimi.ingsw.modelTests.util.DummyPlayingBoard;
-
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Unit test for Objective class, animal diagonal game objective.
  */
-public class FungiDiagonalTest
+public class InsectDiagonalTest
 {
     /**
      * Test the PatternFinder of the diagonal pattern of
-     * the fungi kingdom:<ul>
+     * the insect kingdom:<ul>
      *     <li>method calculatePoints() (calls the method findPatterns())</li>
      * </ul>
      * The test consists in placing some cards on a dummy playing board and
-     * calculate the gained point for the diagonal pattern (three fungi
+     * calculate the gained point for the diagonal pattern (three insect
      * cards aligned from bottom-left to top-right):<ul>
      *     <li>Empty playing board</li>
      *     <li>One diagonal with 2 cards</li>
@@ -34,18 +34,18 @@ public class FungiDiagonalTest
      * </ul>
      */
     @Test
-    @DisplayName("Fungi Diagonal Pattern on Diagonal Board")
+    @DisplayName("Insect Diagonal Pattern on Diagonal Board")
     public void testOnDiagonal()
     {
-        // Get the objective instance to test (Fungi diagonal,
-        // objective #0).
-        Objective target = Objective.getObjectiveWithId(0);
+        // Get the objective instance to test (insect diagonal,
+        // objective #2).
+        Objective target = Objective.getObjectiveWithId(3);
 
-        // Get a fungi card.
+        // Get an insect card.
+        KingdomCardFace insectCard = ResourceCard.getCardWithId(30).getFrontFace();
+
+        // Get an insect card (different kingdom).
         KingdomCardFace fungiCard = ResourceCard.getCardWithId(0).getFrontFace();
-
-        // Get a plant card (different kingdom).
-        KingdomCardFace plantCard = ResourceCard.getCardWithId(10).getFrontFace();
 
         // Create a dummy playing board.
         DummyPlayingBoard board = new DummyPlayingBoard();
@@ -54,49 +54,49 @@ public class FungiDiagonalTest
         int gainedPoints = target.calculatePoints(board);
         assertEquals(0, gainedPoints);
 
-        // Place a fungi card on the board.
-        board.addCard(new BoardSlot(2,2), fungiCard);
+        // Place an insect card on the board.
+        board.addCard(new BoardSlot(2,2), insectCard);
 
         // Test the pattern finder: expected 0 points.
         gainedPoints = target.calculatePoints(board);
         assertEquals(0, gainedPoints);
 
-        // Place a fungi card on the board, creating a diagonal with
-        // two cards.
-        board.addCard(new BoardSlot(3,3), fungiCard);
+        // Place an insect card on the board, creating a diagonal with
+        // two cards (left hand diagonal).
+        board.addCard(new BoardSlot(1,3), insectCard);
 
         // Test the pattern finder: expected 0 points.
         gainedPoints = target.calculatePoints(board);
         assertEquals(0, gainedPoints);
 
-        // Place a fungi card on the board, creating a diagonal with
+        // Place an insect card on the board, creating a diagonal with
         // three cards.
-        board.addCard(new BoardSlot(4,4), fungiCard);
+        board.addCard(new BoardSlot(0,4), insectCard);
 
         // Test the pattern finder: expected 2x1=2 points.
         gainedPoints = target.calculatePoints(board);
         assertEquals(2, gainedPoints);
 
-        // Place a fungi card on the board, creating a diagonal with
+        // Place an insect card on the board, creating a diagonal with
         // four cards.
-        board.addCard(new BoardSlot(1,1), fungiCard);
+        board.addCard(new BoardSlot(3,1), insectCard);
 
         // Test the pattern finder: expected 2x1=2 points.
         gainedPoints = target.calculatePoints(board);
         assertEquals(2, gainedPoints);
 
-        // Place two fungi cards on the board, creating a diagonal with
+        // Place two insect cards on the board, creating a diagonal with
         // six cards.
-        board.addCard(new BoardSlot(5,5), fungiCard);
-        board.addCard(new BoardSlot(6,6), fungiCard);
+        board.addCard(new BoardSlot(-1,5), insectCard);
+        board.addCard(new BoardSlot(-2,6), insectCard);
 
         // Test the pattern finder: expected 2x2=4 points.
         gainedPoints = target.calculatePoints(board);
         assertEquals(4, gainedPoints);
 
-        // Place a fungi card on the board, creating a diagonal with
+        // Place an insect card on the board, creating a diagonal with
         // seven cards.
-        board.addCard(new BoardSlot(7,7), fungiCard);
+        board.addCard(new BoardSlot(-3,7), insectCard);
 
         // Test the pattern finder: expected 2x2=4 points.
         gainedPoints = target.calculatePoints(board);
@@ -104,21 +104,21 @@ public class FungiDiagonalTest
 
         // Remove the card at the middle of the diagonal, creating
         // two diagonals with three cards each.
-        board.removeCard(new BoardSlot(4, 4));
+        board.removeCard(new BoardSlot(0, 4));
 
         // Test the pattern finder: expected 2x2=4 points.
         gainedPoints = target.calculatePoints(board);
         assertEquals(4, gainedPoints);
 
-        // Place a plant card that connects the two diagonals.
-        board.addCard(new BoardSlot(4, 4), plantCard);
+        // Place an insect card that connects the two diagonals.
+        board.addCard(new BoardSlot(0, 4), fungiCard);
 
         // Test the pattern finder: expected 2x2=4 points.
         gainedPoints = target.calculatePoints(board);
         assertEquals(4, gainedPoints);
 
         // Replace the first card of the first diagonal.
-        board.replaceCard(new BoardSlot(1, 1), plantCard);
+        board.replaceCard(new BoardSlot(3, 1), fungiCard);
 
         // Test the pattern finder: expected 2x1=2 points.
         gainedPoints = target.calculatePoints(board);
@@ -127,12 +127,12 @@ public class FungiDiagonalTest
 
     /**
      * Test the PatternFinder of the diagonal pattern of
-     * the fungi kingdom:<ul>
+     * the insect kingdom:<ul>
      *     <li>method calculatePoints() (calls the method findPatterns())</li>
      * </ul>
      * The test consists in creating a rectangular board with all cards
      * of the same kingdom and calculate the gained point for the diagonal
-     * pattern (three fungi cards aligned from bottom-left to top-right):<ul>
+     * pattern (three insect cards aligned from bottom-left to top-right):<ul>
      *     <li>1x1 rectangle</li>
      *     <li>2x2 rectangle</li>
      *     <li>3x3 rectangle</li>
@@ -141,19 +141,19 @@ public class FungiDiagonalTest
      * </ul>
      */
     @Test
-    @DisplayName("Fungi Diagonal Pattern on Rectangular Board")
+    @DisplayName("Insect Diagonal Pattern on Rectangular Board")
     public void testOnRectangularBoard() {
 
-        // Get the objective instance to test (Fungi diagonal,
+        // Get the objective instance to test (insect diagonal,
         // objective #0).
-        Objective target = Objective.getObjectiveWithId(0);
+        Objective target = Objective.getObjectiveWithId(3);
 
         // The ref. position of the rectangle on the board.
         BoardSlot origin = new BoardSlot(1, 1);
 
         // Create a square board with only one card (1x1).
         DummyPlayingBoard board = DummyPlayingBoard.getUniformKingdomBoard(
-                origin, 1, 1, Kingdom.FUNGI_KINGDOM
+                origin, 1, 1, Kingdom.INSECT_KINGDOM
         );
 
         // Expected zero points.
@@ -161,7 +161,7 @@ public class FungiDiagonalTest
 
         // Create a square board (2x2).
         board = DummyPlayingBoard.getUniformKingdomBoard(
-                origin, 2, 2, Kingdom.FUNGI_KINGDOM
+                origin, 2, 2, Kingdom.INSECT_KINGDOM
         );
 
         // Expected zero points.
@@ -169,7 +169,7 @@ public class FungiDiagonalTest
 
         // Create a square board (3x3).
         board = DummyPlayingBoard.getUniformKingdomBoard(
-                origin, 3, 3, Kingdom.FUNGI_KINGDOM
+                origin, 3, 3, Kingdom.INSECT_KINGDOM
         );
 
         // Expected 2 points (the main diagonal).
@@ -183,7 +183,7 @@ public class FungiDiagonalTest
          *  1 X X X
          */
         board = DummyPlayingBoard.getUniformKingdomBoard(
-                origin, 3, 6, Kingdom.FUNGI_KINGDOM
+                origin, 3, 6, Kingdom.INSECT_KINGDOM
         );
 
         // Expected 4 points (2 diagonal patterns).
@@ -200,7 +200,7 @@ public class FungiDiagonalTest
          *  1 X X X
          */
         board = DummyPlayingBoard.getUniformKingdomBoard(
-                origin, 6, 6, Kingdom.FUNGI_KINGDOM
+                origin, 6, 6, Kingdom.INSECT_KINGDOM
         );
 
         // Expected 8 points (4 diagonal patterns).

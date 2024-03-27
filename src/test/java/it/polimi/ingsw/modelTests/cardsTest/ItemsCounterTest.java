@@ -1,7 +1,7 @@
 package it.polimi.ingsw.modelTests.cardsTest;
 
-import it.polimi.ingsw.am52.Model.cards.Item;
-import it.polimi.ingsw.am52.Model.cards.ItemsCounter;
+import it.polimi.ingsw.am52.model.cards.Item;
+import it.polimi.ingsw.am52.model.cards.ItemsCounter;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;

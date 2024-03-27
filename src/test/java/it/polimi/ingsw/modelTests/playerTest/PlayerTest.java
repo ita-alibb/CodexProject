@@ -1,11 +1,11 @@
 package it.polimi.ingsw.modelTests.playerTest;
 
-import it.polimi.ingsw.am52.Exceptions.PlayerException;
-import it.polimi.ingsw.am52.Exceptions.PlayingBoardException;
-import it.polimi.ingsw.am52.Model.Player.Player;
-import it.polimi.ingsw.am52.Model.cards.*;
-import it.polimi.ingsw.am52.Model.objectives.Objective;
-import it.polimi.ingsw.am52.Model.playingBoards.BoardSlot;
+import it.polimi.ingsw.am52.exceptions.PlayerException;
+import it.polimi.ingsw.am52.exceptions.PlayingBoardException;
+import it.polimi.ingsw.am52.model.player.Player;
+import it.polimi.ingsw.am52.model.cards.*;
+import it.polimi.ingsw.am52.model.objectives.Objective;
+import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;

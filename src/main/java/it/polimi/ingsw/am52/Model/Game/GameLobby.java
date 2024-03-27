@@ -1,6 +1,6 @@
-package it.polimi.ingsw.am52.Model.Game;
+package it.polimi.ingsw.am52.model.game;
 
-import it.polimi.ingsw.am52.Exceptions.GameException;
+import it.polimi.ingsw.am52.exceptions.GameException;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.modelTests.cardsTest;
 
-import it.polimi.ingsw.am52.Model.cards.Resource;
-import it.polimi.ingsw.am52.Model.cards.ResourcesCounter;
+import it.polimi.ingsw.am52.model.cards.Resource;
+import it.polimi.ingsw.am52.model.cards.ResourcesCounter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
