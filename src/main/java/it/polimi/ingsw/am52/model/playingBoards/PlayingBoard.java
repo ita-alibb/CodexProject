@@ -17,8 +17,8 @@ import it.polimi.ingsw.am52.exceptions.PlayingBoardException;
  * The playing board of a player. The playing board is created from
  * the starter card. Then, Kingdom cards (Gold or Resource) can be placed
  * in available slots. The playing board keep track of the available (visible)
- * resources and items, and the position of each placed card (in order to
- * valuate patterns for objective points).
+ * resources and items, and the locations of each placed card (in order to
+ * validate patterns for objective points).
  */
 public class PlayingBoard implements BoardInfo {
 
@@ -31,23 +31,23 @@ public class PlayingBoard implements BoardInfo {
 
     /**
      * The hash map that keep track of all placed cards. Each time a card is placed
-     * on the playing bord, the card must e added to this map together with it
-     * position (CardSlot).
+     * on the playing bord, the card must be added to this map together with its
+     * location (BoardSlot).
      * @implNote This collection does not contain the starter card.
      */
     private final Map<BoardSlot, KingdomCardFace> placedCards = new HashMap<>();
     
     /**
-     * The set of available position, where a new card can be placed. Every time
+     * The set of available locations, where a new card can be placed. Every time
      * a new card is placed on the playing board, this collection must be updated
      * to remove the occupied slot and add any additional slots.
      */
     private final Set<BoardSlot> availableSlots = new HashSet<>();
 
     /**
-     * The available (visible) resource on the playing board. Every time a new card is
+     * The available (visible) resources on the playing board. Every time a new card is
      * placed on the playing board, this counter must be updated subtracting the 
-     * resource that the new card hides and adding the new resource visible on the
+     * resource that the new card hides and adding the new resources visible on the
      * new card.
      */
     private ResourcesCounter resources;
@@ -176,32 +176,34 @@ public class PlayingBoard implements BoardInfo {
     //region Public Methods
 
     /**
-     * Place a card on an available slot on the playing board and returns the points gained
+     * Place a card on an available location on the playing board and returns the points gained
      * by the player. The status of the playing board is updated as follows:<ul>
-     * <li>The specified slot is removed from the collection of the available slots 
+     * <li>The specified location is removed from the collection of the available slots
      * <li>Eventually, new slots are added to the collection of available slots
      * <li>The resources counter is updated, taking into consideration resources hidden by the
      * placed card and new resources visible on the placed card.
      * <li>The items counter is updated, taking into consideration items hidden by the
      * placed card and new items visible on the placed card.
      * </ul>
-     * @param slot The slot on the playing board where the card is placed.
+     * @param location The location on the playing board where the card is placed.
      * @param card The card to place.
      * @return The points gained by the player.
-     * @throws IllegalArgumentException If the specified slot is not an available slot on the playing board
-     * or the specified card cannot be placed (i.e. there are no required resources).
+     * @throws PlayingBoardException If the specified location is not an available location on the playing board
+     * or the specified card cannot be placed (i.e. there are no required resources, and the method conPlace()
+     * of the card instance returns false).
      */
-    public int placeCard(BoardSlot slot, KingdomCardFace card) throws IllegalArgumentException {
+    public int placeCard(BoardSlot location, KingdomCardFace card) throws PlayingBoardException {
 
         /*
          * Preliminary checks.
          */
-        // Check if the slot is available, otherwise throw an exception.
-        if (!this.availableSlots.contains(slot)) {
-            throw new PlayingBoardException("The specified slot is not available on the playing board.");
+        // Check if the location is available, otherwise throw an exception.
+        if (!this.availableSlots.contains(location)) {
+            throw new PlayingBoardException("The specified location is not available on the playing board.");
         }
 
-        // Check if the card can be placed.
+        // Check if the card can be placed (its required resources are fulfilled by
+        // the available resources of the playing board).
         if (!card.canPlace(this)) {
             throw new PlayingBoardException("The specified card cannot be placed on the playing board.");
         }
@@ -210,23 +212,28 @@ public class PlayingBoard implements BoardInfo {
          * 1) Update the collection of placed cards.
          */
         // Add the card in the collection of the placed cards.
-        this.placedCards.put(slot, card);
+        this.placedCards.put(location, card);
         
         /*
          * 2) Update the collection of available cards.
          */
-        // Remove the slot from the collection of the available slots.
-        this.availableSlots.remove(slot);
+        // Remove the location from the collection of the available slots.
+        this.availableSlots.remove(location);
         
         // Get the list of new available slots.
-        List<BoardSlot> newAvailableSlot = findNewAvailableSlots(slot);
-        this.availableSlots.addAll(newAvailableSlot);
+        List<BoardSlot> newAvailableSlots = findNewAvailableSlots(location);
+        this.availableSlots.addAll(newAvailableSlots);
+
+        // When a new card is placed on the playing board, it may have a
+        // hidden corner that makes an already available location not available
+        // after this card is placed.
+        this.removeInvalidatedSlots(location);
         
         /*
          * 3) Update resources and items
          */
         // Get the list of corners hidden by the placed card.
-        List<CardCorner> hiddenCorners = findHiddenCorners(slot);
+        List<CardCorner> hiddenCorners = findHiddenCorners(location);
         
         // Update resources and items counter, subtracting hidden resources/items.
         for (CardCorner hidden : hiddenCorners) {
@@ -241,10 +248,9 @@ public class PlayingBoard implements BoardInfo {
         
         // Return the points gained by the player by placing the card on
         // the playing board.
-        System.out.println(hiddenCorners.size());
         return card.gainedPoints(this, hiddenCorners.size());
         }
-        
+
     //endregion
     
     //region Private Methods
@@ -290,18 +296,25 @@ public class PlayingBoard implements BoardInfo {
         return hiddenCorners;
     }
 
-    private List<BoardSlot> findNewAvailableSlots(BoardSlot slot) throws IllegalArgumentException {
+    /**
+     * Get a list of available slots at the corner positions of the specified
+     * board location. If the specified board location does not have a card placed
+     * on it, the method return an empty list.
+     * @param location The location to check.
+     * @return The list of available location, linkable to this location.
+     */
+    private List<BoardSlot> findNewAvailableSlots(BoardSlot location) {
 
         // The list hat will contain new available slots.
         final List<BoardSlot> availableSlots = new ArrayList<>();
 
-        // Check if the specified slot has a card placed on it. Otherwise,
+        // Check if the specified location has a card placed on it. Otherwise,
         // return the empty list.
-        if (!this.placedCards.containsKey(slot)) {
+        if (!this.placedCards.containsKey(location)) {
             return availableSlots;
         }
 
-        // The list of candidates available slot, linkable to the specified slot.
+        // The list of candidates available locations, linkable to the specified location.
         List<BoardSlot> candidates = new ArrayList<>();
 
         // The corner locations to check.
@@ -312,32 +325,32 @@ public class PlayingBoard implements BoardInfo {
                 CornerLocation.TOP_LEFT,
         };
 
-        // Get the card on the reference slot.
-        KingdomCardFace refCard = this.placedCards.get(slot);
+        // Get the card on the reference location.
+        Pluggable refCard = this.placedCards.get(location);
 
         // Iterate over each corner and check if the corresponding
-        // neighbor slot is a candidate.
+        // neighbor location is a candidate.
         for (CornerLocation cornerLocation : corners) {
             
             // get the corner of the reference card.
             Optional<CardCorner> corner = refCard.getCornerAt(cornerLocation);
 
             // If the corner is empty, there isn't a candidate available
-            // slot linkable to that corner, so continue to the next corner.
+            // location linkable to that corner, so continue to the next corner.
             if (corner.isEmpty()) {
                 continue;
             }
 
-            // Get the neighbor slot at this corner.
-            BoardSlot neighbor = slot.getSlotAt(cornerLocation);
+            // Get the neighbor location at this corner.
+            BoardSlot neighbor = location.getSlotAt(cornerLocation);
 
-            // If the slot already has a card placed on it, it isn't a candidate
+            // If the location already has a card placed on it, it isn't a candidate
             // so continue to the next corner.
-            if (this.placedCards.containsKey(neighbor)) {
+            if (neighbor.isRootSlot() || this.placedCards.containsKey(neighbor)) {
                 continue;
             }
 
-            // Add the neighbor slot to the list of candidate available slots.
+            // Add the neighbor location to the list of candidate available slots.
             candidates.add(neighbor);
 
             // Check each candidate.
@@ -353,32 +366,34 @@ public class PlayingBoard implements BoardInfo {
     }
     
     /**
-     * Checks if an empty slot of the playing board can be linked to its
-     * neighbor slot at the specified corner.
+     * Checks if an empty location of the playing board can be linked to its
+     * neighbor location at the specified corner.
      * It only checks if:<ul>
-     * <li>The slot is not the root slot of the playing board
-     * <li>The neighbor slot at the corner do not have a card
-     * <li>The neighbor slot at corner have a card, but with a visible
+     * <li>The location is not the root location of the playing board
+     * <li>The neighbor location at the corner do not have a card
+     * <li>The neighbor location at corner have a card, but with a visible
      * linkable corner.
      * </ul>
-     * @param slot The slot to check.
+     * @param location The location to check.
      * @param cornerLocation The location of the corner to check.
-     * @return True if the slot is linkable.
+     * @return True if the location is linkable.
      */
-    private boolean isLinkable(BoardSlot slot, CornerLocation cornerLocation) {
+    private boolean isLinkable(BoardSlot location, CornerLocation cornerLocation) {
 
-        if (slot.isRootSlot()) {
+        // The root location is not linkable by definition (it can only
+        // contain the starter card).
+        if (location.isRootSlot()) {
             return false;
         }
 
-        // Get the neighbor slot at the specified corner.
-        BoardSlot neighbor = slot.getSlotAt(cornerLocation);
+        // Get the neighbor location at the specified corner.
+        BoardSlot neighbor = location.getSlotAt(cornerLocation);
 
-        // Check if the neighbor slot has a card   it.
-        if (this.placedCards.containsKey(neighbor)) {
-            // If there is a card, check if the corner is visible.
-            // Get the card.
-            KingdomCardFace card = this.placedCards.get(neighbor);
+        // Check if the neighbor location has a card on it.
+        if (neighbor.isRootSlot() || this.placedCards.containsKey(neighbor)) {
+            // There is a card on the neighbor location, so get it (can be the
+            // starter card or a kingdom card).
+            Pluggable card = neighbor.isRootSlot() ? this.starterCard : this.placedCards.get(neighbor);
             // Get the appropriate corner.
             Optional<CardCorner> corner = switch (cornerLocation) {
                 case TOP_RIGHT -> card.getCornerAt(CornerLocation.BOTTOM_LEFT);
@@ -396,22 +411,22 @@ public class PlayingBoard implements BoardInfo {
     }
 
     /**
-     * Checks if the specified slot of this playing board can be linked
-     * to all its neighbor slot, i.e. if it is possible to place a card
-     * on that slot.
-     * @param slot The board slot to check.
-     * @return True if it is possible to place a card on the specified slot,
+     * Checks if the specified location of this playing board can be linked
+     * to all its neighbor location, i.e. if it is possible to place a card
+     * on that location.
+     * @param location The board location to check.
+     * @return True if it is possible to place a card on the specified location,
      * false otherwise.
      * @implNote This method does not check the absolute meaning of 'linkable',
-     * because it does NOT if there is at least one card placed at the corner of the slot,
+     * because it does NOT if there is at least one card placed at the corner of the location,
      * in order to link the placed card to that card. For this method, an empty
-     * slot that does not have any card placed around it is linkable.
+     * location that does not have any card placed around it is linkable.
      */
-    private boolean isLinkable(BoardSlot slot) {
+    private boolean isLinkable(BoardSlot location) {
 
-        // The root slot is not linkable by definition (it can only
+        // The root location is not linkable by definition (it can only
         // contain the starter card).
-        if (slot.isRootSlot()) {
+        if (location.isRootSlot()) {
             return false;
         }
 
@@ -423,17 +438,65 @@ public class PlayingBoard implements BoardInfo {
                 CornerLocation.TOP_LEFT,
         };
 
-        // Iterate over all corners. The specified slot is linkable
+        // Iterate over all corners. The specified location is linkable
         // only if ALL its corners are linkable.
         for (CornerLocation cornerLocation : corners) {
             // If at least one corner is not linkable, return false.
-            if (!isLinkable(slot, cornerLocation)) {
+            if (!isLinkable(location, cornerLocation)) {
                 return false;
             }
         }
 
-        // All corners have been checked, thus this slot is linkable.
+        // All corners have been checked, thus this location is linkable.
         return true;
+    }
+
+    /**
+     * Check if the card placed on the specified slot has a hidden corner
+     * that invalidate an available location.
+     * @param location The location where is placed the card that can invalidate
+     *                 neighbor available location.
+     */
+    private void removeInvalidatedSlots(BoardSlot location) {
+        // If there isn't a card placed on the specified location,
+        // return immediately.
+        if (!this.placedCards.containsKey(location)) {
+            return;
+        }
+
+        // Get the card placed at the specified location. Get a pluggable
+        // reference, because I need only corners information.
+        Pluggable card = this.placedCards.get(location);
+
+        // The list of corner locations to check.
+        CornerLocation[] corners = new CornerLocation[]{
+                CornerLocation.TOP_RIGHT,
+                CornerLocation.BOTTOM_RIGHT,
+                CornerLocation.BOTTOM_LEFT,
+                CornerLocation.TOP_LEFT
+        };
+
+        // Check each corner location.
+        for (CornerLocation cornerLocation : corners) {
+            // Get the corner object.
+            Optional<CardCorner> corner = switch (cornerLocation) {
+                case TOP_RIGHT -> card.getTopRightCorner();
+                case BOTTOM_RIGHT -> card.getBottomRightCorner();
+                case BOTTOM_LEFT -> card.getBottomLeftCorner();
+                case TOP_LEFT -> card.getTopLeftCorner();
+            };
+
+            // Check if it is a hidden corner.
+            if (corner.isEmpty()) {
+                // Get the board location linked to this corner.
+                BoardSlot linkedSlot = location.getSlotAt(cornerLocation);
+                // If that linkable location is an available location,
+                // remove from the list (this hidden corner invalidates the
+                // linkable location).
+                this.availableSlots.remove(linkedSlot);
+            }
+        }
+
     }
 
     /**

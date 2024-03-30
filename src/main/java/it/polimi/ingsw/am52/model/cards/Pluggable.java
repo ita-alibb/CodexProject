@@ -30,4 +30,12 @@ public interface Pluggable {
      * @return The (optional) top-left corner of the pluggable element.
      */
     Optional<CardCorner> getTopLeftCorner();
+
+    /**
+     *
+     * @param cornerLocation The location of the corner relative to the pluggable
+     *                       element.
+     * @return The (Optional) corner of the pluggable element.
+     */
+    Optional<CardCorner> getCornerAt(CornerLocation cornerLocation);
 }

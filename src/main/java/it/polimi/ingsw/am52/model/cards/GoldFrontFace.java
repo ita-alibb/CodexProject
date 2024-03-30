@@ -175,7 +175,7 @@ class FungiGoldFrontFace extends GoldFrontFace {
         /* 41 */cards.add(new FungiGoldFrontFace(BLANK_CORNER, FEATHER_CORNER, BLANK_CORNER, null, FEATHER_POINTS, 0, 1, 2,0));
         /* 42 */cards.add(new FungiGoldFrontFace(INK_CORNER, BLANK_CORNER, null, BLANK_CORNER, INK_POINTS, 1, 0, 2, 0));
         /* 43 */cards.add(new FungiGoldFrontFace(BLANK_CORNER, null, BLANK_CORNER, VELLUM_CORNER, VELLUM_POINTS, 0, 0, 2, 1));
-        /* 44 */cards.add(new FungiGoldFrontFace(BLANK_CORNER, BLANK_CORNER, null, BLANK_CORNER, CORNER_POINTS, 3, 1, 0, 0));
+        /* 44 */cards.add(new FungiGoldFrontFace(BLANK_CORNER, BLANK_CORNER, null, BLANK_CORNER, CORNER_POINTS, 0, 1, 3, 0));
         /* 45 */cards.add(new FungiGoldFrontFace(BLANK_CORNER, null, BLANK_CORNER, BLANK_CORNER, CORNER_POINTS, 1, 0, 3, 0));
         /* 46 */cards.add(new FungiGoldFrontFace(null, BLANK_CORNER, BLANK_CORNER, BLANK_CORNER, CORNER_POINTS, 0, 0, 3, 1));
         /* 47 */cards.add(new FungiGoldFrontFace(null, null, INK_CORNER, BLANK_CORNER, THREE_POINTS, 0, 0, 3, 0));
