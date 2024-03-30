@@ -153,8 +153,7 @@ public class Player implements PlayerBoardSetup, PlayerInfo, PlayerDrawing{
     }
 
     /**
-     * Add card to Hand
-     * @param drawnCard The drawnCard to be added in the hand of the player
+     * {@inheritDoc}
      */
     @Override
     public void drawCard(KingdomCard drawnCard) throws PlayerException  {
@@ -170,14 +169,10 @@ public class Player implements PlayerBoardSetup, PlayerInfo, PlayerDrawing{
     }
 
     /**
-     * Method to place the card
-     * @param location The location in which the card is placed
-     * @param card The placedCard that must be removed from the hand of the player
-     * @param face The face chosen
-     * @return The points obtained
+     * {@inheritDoc}
      */
     @Override
-    public int placeCard(BoardSlot location, KingdomCard card, KingdomCardFace face) throws PlayerException {
+    public void placeCard(BoardSlot location, KingdomCard card, KingdomCardFace face) throws PlayerException {
         if (this.cardHand.stream().map(Card::getCardId).noneMatch(id -> id == card.getCardId())){
             throw new PlayerException("Trying to place a card that is not on the player's hand");
         }
@@ -190,6 +185,6 @@ public class Player implements PlayerBoardSetup, PlayerInfo, PlayerDrawing{
 
         this.cardHand.remove(card);
 
-        return bonus;
+        this.score.updateCardScore(bonus);
     }
 }

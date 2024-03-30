@@ -45,26 +45,16 @@ public class PlayerTest {
         /*
          * Playing board not instantiated
          */
-        try {
+        assertThrows(PlayingBoardException.class, () -> {
             currentPlayer.getPlayingBoard();
-            assert (false);
-        } catch (PlayingBoardException ex) {
-            assert (true);
-        } catch (Exception allEx) {
-            assert (false);
-        }
+        });
 
         /*
          * Card face not in player's starter card
          */
-        try {
+        assertThrows(PlayingBoardException.class, () -> {
             currentPlayer.placeStarterCardFace(StarterCard.getCardWithId(81).getFrontFace());
-            assert (false);
-        } catch (PlayingBoardException ex) {
-            assert (true);
-        } catch (Exception allEx) {
-            assert (false);
-        }
+        });
 
         currentPlayer.placeStarterCardFace(currentPlayer.getStarterCard().getFrontFace());
 
@@ -74,14 +64,9 @@ public class PlayerTest {
         /*
          * Playing board already initialized
          */
-        try {
+        assertThrows(PlayingBoardException.class, () -> {
             currentPlayer.placeStarterCardFace(StarterCard.getCardWithId(80).getFrontFace());
-            assert (false);
-        } catch (PlayingBoardException ex) {
-            assert (true);
-        } catch (Exception allEx) {
-            assert (false);
-        }
+        });
     }
 
     /**
@@ -94,102 +79,71 @@ public class PlayerTest {
         /*
          * Remove card from empty hand
          */
-        try {
+        assertThrows(PlayerException.class, () -> {
             currentPlayer.placeCard(new BoardSlot(1,1), GoldCard.getCardWithId(40),  GoldCard.getCardWithId(40).getFrontFace());
-            assert (false);
-        } catch (PlayerException ex) {
-            assert (true);
-        } catch (Exception allEx) {
-            assert (false);
-        }
-        try {
+        });
+
+        assertThrows(PlayerException.class, () -> {
             currentPlayer.placeCard(new BoardSlot(1,1), ResourceCard.getCardWithId(0), ResourceCard.getCardWithId(0).getBackFace());
-            assert (false);
-        } catch (PlayerException ex) {
-            assert (true);
-        } catch (Exception allEx) {
-            assert (false);
-        }
+        });
 
         // Add cards
         currentPlayer.drawCard(GoldCard.getCardWithId(40));
-        currentPlayer.drawCard(ResourceCard.getCardWithId(0));
+        currentPlayer.drawCard(ResourceCard.getCardWithId(18));
 
         /*
          * Duplicated cards
          */
-        try {
+        assertThrows(PlayerException.class, () -> {
             currentPlayer.drawCard(GoldCard.getCardWithId(40));
-            assert (false);
-        } catch (PlayerException ex) {
-            assert (true);
-        } catch (Exception allEx) {
-            assert (false);
-        }
-        try {
-            currentPlayer.drawCard(ResourceCard.getCardWithId(0));
-            assert (false);
-        } catch (PlayerException ex) {
-            assert (true);
-        } catch (Exception allEx) {
-            assert (false);
-        }
+        });
+        assertThrows(PlayerException.class, () -> {
+            currentPlayer.drawCard(ResourceCard.getCardWithId(18));
+        });
 
         currentPlayer.drawCard(GoldCard.getCardWithId(41));
 
         /*
          * More than 3 cards
          */
-        try {
+        assertThrows(PlayerException.class, () -> {
             currentPlayer.drawCard(GoldCard.getCardWithId(42));
-            assert (false);
-        } catch (PlayerException ex) {
-            assert (true);
-        } catch (Exception allEx) {
-            assert (false);
-        }
+        });
 
         /*
          * Remove non-existing card
          */
-        try {
-            currentPlayer.placeCard(new BoardSlot(1,1), GoldCard.getCardWithId(42), GoldCard.getCardWithId(42).getFrontFace() );
-            assert (false);
-        } catch (PlayerException ex) {
-            assert (true);
-        } catch (Exception allEx) {
-            assert (false);
-        }
+        assertThrows(PlayerException.class, () -> {
+            currentPlayer.placeCard(new BoardSlot(1, 1), GoldCard.getCardWithId(42), GoldCard.getCardWithId(42).getFrontFace());
+        });
 
         /*
          * Card Face does not belong to the Card
          */
-        try {
+        assertThrows(PlayerException.class, () -> {
             currentPlayer.placeCard(new BoardSlot(1,1), GoldCard.getCardWithId(40),  GoldCard.getCardWithId(41).getFrontFace());
-            assert (false);
-        } catch (PlayerException ex) {
-            assert (true);
-        } catch (Exception allEx) {
-            assert (false);
-        }
-        try {
-            currentPlayer.placeCard(new BoardSlot(1,1), ResourceCard.getCardWithId(0), ResourceCard.getCardWithId(11).getBackFace());
-            assert (false);
-        } catch (PlayerException ex) {
-            assert (true);
-        } catch (Exception allEx) {
-            assert (false);
-        }
+        });
+        assertThrows(PlayerException.class, () -> {
+            currentPlayer.placeCard(new BoardSlot(1,1), ResourceCard.getCardWithId(18), ResourceCard.getCardWithId(0).getBackFace());
+        });
 
         assertTrue(currentPlayer.getHand().stream().map(Card::getCardId).anyMatch(id -> id == 40));
-        assertTrue(currentPlayer.getHand().stream().map(Card::getCardId).anyMatch(id -> id == 0));
+        assertTrue(currentPlayer.getHand().stream().map(Card::getCardId).anyMatch(id -> id == 18));
         assertTrue(currentPlayer.getHand().stream().map(Card::getCardId).anyMatch(id -> id == 41));
 
         currentPlayer.placeCard(new BoardSlot(1,1), GoldCard.getCardWithId(40), GoldCard.getCardWithId(40).getBackFace());
-        currentPlayer.placeCard(new BoardSlot(2,0), ResourceCard.getCardWithId(0), ResourceCard.getCardWithId(0).getFrontFace());
+        currentPlayer.placeCard(new BoardSlot(2,0), ResourceCard.getCardWithId(18), ResourceCard.getCardWithId(18).getFrontFace());
 
+        /*
+         * Check that cards are removed
+         */
         assertFalse(currentPlayer.getHand().stream().map(Card::getCardId).anyMatch(id -> id == 40));
         assertFalse(currentPlayer.getHand().stream().map(Card::getCardId).anyMatch(id -> id == 0));
         assertTrue(currentPlayer.getHand().stream().map(Card::getCardId).anyMatch(id -> id == 41));
+
+        /*
+         * Check that one point is setted
+         */
+        assertEquals(1, currentPlayer.getScore());
     }
 }
