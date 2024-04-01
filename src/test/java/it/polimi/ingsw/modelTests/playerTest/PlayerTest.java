@@ -19,7 +19,7 @@ public class PlayerTest {
      */
     @BeforeAll
     public static void setUp(){
-        currentPlayer = new Player("Andrea", KingdomColor.RED, Objective.getObjectiveWithId(1), StarterCard.getCardWithId(80));
+        currentPlayer = new Player("Andrea", KingdomColor.RED, StarterCard.getCardWithId(80));
     }
 
     /**

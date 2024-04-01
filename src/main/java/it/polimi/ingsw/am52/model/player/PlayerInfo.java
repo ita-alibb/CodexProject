@@ -61,4 +61,9 @@ public interface PlayerInfo {
      * @return The total score of the Player
      */
     int getScore();
+
+    /**
+     * @return The object Score of the player
+     */
+    int getObjScore();
 }

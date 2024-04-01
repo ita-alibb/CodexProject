@@ -41,7 +41,7 @@ public class Player implements PlayerBoardSetup, PlayerInfo, PlayerDrawing{
     /**
      * The secret Objective
      */
-    private final Objective secretObjective;
+    private Objective secretObjective;
 
     /**
      * The starter Card
@@ -57,18 +57,23 @@ public class Player implements PlayerBoardSetup, PlayerInfo, PlayerDrawing{
      *
      * @param nickname The nickname chosen by the player
      * @param pawnColor The color of the pawn chosen by the player
-     * @param secretObjective The secretObjective drawn by the player
      * @param starterCard The starterCard chosen by the player
      */
-    public Player(String nickname, KingdomColor pawnColor, Objective secretObjective, StarterCard starterCard) {
+    public Player(String nickname, KingdomColor pawnColor, StarterCard starterCard) {
         this.nickname = nickname;
         this.pawnColor = pawnColor;
         this.cardHand = new HashSet<>();
         this.score = new Score();
-        this.secretObjective = secretObjective;
         this.starterCard = starterCard;
     }
 
+    /**
+     * Used to set the secret objective
+     * @param secretObjective The objective chosen by the player
+     */
+    public void setSecretObjective (Objective secretObjective) {
+        this.secretObjective = secretObjective;
+    }
     /**
      * Used to instantiate the Player's PlayingBoard
      *
@@ -150,6 +155,13 @@ public class Player implements PlayerBoardSetup, PlayerInfo, PlayerDrawing{
     @Override
     public int getScore() {
         return this.score.getTotalScore();
+    }
+
+    /**
+     * @return The object Score of the player
+     */
+    public int getObjScore() {
+        return this.score.getObjectiveScore();
     }
 
     /**
