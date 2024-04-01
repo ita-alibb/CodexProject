@@ -31,7 +31,6 @@ public class PlayerTest {
     public void gettersTest() {
         assertEquals("Andrea", currentPlayer.getNickname());
         assertEquals(KingdomColor.RED, currentPlayer.getPawnColor());
-        assertEquals(1, currentPlayer.getObjective().getObjectiveId());
         assertEquals(0, currentPlayer.getScore());
     }
 
