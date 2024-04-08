@@ -206,4 +206,7 @@ public class Objective {
 
     //endregion
 
+    public boolean equals(Objective obj) {
+        return this.objectiveId == obj.getObjectiveId();
+    }
 }

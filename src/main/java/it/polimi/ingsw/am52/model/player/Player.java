@@ -11,22 +11,19 @@ import it.polimi.ingsw.am52.model.playingBoards.BoardInfo;
 import it.polimi.ingsw.am52.model.playingBoards.PlayingBoard;
 import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * The Player Object. The player implements PlayerInfo to expose its properties and PlayerDrawable
  */
-public class Player implements PlayerBoardSetup, PlayerInfo, PlayerDrawing{
+public class Player implements PlayerSetup, PlayerBoardSetup, PlayerInfo, PlayerDrawing{
     /**
      * The Nickname chosen by the Player
      */
     private final String nickname;
-
-    /**
-     * The color chosen by the Player for his pawn
-     */
-    private final KingdomColor pawnColor;
 
     /**
      * The Player's Hand of cards
@@ -39,7 +36,17 @@ public class Player implements PlayerBoardSetup, PlayerInfo, PlayerDrawing{
     private final Score score;
 
     /**
-     * The secret Objective
+     * The first objective drawn
+     */
+    private final Objective firstObjective;
+
+    /**
+     * The second objective drawn
+     */
+    private final Objective secondObjective;
+
+    /**
+     * The secret Objective, chosen between the two
      */
     private Objective secretObjective;
 
@@ -56,22 +63,39 @@ public class Player implements PlayerBoardSetup, PlayerInfo, PlayerDrawing{
     /**
      *
      * @param nickname The nickname chosen by the player
-     * @param pawnColor The color of the pawn chosen by the player
+     * @param firstObjective The first of the two random objectives
+     * @param secondObjective The first of the two random objectives
      * @param starterCard The starterCard chosen by the player
      */
-    public Player(String nickname, KingdomColor pawnColor, StarterCard starterCard) {
+    public Player(String nickname, Objective firstObjective, Objective secondObjective, StarterCard starterCard) {
         this.nickname = nickname;
-        this.pawnColor = pawnColor;
+        this.firstObjective = firstObjective;
+        this.secondObjective = secondObjective;
         this.cardHand = new HashSet<>();
         this.score = new Score();
         this.starterCard = starterCard;
     }
 
     /**
+     * Used to get the secret objective options
+     */
+    @Override
+    public ArrayList<Objective> getObjectiveOptions() {
+        return new ArrayList<>(Arrays.asList(this.firstObjective, this.secondObjective));
+    }
+
+    /**
      * Used to set the secret objective
      * @param secretObjective The objective chosen by the player
      */
-    public void setSecretObjective (Objective secretObjective) {
+    public void setSecretObjective (Objective secretObjective) throws PlayerException {
+        if (!(secretObjective.equals(this.firstObjective) || secretObjective.equals(this.secondObjective))){
+            throw new PlayerException("The chosen card does not belong to the player chooses");
+        }
+        if (this.secretObjective != null){
+            throw  new PlayerException("The secret objective is already set for this player");
+        }
+
         this.secretObjective = secretObjective;
     }
     /**
@@ -98,12 +122,6 @@ public class Player implements PlayerBoardSetup, PlayerInfo, PlayerDrawing{
      */
     @Override
     public String getNickname() { return this.nickname; }
-
-    /**
-     * @return The color of the pawn of the Player
-     */
-    @Override
-    public KingdomColor getPawnColor() { return this.pawnColor; }
 
     /**
      * @return The list of card in the hand of the player as an ImmutableList

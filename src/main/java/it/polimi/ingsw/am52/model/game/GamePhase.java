@@ -4,7 +4,7 @@ package it.polimi.ingsw.am52.model.game;
  * The phases which compose every turn
  */
 
-public enum GameState {
+public enum GamePhase {
     /**
      * The very beginning of the game, the setup phase
      */

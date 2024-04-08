@@ -39,7 +39,7 @@ public class GameManager {
     /**
      * The phase of the current turn
      */
-    private GameState phase;
+    private GamePhase phase;
     /**
      * The common objectives in a game
      */
@@ -114,20 +114,9 @@ public class GameManager {
         this.players = new ArrayList<>();
         for (String player : players) {
             /*
-             * The color of the pawn is chosen depending on the entering order of the players. The order is:
-             *      First player    : Red
-             *      Second player   : Blue
-             *      Third Player    : Green
-             *      Fourth Player   : Yellow (Al momento è viola, perché c'è un'incongruenza tra i colori dei regni e i colori delle pedine)
+             * Draw two random Objective cards and one Starter card to initialize a Player
              */
-            KingdomColor pawnColor = switch (players.indexOf(player)) {
-                case 0 -> KingdomColor.RED;
-                case 1 -> KingdomColor.BLUE;
-                case 2 -> KingdomColor.GREEN;
-                case 3 -> KingdomColor.VIOLET;
-                default -> null;
-            };
-            this.players.add(new Player(player, pawnColor, starterCardDeck.draw()));
+            this.players.add(new Player(player, objectiveDealer.getNextItem(), objectiveDealer.getNextItem() , starterCardDeck.draw()));
             //Add the player to the ScoreBoard, with his initial score, i.e. zero
             this.scoreBoard.put(players.indexOf(player), this.players.get(players.indexOf(player)).getScore());
         }
@@ -138,9 +127,30 @@ public class GameManager {
         //Initialize by default the current player, the turn and the turn phase
         this.currPlayer = 0;
         this.turn = 0;
-        this.phase = GameState.INIT;
+        this.phase = GamePhase.INIT;
     }
 
+    /**
+     * Method used to show to player the two objective to choose
+     * @param playerId the player
+     * @return the player's objectives options
+     */
+    public ArrayList<Objective> getPlayerObjectiveOptions(int playerId){
+        return this.players.get(playerId).getObjectiveOptions();
+    }
+
+    /**
+     * Method used to set the chosen secret objective
+     * @param playerId the player to set
+     * @param objectiveId the objective chosen
+     */
+    public void setPlayerChosenObject(int playerId, int objectiveId){
+        this.players.get(playerId).setSecretObjective(Objective.getObjectiveWithId(objectiveId));
+
+        if(this.players.stream().allMatch(p -> p.getObjective() != null)){
+            this.setGameState(GamePhase.PLACING);
+        }
+    }
     //endregion
 
     //region Private Methods
@@ -150,27 +160,27 @@ public class GameManager {
      * (INIT-->PLACING, PLACING-->DRAWING, DRAWING-->PLACING, DRAWING-->END)
      * @param phase The game phase
      */
-    private void setGameState(GameState phase) throws GameException {
+    private void setGameState(GamePhase phase) throws GameException {
         //Switch on the private field phase
         switch (this.phase) {
             //If the current phase is INIT
             case INIT -> {
                 //If the next phase isn't PLACING, throws an exception
-                if (phase != GameState.PLACING) {
+                if (phase != GamePhase.PLACING) {
                     throw new GameException("The phase of the turn does not match with the action of the player");
                 }
             }
             //If the current phase is PLACING
             case PLACING -> {
                 //If the next phase isn't DRAWING, throws an exception
-                if (phase != GameState.DRAWING) {
+                if (phase != GamePhase.DRAWING) {
                     throw new GameException("The phase of the turn does not match with the action of the player");
                 }
             }
             //If the current phase is DRAWING
             case DRAWING -> {
                 //If the next phase isn't PLACING either END, throws an exception
-                if (phase != GameState.PLACING && phase != GameState.END) {
+                if (phase != GamePhase.PLACING && phase != GamePhase.END) {
                     throw new GameException("The phase of the turn does not match with the action of the player");
                 }
             }
@@ -260,30 +270,17 @@ public class GameManager {
         return visibleCards;
     }
     /**
-     * @return A list of two objectives, so that the player can choose one out of them
-     */
-    public List<Objective> getRandomObjectives() {
-        //Create a new list of Objective
-        List<Objective> objectiveToChoose = new ArrayList<>();
-        //For 2 times, so for 2 cards
-        for (int i = 0; i < 2; i++) {
-            //Add an objective to the list, and return it
-            objectiveToChoose.add(objectiveDealer.getNextItem());
-        }
-        return objectiveToChoose;
-    }
-    /**
      * @return The status of the turn
      */
-    public GameState getStatus() {
-        return phase;
+    public GamePhase getStatus() {
+        return this.phase;
     }
     /**
      * @return The winner or the list of the winners. Could be one or more, in case of a tie.
      */
     public List<PlayerInfo> getWinners() throws GameException {
         //Check if the game is ending
-        if (getStatus() == GameState.END) {
+        if (this.phase != GamePhase.END) {
             throw new GameException("The game is not ended yet!");
         }
         //Create the list of PlayerInfo
@@ -381,8 +378,6 @@ public class GameManager {
      * @param face      The face used by the card, true if front, false if back
      */
     public void placeCard(int h, int v, int cardId, int face) throws GameException {
-        //Check and update the phase of the turn
-        setGameState(GameState.DRAWING);
         //Create the object BoardSlot from the integer coordinates
         BoardSlot slot = new BoardSlot(h, v);
         //Create the object CardSide from the boolean variable
@@ -394,13 +389,13 @@ public class GameManager {
         players.get(currPlayer).placeCard(slot, card, cardFace);
         //Update the value in the ScoreBoard
         updateScoreBoard();
+        //Check and update the phase of the turn
+        setGameState(GamePhase.DRAWING);
     }
     /**
      * Draw a random card from the resource deck
      */
     public void drawResourceCard() throws GameException {
-        //Check the turn phase and set the new one
-        setGameState(GameState.PLACING);
         players.get(currPlayer).drawCard(resourceCardDeck.draw());
         //Update the current player
         currPlayer = (currPlayer + 1) % players.size();
@@ -408,13 +403,13 @@ public class GameManager {
         if (currPlayer == 0) {
             turn++;
         }
+        //Check the turn phase and set the new one
+        setGameState(GamePhase.PLACING);
     }
     /**
      * Draw a random card from the gold deck
      */
     public void drawGoldCard() {
-        //Check and update the turn phase
-        setGameState(GameState.PLACING);
         players.get(currPlayer).drawCard(goldCardDeck.draw());
         //Update the current player
         currPlayer = (currPlayer + 1) % players.size();
@@ -422,14 +417,14 @@ public class GameManager {
         if (currPlayer == 0) {
             turn++;
         }
+        //Check and update the turn phase
+        setGameState(GamePhase.PLACING);
     }
     /**
      * Take the visible resource card on the board and draw another card to fill the gap
      * @param cardId    The ID of the visible card
      */
     public void takeResourceCard(int cardId) {
-        //Check and update the turn phase
-        setGameState(GameState.PLACING);
         //Create the object KingdomCard
         KingdomCard card;
         //If the drawn card is the first card
@@ -458,14 +453,14 @@ public class GameManager {
         if (currPlayer == 0) {
             turn++;
         }
+        //Check and update the turn phase
+        setGameState(GamePhase.PLACING);
     }
     /**
      * Take the visible gold card on the board and draw another card to fill the gap
      * @param cardId    The ID of the visible card
      */
     public void takeGoldCard(int cardId) {
-        //Check and update the turn phase
-        setGameState(GameState.PLACING);
         //Create the object KingdomCard
         KingdomCard card;
         //If the drawn card is the first card
@@ -493,6 +488,8 @@ public class GameManager {
         if (currPlayer == 0) {
             turn++;
         }
+        //Check and update the turn phase
+        setGameState(GamePhase.PLACING);
     }
     /**
      * Report a player disconnected

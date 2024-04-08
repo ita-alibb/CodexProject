@@ -19,7 +19,7 @@ public class PlayerTest {
      */
     @BeforeAll
     public static void setUp(){
-        currentPlayer = new Player("Andrea", KingdomColor.RED, StarterCard.getCardWithId(80));
+        currentPlayer = new Player("Andrea", Objective.getObjectiveWithId(2), Objective.getObjectiveWithId(3), StarterCard.getCardWithId(80));
     }
 
     /**
@@ -30,7 +30,9 @@ public class PlayerTest {
     @DisplayName("Player getters test")
     public void gettersTest() {
         assertEquals("Andrea", currentPlayer.getNickname());
-        assertEquals(KingdomColor.RED, currentPlayer.getPawnColor());
+        assertEquals(2, currentPlayer.getObjectiveOptions().get(0).getObjectiveId());
+        assertEquals(3, currentPlayer.getObjectiveOptions().get(1).getObjectiveId());
+        assertNull(currentPlayer.getObjective());
         assertEquals(0, currentPlayer.getScore());
     }
 
@@ -69,10 +71,36 @@ public class PlayerTest {
     }
 
     /**
-     * Test player Hand management
+     * Test player Objective setup
      */
     @Test
     @Order(3)
+    @DisplayName("Secret Objective setup")
+    public void setObjectiveBoard(){
+        /*
+         * Objective not in Player choices
+         */
+        assertThrows(PlayerException.class, () -> {
+            currentPlayer.setSecretObjective(Objective.getObjectiveWithId(1));
+        });
+
+        currentPlayer.setSecretObjective(Objective.getObjectiveWithId(3));
+
+        assertEquals(3, currentPlayer.getObjective().getObjectiveId());
+
+        /*
+         * Secret objective already set
+         */
+        assertThrows(PlayerException.class, () -> {
+            currentPlayer.setSecretObjective(Objective.getObjectiveWithId(2));
+        });
+    }
+
+    /**
+     * Test player Hand management
+     */
+    @Test
+    @Order(4)
     @DisplayName("Player Hand management")
     public void manageHand(){
         /*
@@ -141,7 +169,7 @@ public class PlayerTest {
         assertTrue(currentPlayer.getHand().stream().map(Card::getCardId).anyMatch(id -> id == 41));
 
         /*
-         * Check that one point is setted
+         * Check that one point is set
          */
         assertEquals(1, currentPlayer.getScore());
     }

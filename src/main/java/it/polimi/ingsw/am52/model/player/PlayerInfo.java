@@ -22,12 +22,6 @@ public interface PlayerInfo {
 
     /**
      *
-     * @return The color of the pawn of the Player
-     */
-    KingdomColor getPawnColor();
-
-    /**
-     *
      * @return The list of card in the hand of the player as an ImmutableList
      */
     ImmutableList<KingdomCard> getHand();
