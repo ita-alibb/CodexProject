@@ -18,6 +18,15 @@ import java.util.*;
 
 public class GameManager {
 
+    //region Static Fields
+
+    /**
+     * The maximum number of players in a lobby
+     */
+    static final int MAX_PLAYERS = 4;
+
+    //endregion
+
     //region Private Fields
 
     /**
@@ -27,7 +36,7 @@ public class GameManager {
     /**
      * The players who disconnected
      */
-    private List<Player> disconnectedPlayers;
+    private final List<Player> disconnectedPlayers;
     /**
      * The player who is playing the turn
      */
@@ -61,17 +70,9 @@ public class GameManager {
      */
     private final Deck<GoldCard> goldCardDeck;
     /**
-     * The deck for the starter cards, useful during the creation of the lobby
-     */
-    private final Deck<StarterCard> starterCardDeck;
-    /**
-     * An object RandomDealer, which represent a false "deck" for objective cards
-     */
-    private final RandomDealer<Objective> objectiveDealer;
-    /**
      * The Scoreboard of the game; it contains the players' score
      */
-    private Dictionary<Integer, Integer> scoreBoard;
+    private final Dictionary<Integer, Integer> scoreBoard;
 
     //endregion
 
@@ -82,8 +83,18 @@ public class GameManager {
      * @param players The nicknames of the players in the lobby
      */
     public GameManager(List<String> players) {
+        //First check on the players list, if greater than MAX_PLAYER throws an exception
+        if (players.size() > MAX_PLAYERS) {
+            throw new GameException("Too many players");
+        }
+        //Second check on the players list, if empty throws an exception
+        if (players.isEmpty()) {
+            throw new GameException("Player list is empty");
+        }
+        //Define the turn phase
+        this.phase = GamePhase.INIT;
         //Create and initialize the dealer, which represents a fictitious deck of objective cards
-        this.objectiveDealer = Objective.getObjectiveDealer();
+        RandomDealer<Objective> objectiveDealer = Objective.getObjectiveDealer();
         objectiveDealer.init();
 
         //Use the dealer of the objectives to get 2 objectives, in common for all the players of the lobby
@@ -95,7 +106,7 @@ public class GameManager {
         //Create the decks of all types of cards required and shuffle them
         this.resourceCardDeck = Deck.getResourceCardsDeck();
         this.goldCardDeck = Deck.getGoldCardsDeck();
-        this.starterCardDeck = Deck.getStarterCardsDeck();
+        Deck<StarterCard> starterCardDeck = Deck.getStarterCardsDeck();
         resourceCardDeck.shuffle();
         goldCardDeck.shuffle();
         starterCardDeck.shuffle();
@@ -112,6 +123,9 @@ public class GameManager {
         this.scoreBoard = new Hashtable<>();
         //Create the objects Player for every string passed to this constructor
         this.players = new ArrayList<>();
+        //Shuffle the list of the players, so that the order is random
+        Collections.shuffle(players);
+        //Iterate for every player
         for (String player : players) {
             /*
              * Draw two random Objective cards and one Starter card to initialize a Player
@@ -119,38 +133,18 @@ public class GameManager {
             this.players.add(new Player(player, objectiveDealer.getNextItem(), objectiveDealer.getNextItem() , starterCardDeck.draw()));
             //Add the player to the ScoreBoard, with his initial score, i.e. zero
             this.scoreBoard.put(players.indexOf(player), this.players.get(players.indexOf(player)).getScore());
+            //Give to each player 2 resource card and 1 gold card in his hand, drawn by the corresponding decks
+            this.players.getLast().drawCard(resourceCardDeck.draw());
+            this.players.getLast().drawCard(resourceCardDeck.draw());
+            this.players.getLast().drawCard(goldCardDeck.draw());
         }
-        //Shuffle the list of the players, so that the order is random
-        Collections.shuffle(players);
         //Initialize the list of the disconnected player, as an empty list
         this.disconnectedPlayers = new ArrayList<>();
-        //Initialize by default the current player, the turn and the turn phase
+        //Initialize by default the current player and the turn number
         this.currPlayer = 0;
         this.turn = 0;
-        this.phase = GamePhase.INIT;
     }
 
-    /**
-     * Method used to show to player the two objective to choose
-     * @param playerId the player
-     * @return the player's objectives options
-     */
-    public ArrayList<Objective> getPlayerObjectiveOptions(int playerId){
-        return this.players.get(playerId).getObjectiveOptions();
-    }
-
-    /**
-     * Method used to set the chosen secret objective
-     * @param playerId the player to set
-     * @param objectiveId the objective chosen
-     */
-    public void setPlayerChosenObject(int playerId, int objectiveId){
-        this.players.get(playerId).setSecretObjective(Objective.getObjectiveWithId(objectiveId));
-
-        if(this.players.stream().allMatch(p -> p.getObjective() != null)){
-            this.setGameState(GamePhase.PLACING);
-        }
-    }
     //endregion
 
     //region Private Methods
@@ -217,6 +211,14 @@ public class GameManager {
      */
     public PlayerInfo getCurrentPlayer() {
         return getPlayer(currPlayer);
+    }
+    /**
+     * Method used to show to player the two objective to choose
+     * @param playerId the player
+     * @return the player's objectives options
+     */
+    public ArrayList<Objective> getPlayerObjectiveOptions(int playerId){
+        return this.players.get(playerId).getObjectiveOptions();
     }
     /**
      * @return The lasting cards in the resource deck
@@ -324,16 +326,7 @@ public class GameManager {
         //Return the value of the winner
         return winners;
     }
-    /**
-     * @return Two objective cards, so that each player can choose one out of them
-     */
-    public List<Objective> getObjectiveToChoose() {
-        List<Objective> cards = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
-            cards.add(objectiveDealer.getNextItem());
-        }
-        return cards;
-    }
+
     /**
      * @return The scoreboard of the game
      */
@@ -346,12 +339,16 @@ public class GameManager {
     //region Setters
 
     /**
-     * Take the chosen objective and set the secret objective of a player
-     * @param playerId          The ID of the player who made the choice
-     * @param secretObjective   The objective chosen
+     * Method used to set the chosen secret objective
+     * @param playerId the player to set
+     * @param objectiveId the objective chosen
      */
-    public void setSecretObjective(int playerId, Objective secretObjective) {
-        players.get(playerId).setSecretObjective(secretObjective);
+    public void setPlayerChosenObject(int playerId, int objectiveId){
+        this.players.get(playerId).setSecretObjective(Objective.getObjectiveWithId(objectiveId));
+
+        if(this.players.stream().allMatch(p -> p.getObjective() != null)){
+            this.setGameState(GamePhase.PLACING);
+        }
     }
 
     //endregion
@@ -378,6 +375,8 @@ public class GameManager {
      * @param face      The face used by the card, true if front, false if back
      */
     public void placeCard(int h, int v, int cardId, int face) throws GameException {
+        //Check and update the phase of the turn
+        setGameState(GamePhase.DRAWING);
         //Create the object BoardSlot from the integer coordinates
         BoardSlot slot = new BoardSlot(h, v);
         //Create the object CardSide from the boolean variable
@@ -389,13 +388,13 @@ public class GameManager {
         players.get(currPlayer).placeCard(slot, card, cardFace);
         //Update the value in the ScoreBoard
         updateScoreBoard();
-        //Check and update the phase of the turn
-        setGameState(GamePhase.DRAWING);
     }
     /**
      * Draw a random card from the resource deck
      */
     public void drawResourceCard() throws GameException {
+        //Check the turn phase and set the new one
+        setGameState(GamePhase.PLACING);
         players.get(currPlayer).drawCard(resourceCardDeck.draw());
         //Update the current player
         currPlayer = (currPlayer + 1) % players.size();
@@ -403,28 +402,27 @@ public class GameManager {
         if (currPlayer == 0) {
             turn++;
         }
-        //Check the turn phase and set the new one
-        setGameState(GamePhase.PLACING);
     }
     /**
      * Draw a random card from the gold deck
      */
     public void drawGoldCard() {
-        players.get(currPlayer).drawCard(goldCardDeck.draw());
+        //Check and update the turn phase
+        setGameState(GamePhase.PLACING);players.get(currPlayer).drawCard(goldCardDeck.draw());
         //Update the current player
         currPlayer = (currPlayer + 1) % players.size();
         //Update the number of the turn, if necessary
         if (currPlayer == 0) {
             turn++;
         }
-        //Check and update the turn phase
-        setGameState(GamePhase.PLACING);
     }
     /**
      * Take the visible resource card on the board and draw another card to fill the gap
      * @param cardId    The ID of the visible card
      */
     public void takeResourceCard(int cardId) {
+        //Check and update the turn phase
+        setGameState(GamePhase.PLACING);
         //Create the object KingdomCard
         KingdomCard card;
         //If the drawn card is the first card
@@ -453,14 +451,14 @@ public class GameManager {
         if (currPlayer == 0) {
             turn++;
         }
-        //Check and update the turn phase
-        setGameState(GamePhase.PLACING);
     }
     /**
      * Take the visible gold card on the board and draw another card to fill the gap
      * @param cardId    The ID of the visible card
      */
     public void takeGoldCard(int cardId) {
+        //Check and update the turn phase
+        setGameState(GamePhase.PLACING);
         //Create the object KingdomCard
         KingdomCard card;
         //If the drawn card is the first card
@@ -488,8 +486,6 @@ public class GameManager {
         if (currPlayer == 0) {
             turn++;
         }
-        //Check and update the turn phase
-        setGameState(GamePhase.PLACING);
     }
     /**
      * Report a player disconnected
@@ -501,8 +497,13 @@ public class GameManager {
          * It could be useful for a system which is resilient to disconnection, because it doesn't block the game,
          * preventing the deletion of the data connected to the player who left.
          */
+        //If the player isn't in the lobby, throws an exception
+        if (playerId >= players.size()) {
+            throw new GameException("The selected player is not in the game");
+        }
         disconnectedPlayers.add(players.get(playerId));
         players.remove(playerId);
+        scoreBoard.remove(playerId);
     }
 
     //endregion
