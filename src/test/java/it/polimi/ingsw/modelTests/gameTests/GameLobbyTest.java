@@ -22,7 +22,7 @@ public class GameLobbyTest {
          * Game lobby too large
          */
         try {
-            lobby = new GameLobby(5);
+            lobby = new GameLobby(1,5);
             assert (false);
         } catch (GameException ex) {
             assert (true);
@@ -34,7 +34,7 @@ public class GameLobbyTest {
          * Game lobby too small
          */
         try {
-            lobby = new GameLobby(1);
+            lobby = new GameLobby(1,1);
             assert (false);
         } catch (GameException ex) {
             assert (true);
@@ -42,7 +42,7 @@ public class GameLobbyTest {
             assert (false);
         }
 
-        lobby = new GameLobby(3);
+        lobby = new GameLobby(1,3);
 
         assertEquals(0,lobby.getPlayersCount());
 
