@@ -1,0 +1,8 @@
+{
+  "method": "createLobby",
+  "data": {
+    "nickname": "Livio",
+    "lobbyName": "Family Lobby",
+    "numPlayers": 4
+  }
+}

@@ -41,7 +41,7 @@ public class ParseTest
         // Parse the server settings.
         ServerSettings settings = null;
         try {
-            settings = ServerSettings.parseFromJson(Files.readString(jsonFilePath));
+            settings = ServerSettings.loadJsonFile(jsonFilePath);
         } catch (IOException ioEx) {
             assert(false);
         }
@@ -78,7 +78,7 @@ public class ParseTest
         // Parse the server settings.
         ServerSettings settings = null;
         try {
-            settings = ServerSettings.parseFromJson(Files.readString(jsonFilePath));
+            settings = ServerSettings.loadJsonFile(jsonFilePath);
         } catch (IOException ioEx) {
             assert(false);
         }
@@ -114,7 +114,7 @@ public class ParseTest
         // Parse the server settings.
         ServerSettings settings = null;
         try {
-            settings = ServerSettings.parseFromJson(Files.readString(jsonFilePath));
+            settings = ServerSettings.loadJsonFile(jsonFilePath);
         } catch (IOException ioEx) {
             assert(false);
         }
@@ -151,7 +151,7 @@ public class ParseTest
         // Parse the server settings.
         ServerSettings settings = null;
         try {
-            settings = ServerSettings.parseFromJson(Files.readString(jsonFilePath));
+            settings = ServerSettings.loadJsonFile(jsonFilePath);
         } catch (IOException ioEx) {
             assert(false);
         }
@@ -187,7 +187,7 @@ public class ParseTest
         // Parse the server settings.
         ServerSettings settings = null;
         try {
-            settings = ServerSettings.parseFromJson(Files.readString(jsonFilePath));
+            settings = ServerSettings.loadJsonFile(jsonFilePath);
         } catch (IOException ioEx) {
             assert(false);
         }
@@ -224,7 +224,7 @@ public class ParseTest
         // Parse the server settings.
         ServerSettings settings = null;
         try {
-            settings = ServerSettings.parseFromJson(Files.readString(jsonFilePath));
+            settings = ServerSettings.loadJsonFile(jsonFilePath);
         } catch (IOException ioEx) {
             assert(false);
         }
@@ -260,7 +260,7 @@ public class ParseTest
         // Parse the server settings.
         ServerSettings settings = null;
         try {
-            settings = ServerSettings.parseFromJson(Files.readString(jsonFilePath));
+            settings = ServerSettings.loadJsonFile(jsonFilePath);
         } catch (IOException ioEx) {
             assert(false);
         }
@@ -296,7 +296,7 @@ public class ParseTest
         // Parse the server settings.
         ServerSettings settings = null;
         try {
-            settings = ServerSettings.parseFromJson(Files.readString(jsonFilePath));
+            settings = ServerSettings.loadJsonFile(jsonFilePath);
         } catch (IOException ioEx) {
             assert(false);
         }
@@ -332,7 +332,7 @@ public class ParseTest
         // Parse the server settings.
         ServerSettings settings = null;
         try {
-            settings = ServerSettings.parseFromJson(Files.readString(jsonFilePath));
+            settings = ServerSettings.loadJsonFile(jsonFilePath);
         } catch (IOException ioEx) {
             assert(false);
         }
@@ -368,7 +368,7 @@ public class ParseTest
         // Parse the server settings.
         ServerSettings settings = null;
         try {
-            settings = ServerSettings.parseFromJson(Files.readString(jsonFilePath));
+            settings = ServerSettings.loadJsonFile(jsonFilePath);
         } catch (IOException ioEx) {
             assert(false);
         }
@@ -404,7 +404,7 @@ public class ParseTest
         // Parse the server settings.
         ServerSettings settings = null;
         try {
-            settings = ServerSettings.parseFromJson(Files.readString(jsonFilePath));
+            settings = ServerSettings.loadJsonFile(jsonFilePath);
         } catch (IOException ioEx) {
             assert(false);
         }
@@ -439,7 +439,7 @@ public class ParseTest
         // Parse the server settings.
         ServerSettings settings = null;
         try {
-            settings = ServerSettings.parseFromJson(Files.readString(jsonFilePath));
+            settings = ServerSettings.loadJsonFile(jsonFilePath);
         } catch (IOException ioEx) {
             assert(false);
         }
@@ -476,7 +476,7 @@ public class ParseTest
         // Parse the server settings.
         ServerSettings settings = null;
         try {
-            settings = ServerSettings.parseFromJson(Files.readString(jsonFilePath));
+            settings = ServerSettings.loadJsonFile(jsonFilePath);
             assert (false);
         } catch (JsonProcessingException ioEx) {
             assert(true);
@@ -510,7 +510,7 @@ public class ParseTest
         // Parse the server settings.
         ServerSettings settings = null;
         try {
-            settings = ServerSettings.parseFromJson(Files.readString(jsonFilePath));
+            settings = ServerSettings.loadJsonFile(jsonFilePath);
         } catch (IOException ioEx) {
             assert(false);
         }
@@ -549,7 +549,46 @@ public class ParseTest
         // Parse the server settings.
         ServerSettings settings = null;
         try {
-            settings = ServerSettings.parseFromJson(Files.readString(jsonFilePath));
+            settings = ServerSettings.loadJsonFile(jsonFilePath);
+        } catch (IOException ioEx) {
+            assert(false);
+        }
+
+        // The port number is equal to the value read from file.
+        assertEquals(3325, settings.getPort());
+        // The max lobbies is equal to the value read from file.
+        assertEquals(99, settings.getMaxLobbies());
+        // The verbosity is equal to the value read from file.
+        assertEquals(VerbosityLevel.WARNING, settings.getVerbosity());
+    }
+
+    /**
+     * Test the parseFromJson() method in case the json file has all
+     * three settings, but with the maxLobbies value as string "99",
+     * not integer value 99.
+     */
+    @Test
+    @DisplayName("Test file settings16.json")
+    public void testSettings16()
+    {
+        // This file has all three settings' values:
+        // {
+        //   "port": 3325,
+        //   "maxLobbies": "99",
+        //   "verbosity": "warning"
+        // }
+
+        // Path and filename of the json settings file.
+        final String path = "src/test/java/it/polimi/ingsw/modelTests/serverSettingsTest";
+        final String jsonFileName = "settings16.json";
+        final Path jsonFilePath = Path.of(path, jsonFileName);
+        // Check if the file exists.
+        assertTrue(Files.exists(jsonFilePath));
+
+        // Parse the server settings.
+        ServerSettings settings = null;
+        try {
+            settings = ServerSettings.loadJsonFile(jsonFilePath);
         } catch (IOException ioEx) {
             assert(false);
         }

@@ -7,4 +7,7 @@ module it.polimi.ingsw.am52 {
 
     opens it.polimi.ingsw.am52 to javafx.fxml;
     exports it.polimi.ingsw.am52;
+
+    exports it.polimi.ingsw.am52.json to com.fasterxml.jackson.databind;
+    opens it.polimi.ingsw.am52.json to com.fasterxml.jackson.databind;
 }

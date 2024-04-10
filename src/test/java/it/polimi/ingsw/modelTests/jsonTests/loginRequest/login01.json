@@ -1,0 +1,7 @@
+{
+  "method": "login",
+  "data": {
+    "nickname": "Livio",
+    "lobbyId": 668
+  }
+}
