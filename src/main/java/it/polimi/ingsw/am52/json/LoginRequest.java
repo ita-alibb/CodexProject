@@ -1,15 +1,12 @@
 package it.polimi.ingsw.am52.json;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 /**
- * The login request object. The method is "login" and the
+ * The login request object. The method of this request is "login" and the
  * data is a LoginData object.
  */
 public class LoginRequest extends ClientRequest<LoginData> {
 
-    //region Constructor
+    //region Constructors
 
     /**
      * Creates a login request with the specified login data.
@@ -17,6 +14,16 @@ public class LoginRequest extends ClientRequest<LoginData> {
      */
     public LoginRequest(LoginData loginData) {
         super(loginData);
+    }
+
+    /**
+     * Creates a login request with the specified player's nickname
+     * and lobby id.
+     * @param nickname The nickname of the player.
+     * @param lobbyId The id of the lobby where to login.
+     */
+    public LoginRequest(String nickname, int lobbyId) {
+        this(new LoginData(nickname, lobbyId));
     }
 
     //endregion

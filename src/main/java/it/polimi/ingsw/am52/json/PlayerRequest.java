@@ -1,9 +1,5 @@
 package it.polimi.ingsw.am52.json;
 
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 /**
  * The base class of all client request's messages regarding a player
  * action for the game. All these requests have a "playerId" and "lobbyId"

@@ -1,8 +1,5 @@
 package it.polimi.ingsw.am52.json;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 /**
  * The base class of all client request's messages.
  * @author Livio B.

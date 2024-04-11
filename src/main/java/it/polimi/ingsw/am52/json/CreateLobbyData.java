@@ -2,6 +2,8 @@ package it.polimi.ingsw.am52.json;
 
 /**
  * The object representing the data for the createLobby method.
+ * The createLobby method requires the nickname of the player, the
+ * name of the lobby and the number of player for the game.
  */
 public class CreateLobbyData {
 

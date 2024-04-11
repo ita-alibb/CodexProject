@@ -2,6 +2,8 @@ package it.polimi.ingsw.am52.json;
 
 /**
  * The object representing the data for the login method.
+ * The login method needs the nickname of the player and
+ * the id of the lobby where o login.
  */
 public class LoginData {
 
@@ -13,7 +15,7 @@ public class LoginData {
     private final String nickname;
 
     /**
-     * The id of the desired lobby.
+     * The id of the lobby to login into.
      */
     private final int lobbyId;
 
@@ -53,7 +55,7 @@ public class LoginData {
 
     /**
      *
-     * @return The id of the lobby where to login.
+     * @return The id of the where to login.
      */
     public int getLobbyId() {
         return lobbyId;

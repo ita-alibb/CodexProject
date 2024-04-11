@@ -1,0 +1,9 @@
+{
+  "method": "placeCard",
+  "playerId": 4,
+  "lobbyId": 633,
+  "data": {
+    "cardId": 11,
+    "face": "front"
+  }
+}

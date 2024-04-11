@@ -6,7 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * The base class of all json messages. All json requests
  * have a "method" and "data" properties. All requests have a method able to
- * convert the object in a json text string.
+ * convert the object in a json text string representing the state of the
+ * object itself.
  * @author Livio B.
  */
 public abstract class JsonMessage<TData> {
@@ -35,6 +36,10 @@ public abstract class JsonMessage<TData> {
 
     //region Getters
 
+    /**
+     *
+     * @return The data associated to this message.
+     */
     public TData getData() {
         return this.data;
     }
@@ -45,13 +50,14 @@ public abstract class JsonMessage<TData> {
 
     /**
      *
-     * @return The method of this client request.
+     * @return The method associated to this message.
      */
     public abstract String getMethod();
 
     /**
-     * Convert this request in a json text string.
-     * @return The json text representing this request.
+     * Convert this message in a json text string representing the state
+     * of the message itself.
+     * @return The json text representing this message.
      * @throws JsonProcessingException If a json processing error occurs.
      */
     public String toJson() throws JsonProcessingException {

@@ -1,0 +1,8 @@
+{
+  "method": "takeCard",
+  "playerId": 4,
+  "lobbyId": 2335,
+  "data": {
+    "type": "resource"
+  }
+}

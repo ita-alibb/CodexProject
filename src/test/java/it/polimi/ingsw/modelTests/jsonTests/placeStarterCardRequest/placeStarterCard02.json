@@ -1,0 +1,8 @@
+{
+  "method": "placeStarterCard",
+  "playerId": 1,
+  "lobbyId": 136,
+  "data": {
+    "face": "back"
+  }
+}

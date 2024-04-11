@@ -14,6 +14,8 @@ import java.util.Iterator;
  */
 public class JsonDeserializer {
 
+    //region Public Static Methods
+
     /**
      * Parse a json text representing a request from the client and return the appropriate
      * java object.
@@ -42,6 +44,10 @@ public class JsonDeserializer {
         throw new IOException("Field \"method\" not found in json object.");
     }
 
+    //endregion
+
+    //region Private Static Methods
+
     /**
      * Deserialize the jsonNode into the appropriate java request object.
      * @param jsonNode The json node to deserialize.
@@ -60,6 +66,10 @@ public class JsonDeserializer {
             // Cases with also "playerId" and "lobbyId" fields (inherit from PlayerRequest).
             case "leaveGame":
             case "selectObjective":
+            case "placeStarterCard":
+            case "placeCard":
+            case "drawCard":
+            case "takeCard":
                 return deserializePlayerRequest(jsonNode, method);
             // Unknown method.
             default:
@@ -102,6 +112,22 @@ public class JsonDeserializer {
                 SelectObjectiveData data = objectMapper.readValue(jsonNode.get("data").toString(), SelectObjectiveData.class);
                 yield new SelectObjectiveRequest(playerId, lobbyId, data);
             }
+            case "placeStarterCard" -> {
+                PlaceCardData data = objectMapper.readValue(jsonNode.get("data").toString(), PlaceCardData.class);
+                yield new PlaceStarterCardRequest(playerId, lobbyId, data);
+            }
+            case "placeCard" -> {
+                PlaceCardData data = objectMapper.readValue(jsonNode.get("data").toString(), PlaceCardData.class);
+                yield new PlaceCardRequest(playerId, lobbyId, data);
+            }
+            case "drawCard" -> {
+                DrawCardData data = objectMapper.readValue(jsonNode.get("data").toString(), DrawCardData.class);
+                yield new DrawCardRequest(playerId, lobbyId, data);
+            }
+            case "takeCard" -> {
+                TakeCardData data = objectMapper.readValue(jsonNode.get("data").toString(), TakeCardData.class);
+                yield new TakeCardRequest(playerId, lobbyId, data);
+            }
             // Unknown method.
             default -> throw new IOException(String.format("Unknown method \"%s\".", method));
         };
@@ -132,4 +158,6 @@ public class JsonDeserializer {
             default -> throw new IOException(String.format("Unknown method \"%s\".", method));
         };
     }
+
+    //endregion
 }
