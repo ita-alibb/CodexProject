@@ -32,7 +32,7 @@ public class SelectObjectiveRequestTest
         final int lobbyId = 556;
 
         // The method name.
-        final String methodName = "selectObjective";
+        final String methodName = JsonDeserializer.SELECT_OBJECTIVE_METHOD;
 
         // Select objective data.
         final int objectiveId = 13;
@@ -55,14 +55,23 @@ public class SelectObjectiveRequestTest
         // all fields and their values.
         JsonNode jsonNode = getJsonNode(jsonText);
 
-        // Check there are two and only two fields, named "method" and "data".
-        checkNodeFieldNames(jsonNode, "playerId", "lobbyId", "method", "data");
+        // Check there are four and only four fields, named "playerId", lobbyId",
+        // "method", and "data".
+        checkNodeFieldNames(jsonNode,
+                JsonDeserializer.PLAYER_ID_FIELD,
+                JsonDeserializer.LOBBY_ID_FIELD,
+                JsonDeserializer.METHOD_FIELD,
+                JsonDeserializer.DATA_FIELD);
 
         // Check the method is "selectObjective".
-        checkNodeFiledStringValue(jsonNode, "method", methodName);
+        checkNodeFiledStringValue(jsonNode, JsonDeserializer.METHOD_FIELD, methodName);
+        // Check the value of the "playerId" field.
+        checkNodeFiledIntValue(jsonNode, JsonDeserializer.PLAYER_ID_FIELD, playerId);
+        // Check the value of the "lobbyId" field.
+        checkNodeFiledIntValue(jsonNode, JsonDeserializer.LOBBY_ID_FIELD, lobbyId);
 
         // Inspect the data object.
-        JsonNode dataNode = jsonNode.get("data");
+        JsonNode dataNode = jsonNode.get(JsonDeserializer.DATA_FIELD);
 
         // Check there are one and only one filed "objectiveId".
         checkNodeFieldNames(dataNode, "objectiveId");
@@ -106,7 +115,7 @@ public class SelectObjectiveRequestTest
         // Parse the json text.
         try {
             SelectObjectiveRequest request = (SelectObjectiveRequest)JsonDeserializer.deserializeRequest(jsonText);
-            assertEquals("selectObjective", request.getMethod());
+            assertEquals(JsonDeserializer.SELECT_OBJECTIVE_METHOD, request.getMethod());
             assertEquals(2, request.getPlayerId());
             assertEquals(941, request.getLobbyId());
             assertEquals(9, request.getData().getObjectiveId());
@@ -151,7 +160,7 @@ public class SelectObjectiveRequestTest
         // Parse the json text.
         try {
             SelectObjectiveRequest request = (SelectObjectiveRequest)JsonDeserializer.deserializeRequest(jsonText);
-            assertEquals("selectObjective", request.getMethod());
+            assertEquals(JsonDeserializer.SELECT_OBJECTIVE_METHOD, request.getMethod());
             assertEquals(2, request.getPlayerId());
             assertEquals(941, request.getLobbyId());
             assertEquals(-1, request.getData().getObjectiveId());

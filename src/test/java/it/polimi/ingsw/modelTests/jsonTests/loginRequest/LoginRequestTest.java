@@ -30,7 +30,7 @@ public class LoginRequestTest
     public void toJsonTest()
     {
         // The method name.
-        final String methodName = "login";
+        final String methodName = JsonDeserializer.LOGIN_METHOD;
 
         // Login data.
         final String nickname = "livio";
@@ -55,13 +55,13 @@ public class LoginRequestTest
         JsonNode jsonNode = getJsonNode(jsonText);
 
         // Check there are two and only two fields, named "method" and "data".
-        checkNodeFieldNames(jsonNode, "method", "data");
+        checkNodeFieldNames(jsonNode, JsonDeserializer.METHOD_FIELD, JsonDeserializer.DATA_FIELD);
 
         // Check the method is "login".
-        checkNodeFiledStringValue(jsonNode, "method", methodName);
+        checkNodeFiledStringValue(jsonNode, JsonDeserializer.METHOD_FIELD, methodName);
 
         // Inspect the data object.
-        JsonNode dataNode = jsonNode.get("data");
+        JsonNode dataNode = jsonNode.get(JsonDeserializer.DATA_FIELD);
 
         // Check there are two and only two fields, named "nickname" and "lobbyId".
         checkNodeFieldNames(dataNode, "nickname", "lobbyId");
@@ -105,7 +105,7 @@ public class LoginRequestTest
         // Parse the json text.
         try {
             LoginRequest request = (LoginRequest)JsonDeserializer.deserializeRequest(jsonText);
-            assertEquals("login", request.getMethod());
+            assertEquals(JsonDeserializer.LOGIN_METHOD, request.getMethod());
             assertEquals("Livio", request.getData().getNickname());
             assertEquals(668, request.getData().getLobbyId());
         } catch (IOException e) {
@@ -148,7 +148,7 @@ public class LoginRequestTest
         // Parse the json text.
         try {
             LoginRequest request = (LoginRequest)JsonDeserializer.deserializeRequest(jsonText);
-            assertEquals("login", request.getMethod());
+            assertEquals(JsonDeserializer.LOGIN_METHOD, request.getMethod());
             assertEquals("Livio", request.getData().getNickname());
             assertEquals(-1, request.getData().getLobbyId());
             assert(true);

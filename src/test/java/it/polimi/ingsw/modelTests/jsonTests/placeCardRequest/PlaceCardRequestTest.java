@@ -34,7 +34,7 @@ public class PlaceCardRequestTest
         final int lobbyId = 4229;
 
         // The method name.
-        final String methodName = "placeCard";
+        final String methodName = JsonDeserializer.PLACE_CARD_METHOD;
 
         // Place card data.
         final int cardId = 31;
@@ -58,14 +58,23 @@ public class PlaceCardRequestTest
         // all fields and their values.
         JsonNode jsonNode = getJsonNode(jsonText);
 
-        // Check there are two and only two fields, named "method" and "data".
-        checkNodeFieldNames(jsonNode, "playerId", "lobbyId", "method", "data");
+        // Check there are four and only four fields, named "playerId", lobbyId",
+        // "method", and "data".
+        checkNodeFieldNames(jsonNode,
+                JsonDeserializer.PLAYER_ID_FIELD,
+                JsonDeserializer.LOBBY_ID_FIELD,
+                JsonDeserializer.METHOD_FIELD,
+                JsonDeserializer.DATA_FIELD);
 
-        // Check the method is "selectObjective".
-        checkNodeFiledStringValue(jsonNode, "method", methodName);
+        // Check the method is "placeCard".
+        checkNodeFiledStringValue(jsonNode, JsonDeserializer.METHOD_FIELD, methodName);
+        // Check the value of the "playerId" field.
+        checkNodeFiledIntValue(jsonNode, JsonDeserializer.PLAYER_ID_FIELD, playerId);
+        // Check the value of the "lobbyId" field.
+        checkNodeFiledIntValue(jsonNode, JsonDeserializer.LOBBY_ID_FIELD, lobbyId);
 
         // Inspect the data object.
-        JsonNode dataNode = jsonNode.get("data");
+        JsonNode dataNode = jsonNode.get(JsonDeserializer.DATA_FIELD);
 
         // Check there are two and only two fields "cardId" and "face".
         checkNodeFieldNames(dataNode, "cardId", "face");
@@ -111,7 +120,7 @@ public class PlaceCardRequestTest
         // Parse the json text.
         try {
             PlaceCardRequest request = (PlaceCardRequest)JsonDeserializer.deserializeRequest(jsonText);
-            assertEquals("placeCard", request.getMethod());
+            assertEquals(JsonDeserializer.PLACE_CARD_METHOD, request.getMethod());
             assertEquals(4, request.getPlayerId());
             assertEquals(633, request.getLobbyId());
             assertEquals(11, request.getData().getCardId());
@@ -158,7 +167,7 @@ public class PlaceCardRequestTest
         // Parse the json text.
         try {
             PlaceCardRequest request = (PlaceCardRequest)JsonDeserializer.deserializeRequest(jsonText);
-            assertEquals("placeCard", request.getMethod());
+            assertEquals(JsonDeserializer.PLACE_CARD_METHOD, request.getMethod());
             assertEquals(1, request.getPlayerId());
             assertEquals(332, request.getLobbyId());
             assertEquals(11, request.getData().getCardId());

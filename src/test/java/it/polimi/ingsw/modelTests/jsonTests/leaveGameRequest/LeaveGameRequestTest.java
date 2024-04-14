@@ -32,7 +32,7 @@ public class LeaveGameRequestTest
         final int lobbyId = 1036;
 
         // The method name.
-        final String methodName = "leaveGame";
+        final String methodName = JsonDeserializer.LEAVE_GAME_METHOD;
 
         // Leave game data.
         final String message = "Goodbye to all!";
@@ -55,18 +55,23 @@ public class LeaveGameRequestTest
         // all fields and their values.
         JsonNode jsonNode = getJsonNode(jsonText);
 
-        // Check there are four and only four fields, named "method" and "data".
-        checkNodeFieldNames(jsonNode, "playerId", "lobbyId", "method", "data");
+        // Check there are four and only four fields, named "playerId", lobbyId",
+        // "method", and "data".
+        checkNodeFieldNames(jsonNode,
+                JsonDeserializer.PLAYER_ID_FIELD,
+                JsonDeserializer.LOBBY_ID_FIELD,
+                JsonDeserializer.METHOD_FIELD,
+                JsonDeserializer.DATA_FIELD);
 
         // Check the method is "leaveGame".
-        checkNodeFiledStringValue(jsonNode, "method", methodName);
-        // Check the playerId.
-        checkNodeFiledIntValue(jsonNode, "playerId", playerId);
-        // Check the lobbyId.
-        checkNodeFiledIntValue(jsonNode, "lobbyId", lobbyId);
+        checkNodeFiledStringValue(jsonNode, JsonDeserializer.METHOD_FIELD, methodName);
+        // Check the value of the "playerId" field.
+        checkNodeFiledIntValue(jsonNode, JsonDeserializer.PLAYER_ID_FIELD, playerId);
+        // Check the value of the "lobbyId" field.
+        checkNodeFiledIntValue(jsonNode, JsonDeserializer.LOBBY_ID_FIELD, lobbyId);
 
         // Inspect the data object.
-        JsonNode dataNode = jsonNode.get("data");
+        JsonNode dataNode = jsonNode.get(JsonDeserializer.DATA_FIELD);
 
         // Check there are one and only one field, named "message".
         checkNodeFieldNames(dataNode, "message");
@@ -111,7 +116,7 @@ public class LeaveGameRequestTest
             LeaveGameRequest request = (LeaveGameRequest) JsonDeserializer.deserializeRequest(jsonText);
             assertEquals(1, request.getPlayerId());
             assertEquals(335, request.getLobbyId());
-            assertEquals("leaveGame", request.getMethod());
+            assertEquals(JsonDeserializer.LEAVE_GAME_METHOD, request.getMethod());
             assertEquals("Bye Bye!", request.getData().getMessage());
         } catch (IOException e) {
             System.out.println(e.getMessage());

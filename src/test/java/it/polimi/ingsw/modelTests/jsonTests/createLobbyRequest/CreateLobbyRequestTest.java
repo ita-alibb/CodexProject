@@ -27,7 +27,7 @@ public class CreateLobbyRequestTest
     public void toJsonTest()
     {
         // The method name.
-        final String methodName = "createLobby";
+        final String methodName = JsonDeserializer.CREATE_LOBBY_METHOD;
 
         // Create lobby data.
         final String nickname = "Livio";
@@ -53,13 +53,13 @@ public class CreateLobbyRequestTest
         JsonNode jsonNode = getJsonNode(jsonText);
 
         // Check there are two and only two fields, named "method" and "data".
-        checkNodeFieldNames(jsonNode, "method", "data");
+        checkNodeFieldNames(jsonNode, JsonDeserializer.METHOD_FIELD, JsonDeserializer.DATA_FIELD);
 
-        // Check the method is "login".
-        checkNodeFiledStringValue(jsonNode, "method", methodName);
+        // Check the method is "createLobby".
+        checkNodeFiledStringValue(jsonNode, JsonDeserializer.METHOD_FIELD, methodName);
 
         // Inspect the data object.
-        JsonNode dataNode = jsonNode.get("data");
+        JsonNode dataNode = jsonNode.get(JsonDeserializer.DATA_FIELD);
 
         // Check there are two and only two fields, named "nickname" and "lobbyId".
         checkNodeFieldNames(dataNode, "nickname", "numPlayers", "lobbyName");
@@ -105,7 +105,7 @@ public class CreateLobbyRequestTest
         // Parse the json text.
         try {
             CreateLobbyRequest request = (CreateLobbyRequest)JsonDeserializer.deserializeRequest(jsonText);
-            assertEquals("createLobby", request.getMethod());
+            assertEquals(JsonDeserializer.CREATE_LOBBY_METHOD, request.getMethod());
             assertEquals("Livio", request.getData().getNickname());
             assertEquals("Family Lobby", request.getData().getLobbyName());
             assertEquals(4, request.getData().getNumPlayers());
@@ -149,7 +149,7 @@ public class CreateLobbyRequestTest
         // Parse the json text.
         try {
             CreateLobbyRequest request = (CreateLobbyRequest)JsonDeserializer.deserializeRequest(jsonText);
-            assertEquals("createLobby", request.getMethod());
+            assertEquals(JsonDeserializer.CREATE_LOBBY_METHOD, request.getMethod());
             assertEquals("Livio", request.getData().getNickname());
             assertEquals("", request.getData().getLobbyName());
             assertEquals(-1, request.getData().getNumPlayers());

@@ -34,7 +34,7 @@ public class DrawCardRequestTest
         final int lobbyId = 1065;
 
         // The method name.
-        final String methodName = "drawCard";
+        final String methodName = JsonDeserializer.DRAW_CARD_METHOD;
 
         // Draw card data.
         final String deck = "resource";
@@ -57,14 +57,23 @@ public class DrawCardRequestTest
         // all fields and their values.
         JsonNode jsonNode = getJsonNode(jsonText);
 
-        // Check there are two and only two fields, named "method" and "data".
-        checkNodeFieldNames(jsonNode, "playerId", "lobbyId", "method", "data");
+        // Check there are four and only four fields, named "playerId", lobbyId",
+        // "method", and "data".
+        checkNodeFieldNames(jsonNode,
+                JsonDeserializer.PLAYER_ID_FIELD,
+                JsonDeserializer.LOBBY_ID_FIELD,
+                JsonDeserializer.METHOD_FIELD,
+                JsonDeserializer.DATA_FIELD);
 
         // Check the method is "selectObjective".
-        checkNodeFiledStringValue(jsonNode, "method", methodName);
+        checkNodeFiledStringValue(jsonNode, JsonDeserializer.METHOD_FIELD, methodName);
+        // Check the value of the "playerId" field.
+        checkNodeFiledIntValue(jsonNode, JsonDeserializer.PLAYER_ID_FIELD, playerId);
+        // Check the value of the "lobbyId" field.
+        checkNodeFiledIntValue(jsonNode, JsonDeserializer.LOBBY_ID_FIELD, lobbyId);
 
         // Inspect the data object.
-        JsonNode dataNode = jsonNode.get("data");
+        JsonNode dataNode = jsonNode.get(JsonDeserializer.DATA_FIELD);
 
         // Check there is one and only one field "deck".
         checkNodeFieldNames(dataNode, "deck");
@@ -108,7 +117,7 @@ public class DrawCardRequestTest
         // Parse the json text.
         try {
             DrawCardRequest request = (DrawCardRequest)JsonDeserializer.deserializeRequest(jsonText);
-            assertEquals("drawCard", request.getMethod());
+            assertEquals(JsonDeserializer.DRAW_CARD_METHOD, request.getMethod());
             assertEquals(2, request.getPlayerId());
             assertEquals(89, request.getLobbyId());
             assertEquals("gold", request.getData().getDeck());
@@ -153,7 +162,7 @@ public class DrawCardRequestTest
         // Parse the json text.
         try {
             DrawCardRequest request = (DrawCardRequest)JsonDeserializer.deserializeRequest(jsonText);
-            assertEquals("drawCard", request.getMethod());
+            assertEquals(JsonDeserializer.DRAW_CARD_METHOD, request.getMethod());
             assertEquals(2, request.getPlayerId());
             assertEquals(89, request.getLobbyId());
             assertEquals("", request.getData().getDeck());
