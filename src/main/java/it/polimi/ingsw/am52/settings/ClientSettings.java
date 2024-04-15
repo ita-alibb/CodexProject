@@ -21,7 +21,7 @@ public class ClientSettings {
     /**
      * The network mode (Socket or RMI).
      */
-    private final NetworkMode network;
+    private final NetworkMode networkMode;
 
     //endregion
 
@@ -38,7 +38,7 @@ public class ClientSettings {
         this.ip = ip;
         this.port = port;
         this.mode = mode;
-        this.network = network;
+        this.networkMode = network;
     }
 
     //endregion
@@ -73,8 +73,8 @@ public class ClientSettings {
      *
      * @return The network: Socket (json) or RMI.
      */
-    public NetworkMode getNetwork() {
-        return network;
+    public NetworkMode getNetworkMode() {
+        return networkMode;
     }
 
 

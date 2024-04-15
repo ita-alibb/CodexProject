@@ -1,0 +1,6 @@
+{
+  "port": 3365,
+  "verbosity": "verbose",
+  "network": "rmi",
+  "maxLobbies": 9999
+}

@@ -2,20 +2,11 @@ package it.polimi.ingsw.am52.settings;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalInt;
 
 public class CmdLineArgsReader {
 
     //region Public Static Final Fields
-
-    /**
-     * The minimum allowed port number.
-     */
-    public static final int PORT_MIN = 1024;
-
-    /**
-     * The maximum allowed port number.
-     */
-    public static final int PORT_MAX = 65035;
 
     public static final ClientMode DEFAULT_CLIENT_MODE = ClientMode.GRAPHICAL;
     public static final NetworkMode DEFAULT_NETWORK_MODE = NetworkMode.SOCKET;
@@ -77,8 +68,123 @@ public class CmdLineArgsReader {
         };
     }
 
+    /**
+     *
+     * @param params The arguments entered for the application.
+     * @param options The options entered at the command line, after the initial params.
+     * @return The application startup settings.
+     * @throws IllegalArgumentException If there are invalid format or options.
+     */
     private static ApplicationSettings readServerSettings(List<String> params, List<String> options) {
-        throw new UnsupportedOperationException();
+
+        // Note: I don't check the length of the params list, because this is a private method
+        //       and I assume it is always called with params.size() == (0 or 1).
+
+        // In server mode, there is an optional parameter, that is the desired port number
+        // for the connection.
+        OptionalInt portNumber =
+                (params.size() == 1) ? // Is there an argument?
+                OptionalInt.of(parsePortNumber(params.getFirst())) : // Yes, parse it for the port value
+                OptionalInt.empty(); // No, assign empty value
+        // If the port number is specified, assume port mode = "fixed", otherwise it is "auto".
+        PortMode portMode =
+                portNumber.isEmpty() ? PortMode.AUTO : PortMode.FIXED;
+
+        // Default settings, these are app settings if no options
+        // are entered at the command line.
+        int maxLobbies = ServerSettings.DEF_MAX_LOBBIES;
+        NetworkMode networkMode = ServerSettings.DEF_NETWORK;
+        VerbosityLevel verbosity = ServerSettings.DEF_VERBOSITY;
+
+        // Parse all remaining options.
+        for (int i = 0; i != options.size(); i++) {
+            // Get the i-th option.
+            String option = options.get(i);
+            // Validate option flag.
+            if (!validateFlag(option, Mode.SERVER)) {
+                throw new IllegalArgumentException(
+                        String.format("Illegal option %s for the application (mode %s).",
+                                option, Mode.SERVER)
+                );
+            }
+
+            // Switch option flag.
+            switch (option) {
+                // -r/--rmi: enable RMI network.
+                case "-r":
+                case "--rmi":
+                    networkMode = NetworkMode.RMI;
+                    break;
+                // -r/--rmi: enable RMI network.
+                case "-a":
+                case "--auto":
+                    portMode = PortMode.AUTO;
+                    break;
+                // -l/--limit: the maximum number of concurrent lobbies.
+                case "-l":
+                case "--limit":
+                    // This option requires a parameter.
+                    if ((i+1) == options.size()) {
+                        throw new IllegalArgumentException(
+                                String.format("The option %s requires the number of max lobbies.", "-l/--limit")
+                        );
+                    }
+                    String maxLobbiesText = options.get(i+1);
+                    try {
+                        maxLobbies = Integer.parseInt(maxLobbiesText);
+                        if (maxLobbies < 1) {
+                            throw new IllegalArgumentException(
+                                    String.format("Invalid value %d for max lobbies argument.", maxLobbies)
+                            );
+                        }
+                        // Skip next option in the for loop.
+                        i++;
+                    } catch (NumberFormatException ex) {
+                        throw new IllegalArgumentException(
+                                String.format("Invalid value %s for option %s.", maxLobbiesText, "-l/--limit")
+                        );
+
+                    }
+                    break;
+                // -v/--verbosity: the verbosity level for the server's log.
+                case "-v":
+                case "--verbosity":
+                    // This option requires a parameter.
+                    if ((i+1) == options.size()) {
+                        throw new IllegalArgumentException(
+                                String.format("The option %s requires the value of verbosity level.", "-v/--verbosity")
+                        );
+                    }
+                    String verbosityText = options.get(i+1);
+                    try {
+                        int verbosityLevel = Integer.parseInt(verbosityText);
+                        verbosity = switch (verbosityLevel) {
+                            case 1 -> VerbosityLevel.ERROR;
+                            case 2 -> VerbosityLevel.WARNING;
+                            case 3 -> VerbosityLevel.INFO;
+                            case 4 -> VerbosityLevel.VERBOSE;
+                            default -> throw new IllegalArgumentException(
+                                    String.format("Invalid value %d for verbosity level argument.", verbosityLevel)
+                            );
+                        };
+                        // Skip next option in the for loop.
+                        i++;
+                    } catch (NumberFormatException ex) {
+                        throw new IllegalArgumentException(
+                                String.format("Invalid value %s for option %s.", verbosityText, "-v/--verbosity")
+                        );
+
+                    }
+                    break;
+            }
+        }
+
+        ServerSettings serverSettings =
+                portNumber.isEmpty() ?
+                        new ServerSettings(maxLobbies, verbosity, networkMode) :
+                        new ServerSettings(maxLobbies, portNumber.getAsInt(), verbosity, networkMode, portMode);
+
+        return new ApplicationSettings(serverSettings);
     }
 
     /**
@@ -153,14 +259,14 @@ public class CmdLineArgsReader {
         }
 
         // Check if the port number is in the allowed range.
-        if (port >= PORT_MIN && port <= PORT_MAX) {
+        if (port >= ServerSettings.PORT_MIN && port <= ServerSettings.PORT_MAX) {
             return port;
         }
 
         // The port number is outside the allowed range.
         throw new IllegalArgumentException(
                 String.format("Port number %d out of valid range [%d, %d]",
-                        port, PORT_MIN, PORT_MAX)
+                        port, ServerSettings.PORT_MIN, ServerSettings.PORT_MAX)
         );
     }
 
@@ -207,7 +313,10 @@ public class CmdLineArgsReader {
     }
 
     private static boolean validateServerFlag(String flag) {
-        throw new UnsupportedOperationException();
+        return switch (flag) {
+            case "-r", "--rmi", "-l", "--limit", "-a", "--auto", "v", "--verbosity" -> true;
+            default -> false;
+        };
     }
 
     /**

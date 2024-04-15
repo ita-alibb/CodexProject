@@ -1,4 +1,4 @@
-package it.polimi.ingsw.am52.server;
+package it.polimi.ingsw.am52.settings;
 
 public enum VerbosityLevel {
     VERBOSE,

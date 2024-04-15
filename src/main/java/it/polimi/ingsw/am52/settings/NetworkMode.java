@@ -11,5 +11,13 @@ public enum NetworkMode {
     /**
      * RMI mode.
      */
-    RMI
+    RMI;
+
+    public static NetworkMode parse(String value) {
+        return switch (value.toLowerCase()) {
+            case "socket" -> NetworkMode.SOCKET;
+            case "rmi" -> NetworkMode.RMI;
+            default -> throw new IllegalArgumentException();
+        };
+    }
 }
