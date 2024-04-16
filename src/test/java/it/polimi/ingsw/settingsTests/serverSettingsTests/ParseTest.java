@@ -1,4 +1,4 @@
-package it.polimi.ingsw.settingsTests.serverSettingsTest;
+package it.polimi.ingsw.settingsTests.serverSettingsTests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import it.polimi.ingsw.am52.settings.NetworkMode;
@@ -13,14 +13,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.OptionalInt;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit test for ServerSettings class.
  */
 public class ParseTest
 {
+    public static final String PATH = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTests";
+
     /**
      * Test the parseFromJson() method in case the json file has only
      * the port setting value.
@@ -35,9 +36,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings01.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
@@ -76,9 +76,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings02.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
@@ -116,9 +115,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings03.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
@@ -157,9 +155,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings04.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
@@ -197,9 +194,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings05.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
@@ -220,7 +216,7 @@ public class ParseTest
         // The network mode is equal to the default value.
         assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
-        assertEquals(ServerSettings.DEF_MODE_PORT, settings.getPortMode());
+        assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
     }
 
     /**
@@ -238,9 +234,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings06.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
@@ -261,7 +256,7 @@ public class ParseTest
         // The network mode is equal to the default value.
         assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
-        assertEquals(ServerSettings.DEF_MODE_PORT, settings.getPortMode());
+        assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
     }
 
     /**
@@ -278,9 +273,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings07.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
@@ -301,7 +295,7 @@ public class ParseTest
         // The network mode is equal to the default value.
         assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
-        assertEquals(ServerSettings.DEF_MODE_PORT, settings.getPortMode());
+        assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
     }
 
     /**
@@ -318,9 +312,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings08.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
@@ -341,7 +334,7 @@ public class ParseTest
         // The network mode is equal to the default value.
         assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
-        assertEquals(ServerSettings.DEF_MODE_PORT, settings.getPortMode());
+        assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
     }
 
     /**
@@ -358,9 +351,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings09.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
@@ -381,7 +373,7 @@ public class ParseTest
         // The network mode is equal to the default value.
         assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
-        assertEquals(ServerSettings.DEF_MODE_PORT, settings.getPortMode());
+        assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
     }
 
     /**
@@ -398,9 +390,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings10.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
@@ -421,7 +412,7 @@ public class ParseTest
         // The network mode is equal to the default value.
         assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
-        assertEquals(ServerSettings.DEF_MODE_PORT, settings.getPortMode());
+        assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
     }
 
     /**
@@ -438,9 +429,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings11.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
@@ -461,7 +451,7 @@ public class ParseTest
         // The network mode is equal to the default value.
         assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
-        assertEquals(ServerSettings.DEF_MODE_PORT, settings.getPortMode());
+        assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
     }
 
     /**
@@ -477,9 +467,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings12.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
@@ -500,7 +489,7 @@ public class ParseTest
         // The network mode is equal to the default value.
         assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
-        assertEquals(ServerSettings.DEF_MODE_PORT, settings.getPortMode());
+        assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
     }
 
     /**
@@ -518,9 +507,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings13.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
@@ -551,9 +539,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings14.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
@@ -594,9 +581,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings15.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
@@ -637,9 +623,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings16.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
@@ -677,9 +662,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings17.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
@@ -700,7 +684,7 @@ public class ParseTest
         // The network mode is equal to the default value.
         assertEquals(NetworkMode.SOCKET, settings.getNetworkMode());
         // The port mode.
-        assertEquals(ServerSettings.DEF_MODE_PORT, settings.getPortMode());
+        assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
     }
 
     /**
@@ -717,9 +701,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings18.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
@@ -740,7 +723,7 @@ public class ParseTest
         // The network mode is equal to the default value.
         assertEquals(NetworkMode.RMI, settings.getNetworkMode());
         // The port mode.
-        assertEquals(ServerSettings.DEF_MODE_PORT, settings.getPortMode());
+        assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
     }
 
     /**
@@ -760,9 +743,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings19.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
@@ -800,9 +782,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings20.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
@@ -840,9 +821,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings21.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
@@ -881,9 +861,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings22.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
@@ -922,9 +901,8 @@ public class ParseTest
         // }
 
         // Path and filename of the json settings file.
-        final String path = "src/test/java/it/polimi/ingsw/settingsTests/serverSettingsTest";
         final String jsonFileName = "settings23.json";
-        final Path jsonFilePath = Path.of(path, jsonFileName);
+        final Path jsonFilePath = Path.of(PATH, jsonFileName);
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 

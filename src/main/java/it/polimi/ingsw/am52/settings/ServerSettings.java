@@ -3,7 +3,6 @@ package it.polimi.ingsw.am52.settings;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.impl.AsExistingPropertyTypeSerializer;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,6 +16,8 @@ import java.util.OptionalInt;
  * @author Livio B.
  */
 public class ServerSettings {
+    public static final int MAX_LOBBIES = 10000;
+    public static final int MIN_LOBBIES = 1;
 
     //region Private Fields
 
@@ -77,7 +78,7 @@ public class ServerSettings {
     /**
      * The default mode for selecting the port for the connection.
      */
-    public static final PortMode DEF_MODE_PORT = PortMode.AUTO;
+    public static final PortMode DEF_PORT_MODE = PortMode.AUTO;
 
     //endregion
 
@@ -86,7 +87,7 @@ public class ServerSettings {
     /**
      * The server settings with all settings set to their default values.
      */
-    private static final ServerSettings defaultSettings = new ServerSettings(DEF_MAX_LOBBIES, DEF_PORT, DEF_VERBOSITY, DEF_NETWORK, DEF_MODE_PORT);
+    private static final ServerSettings defaultSettings = new ServerSettings(DEF_MAX_LOBBIES, DEF_PORT, DEF_VERBOSITY, DEF_NETWORK, DEF_PORT_MODE);
 
     //endregion
 
@@ -445,7 +446,7 @@ public class ServerSettings {
             return PortMode.parse(value);
         } catch (Exception e) {
             // On parsing error, return default server verbosity level.
-            return DEF_MODE_PORT;
+            return DEF_PORT_MODE;
         }
     }
 

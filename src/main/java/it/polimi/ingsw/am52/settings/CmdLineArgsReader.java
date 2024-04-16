@@ -1,26 +1,93 @@
 package it.polimi.ingsw.am52.settings;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.OptionalInt;
+import it.polimi.ingsw.am52.util.ImmutableList;
+
+import java.util.*;
 
 public class CmdLineArgsReader {
 
-    //region Public Static Final Fields
+    //region Private Static Fields
 
-    public static final ClientMode DEFAULT_CLIENT_MODE = ClientMode.GRAPHICAL;
-    public static final NetworkMode DEFAULT_NETWORK_MODE = NetworkMode.SOCKET;
+    /**
+     * The list of the options available for the server mode.
+     */
+    private static ImmutableList<Option> serverOptions = null;
+
+    /**
+     * The list of the options available for the client mode.
+     */
+    private static ImmutableList<Option> clientOptions = null;
 
     //endregion
 
     //region Public Static Methods
 
     /**
+     *
+     * @return The list of available options for the server mode.
+     */
+    public static ImmutableList<Option> getServerOptions() {
+
+        if (serverOptions == null) {
+
+            List<Option> options = new ArrayList<>();
+            options.add(new AutoOption());
+            options.add(new LimitOption());
+            options.add(new VerbosityOption());
+            options.add(new RmiOption());
+
+            serverOptions = new ImmutableList<>(options);
+        }
+
+        return serverOptions;
+    }
+
+    /**
+     *
+     * @return The list of available options for the server mode.
+     */
+    public static ImmutableList<Option> getClientOptions() {
+
+        if (clientOptions == null) {
+
+            List<Option> options = new ArrayList<>();
+            options.add(new TuiOption());
+            options.add(new RmiOption());
+
+            clientOptions = new ImmutableList<>(options);
+        }
+
+        return clientOptions;
+    }
+
+    /**
      * Processes the command line arguments and return an instance of
      * the application settings, configured with the specified settings.
+     * To ask for help without running the application, the user must
+     * enter only the help flag (-h/--help), without any parameter or
+     * additional options.
+     * <ul>Server args:
+     *     <li>port: optional argument, the port number.</li>
+     *     <li>-a/--auto: automatic selection of the port number. If the port number
+     *     has been passed as an argument, the server first try to open the connection
+     *     on the specified port number. If it is not available, the server automatically
+     *     iterate in order to find an available port in the range [1024,65535]</li>
+     *     <li>-r/--rmi: user RMI network communication.</li>
+     *     <li>-l/-limit maxLobbies: limit the maximum number of concurrent games on the
+     *     server to the value maxLobbies (>=1)</li>
+     *     <li>-v/--verbosity lvl: set the verbosity of the server logging, to the value lvl,
+     *     in range [1,4]</li>
+     * </ul>
+     * <ul>Client args:
+     *     <li>ip: the ip address of the server (required).</li>
+     *     <li>port: the port number (required).</li>
+     *     <li>-t/--tui: run in textual mode, instead of default graphical mode</li>
+     *     <li>-r/--rmi: user RMI network communication.</li>
+     * </ul>
      * @param args The array of string representing the command line arguments.
      * @return The application startup settings.
-     * @throws IllegalArgumentException If there are invalid format or options.
+     * @throws IllegalArgumentException If there are invalid format for options.
+     * @author Livio B.
      */
     public static CmdLineArgs readCmdLineArgs(String[] args) {
         // Check if the user required to show the help, without running the
@@ -31,6 +98,7 @@ public class CmdLineArgsReader {
             return CmdLineArgs.getShowHelpSettings();
         }
 
+        // Process command line args for application's settings.
         return new CmdLineArgs(readSettings(args));
     }
 
@@ -44,6 +112,7 @@ public class CmdLineArgsReader {
      * @param args The array of string representing the command line arguments.
      * @return The application settings.
      * @throws IllegalArgumentException If there are invalid format or options.
+     * @author Livio B.
      */
     private static ApplicationSettings readSettings(String[] args) {
         // Get the list of params.
@@ -90,7 +159,7 @@ public class CmdLineArgsReader {
         PortMode portMode =
                 portNumber.isEmpty() ? PortMode.AUTO : PortMode.FIXED;
 
-        // Default settings, these are app settings if no options
+        // Default settings, these are the app settings if no options
         // are entered at the command line.
         int maxLobbies = ServerSettings.DEF_MAX_LOBBIES;
         NetworkMode networkMode = ServerSettings.DEF_NETWORK;
@@ -111,70 +180,37 @@ public class CmdLineArgsReader {
             // Switch option flag.
             switch (option) {
                 // -r/--rmi: enable RMI network.
-                case "-r":
-                case "--rmi":
+                case RmiOption.SHORT_FLAG:
+                case RmiOption.LONG_FLAG:
                     networkMode = NetworkMode.RMI;
                     break;
+
                 // -r/--rmi: enable RMI network.
-                case "-a":
-                case "--auto":
+                case AutoOption.SHORT_FLAG:
+                case AutoOption.LONG_FLAG:
                     portMode = PortMode.AUTO;
                     break;
+
                 // -l/--limit: the maximum number of concurrent lobbies.
-                case "-l":
-                case "--limit":
+                case LimitOption.SHORT_FLAG:
+                case LimitOption.LONG_FLAG:
+                    LimitOption limitOpt = new LimitOption();
                     // This option requires a parameter.
-                    if ((i+1) == options.size()) {
-                        throw new IllegalArgumentException(
-                                String.format("The option %s requires the number of max lobbies.", "-l/--limit")
-                        );
-                    }
-                    String maxLobbiesText = options.get(i+1);
-                    try {
-                        maxLobbies = Integer.parseInt(maxLobbiesText);
-                        if (maxLobbies < 1) {
-                            throw new IllegalArgumentException(
-                                    String.format("Invalid value %d for max lobbies argument.", maxLobbies)
-                            );
-                        }
-                        // Skip next option in the for loop.
-                        i++;
-                    } catch (NumberFormatException ex) {
-                        throw new IllegalArgumentException(
-                                String.format("Invalid value %s for option %s.", maxLobbiesText, "-l/--limit")
-                        );
-
-                    }
+                    String maxLobbiesText = getOptionArgument(i, options, limitOpt);
+                    maxLobbies = limitOpt.parseValueText(maxLobbiesText);
+                    // Skip next option in the for loop (it was the argument).
+                    i++;
                     break;
-                // -v/--verbosity: the verbosity level for the server's log.
-                case "-v":
-                case "--verbosity":
-                    // This option requires a parameter.
-                    if ((i+1) == options.size()) {
-                        throw new IllegalArgumentException(
-                                String.format("The option %s requires the value of verbosity level.", "-v/--verbosity")
-                        );
-                    }
-                    String verbosityText = options.get(i+1);
-                    try {
-                        int verbosityLevel = Integer.parseInt(verbosityText);
-                        verbosity = switch (verbosityLevel) {
-                            case 1 -> VerbosityLevel.ERROR;
-                            case 2 -> VerbosityLevel.WARNING;
-                            case 3 -> VerbosityLevel.INFO;
-                            case 4 -> VerbosityLevel.VERBOSE;
-                            default -> throw new IllegalArgumentException(
-                                    String.format("Invalid value %d for verbosity level argument.", verbosityLevel)
-                            );
-                        };
-                        // Skip next option in the for loop.
-                        i++;
-                    } catch (NumberFormatException ex) {
-                        throw new IllegalArgumentException(
-                                String.format("Invalid value %s for option %s.", verbosityText, "-v/--verbosity")
-                        );
 
-                    }
+                // -v/--verbosity: the verbosity level for the server's log.
+                case VerbosityOption.SHORT_FLAG:
+                case VerbosityOption.LONG_FLAG:
+                    VerbosityOption verbosityOpt = new VerbosityOption();
+                    // This option requires a parameter.
+                    String verbosityText = getOptionArgument(i, options, verbosityOpt);
+                    verbosity = verbosityOpt.parseValueText(verbosityText);
+                    // Skip next option in the for loop (it was the argument).
+                    i++;
                     break;
             }
         }
@@ -185,6 +221,25 @@ public class CmdLineArgsReader {
                         new ServerSettings(maxLobbies, portNumber.getAsInt(), verbosity, networkMode, portMode);
 
         return new ApplicationSettings(serverSettings);
+    }
+
+    /**
+     * If an option requires an argument, this method get the string next to the option flag
+     * in the args list.
+     * @param optionIndex The index of the args list.
+     * @param options The list of all args.
+     * @param option The option.
+     * @return The text of the argument for the specified option.
+     * @throws IllegalArgumentException If there isn't any string after next to the specified option.
+     */
+    private static String getOptionArgument(int optionIndex, List<String> options, Option option) {
+        if ((optionIndex+1) >= options.size()) {
+            throw new IllegalArgumentException(
+                    String.format("The option %s/%s requires an argument.",
+                            option.getShortFlag(), option.getLongFlag())
+            );
+        }
+        return options.get(optionIndex+1);
     }
 
     /**
@@ -207,8 +262,8 @@ public class CmdLineArgsReader {
 
         // Default settings, these are app settings if no options
         // are entered at the command line.
-        ClientMode  clientMode = DEFAULT_CLIENT_MODE;
-        NetworkMode networkMode = DEFAULT_NETWORK_MODE;
+        ClientMode  clientMode = ClientSettings.DEFAULT_CLIENT_MODE;
+        NetworkMode networkMode = ClientSettings.DEFAULT_NETWORK_MODE;
 
         // Parse all remaining options.
         for (String option : options) {
@@ -223,13 +278,13 @@ public class CmdLineArgsReader {
             // Switch option flag.
             switch (option) {
                 // -r/--rmi: enable RMI network.
-                case "-r":
-                case "--rmi":
+                case RmiOption.SHORT_FLAG:
+                case RmiOption.LONG_FLAG:
                     networkMode = NetworkMode.RMI;
                     break;
                 // -t/--tui: run in textual mode.
-                case "-t":
-                case "--tui":
+                case TuiOption.SHORT_FLAG:
+                case TuiOption.LONG_FLAG:
                     clientMode = ClientMode.TEXTUAL;
                     break;
             }
@@ -314,7 +369,7 @@ public class CmdLineArgsReader {
 
     private static boolean validateServerFlag(String flag) {
         return switch (flag) {
-            case "-r", "--rmi", "-l", "--limit", "-a", "--auto", "v", "--verbosity" -> true;
+            case "-r", "--rmi", "-l", "--limit", "-a", "--auto", "-v", "--verbosity" -> true;
             default -> false;
         };
     }

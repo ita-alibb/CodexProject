@@ -1,6 +1,8 @@
 package it.polimi.ingsw.am52.settings;
 
 public class ClientSettings {
+    public static final ClientMode DEFAULT_CLIENT_MODE = ClientMode.GRAPHICAL;
+    public static final NetworkMode DEFAULT_NETWORK_MODE = NetworkMode.SOCKET;
 
     //region Private Fields
 

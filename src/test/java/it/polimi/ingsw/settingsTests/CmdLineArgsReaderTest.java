@@ -4,7 +4,6 @@ import it.polimi.ingsw.am52.settings.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
 import java.util.OptionalInt;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,26 +56,14 @@ public class CmdLineArgsReaderTest
         // Test client running mode with an extra invalid argument (36).
         argsString = "127.0.0.1 5635 36";
         args = getArgs(argsString);
-
-        try {
-            // Parse the command line args.
-            cmdArgs = CmdLineArgsReader.readCmdLineArgs(args);
-            assert(false);
-        } catch (IllegalArgumentException ex) {
-            assert(true);
-        }
+        // Check the read method throws IllegalArgumentException.
+        checkReadThrows(args);
 
         // Test inverted order of the two arguments.
         argsString = "5635 127.0.0.1";
         args = getArgs(argsString);
-
-        try {
-            // Parse the command line args.
-            cmdArgs = CmdLineArgsReader.readCmdLineArgs(args);
-            assert(false);
-        } catch (IllegalArgumentException ex) {
-            assert(true);
-        }
+        // Check the read method throws IllegalArgumentException.
+        checkReadThrows(args);
 
         // Test lower limit of the port number.
         int port = ServerSettings.PORT_MIN;
@@ -99,25 +86,19 @@ public class CmdLineArgsReaderTest
         // Test (wrong) value (MIN-1).
         argsString = "127.0.0.1 " + (ServerSettings.PORT_MIN - 1);
         args = getArgs(argsString);
-        try {
-            // Parse the command line args.
-            cmdArgs = CmdLineArgsReader.readCmdLineArgs(args);
-            assert(false);
-        } catch (IllegalArgumentException ex) {
-            assert(true);
-        }
+        // Check the read method throws IllegalArgumentException.
+        checkReadThrows(args);
 
         // Test (wrong) value (MAX+1).
         argsString = "127.0.0.1 " + (ServerSettings.PORT_MAX + 1);
         args = getArgs(argsString);
-        try {
-            // Parse the command line args.
-            cmdArgs = CmdLineArgsReader.readCmdLineArgs(args);
-            assert(false);
-        } catch (IllegalArgumentException ex) {
-            assert(true);
-        }
+        // Check the read method throws IllegalArgumentException.
+        checkReadThrows(args);
 
+    }
+
+    private static void checkReadThrows(String[] args) {
+        assertThrows(IllegalArgumentException.class, () -> CmdLineArgsReader.readCmdLineArgs(args));
     }
 
     private static void checkClientPortNumber(int expected, CmdLineArgs args) {
@@ -151,24 +132,14 @@ public class CmdLineArgsReaderTest
         // Test wrong multiple options (client mode).
         argsString = "localhost 2236 -h -t";
         args = getArgs(argsString);
-
-        try {
-            cmdArgs = CmdLineArgsReader.readCmdLineArgs(args);
-            assert (false);
-        } catch (IllegalArgumentException ex) {
-            assert(true);
-        }
+        // Check the read method throws IllegalArgumentException.
+        checkReadThrows(args);
 
         // Test wrong multiple options (client mode).
         argsString = "localhost 2236 --help -r";
         args = getArgs(argsString);
-
-        try {
-            cmdArgs = CmdLineArgsReader.readCmdLineArgs(args);
-            assert (false);
-        } catch (IllegalArgumentException ex) {
-            assert(true);
-        }
+        // Check the read method throws IllegalArgumentException.
+        checkReadThrows(args);
     }
 
     /**
@@ -459,7 +430,7 @@ public class CmdLineArgsReaderTest
                 ServerSettings.DEF_MAX_LOBBIES,
                 ServerSettings.DEF_NETWORK,
                 ServerSettings.DEF_VERBOSITY,
-                ServerSettings.DEF_MODE_PORT
+                ServerSettings.DEF_PORT_MODE
         );
 
         // Test server running mode with one valid argument (port number).
@@ -519,27 +490,15 @@ public class CmdLineArgsReaderTest
         // use one less than the lower limit.
         argsString = String.format("%d", ServerSettings.PORT_MIN - 1);
         args = getArgs(argsString);
-
-        try {
-            // Parse the command line args.
-            cmdArgs = CmdLineArgsReader.readCmdLineArgs(args);
-            assert(false);
-        } catch (IllegalArgumentException ex) {
-            assert(true);
-        }
+        // Check the read method throws IllegalArgumentException.
+        checkReadThrows(args);
 
         // Test server running mode with one invalid argument (port number),
         // use one over than the upper limit.
         argsString = String.format("%d", ServerSettings.PORT_MAX + 1);
         args = getArgs(argsString);
-
-        try {
-            // Parse the command line args.
-            cmdArgs = CmdLineArgsReader.readCmdLineArgs(args);
-            assert(false);
-        } catch (IllegalArgumentException ex) {
-            assert(true);
-        }
+        // Check the read method throws IllegalArgumentException.
+        checkReadThrows(args);
 
     }
 
@@ -571,7 +530,7 @@ public class CmdLineArgsReaderTest
                 ServerSettings.DEF_MAX_LOBBIES,
                 ServerSettings.DEF_NETWORK,
                 ServerSettings.DEF_VERBOSITY,
-                ServerSettings.DEF_MODE_PORT
+                ServerSettings.DEF_PORT_MODE
         );
 
         // Test server running mode (no arguments), but the
@@ -589,7 +548,7 @@ public class CmdLineArgsReaderTest
                 ServerSettings.DEF_MAX_LOBBIES,
                 ServerSettings.DEF_NETWORK,
                 ServerSettings.DEF_VERBOSITY,
-                ServerSettings.DEF_MODE_PORT
+                ServerSettings.DEF_PORT_MODE
         );
 
         // Test server running mode with one valid argument (port number),
@@ -657,7 +616,7 @@ public class CmdLineArgsReaderTest
                 ServerSettings.DEF_MAX_LOBBIES,
                 NetworkMode.RMI,
                 ServerSettings.DEF_VERBOSITY,
-                ServerSettings.DEF_MODE_PORT
+                ServerSettings.DEF_PORT_MODE
         );
 
         // Test server running mode (no arguments), but the
@@ -675,7 +634,7 @@ public class CmdLineArgsReaderTest
                 ServerSettings.DEF_MAX_LOBBIES,
                 NetworkMode.RMI,
                 ServerSettings.DEF_VERBOSITY,
-                ServerSettings.DEF_MODE_PORT
+                ServerSettings.DEF_PORT_MODE
         );
 
         // Test server running mode with one valid argument (port number),
@@ -733,7 +692,340 @@ public class CmdLineArgsReaderTest
         );
     }
 
-    private static void checkServerCmdLineArgs(CmdLineArgs args, OptionalInt port, int maxLobbies, NetworkMode network, VerbosityLevel verbodity, PortMode portMode) {
+    /**
+     * The user can set log verbosity of the server: <ul>
+     *     <li>-v/--verbosity lvl: set the verbosity to level lvl, in range [1, 4]</li>
+     *     <li>no options: verbosity level is 3 (info)</li>
+     * </ul>.
+     * Test if the CmdLineArgsReader.readCmdLineArgs() works correctly
+     * for this option.
+     */
+    @Test
+    @DisplayName("-v/--verbosity test")
+    public void verbosityTest() {
+
+        // Test server running mode (no arguments), without any option.
+        // The default verbosity level is info (3).
+        String argsString = "";
+        String[] args = getArgs(argsString);
+        checkVerbosity(VerbosityLevel.INFO, args);
+
+        // Test server running mode with the port argument, without any option.
+        // The default verbosity level is info (3).
+        argsString = "1335";
+        args = getArgs(argsString);
+        checkVerbosity(VerbosityLevel.INFO, args);
+
+        // Test server running mode (no arguments).
+        // Set verbosity level to 1;
+        argsString = "-v 1";
+        args = getArgs(argsString);
+        checkVerbosity(VerbosityLevel.ERROR, args);
+
+        // Test server running mode (no arguments).
+        // Set verbosity level to 1;
+        argsString = "--verbosity 1";
+        args = getArgs(argsString);
+        checkVerbosity(VerbosityLevel.ERROR, args);
+
+        // Test server running mode, one argument (port number).
+        // Set verbosity level to 1;
+        argsString = "4599 -v 1";
+        args = getArgs(argsString);
+        checkVerbosity(VerbosityLevel.ERROR, args);
+
+        // Test server running mode, one argument (port number).
+        // Set verbosity level to 1;
+        argsString = "4599 --verbosity 1";
+        args = getArgs(argsString);
+        checkVerbosity(VerbosityLevel.ERROR, args);
+
+        // Test server running mode (no arguments).
+        // Set verbosity level to 2;
+        argsString = "-v 2";
+        args = getArgs(argsString);
+        checkVerbosity(VerbosityLevel.WARNING, args);
+
+        // Test server running mode, one argument (port number).
+        // Set verbosity level to 2;
+        argsString = "4599 -v 2";
+        args = getArgs(argsString);
+        checkVerbosity(VerbosityLevel.WARNING, args);
+
+        // Test server running mode (no arguments).
+        // Set verbosity level to 3;
+        argsString = "-v 3";
+        args = getArgs(argsString);
+        checkVerbosity(VerbosityLevel.INFO, args);
+
+        // Test server running mode, one argument (port number).
+        // Set verbosity level to 2;
+        argsString = "4599 -v 3";
+        args = getArgs(argsString);
+        checkVerbosity(VerbosityLevel.INFO, args);
+
+        // Test server running mode (no arguments).
+        // Set verbosity level to 4;
+        argsString = "-v 4";
+        args = getArgs(argsString);
+        checkVerbosity(VerbosityLevel.VERBOSE, args);
+
+        // Test server running mode, one argument (port number).
+        // Set verbosity level to 4;
+        argsString = "4599 -v 4";
+        args = getArgs(argsString);
+        checkVerbosity(VerbosityLevel.VERBOSE, args);
+
+        // Test throws IllegalArgumentException if the option is specified,
+        // but not its argument.
+        argsString = "-v";
+        args = getArgs(argsString);
+        checkReadThrows(args);
+
+        // Test throws IllegalArgumentException if the option is specified,
+        // but not its argument.
+        argsString = "367 -v";
+        args = getArgs(argsString);
+        checkReadThrows(args);
+
+        // Test throws if the argument is not valid.
+        argsString = "-v 0";
+        args = getArgs(argsString);
+        checkReadThrows(args);
+
+        // Test throws if the argument is not valid.
+        argsString = "367 -v 0";
+        args = getArgs(argsString);
+        checkReadThrows(args);
+
+        // Test throws if the argument is not valid.
+        argsString = "-v 5";
+        args = getArgs(argsString);
+        checkReadThrows(args);
+
+        // Test throws if the argument is not valid.
+        argsString = "367 -v 5";
+        args = getArgs(argsString);
+        checkReadThrows(args);
+
+        // Test throws if the argument is not valid.
+        argsString = "-v info";
+        args = getArgs(argsString);
+        checkReadThrows(args);
+
+        // Test throws if the argument is not valid.
+        argsString = "367 -v info";
+        args = getArgs(argsString);
+        checkReadThrows(args);
+
+        // Test with other options.
+        // Set verbosity and auto mode;
+        argsString = "-v 4 -a";
+        args = getArgs(argsString);
+        checkVerbosity(VerbosityLevel.VERBOSE, args);
+
+        // Test with other options.
+        // Set verbosity and auto mode;
+        argsString = "4599 -v 4 -a";
+        args = getArgs(argsString);
+        checkVerbosity(VerbosityLevel.VERBOSE, args);
+
+        // Test with other options.
+        // Set verbosity and auto mode;
+        argsString = "-a -v 4";
+        args = getArgs(argsString);
+        checkVerbosity(VerbosityLevel.VERBOSE, args);
+
+        // Test with other options.
+        // Set verbosity and auto mode;
+        argsString = "4599 -a -v 4";
+        args = getArgs(argsString);
+        checkVerbosity(VerbosityLevel.VERBOSE, args);
+
+        // Test with other options.
+        // Set verbosity and auto mode;
+        argsString = "4599 -a --verbosity 4";
+        args = getArgs(argsString);
+        checkVerbosity(VerbosityLevel.VERBOSE, args);
+
+        // Parse the command line args.
+        CmdLineArgs cmdArgs = CmdLineArgsReader.readCmdLineArgs(args);
+
+        // Check all settings.
+        checkServerCmdLineArgs(
+                cmdArgs,
+                OptionalInt.of(4599),
+                ServerSettings.DEF_MAX_LOBBIES,
+                NetworkMode.SOCKET,
+                VerbosityLevel.VERBOSE,
+                PortMode.AUTO
+        );
+    }
+
+    private static void checkVerbosity(VerbosityLevel expected, String[] args) {
+        // Parse the command line args.
+        CmdLineArgs cmdArgs = CmdLineArgsReader.readCmdLineArgs(args);
+
+        assertEquals(expected, cmdArgs.getSettings().getServerSettings().getVerbosity());
+    }
+
+    /**
+     * The user can set the maximum number of concurrent games on the server: <ul>
+     *     <li>-l/--limit max: set max number of concurrent games, in range [1, MAX_LOBBIES]</li>
+     *     <li>no options: the limit is DEF_MAX_LOBBIES (=1000)</li>
+     * </ul>.
+     * Test if the CmdLineArgsReader.readCmdLineArgs() works correctly
+     * for this option.
+     */
+    @Test
+    @DisplayName("-l/--limit test")
+    public void limitTest() {
+
+        // Test server running mode (no arguments), without any option.
+        // The default max lobbies is DEF_MAX_LOBBIES.
+        String argsString = "";
+        String[] args = getArgs(argsString);
+        checkMaxLobbies(ServerSettings.DEF_MAX_LOBBIES, args);
+
+        // Test server running mode with the port argument, without any option.
+        // The default max lobbies is DEF_MAX_LOBBIES.
+        argsString = "1335";
+        args = getArgs(argsString);
+        checkMaxLobbies(ServerSettings.DEF_MAX_LOBBIES, args);
+
+        // Test server running mode (no arguments).
+        // Set limit to 1;
+        argsString = "-l 1";
+        args = getArgs(argsString);
+        checkMaxLobbies(1, args);
+
+        // Test server running mode (no arguments).
+        // Set limit to 1;
+        argsString = "--limit 1";
+        args = getArgs(argsString);
+        checkMaxLobbies(1, args);
+
+        // Test server running mode, one argument (port number).
+        // Set limit to 1;
+        argsString = "1244 -l 1";
+        args = getArgs(argsString);
+        checkMaxLobbies(1, args);
+
+        // Test server running mode, one argument (port number).
+        // Set limit to 1;
+        argsString = "1244 --limit 1";
+        args = getArgs(argsString);
+        checkMaxLobbies(1, args);
+
+        // Test server running mode (no arguments).
+        // Set limit to 653;
+        argsString = "-l 653";
+        args = getArgs(argsString);
+        checkMaxLobbies(653, args);
+
+        // Test server running mode, one argument (port number).
+        // Set limit to 1;
+        argsString = "1244 -l 653";
+        args = getArgs(argsString);
+        checkMaxLobbies(653, args);
+
+        // Test server running mode (no arguments).
+        // Set limit to MIN_LOBBIES;
+        argsString = "-l " + ServerSettings.MIN_LOBBIES;
+        args = getArgs(argsString);
+        checkMaxLobbies(ServerSettings.MIN_LOBBIES, args);
+
+        // Test server running mode, one argument (port number).
+        // Set limit to MIN_LOBBIES;
+        argsString = "1244 -l " + ServerSettings.MIN_LOBBIES;
+        args = getArgs(argsString);
+        checkMaxLobbies(ServerSettings.MIN_LOBBIES, args);
+
+        // Test server running mode (no arguments).
+        // Set limit to MAX_LOBBIES;
+        argsString = "-l " + ServerSettings.MAX_LOBBIES;
+        args = getArgs(argsString);
+        checkMaxLobbies(ServerSettings.MAX_LOBBIES, args);
+
+        // Test server running mode, one argument (port number).
+        // Set limit to MAX_LOBBIES;
+        argsString = "1244 -l " + ServerSettings.MAX_LOBBIES;
+        args = getArgs(argsString);
+        checkMaxLobbies(ServerSettings.MAX_LOBBIES, args);
+
+        // Test out of range values.
+        // Set to MIN_LOBBIES - 1.
+        argsString = "-l " + (ServerSettings.MIN_LOBBIES - 1);
+        args = getArgs(argsString);
+        checkReadThrows(args);
+
+        // Test out of range values.
+        // Set to MIN_LOBBIES - 1.
+        argsString = "4475 -l " + (ServerSettings.MIN_LOBBIES - 1);
+        args = getArgs(argsString);
+        checkReadThrows(args);
+
+        // Test out of range values.
+        // Set to MAX_LOBBIES + 1.
+        argsString = "-l " + (ServerSettings.MAX_LOBBIES + 1);
+        args = getArgs(argsString);
+        checkReadThrows(args);
+
+        // Test out of range values.
+        // Set to MAX_LOBBIES + 1.
+        argsString = "4475 -l " + (ServerSettings.MAX_LOBBIES + 1);
+        args = getArgs(argsString);
+        checkReadThrows(args);
+
+        // Test not integer values.
+        argsString = "-l min";
+        args = getArgs(argsString);
+        checkReadThrows(args);
+        argsString = "-l 6.3";
+        args = getArgs(argsString);
+        checkReadThrows(args);
+
+        // Test missing option argument.
+        argsString = "-l";
+        args = getArgs(argsString);
+        checkReadThrows(args);
+        argsString = "3364 -l min";
+        args = getArgs(argsString);
+        checkReadThrows(args);
+
+        // Test with other options.
+        argsString = "-l 35 -r";
+        args = getArgs(argsString);
+        checkMaxLobbies(35, args);
+        argsString = "-r -l 35";
+        args = getArgs(argsString);
+        checkMaxLobbies(35, args);
+        argsString = "9963 -r --limit 35";
+        args = getArgs(argsString);
+        checkMaxLobbies(35, args);
+
+        // Parse the command line args.
+        CmdLineArgs cmdArgs = CmdLineArgsReader.readCmdLineArgs(args);
+
+        // Check all settings.
+        checkServerCmdLineArgs(
+                cmdArgs,
+                OptionalInt.of(9963),
+                35,
+                NetworkMode.RMI,
+                VerbosityLevel.INFO,
+                PortMode.FIXED
+        );
+    }
+
+    private static void checkMaxLobbies(int expected, String[] args) {
+        // Parse the command line args.
+        CmdLineArgs cmdArgs = CmdLineArgsReader.readCmdLineArgs(args);
+
+        assertEquals(expected, cmdArgs.getSettings().getServerSettings().getMaxLobbies());
+    }
+
+    private static void checkServerCmdLineArgs(CmdLineArgs args, OptionalInt port, int maxLobbies, NetworkMode network, VerbosityLevel verbosity, PortMode portMode) {
 
         // Check showHelp() returns false.
         assertFalse(args.showHelp());
@@ -750,7 +1042,7 @@ public class CmdLineArgsReaderTest
         // Check network mode.
         assertEquals(network, serverSettings.getNetworkMode());
         // Check verbosity.
-        assertEquals(verbodity, serverSettings.getVerbosity());
+        assertEquals(verbosity, serverSettings.getVerbosity());
         // Check port mode.
         assertEquals(portMode, serverSettings.getPortMode());
 
