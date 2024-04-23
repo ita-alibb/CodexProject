@@ -212,4 +212,87 @@ public class GameManagerTest {
         assertEquals(GamePhase.PLACING, manager.getStatus());
         assertEquals(firstPlayer, manager.getCurrentPlayer().getNickname());
     }
+
+    @Test
+    @Order(6)
+    @DisplayName("Test on another simulated game with errors")
+    public void turnWithErrorsTest() {
+        /*
+         * We will do the same thing as above, but this time I will insert some kinds of errors, to see if the game handles them
+         * in the correct way. The errors will be indicated when done
+         */
+
+        //INIT phase
+
+        //After the initialization of the object GameManager, each player will choose the face of his starter card and the secret objective
+        for (int i = 0; i < manager.getPlayersCount(); i++) {
+            //While we are in the for, the game phase is INIT
+            assertEquals(GamePhase.INIT, manager.getStatus());
+            //After this passage, the PlayingBoard is null, so is generated an exception
+            int finalI = i;
+            PlayingBoardException exception = assertThrows(PlayingBoardException.class, () -> manager.getPlayer(finalI).getPlayingBoard());
+            String expectedMessage = "The PlayingBoard for the player is not instantiated";
+            String actualMessage = exception.getMessage();
+            assertEquals(expectedMessage, actualMessage);
+            //Let's place the starter card
+            manager.placeStarterCard(
+                    i,
+                    manager.getPlayer(i).getStarterCard().getCardId(),
+                    CardSide.FRONT
+            );
+            //Now, if we invoke the same methods of before, this value will not be null
+            assertNotNull(manager.getPlayer(i).getPlayingBoard());
+            //Let's set the objective of each player
+            manager.setPlayerChosenObject(i, manager.getPlayerObjectiveOptions(i).getFirst().getObjectiveId());
+            //Check if the objective has been inserted
+            assertNotNull(manager.getPlayer(i).getObjective());
+        }
+
+        //GAME phase (PLACING-DRAWING)
+
+        //The nickname of the first player to play, for a test on the order of the turn
+        String firstPlayer = manager.getCurrentPlayer().getNickname();
+
+        for (int i = 0; i < manager.getPlayersCount(); i++) {
+            //Once we are out of this loop, the game phase has changed into PLACING
+            assertEquals(GamePhase.PLACING, manager.getStatus());
+            //ERROR: The Player wants to place a card which is not in his hand
+            GameException exception = assertThrows(GameException.class, () -> manager.placeCard(manager.getCurrentPlayer().getPlayingBoard().getAvailableSlots().get(0).getHoriz(),
+                    manager.getCurrentPlayer().getPlayingBoard().getAvailableSlots().get(0).getVert(),
+                    manager.getVisibleResourceCards().getFirst(),
+                    1));
+            String expectedMessage = "Trying to place a card that is not on the player's hand";
+            String actualMessage = exception.getMessage();
+            assertEquals(expectedMessage, actualMessage);
+            //Now, we will use the value of currPlayer in GameManager to know which player is playing a turn.
+            //The player will place the first card in his hand, and will draw a resource card.
+            manager.placeCard(
+                    manager.getCurrentPlayer().getPlayingBoard().getAvailableSlots().get(0).getHoriz(),
+                    manager.getCurrentPlayer().getPlayingBoard().getAvailableSlots().get(0).getVert(),
+                    manager.getCurrentPlayer().getHand().get(0).getCardId(),
+                    1
+            );
+            //ERROR: Placing another card during the same turn, in the wrong phase of the game
+            GameException exception1 = assertThrows(GameException.class, () -> manager.placeCard(
+                    manager.getCurrentPlayer().getPlayingBoard().getAvailableSlots().get(0).getHoriz(),
+                    manager.getCurrentPlayer().getPlayingBoard().getAvailableSlots().get(0).getVert(),
+                    manager.getCurrentPlayer().getHand().get(0).getCardId(),
+                    1
+            ));
+            String expectedMessage1 = "Incorrect phase";
+            actualMessage = exception1.getMessage();
+            assertEquals(expectedMessage1, actualMessage);
+            //Now, the new game phase is DRAWING
+            assertEquals(GamePhase.DRAWING, manager.getStatus());
+            //The player will draw a card from the resource cards deck
+            manager.drawResourceCard();
+            //ERROR: The player draws another card!
+            GameException exception2 = assertThrows(GameException.class, () -> manager.drawResourceCard());
+            actualMessage = exception2.getMessage();
+            assertEquals(expectedMessage1, actualMessage);
+        }
+        //Out of the for, the phase is PLACING, and the current player will be again the first player who played, because turn 0 ended
+        assertEquals(GamePhase.PLACING, manager.getStatus());
+        assertEquals(firstPlayer, manager.getCurrentPlayer().getNickname());
+    }
 }

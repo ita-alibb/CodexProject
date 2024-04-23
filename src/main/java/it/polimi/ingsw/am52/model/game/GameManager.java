@@ -1,12 +1,13 @@
 package it.polimi.ingsw.am52.model.game;
 
 import it.polimi.ingsw.am52.exceptions.GameException;
+import it.polimi.ingsw.am52.exceptions.PhaseException;
+import it.polimi.ingsw.am52.exceptions.PlayerException;
 import it.polimi.ingsw.am52.model.cards.*;
 import it.polimi.ingsw.am52.model.decks.Deck;
 import it.polimi.ingsw.am52.model.decks.RandomDealer;
 import it.polimi.ingsw.am52.model.objectives.Objective;
-import it.polimi.ingsw.am52.model.player.Player;
-import it.polimi.ingsw.am52.model.player.PlayerInfo;
+import it.polimi.ingsw.am52.model.player.*;
 import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
 
 import java.util.*;
@@ -38,17 +39,9 @@ public class GameManager {
      */
     private final List<Player> disconnectedPlayers;
     /**
-     * The player who is playing the turn
-     */
-    private int currPlayer;
-    /**
-     * The turn which is playing
-     */
-    private int turn;
-    /**
      * The phase of the current turn
      */
-    private GamePhase phase;
+    private Phase phase;
     /**
      * The common objectives in a game
      */
@@ -72,7 +65,7 @@ public class GameManager {
     /**
      * The Scoreboard of the game; it contains the players' score
      */
-    private final Dictionary<Integer, Integer> scoreBoard;
+    private final Map<Integer, Integer> scoreBoard;
 
     //endregion
 
@@ -92,7 +85,7 @@ public class GameManager {
             throw new GameException("Player list is empty");
         }
         //Define the turn phase
-        this.phase = GamePhase.INIT;
+        this.phase = new InitPhase();
         //Create and initialize the dealer, which represents a fictitious deck of objective cards
         RandomDealer<Objective> objectiveDealer = Objective.getObjectiveDealer();
         objectiveDealer.init();
@@ -107,16 +100,16 @@ public class GameManager {
         this.resourceCardDeck = Deck.getResourceCardsDeck();
         this.goldCardDeck = Deck.getGoldCardsDeck();
         Deck<StarterCard> starterCardDeck = Deck.getStarterCardsDeck();
-        resourceCardDeck.shuffle();
-        goldCardDeck.shuffle();
+        this.resourceCardDeck.shuffle();
+        this.goldCardDeck.shuffle();
         starterCardDeck.shuffle();
 
         //Use the decks to get 4 cards, 2 resource cards and 2 gold cards; these will be the first visible cards.
         this.visibleResourceCards = new ArrayList<>();
         this.visibleGoldCards = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
-            this.visibleResourceCards.add(resourceCardDeck.draw());
-            this.visibleGoldCards.add(goldCardDeck.draw());
+            this.visibleResourceCards.add(this.resourceCardDeck.draw());
+            this.visibleGoldCards.add(this.goldCardDeck.draw());
         }
 
         //Instantiate the scoreBoard
@@ -134,15 +127,12 @@ public class GameManager {
             //Add the player to the ScoreBoard, with his initial score, i.e. zero
             this.scoreBoard.put(players.indexOf(player), this.players.get(players.indexOf(player)).getScore());
             //Give to each player 2 resource card and 1 gold card in his hand, drawn by the corresponding decks
-            this.players.getLast().drawCard(resourceCardDeck.draw());
-            this.players.getLast().drawCard(resourceCardDeck.draw());
-            this.players.getLast().drawCard(goldCardDeck.draw());
+            this.players.getLast().drawCard(this.resourceCardDeck.draw());
+            this.players.getLast().drawCard(this.resourceCardDeck.draw());
+            this.players.getLast().drawCard(this.goldCardDeck.draw());
         }
         //Initialize the list of the disconnected player, as an empty list
         this.disconnectedPlayers = new ArrayList<>();
-        //Initialize by default the current player and the turn number
-        this.currPlayer = 0;
-        this.turn = 0;
     }
 
     //endregion
@@ -150,43 +140,49 @@ public class GameManager {
     //region Private Methods
 
     /**
-     * Private method to check and set the state of a game. It is represented by a finite state automaton, with the possible transitions:
-     * (INIT-->PLACING, PLACING-->DRAWING, DRAWING-->PLACING, DRAWING-->END)
-     * @param phase The game phase
-     */
-    private void setGameState(GamePhase phase) throws GameException {
-        //Switch on the private field phase
-        switch (this.phase) {
-            //If the current phase is INIT
-            case INIT -> {
-                //If the next phase isn't PLACING, throws an exception
-                if (phase != GamePhase.PLACING) {
-                    throw new GameException("The phase of the turn does not match with the action of the player");
-                }
-            }
-            //If the current phase is PLACING
-            case PLACING -> {
-                //If the next phase isn't DRAWING, throws an exception
-                if (phase != GamePhase.DRAWING) {
-                    throw new GameException("The phase of the turn does not match with the action of the player");
-                }
-            }
-            //If the current phase is DRAWING
-            case DRAWING -> {
-                //If the next phase isn't PLACING either END, throws an exception
-                if (phase != GamePhase.PLACING && phase != GamePhase.END) {
-                    throw new GameException("The phase of the turn does not match with the action of the player");
-                }
-            }
-        }
-        //After all the checks, set the new phase in the private field
-        this.phase = phase;
-    }
-    /**
      * After each move, updates the values in the scoreboard
      */
     private void updateScoreBoard() {
-        scoreBoard.put(currPlayer, players.get(currPlayer).getScore());
+        this.scoreBoard.put(this.phase.getCurrPlayer(), this.players.get(this.phase.getCurrPlayer()).getScore());
+    }
+
+    /**
+     * @param playerId The ID of the player
+     * @return The player, with the Setup interface
+     */
+    private PlayerSetup getPlayerSetup(int playerId) {
+        return this.players.get(playerId);
+    }
+
+    /**
+     * @param playerId  The ID of the player
+     * @return The player with the BoardSetup interface
+     */
+    private PlayerBoardSetup getPlayerBoardSetup(int playerId) {
+        return this.players.get(playerId);
+    }
+
+    /**
+     * @param playerId  The ID of the player
+     * @return The player with the Drawing interface
+     */
+    private PlayerDrawing getPlayerDrawing(int playerId) {
+        return this.players.get(playerId);
+    }
+
+    /**
+     * @return The list of the players, using the interface PlayerInfo
+     */
+    protected List<PlayerInfo> getPlayerInfos() {
+        return new ArrayList<>(this.players);
+    }
+
+    /**
+     * Update the phase, thanks to the State Design Pattern
+     * @param newPhase  The new Phase
+     */
+    protected void setPhase(Phase newPhase) {
+        this.phase = newPhase;
     }
 
     //endregion
@@ -197,21 +193,38 @@ public class GameManager {
      * @return The number of players in the lobby
      */
     public int getPlayersCount() {
-        return players.size();
+        return this.players.size();
     }
 
     /**
+     * @param playerId The ID of the player
      * @return The information about an object Player, thanks to the interface PlayerInfo
      */
     public PlayerInfo getPlayer(int playerId) {
-        return players.get(playerId);
+        return this.players.get(playerId);
     }
+
     /**
      * @return The information of the current player
      */
     public PlayerInfo getCurrentPlayer() {
-        return getPlayer(currPlayer);
+        return this.getPlayer(this.phase.getCurrPlayer());
     }
+
+    /**
+     * @return The number of the turns
+     */
+    public int getTurn() {
+        return this.phase.getTurn();
+    }
+
+    /**
+     * @return true if it's the last turn, false otherwise
+     */
+    public boolean isLastTurn() {
+        return this.phase.isLastTurn();
+    }
+
     /**
      * Method used to show to player the two objective to choose
      * @param playerId the player
@@ -220,18 +233,21 @@ public class GameManager {
     public ArrayList<Objective> getPlayerObjectiveOptions(int playerId){
         return this.players.get(playerId).getObjectiveOptions();
     }
+
     /**
      * @return The lasting cards in the resource deck
      */
     public int getResourceDeckCount() {
-        return resourceCardDeck.cardsCount();
+        return this.resourceCardDeck.cardsCount();
     }
+
     /**
      * @return The lasting cards in the gold deck
      */
     public int getGoldDeckCount() {
-        return goldCardDeck.cardsCount();
+        return this.goldCardDeck.cardsCount();
     }
+
     /**
      * @return The list of IDs the visible resource cards
      */
@@ -241,10 +257,11 @@ public class GameManager {
         //For the 2 cards on the common board
         for (int i = 0; i < 2; i++) {
             //Add the ID of the visible cards to the list
-            visibleCards.add(visibleResourceCards.get(i).getCardId());
+            visibleCards.add(this.visibleResourceCards.get(i).getCardId());
         }
         return visibleCards;
     }
+
     /**
      * @return The list of IDs the visible gold cards
      */
@@ -254,10 +271,11 @@ public class GameManager {
         //For the 2 cards on the common board
         for (int i = 0; i < 2; i++) {
             //Add the ID of the visible cards to the list
-            visibleCards.add(visibleGoldCards.get(i).getCardId());
+            visibleCards.add(this.visibleGoldCards.get(i).getCardId());
         }
         return visibleCards;
     }
+
     /**
      * @return The list of IDs the common objective cards
      */
@@ -267,71 +285,35 @@ public class GameManager {
         //For the 2 cards on the common board
         for (int i = 0; i < 2; i++) {
             //Add the ID of the visible cards to the list
-            visibleCards.add(commonObjectives.get(i).getObjectiveId());
+            visibleCards.add(this.commonObjectives.get(i).getObjectiveId());
         }
         return visibleCards;
     }
+
     /**
      * @return The status of the turn
      */
     public GamePhase getStatus() {
-        return this.phase;
+        return this.phase.getPhase();
     }
+
     /**
      * @return The winner or the list of the winners. Could be one or more, in case of a tie.
      */
-    public List<PlayerInfo> getWinners() throws GameException {
-        //Check if the game is ending
-        if (this.phase != GamePhase.END) {
-            throw new GameException("The game is not ended yet!");
+    public List<PlayerInfo> getWinners() {
+        try {
+            List<PlayerInfo> playersInfo = new ArrayList<>(this.players);
+            return this.phase.getWinners(this, playersInfo);
+        } catch (PhaseException e) {
+            throw new GameException(e.getMessage());
         }
-        //Create the list of PlayerInfo
-        List<PlayerInfo> possibleWinners = new ArrayList<>();
-        //Add by default the first player and pass to the next
-        possibleWinners.add(players.getFirst());
-        //For each person in the lobby
-        for (int i = 1; i < players.size(); i++) {
-            //If the score of a player is greater than the one of player who is already in the list
-            if (scoreBoard.get(i) > possibleWinners.getFirst().getScore()) {
-                possibleWinners.clear();
-                possibleWinners.add(players.get(i));
-            }
-            //If the score of a player is equal to the one of the player who is already in the list
-            else if (scoreBoard.get(i) == possibleWinners.getFirst().getScore()) {
-                possibleWinners.add(players.get(i));
-            }
-        }
-        //Once I have the list of the winner, if this contains more than one player, return it, otherwise choose the winner with the objectives score
-        if (possibleWinners.size() == 1) {
-            return possibleWinners;
-        }
-        //Create a new list
-        List<PlayerInfo> winners = new ArrayList<>();
-        winners.add(possibleWinners.getFirst());
-        //If the list is bigger than one element
-        //For each item in the temp list possibleWinners
-        for (int i = 1; i < possibleWinners.size(); i++) {
-            //If a Player has a bigger objective score than the one in the definitive list
-            if (winners.getFirst().getObjScore() < possibleWinners.get(i).getObjScore()) {
-                //Clear the list and add the Player in it
-                winners.clear();
-                winners.add(possibleWinners.get(i));
-            }
-            //If a Player has the same objective score as the one in the definitive list
-            else if (winners.getFirst().getObjScore() == possibleWinners.get(i).getObjScore()) {
-                //Add the Player in the list
-                winners.add(possibleWinners.get(i));
-            }
-        }
-        //Return the value of the winner
-        return winners;
     }
 
     /**
      * @return The scoreboard of the game
      */
-    public Dictionary<Integer, Integer> getScoreBoard() {
-        return scoreBoard;
+    public Map<Integer, Integer> getScoreBoard() {
+        return this.scoreBoard;
     }
 
     //endregion
@@ -344,10 +326,10 @@ public class GameManager {
      * @param objectiveId the objective chosen
      */
     public void setPlayerChosenObject(int playerId, int objectiveId){
-        this.players.get(playerId).setSecretObjective(Objective.getObjectiveWithId(objectiveId));
-
-        if(this.players.stream().allMatch(p -> p.getObjective() != null)){
-            this.setGameState(GamePhase.PLACING);
+        try {
+            this.phase.setPlayerChosenObject(this, this.getPlayerSetup(playerId), objectiveId);
+        } catch (PhaseException e) {
+            throw new GameException(e.getMessage());
         }
     }
 
@@ -362,11 +344,18 @@ public class GameManager {
      * @param side      The face used by the card
      */
     public void placeStarterCard(int playerId, int cardId, CardSide side) {
-        //Create the card to place
-        StarterCard firstCard = StarterCard.getCardWithId(cardId);
-        //Use the ID to identify the player who made the move and use the correct face of the card
-        players.get(playerId).placeStarterCardFace(side == CardSide.FRONT ? firstCard.getFrontFace() : firstCard.getBackFace());
+        try {
+            //Use the ID to identify the player who made the move and use the correct face of the card
+            this.phase.placeStarterCard(
+                    this.getPlayerBoardSetup(playerId),
+                    StarterCard.getCardWithId(cardId),
+                    side
+            );
+        } catch (PhaseException e) {
+            throw new GameException(e.getMessage());
+        }
     }
+
     /**
      * Place a given generic card in a certain position
      * @param h         The horizontal coordinate
@@ -374,119 +363,101 @@ public class GameManager {
      * @param cardId    The ID of the card
      * @param face      The face used by the card, true if front, false if back
      */
-    public void placeCard(int h, int v, int cardId, int face) throws GameException {
-        //Check and update the phase of the turn
-        setGameState(GamePhase.DRAWING);
-        //Create the object BoardSlot from the integer coordinates
-        BoardSlot slot = new BoardSlot(h, v);
-        //Create the object CardSide from the boolean variable
-        CardSide side = CardSide.fromInteger(face);
-        //Create the card and the face chosen
-        KingdomCard card = KingdomCard.getCardWithId(cardId);
-        KingdomCardFace cardFace = (side == CardSide.FRONT) ? card.getFrontFace() : card.getBackFace();
-        //Call the method on the current player
-        players.get(currPlayer).placeCard(slot, card, cardFace);
-        //Update the value in the ScoreBoard
-        updateScoreBoard();
+    public void placeCard(int h, int v, int cardId, int face) {
+        try {
+            //Create the object KingdomCard
+            KingdomCard card = KingdomCard.getCardWithId(cardId);
+            //Call the method on the current player
+            phase.placeCard(
+                    this,
+                    this.getPlayerDrawing(this.phase.getCurrPlayer()),
+                    new BoardSlot(h, v),
+                    card,
+                    (CardSide.fromInteger(face) == CardSide.FRONT) ? card.getFrontFace() : card.getBackFace()
+            );
+            //Update the value in the ScoreBoard
+            this.updateScoreBoard();
+        } catch (PhaseException e) {
+            throw new GameException(e.getMessage());
+        }
     }
+
     /**
      * Draw a random card from the resource deck
      */
-    public void drawResourceCard() throws GameException {
-        //Check the turn phase and set the new one
-        setGameState(GamePhase.PLACING);
-        players.get(currPlayer).drawCard(resourceCardDeck.draw());
-        //Update the current player
-        currPlayer = (currPlayer + 1) % players.size();
-        //Update the number of the turn, if necessary
-        if (currPlayer == 0) {
-            turn++;
+    public void drawResourceCard() {
+        try {
+            this.phase.drawResourceCard(
+                    this,
+                    this.getPlayerDrawing(this.phase.getCurrPlayer()),
+                    this.resourceCardDeck.draw()
+            );
+        } catch (PlayerException e) {
+            throw new GameException(e.getMessage());
         }
     }
+
     /**
      * Draw a random card from the gold deck
      */
     public void drawGoldCard() {
-        //Check and update the turn phase
-        setGameState(GamePhase.PLACING);players.get(currPlayer).drawCard(goldCardDeck.draw());
-        //Update the current player
-        currPlayer = (currPlayer + 1) % players.size();
-        //Update the number of the turn, if necessary
-        if (currPlayer == 0) {
-            turn++;
+        try {
+            this.phase.drawGoldCard(
+                    this,
+                    this.getPlayerDrawing(this.phase.getCurrPlayer()),
+                    this.goldCardDeck.draw()
+            );
+        } catch (PhaseException e) {
+            throw new GameException(e.getMessage());
         }
     }
+
     /**
      * Take the visible resource card on the board and draw another card to fill the gap
      * @param cardId    The ID of the visible card
      */
     public void takeResourceCard(int cardId) {
-        //Check and update the turn phase
-        setGameState(GamePhase.PLACING);
-        //Create the object KingdomCard
-        KingdomCard card;
-        //If the drawn card is the first card
-        if (visibleResourceCards.getFirst().getCardId() == cardId) {
-            //Take the first card, remove it from the list and draw another card to fill the gap
-            card = visibleResourceCards.getFirst();
-            visibleResourceCards.removeFirst();
-            visibleResourceCards.add(resourceCardDeck.draw());
-        }
-        //If the drawn card is the second and last card
-        else if (visibleResourceCards.getLast().getCardId() == cardId) {
-            //Take the second card, remove it from the list and draw another card to fill the gap
-            card = visibleResourceCards.getLast();
-            visibleResourceCards.removeLast();
-            visibleResourceCards.add(resourceCardDeck.draw());
-        }
-        //If the ID is not corresponding, throw an exception
-        else {
+        //If the List of the visible resource cards doesn't contain the card, throw an exception
+        if (!this.visibleResourceCards.contains(ResourceCard.getCardWithId(cardId))) {
             throw new GameException("The card selected is not a visible card");
         }
-        //Add the card in the hand of the current player
-        players.get(currPlayer).drawCard(card);
-        //Update the current player
-        currPlayer = (currPlayer + 1) % players.size();
-        //Update the number of the turn, if necessary
-        if (currPlayer == 0) {
-            turn++;
+        else {
+            try {
+                this.phase.takeResourceCard(
+                        this,
+                        this.getPlayerDrawing(this.phase.getCurrPlayer()),
+                        ResourceCard.getCardWithId(cardId),
+                        this.visibleResourceCards
+                );
+            } catch (PhaseException e) {
+                throw new GameException(e.getMessage());
+            }
         }
     }
+
     /**
      * Take the visible gold card on the board and draw another card to fill the gap
      * @param cardId    The ID of the visible card
      */
     public void takeGoldCard(int cardId) {
-        //Check and update the turn phase
-        setGameState(GamePhase.PLACING);
-        //Create the object KingdomCard
-        KingdomCard card;
-        //If the drawn card is the first card
-        if (visibleGoldCards.getFirst().getCardId() == cardId) {
-            //Take the first card, remove it from the list and draw another card to fill the gap
-            card = visibleGoldCards.getFirst();
-            visibleGoldCards.removeFirst();
-            visibleGoldCards.add(goldCardDeck.draw());
+        //If the List of the visible resource cards doesn't contain the card, throw an exception
+        if (!this.visibleGoldCards.contains(GoldCard.getCardWithId(cardId))) {
+            throw new GameException("The card selected is not a visible card");
         }
-        //If the drawn card is the second and last card
-        else if (visibleGoldCards.getLast().getCardId() == cardId) {
-            //Take the second card, remove it from the list and draw another card to fill the gap
-            card = visibleGoldCards.getLast();
-            visibleGoldCards.removeLast();
-            visibleGoldCards.add(goldCardDeck.draw());
-        }
-        //If the ID is not corresponding, throw an exception
         else {
-            throw new GameException("The selected card is not a visible card");
-        }
-        players.get(currPlayer).drawCard(card);
-        //Update the current player
-        currPlayer = (currPlayer + 1) % players.size();
-        //Update the number of the turn, if necessary
-        if (currPlayer == 0) {
-            turn++;
+            try {
+                this.phase.takeGoldCard(
+                        this,
+                        this.getPlayerDrawing(this.phase.getCurrPlayer()),
+                        GoldCard.getCardWithId(cardId),
+                        this.visibleGoldCards
+                );
+            } catch (PhaseException e) {
+                throw new GameException(e.getMessage());
+            }
         }
     }
+
     /**
      * Report a player disconnected
      * @param playerId  The ID of the disconnected player
@@ -498,12 +469,12 @@ public class GameManager {
          * preventing the deletion of the data connected to the player who left.
          */
         //If the player isn't in the lobby, throws an exception
-        if (playerId >= players.size()) {
+        if (playerId >= this.players.size()) {
             throw new GameException("The selected player is not in the game");
         }
-        disconnectedPlayers.add(players.get(playerId));
-        players.remove(playerId);
-        scoreBoard.remove(playerId);
+        this.disconnectedPlayers.add(this.players.get(playerId));
+        this.players.remove(playerId);
+        this.scoreBoard.remove(playerId);
     }
 
     //endregion
