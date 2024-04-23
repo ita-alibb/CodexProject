@@ -16,8 +16,6 @@ import java.util.OptionalInt;
  * @author Livio B.
  */
 public class ServerSettings {
-    public static final int MAX_LOBBIES = 10000;
-    public static final int MIN_LOBBIES = 1;
 
     //region Private Fields
 
@@ -33,11 +31,6 @@ public class ServerSettings {
      * The level of verbosity for logging.
      */
     private final VerbosityLevel verbosity;
-
-    /**
-     * The network mode (Socket or RMI).
-     */
-    private final NetworkMode networkMode;
 
     /**
      * The mode used to select the port number for the connection.
@@ -59,6 +52,17 @@ public class ServerSettings {
     public static final int PORT_MAX = 65535;
 
     /**
+     * The maximum allowed "maximum number" of concurrent games
+     */
+    public static final int MAX_LOBBIES = 10000;
+
+    /**
+     * The minimum allowed "maximum number" of concurrent games
+     */
+
+    public static final int MIN_LOBBIES = 1;
+
+    /**
      * The default number of maximum concurrency games.
      */
     public static final int DEF_MAX_LOBBIES = 1000;
@@ -70,10 +74,6 @@ public class ServerSettings {
      * The default verbosity level.
      */
     public static final VerbosityLevel DEF_VERBOSITY = VerbosityLevel.INFO;
-    /**
-     * The default network mode.
-     */
-    public static final NetworkMode DEF_NETWORK = NetworkMode.SOCKET;
 
     /**
      * The default mode for selecting the port for the connection.
@@ -87,7 +87,7 @@ public class ServerSettings {
     /**
      * The server settings with all settings set to their default values.
      */
-    private static final ServerSettings defaultSettings = new ServerSettings(DEF_MAX_LOBBIES, DEF_PORT, DEF_VERBOSITY, DEF_NETWORK, DEF_PORT_MODE);
+    private static final ServerSettings defaultSettings = new ServerSettings(DEF_MAX_LOBBIES, DEF_PORT, DEF_VERBOSITY, DEF_PORT_MODE);
 
     //endregion
 
@@ -132,7 +132,6 @@ public class ServerSettings {
         int maxLobbies = DEF_MAX_LOBBIES;   // Def. max lobbies
         Optional<Integer> port = Optional.empty();  // Assume port number not assigned
         VerbosityLevel verbosity = DEF_VERBOSITY;   // Def. server logging verbosity
-        NetworkMode networkMode = DEF_NETWORK;  // Def. network mode
         Optional<PortMode> portMode = Optional.empty();  // Assume port mode not assigned.
 
         // Get the iterator able to iterate over all json fields, and overwrite settings, if found.
@@ -142,7 +141,7 @@ public class ServerSettings {
             // The field text string.
             final String field = iter.next();
             // Switch the text of the filed: the valid filed names are
-            // "maxLobbies", "port", "verbosity", "network", and "portMode".
+            // "maxLobbies", "port", "verbosity", and "portMode".
             // Invalid field names are ignored. The values of maxLobbies and port are just
             // converted to integer values (or their default values) without
             // any check on valid values, because all values are validate inside the
@@ -161,10 +160,6 @@ public class ServerSettings {
                     // Parse the verbosity value of the "verbosity" field.
                     verbosity = parseVerbosity(jsonNode.get(field).asText());
                     break;
-                case "network":
-                    // Parse the network value of the "network" field.
-                    networkMode = parseNetwork(jsonNode.get(field).asText());
-                    break;
                 case "portMode":
                     // Parse the port mode value of the "portMode" field.
                     PortMode portModeValue = parsePortMode(jsonNode.get(field).asText());
@@ -178,18 +173,18 @@ public class ServerSettings {
         // If both port number and port mode have NOT been set, then do NOT
         // set the port number and set port mode as default ("auto").
         if (port.isEmpty() && portMode.isEmpty()) {
-            return new ServerSettings(maxLobbies, verbosity, networkMode);
+            return new ServerSettings(maxLobbies, verbosity);
         }
 
         // If the port number has been set.
         if (port.isPresent()) {
             // If the port mode has NOT been set, impose "fixed" mode.
             if (portMode.isEmpty()) {
-                return new ServerSettings(maxLobbies, port.get(), verbosity, networkMode, PortMode.FIXED);
+                return new ServerSettings(maxLobbies, port.get(), verbosity, PortMode.FIXED);
             } else {
                 // Return the object with the settings. The constructor validates the
                 // parameters passed to it.
-                return new ServerSettings(maxLobbies, port.get(), verbosity, networkMode, portMode.get());
+                return new ServerSettings(maxLobbies, port.get(), verbosity, portMode.get());
             }
         }
 
@@ -197,11 +192,11 @@ public class ServerSettings {
         // If the port number has NOT been set, but the port mode has been set to FIXED,
         // then assign default port number.
         if (portMode.get() == PortMode.FIXED) {
-            return new ServerSettings(maxLobbies, DEF_PORT, verbosity, networkMode, portMode.get());
+            return new ServerSettings(maxLobbies, DEF_PORT, verbosity, portMode.get());
         }
 
         // If the port number has NOT been set, and the port mode has been set to AUTO.
-        return new ServerSettings(maxLobbies, verbosity, networkMode);
+        return new ServerSettings(maxLobbies, verbosity);
     }
 
     /**
@@ -263,14 +258,12 @@ public class ServerSettings {
      * @param maxLobbies The maximum number of concurrency games on the server. If the
      *                   specified value is less than 1, the DEF_MAX_LOBBIES value is assigned.
      * @param verbosity The verbosity level for logging.
-     * @param networkMode The network mode: Socket, or RMI.
      * @author Livio B.
      */
-    public ServerSettings(int maxLobbies, VerbosityLevel verbosity, NetworkMode networkMode) {
-        this.maxLobbies = (maxLobbies < 1) ? DEF_MAX_LOBBIES : maxLobbies;
+    public ServerSettings(int maxLobbies, VerbosityLevel verbosity) {
+        this.maxLobbies = (maxLobbies < MIN_LOBBIES || maxLobbies > MAX_LOBBIES) ? DEF_MAX_LOBBIES : maxLobbies;
         this.port = OptionalInt.empty();
         this.verbosity = verbosity;
-        this.networkMode = networkMode;
         this.portMode = PortMode.AUTO;
     }
 
@@ -281,15 +274,13 @@ public class ServerSettings {
      * @param port The number of port used for the socket connection. If the value is less than
      *             1024 or greater than 65535, the DEF_PORT value is assigned.
      * @param verbosity The verbosity level for logging.
-     * @param networkMode The network mode: Socket, or RMI.
      * @param portMode The mode used to select the port number for the connection.
      * @author Livio B.
      */
-    public ServerSettings(int maxLobbies, int port, VerbosityLevel verbosity, NetworkMode networkMode, PortMode portMode) {
-        this.maxLobbies = (maxLobbies < 1) ? DEF_MAX_LOBBIES : maxLobbies;
+    public ServerSettings(int maxLobbies, int port, VerbosityLevel verbosity, PortMode portMode) {
+        this.maxLobbies = (maxLobbies < MIN_LOBBIES || maxLobbies > MAX_LOBBIES) ? DEF_MAX_LOBBIES : maxLobbies;
         this.port = OptionalInt.of((port < ServerSettings.PORT_MIN || port > ServerSettings.PORT_MAX) ? DEF_PORT : port);
         this.verbosity = verbosity;
-        this.networkMode = networkMode;
         this.portMode = portMode;
     }
 
@@ -322,15 +313,6 @@ public class ServerSettings {
      */
     public VerbosityLevel getVerbosity() {
         return this.verbosity;
-    }
-
-    /**
-     *
-     * @return The network mode (Socket or RMI).
-     * @author Livio B.
-     */
-    public NetworkMode getNetworkMode() {
-        return this.networkMode;
     }
 
     /**
@@ -407,28 +389,6 @@ public class ServerSettings {
     }
 
     /**
-     * Convert a string into a NetworkMode enum value. If the string cannot
-     * be converted, the DEF_NETWORK is returned. The valid string values are
-     * (case-sensitive):
-     * <ul>
-     *     <li>"socket"</li>
-     *     <li>"rmi"</li>
-     * </ul>
-     * @param value The text to parse.
-     * @return The network mode value.
-     * @author Livio B.
-     */
-    private static NetworkMode parseNetwork(String value) {
-        try {
-            // Delegate the parsing stuff to the VerbosityLevel enum.
-            return NetworkMode.parse(value);
-        } catch (Exception e) {
-            // On parsing error, return default server verbosity level.
-            return DEF_NETWORK;
-        }
-    }
-
-    /**
      * Convert a string into a POrtMode enum value. If the string cannot
      * be converted, the DEF_MODE_PORT is returned. The valid string values are
      * (case-sensitive):
@@ -469,7 +429,6 @@ public class ServerSettings {
         sb.append(String.format("  Max lobbies: %d%n", getMaxLobbies()));
         String portText = getPort().isEmpty() ? "<none>" : String.format("%d", getPort().getAsInt());
         sb.append(String.format("  Port: %s%n", portText));
-        sb.append(String.format("  Network mode: %s%n", getNetworkMode()));
         sb.append(String.format("  Port mode: %s%n", getPortMode()));
         sb.append(String.format("  Log verbosity: %s%n", getVerbosity()));
 

@@ -34,7 +34,6 @@ public class CmdLineArgsReader {
             options.add(new AutoOption());
             options.add(new LimitOption());
             options.add(new VerbosityOption());
-            options.add(new RmiOption());
 
             serverOptions = new ImmutableList<>(options);
         }
@@ -44,7 +43,7 @@ public class CmdLineArgsReader {
 
     /**
      *
-     * @return The list of available options for the server mode.
+     * @return The list of available options for the client mode.
      */
     public static ImmutableList<Option> getClientOptions() {
 
@@ -162,7 +161,6 @@ public class CmdLineArgsReader {
         // Default settings, these are the app settings if no options
         // are entered at the command line.
         int maxLobbies = ServerSettings.DEF_MAX_LOBBIES;
-        NetworkMode networkMode = ServerSettings.DEF_NETWORK;
         VerbosityLevel verbosity = ServerSettings.DEF_VERBOSITY;
 
         // Parse all remaining options.
@@ -179,13 +177,8 @@ public class CmdLineArgsReader {
 
             // Switch option flag.
             switch (option) {
-                // -r/--rmi: enable RMI network.
-                case RmiOption.SHORT_FLAG:
-                case RmiOption.LONG_FLAG:
-                    networkMode = NetworkMode.RMI;
-                    break;
 
-                // -r/--rmi: enable RMI network.
+                // -a/--auto: enable auto port selection.
                 case AutoOption.SHORT_FLAG:
                 case AutoOption.LONG_FLAG:
                     portMode = PortMode.AUTO;
@@ -217,8 +210,8 @@ public class CmdLineArgsReader {
 
         ServerSettings serverSettings =
                 portNumber.isEmpty() ?
-                        new ServerSettings(maxLobbies, verbosity, networkMode) :
-                        new ServerSettings(maxLobbies, portNumber.getAsInt(), verbosity, networkMode, portMode);
+                        new ServerSettings(maxLobbies, verbosity) :
+                        new ServerSettings(maxLobbies, portNumber.getAsInt(), verbosity, portMode);
 
         return new ApplicationSettings(serverSettings);
     }

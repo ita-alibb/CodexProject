@@ -55,8 +55,6 @@ public class ParseTest
         assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
         // The verbosity is equal to the default value.
         assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The network mode is equal to the default value.
-        assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
         assertEquals(PortMode.FIXED, settings.getPortMode());
     }
@@ -95,8 +93,6 @@ public class ParseTest
         assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
         // The verbosity is equal to the default value.
         assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The network mode is equal to the default value.
-        assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
         assertEquals(PortMode.FIXED, settings.getPortMode());
     }
@@ -134,8 +130,6 @@ public class ParseTest
         assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
         // The verbosity is equal to the default value.
         assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The network mode is equal to the default value.
-        assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
         assertEquals(PortMode.FIXED, settings.getPortMode());
     }
@@ -174,8 +168,6 @@ public class ParseTest
         assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
         // The verbosity is equal to the default value.
         assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The network mode is equal to the default value.
-        assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
         assertEquals(PortMode.FIXED, settings.getPortMode());
     }
@@ -213,8 +205,6 @@ public class ParseTest
         assertEquals(1, settings.getMaxLobbies());
         // The verbosity is equal to the default value.
         assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The network mode is equal to the default value.
-        assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
         assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
     }
@@ -253,8 +243,6 @@ public class ParseTest
         assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
         // The verbosity is equal to the default value.
         assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The network mode is equal to the default value.
-        assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
         assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
     }
@@ -292,8 +280,6 @@ public class ParseTest
         assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
         // The verbosity is equal to the value read from the settings file.
         assertEquals(VerbosityLevel.VERBOSE, settings.getVerbosity());
-        // The network mode is equal to the default value.
-        assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
         assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
     }
@@ -331,8 +317,6 @@ public class ParseTest
         assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
         // The verbosity is equal to the value read from the settings file.
         assertEquals(VerbosityLevel.INFO, settings.getVerbosity());
-        // The network mode is equal to the default value.
-        assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
         assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
     }
@@ -370,8 +354,6 @@ public class ParseTest
         assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
         // The verbosity is equal to the value read from the settings file.
         assertEquals(VerbosityLevel.WARNING, settings.getVerbosity());
-        // The network mode is equal to the default value.
-        assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
         assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
     }
@@ -409,8 +391,6 @@ public class ParseTest
         assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
         // The verbosity is equal to the value read from the settings file.
         assertEquals(VerbosityLevel.ERROR, settings.getVerbosity());
-        // The network mode is equal to the default value.
-        assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
         assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
     }
@@ -448,8 +428,6 @@ public class ParseTest
         assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
         // The verbosity is equal to the default value.
         assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The network mode is equal to the default value.
-        assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
         assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
     }
@@ -486,8 +464,6 @@ public class ParseTest
         assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
         // The verbosity is equal to the default value.
         assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The network mode is equal to the default value.
-        assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
         assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
     }
@@ -558,8 +534,6 @@ public class ParseTest
         assertEquals(99, settings.getMaxLobbies());
         // The verbosity is equal to the value read from file.
         assertEquals(VerbosityLevel.WARNING, settings.getVerbosity());
-        // The network mode is equal to the default value.
-        assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
         assertEquals(PortMode.FIXED, settings.getPortMode());
     }
@@ -600,8 +574,6 @@ public class ParseTest
         assertEquals(99, settings.getMaxLobbies());
         // The verbosity is equal to the value read from file.
         assertEquals(VerbosityLevel.WARNING, settings.getVerbosity());
-        // The network mode is equal to the default value.
-        assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
         assertEquals(PortMode.FIXED, settings.getPortMode());
     }
@@ -642,8 +614,6 @@ public class ParseTest
         assertEquals(99, settings.getMaxLobbies());
         // The verbosity is equal to the value read from file.
         assertEquals(VerbosityLevel.WARNING, settings.getVerbosity());
-        // The network mode is equal to the default value.
-        assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
         assertEquals(PortMode.FIXED, settings.getPortMode());
     }
@@ -681,8 +651,6 @@ public class ParseTest
         assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
         // The verbosity is equal to the value read from file.
         assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The network mode is equal to the default value.
-        assertEquals(NetworkMode.SOCKET, settings.getNetworkMode());
         // The port mode.
         assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
     }
@@ -720,8 +688,6 @@ public class ParseTest
         assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
         // The verbosity is equal to the value read from file.
         assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The network mode is equal to the default value.
-        assertEquals(NetworkMode.RMI, settings.getNetworkMode());
         // The port mode.
         assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
     }
@@ -762,8 +728,6 @@ public class ParseTest
         assertEquals(9999, settings.getMaxLobbies());
         // The verbosity is equal to the value read from file.
         assertEquals(VerbosityLevel.VERBOSE, settings.getVerbosity());
-        // The network mode is equal to the default value.
-        assertEquals(NetworkMode.RMI, settings.getNetworkMode());
         // The port mode.
         assertEquals(PortMode.FIXED, settings.getPortMode());
     }
@@ -801,8 +765,6 @@ public class ParseTest
         assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
         // The verbosity is equal to the value read from file.
         assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The network mode is equal to the default value.
-        assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
         assertEquals(PortMode.AUTO, settings.getPortMode());
     }
@@ -840,8 +802,6 @@ public class ParseTest
         assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
         // The verbosity is equal to the value read from file.
         assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The network mode is equal to the default value.
-        assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
         assertEquals(PortMode.FIXED, settings.getPortMode());
     }
@@ -880,8 +840,6 @@ public class ParseTest
         assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
         // The verbosity is equal to the value read from file.
         assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The network mode is equal to the default value.
-        assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
         assertEquals(PortMode.FIXED, settings.getPortMode());
     }
@@ -920,8 +878,6 @@ public class ParseTest
         assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
         // The verbosity is equal to the value read from file.
         assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The network mode is equal to the default value.
-        assertEquals(ServerSettings.DEF_NETWORK, settings.getNetworkMode());
         // The port mode.
         assertEquals(PortMode.AUTO, settings.getPortMode());
     }

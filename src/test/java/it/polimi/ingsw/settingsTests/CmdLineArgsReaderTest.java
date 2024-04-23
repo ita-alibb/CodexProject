@@ -428,7 +428,6 @@ public class CmdLineArgsReaderTest
                 cmdArgs,
                 OptionalInt.empty(),
                 ServerSettings.DEF_MAX_LOBBIES,
-                ServerSettings.DEF_NETWORK,
                 ServerSettings.DEF_VERBOSITY,
                 ServerSettings.DEF_PORT_MODE
         );
@@ -445,7 +444,6 @@ public class CmdLineArgsReaderTest
                 cmdArgs,
                 OptionalInt.of(1196),
                 ServerSettings.DEF_MAX_LOBBIES,
-                ServerSettings.DEF_NETWORK,
                 ServerSettings.DEF_VERBOSITY,
                 PortMode.FIXED
         );
@@ -463,7 +461,6 @@ public class CmdLineArgsReaderTest
                 cmdArgs,
                 OptionalInt.of(ServerSettings.PORT_MIN),
                 ServerSettings.DEF_MAX_LOBBIES,
-                ServerSettings.DEF_NETWORK,
                 ServerSettings.DEF_VERBOSITY,
                 PortMode.FIXED
         );
@@ -481,7 +478,6 @@ public class CmdLineArgsReaderTest
                 cmdArgs,
                 OptionalInt.of(ServerSettings.PORT_MAX),
                 ServerSettings.DEF_MAX_LOBBIES,
-                ServerSettings.DEF_NETWORK,
                 ServerSettings.DEF_VERBOSITY,
                 PortMode.FIXED
         );
@@ -528,7 +524,6 @@ public class CmdLineArgsReaderTest
                 cmdArgs,
                 OptionalInt.empty(),
                 ServerSettings.DEF_MAX_LOBBIES,
-                ServerSettings.DEF_NETWORK,
                 ServerSettings.DEF_VERBOSITY,
                 ServerSettings.DEF_PORT_MODE
         );
@@ -546,7 +541,6 @@ public class CmdLineArgsReaderTest
                 cmdArgs,
                 OptionalInt.empty(),
                 ServerSettings.DEF_MAX_LOBBIES,
-                ServerSettings.DEF_NETWORK,
                 ServerSettings.DEF_VERBOSITY,
                 ServerSettings.DEF_PORT_MODE
         );
@@ -564,7 +558,6 @@ public class CmdLineArgsReaderTest
                 cmdArgs,
                 OptionalInt.of(1196),
                 ServerSettings.DEF_MAX_LOBBIES,
-                ServerSettings.DEF_NETWORK,
                 ServerSettings.DEF_VERBOSITY,
                 PortMode.AUTO
         );
@@ -582,7 +575,6 @@ public class CmdLineArgsReaderTest
                 cmdArgs,
                 OptionalInt.of(1196),
                 ServerSettings.DEF_MAX_LOBBIES,
-                ServerSettings.DEF_NETWORK,
                 ServerSettings.DEF_VERBOSITY,
                 PortMode.AUTO
         );
@@ -614,7 +606,6 @@ public class CmdLineArgsReaderTest
                 cmdArgs,
                 OptionalInt.empty(),
                 ServerSettings.DEF_MAX_LOBBIES,
-                NetworkMode.RMI,
                 ServerSettings.DEF_VERBOSITY,
                 ServerSettings.DEF_PORT_MODE
         );
@@ -632,7 +623,6 @@ public class CmdLineArgsReaderTest
                 cmdArgs,
                 OptionalInt.empty(),
                 ServerSettings.DEF_MAX_LOBBIES,
-                NetworkMode.RMI,
                 ServerSettings.DEF_VERBOSITY,
                 ServerSettings.DEF_PORT_MODE
         );
@@ -650,7 +640,6 @@ public class CmdLineArgsReaderTest
                 cmdArgs,
                 OptionalInt.of(1196),
                 ServerSettings.DEF_MAX_LOBBIES,
-                NetworkMode.SOCKET,
                 ServerSettings.DEF_VERBOSITY,
                 PortMode.FIXED
         );
@@ -668,7 +657,6 @@ public class CmdLineArgsReaderTest
                 cmdArgs,
                 OptionalInt.of(1196),
                 ServerSettings.DEF_MAX_LOBBIES,
-                NetworkMode.RMI,
                 ServerSettings.DEF_VERBOSITY,
                 PortMode.FIXED
         );
@@ -686,7 +674,6 @@ public class CmdLineArgsReaderTest
                 cmdArgs,
                 OptionalInt.of(1196),
                 ServerSettings.DEF_MAX_LOBBIES,
-                NetworkMode.RMI,
                 ServerSettings.DEF_VERBOSITY,
                 PortMode.FIXED
         );
@@ -856,7 +843,6 @@ public class CmdLineArgsReaderTest
                 cmdArgs,
                 OptionalInt.of(4599),
                 ServerSettings.DEF_MAX_LOBBIES,
-                NetworkMode.SOCKET,
                 VerbosityLevel.VERBOSE,
                 PortMode.AUTO
         );
@@ -1012,7 +998,6 @@ public class CmdLineArgsReaderTest
                 cmdArgs,
                 OptionalInt.of(9963),
                 35,
-                NetworkMode.RMI,
                 VerbosityLevel.INFO,
                 PortMode.FIXED
         );
@@ -1025,7 +1010,7 @@ public class CmdLineArgsReaderTest
         assertEquals(expected, cmdArgs.getSettings().getServerSettings().getMaxLobbies());
     }
 
-    private static void checkServerCmdLineArgs(CmdLineArgs args, OptionalInt port, int maxLobbies, NetworkMode network, VerbosityLevel verbosity, PortMode portMode) {
+    private static void checkServerCmdLineArgs(CmdLineArgs args, OptionalInt port, int maxLobbies, VerbosityLevel verbosity, PortMode portMode) {
 
         // Check showHelp() returns false.
         assertFalse(args.showHelp());
@@ -1039,8 +1024,6 @@ public class CmdLineArgsReaderTest
         assertEquals(port, serverSettings.getPort());
         // Check max lobbies.
         assertEquals(maxLobbies, serverSettings.getMaxLobbies());
-        // Check network mode.
-        assertEquals(network, serverSettings.getNetworkMode());
         // Check verbosity.
         assertEquals(verbosity, serverSettings.getVerbosity());
         // Check port mode.
