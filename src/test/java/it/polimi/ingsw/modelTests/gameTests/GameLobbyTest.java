@@ -2,6 +2,7 @@ package it.polimi.ingsw.modelTests.gameTests;
 
 import it.polimi.ingsw.am52.exceptions.GameException;
 import it.polimi.ingsw.am52.model.game.GameLobby;
+import it.polimi.ingsw.am52.model.player.Player;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -11,36 +12,25 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class GameLobbyTest {
     /**
+     * The lobby to test
+     */
+    private static GameLobby lobby;
+
+    /**
      * Test player Getters
      */
     @Test
     @DisplayName("Game Lobby test")
     public void generalTest() {
-        GameLobby lobby;
-
         /*
          * Game lobby too large
          */
-        try {
-            lobby = new GameLobby(1,5);
-            assert (false);
-        } catch (GameException ex) {
-            assert (true);
-        } catch (Exception allEx) {
-            assert (false);
-        }
+        assertThrows(GameException.class, () -> lobby = new GameLobby(1,5));
 
         /*
          * Game lobby too small
          */
-        try {
-            lobby = new GameLobby(1,1);
-            assert (false);
-        } catch (GameException ex) {
-            assert (true);
-        } catch (Exception allEx) {
-            assert (false);
-        }
+        assertThrows(GameException.class, () -> lobby = new GameLobby(1,1));
 
         lobby = new GameLobby(1,3);
 
@@ -54,7 +44,10 @@ public class GameLobbyTest {
         assertTrue(lobby.addPlayer("Lorenzo"));
 
         assertTrue(lobby.isFull());
-        assertFalse(lobby.addPlayer("William"));
+
+        assertThrows(GameException.class, () -> {
+            lobby.addPlayer("William");
+        });
 
         assertTrue(lobby.getPlayers().stream().anyMatch(nickname -> Objects.equals(nickname, "Andrea")));
         assertTrue(lobby.getPlayers().stream().anyMatch(nickname -> Objects.equals(nickname, "Lorenzo")));

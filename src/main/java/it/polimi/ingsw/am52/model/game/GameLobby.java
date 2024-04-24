@@ -3,13 +3,18 @@ package it.polimi.ingsw.am52.model.game;
 import it.polimi.ingsw.am52.exceptions.GameException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 /**
- * TODO: maybe this class chan be moved to Controller section. This is used to collect hte players and then initialize the GameManager
+ *
  */
 public class GameLobby {
+    /**
+     * The max number of character in nickname
+     */
+    private static final int MAX_NAME_LENGTH = 16;
+
     /**
      * The id of the Lobby
      */
@@ -23,7 +28,7 @@ public class GameLobby {
     /**
      * The list of nickname of players
      */
-    private final List<String> Players;
+    private final List<String> players;
 
     /**
      * Create a new instance of a GameLobby
@@ -32,12 +37,12 @@ public class GameLobby {
      */
     public GameLobby(int id, int maxPlayers) throws GameException {
         this.id = id;
-        if (maxPlayers > 4 || maxPlayers < 2){
+        if (maxPlayers > GameManager.MAX_PLAYERS || maxPlayers < GameManager.MIN_PLAYERS){
             throw new GameException("Lobby must have 2 to 4 Players");
         }
 
         this.maxPlayers = maxPlayers;
-        this.Players = new ArrayList<>();
+        this.players = new ArrayList<>();
     }
 
 
@@ -54,7 +59,7 @@ public class GameLobby {
      * @return A bool indicating whether the nickname is valid
      */
     private boolean validateNickName(String nickName){
-        return nickName != null && !nickName.isBlank() && nickName.length() <= 16 && !this.Players.contains(nickName) && !this.isFull();
+        return nickName != null && !nickName.isBlank() && nickName.length() <= MAX_NAME_LENGTH && !this.players.contains(nickName);
     }
 
     /**
@@ -62,9 +67,13 @@ public class GameLobby {
      * @param nickName The nickname of the new player
      * @return A bool indicating whether the Player has been added
      */
-    public boolean addPlayer(String nickName){
+    public synchronized boolean addPlayer(String nickName) throws GameException{
+        if (this.isFull()){
+            throw new GameException("Lobby is full");
+        }
+
         if (validateNickName(nickName)){
-            return this.Players.add(nickName);
+            return this.players.add(nickName);
         }
         return false;
     }
@@ -74,8 +83,12 @@ public class GameLobby {
      * @param nickName The nickname of the player to remove
      * @return A bool indicating whether the Player has been removed
      */
-    public boolean removePlayer(String nickName){
-        return this.Players.remove(nickName);
+    public synchronized boolean removePlayer(String nickName){
+        if (!this.players.contains(nickName)){
+            throw new GameException("Player already not in lobby");
+        }
+
+        return this.players.remove(nickName);
     }
 
     /**
@@ -83,7 +96,7 @@ public class GameLobby {
      * @return The list of nicknames of players in lobby
      */
     public List<String> getPlayers(){
-        return this.Players;
+        return Collections.unmodifiableList(this.players);
     }
 
     /**
@@ -91,7 +104,7 @@ public class GameLobby {
      * @return The number of players
      */
     public long getPlayersCount(){
-        return this.Players.stream().filter(Objects::nonNull).count();
+        return this.players.size();
     }
 
     /**

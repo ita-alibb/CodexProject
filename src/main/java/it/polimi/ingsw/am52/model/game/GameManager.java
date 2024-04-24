@@ -20,11 +20,15 @@ import java.util.*;
 public class GameManager {
 
     //region Static Fields
+    /**
+     * The minimum number of players in a lobby
+     */
+    public static final int MIN_PLAYERS = 2;
 
     /**
      * The maximum number of players in a lobby
      */
-    static final int MAX_PLAYERS = 4;
+    public static final int MAX_PLAYERS = 4;
 
     //endregion
 
