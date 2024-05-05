@@ -1,0 +1,6 @@
+{
+  "method": "createLobby",
+  "data": {
+    "nickname": "Livio"
+  }
+}

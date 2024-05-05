@@ -1,0 +1,9 @@
+{
+  "method": "takeCard",
+  "playerId": 3,
+  "lobbyId": 889,
+  "data": {
+    "cardId": 69,
+    "type": "gold"
+  }
+}

@@ -1,10 +1,12 @@
 package it.polimi.ingsw.am52.model.game;
 
+import it.polimi.ingsw.am52.controller.User;
 import it.polimi.ingsw.am52.exceptions.GameException;
+import it.polimi.ingsw.am52.network.Sender;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  *
@@ -28,7 +30,7 @@ public class GameLobby {
     /**
      * The list of nickname of players
      */
-    private final List<String> players;
+    private final List<User> players;
 
     /**
      * Create a new instance of a GameLobby
@@ -58,22 +60,22 @@ public class GameLobby {
      * @param nickName The nickname of the new player
      * @return A bool indicating whether the nickname is valid
      */
-    private boolean validateNickName(String nickName){
+    private boolean validateNickName(String nickName) {
         return nickName != null && !nickName.isBlank() && nickName.length() <= MAX_NAME_LENGTH && !this.players.contains(nickName);
     }
 
     /**
      * Method to add a new player to the lobby
-     * @param nickName The nickname of the new player
+     * @param user The user of the new player
      * @return A bool indicating whether the Player has been added
      */
-    public synchronized boolean addPlayer(String nickName) throws GameException{
+    public synchronized boolean addPlayer(User user) throws GameException {
         if (this.isFull()){
             throw new GameException("Lobby is full");
         }
 
-        if (validateNickName(nickName)){
-            return this.players.add(nickName);
+        if (validateNickName(user.getUsername())){
+            return this.players.add(user);
         }
         return false;
     }
@@ -83,27 +85,27 @@ public class GameLobby {
      * @param nickName The nickname of the player to remove
      * @return A bool indicating whether the Player has been removed
      */
-    public synchronized boolean removePlayer(String nickName){
-        if (!this.players.contains(nickName)){
+    public synchronized boolean removePlayer(String nickName) throws GameException {
+        if (!this.getPlayersNickname().contains(nickName)){
             throw new GameException("Player already not in lobby");
         }
 
-        return this.players.remove(nickName);
+        return this.players.removeIf(user -> user.getUsername().equals(nickName));
     }
 
     /**
      * Method to retrieve all players in lobby
      * @return The list of nicknames of players in lobby
      */
-    public List<String> getPlayers(){
-        return Collections.unmodifiableList(this.players);
+    public List<String> getPlayersNickname() {
+        return this.players.stream().map(User::getUsername).toList();
     }
 
     /**
      * Method to retrieve the count of players
      * @return The number of players
      */
-    public long getPlayersCount(){
+    public long getPlayersCount() {
         return this.players.size();
     }
 
@@ -111,8 +113,16 @@ public class GameLobby {
      * Method to retrieve if the lobby is full
      * @return A bool indicating whether the lobby is full
      */
-    public boolean isFull(){
+    public boolean isFull() {
         return this.getPlayersCount() == this.maxPlayers;
+    }
+
+    /**
+     * Method to retrieve if the lobby is empty
+     * @return A bool indicating whether the lobby is empty
+     */
+    public boolean isEmpty() {
+        return this.getPlayersCount() == 0;
     }
 
     /**
@@ -121,13 +131,39 @@ public class GameLobby {
      *
      * @throws GameException if the requested user is not in the game
      */
-    public boolean isPlayerLoggedInLobby() throws GameException{
+    public boolean isPlayerLoggedInLobby() throws GameException {
         //TODO: To do this some refactoring is needed: make players a
         // list of User (so refactor all other methods, eg add player takes a User) .
         // Then remove the list of connected user from the ServerController (if needed one can query every GameLobby and get the players),
         // then this class can be used to check the connection of a player to the game
         // forse non serve perche' il client manda un "heartbeat" mentre e' il suo turno ogni tot secondi controlli che sia ancora connesso, se lo trovi non connesso allora si e' disconnesso e skippi il turno
         return true;
+    }
+
+    /**
+     * Method to get the user with nickname
+     * @param nickName the user nickname to search
+     * @return the optional of the user
+     */
+    public Optional<User> getPlayer(String nickName) {
+        return this.players.stream().filter(user -> user.getUsername().equals(nickName)).findFirst();
+    }
+
+    /**
+     * Method to get the user with clientId
+     * @param clientId the user clientId to search
+     * @return the optional of the user
+     */
+    public Optional<User> getPlayer(int clientId) {
+        return this.players.stream().filter(user -> user.getClientId() == clientId).findFirst();
+    }
+
+    /**
+     * Return all ClientHandler except the one to exclude
+     * @param clientIdToExclude the clientToNotBroadcast
+     */
+    public List<Sender> handlerToBroadcast(int clientIdToExclude) {
+        return this.players.stream().filter(u -> u.getClientId() != clientIdToExclude).map(User::getHandler).toList();
     }
 }
 

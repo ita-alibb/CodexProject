@@ -1,0 +1,5 @@
+{
+  "port": 3325,
+  "maxLobbies": 99,
+  "verbosity": "warning"
+}

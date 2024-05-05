@@ -43,7 +43,7 @@ public abstract class Phase {
     protected int turn;
 
     /**
-     * The current player
+     * The current player TODO: maybe this should be the nickname string?
      */
     protected int currPlayer;
 

@@ -120,16 +120,17 @@ public class GameManager {
         this.scoreBoard = new Hashtable<>();
         //Create the objects Player for every string passed to this constructor
         this.players = new ArrayList<>();
-        //Shuffle the list of the players, so that the order is random
-        Collections.shuffle(players);
+        //Shuffle the list of the players, so that the order is random. Needed another list because the list passed is unmodifiable
+        var shuffledPlayers = new ArrayList<>(players);
+        Collections.shuffle(shuffledPlayers);
         //Iterate for every player
-        for (String player : players) {
+        for (String player : shuffledPlayers) {
             /*
              * Draw two random Objective cards and one Starter card to initialize a Player
              */
             this.players.add(new Player(player, objectiveDealer.getNextItem(), objectiveDealer.getNextItem() , starterCardDeck.draw()));
             //Add the player to the ScoreBoard, with his initial score, i.e. zero
-            this.scoreBoard.put(players.indexOf(player), this.players.get(players.indexOf(player)).getScore());
+            this.scoreBoard.put(shuffledPlayers.indexOf(player), this.players.get(shuffledPlayers.indexOf(player)).getScore());
             //Give to each player 2 resource card and 1 gold card in his hand, drawn by the corresponding decks
             this.players.getLast().drawCard(this.resourceCardDeck.draw());
             this.players.getLast().drawCard(this.resourceCardDeck.draw());
@@ -320,6 +321,10 @@ public class GameManager {
         return this.scoreBoard;
     }
 
+    /**
+     * TODO: must be improved, not send the actual object
+     */
+    public Phase getStatusResponse(){ return this.phase; }
     //endregion
 
     //region Setters

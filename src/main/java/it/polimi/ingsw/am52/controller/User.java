@@ -1,5 +1,8 @@
 package it.polimi.ingsw.am52.controller;
 
+import it.polimi.ingsw.am52.network.ClientHandler;
+import it.polimi.ingsw.am52.network.Sender;
+
 import java.util.Objects;
 import java.util.Optional;
 
@@ -13,29 +16,37 @@ public class User {
     private String username;
 
     /**
-     * The password
-     */
-    private String password;
-
-    /**
      * The connected boolean
      */
     private boolean isConnected;
 
     /**
-     * The last GameLobbyId to which it has been connected
+     * The client message Handler
      */
-    private Optional<Integer> lastGameLobbyId;
+    private final Sender handler;
+
+    /**
+     * The client d, taken from its handler
+     */
+    private final int clientId;
 
     /**
      * Constructor of User
      * @param username The username
-     * @param password The password
      */
-    public User(String username, String password){
+    public User(String username, ClientHandler handler){
         this.username = username;
-        this.password = password;
         this.isConnected = true;
+        this.handler = handler;
+        this.clientId = handler.getClientId();
+    }
+
+    /**
+     * Return the clientId
+     * @return the clientId
+     */
+    public int getClientId() {
+        return clientId;
     }
 
     /**
@@ -46,12 +57,10 @@ public class User {
     }
 
     /**
-     * Method to "login", return true if the provided password is correct
-     * @param password The password to test
-     * @return A bool indicating whether the login was successful
+     * Get User's Handler
      */
-    public boolean login(String password){
-        return Objects.equals(password, this.password);
+    public Sender getHandler(){
+        return this.handler;
     }
 
     /**
@@ -66,26 +75,5 @@ public class User {
      */
     public void setConnected(boolean isConnected){
         this.isConnected = isConnected;
-    }
-
-    /**
-     * @return the last gameLobbyId connected
-     */
-    public Optional<Integer> getLastGameLobbyId() {
-        return lastGameLobbyId;
-    }
-
-    /**
-     * @param lastGameLobbyId the last game lobby id
-     */
-    public void setLastGameLobbyId(int lastGameLobbyId) {
-        this.lastGameLobbyId = Optional.of(lastGameLobbyId);
-    }
-
-    /**
-     * Reset the LastGameLobbyId
-     */
-    public void resetLastGameLobbyId() {
-        this.lastGameLobbyId = Optional.empty();
     }
 }

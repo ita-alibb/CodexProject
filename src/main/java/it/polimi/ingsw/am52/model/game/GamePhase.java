@@ -6,6 +6,10 @@ package it.polimi.ingsw.am52.model.game;
 
 public enum GamePhase {
     /**
+     * The game is not started yet, only Lobby is created
+     */
+    LOBBY,
+    /**
      * The very beginning of the game, the setup phase
      */
     INIT,
