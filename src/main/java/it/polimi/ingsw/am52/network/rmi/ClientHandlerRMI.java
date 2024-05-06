@@ -74,7 +74,8 @@ public class ClientHandlerRMI implements ClientHandler,Runnable {
         try {
             this.client.addQueue(response.getData());
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            // TODO: better logging
+            System.out.println("Error on sending for client " + this.clientId + "exception: " + e.getMessage());
         }
     }
 }

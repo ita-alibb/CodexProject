@@ -109,7 +109,7 @@ public class ClientHandlerTCP implements ClientHandler {
         try {
             this.out.println(response.toJson());
         } catch (Exception e) {
-            System.out.println("Exception on Serializing response: " + e.getMessage());
+            System.out.println("Exception on sending response to client: " + this.clientId + "exception: " + e.getMessage());
         }
     }
 }

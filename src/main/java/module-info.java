@@ -15,7 +15,12 @@ module it.polimi.ingsw.am52 {
 
     opens it.polimi.ingsw.am52.json to com.fasterxml.jackson.databind;
 
-    exports it.polimi.ingsw.am52.json.response to java.rmi;
+    exports it.polimi.ingsw.am52.json.response to java.rmi, com.fasterxml.jackson.databind;
+    exports it.polimi.ingsw.am52.json.request to java.rmi, com.fasterxml.jackson.databind;
+
+    opens it.polimi.ingsw.am52.json.request to com.fasterxml.jackson.databind;
+    opens it.polimi.ingsw.am52.json.response to com.fasterxml.jackson.databind;
+
     exports it.polimi.ingsw.am52.model.game to java.rmi;
     exports it.polimi.ingsw.am52.controller to java.rmi;
     exports it.polimi.ingsw.am52.network to java.rmi;
@@ -23,6 +28,5 @@ module it.polimi.ingsw.am52 {
     exports it.polimi.ingsw.am52.network.rmi to java.rmi;
     exports it.polimi.ingsw.am52.network.rmi.client to java.rmi;
     exports it.polimi.ingsw.am52.json to com.fasterxml.jackson.databind;
-    exports it.polimi.ingsw.am52.json.request to com.fasterxml.jackson.databind;
-    opens it.polimi.ingsw.am52.json.request to com.fasterxml.jackson.databind;
+
 }

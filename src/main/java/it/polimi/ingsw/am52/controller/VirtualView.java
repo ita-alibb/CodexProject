@@ -144,7 +144,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
      * @param response the Response to send to the client's. TODO: the response could be personalized for every client (ex: startGame, every client has a different response)
      */
     private void broadcast(JsonMessage<BaseResponseData> response) {
-        if (this.gameController != null) {
+        if (this.gameController != null && response.getData().getStatus().errorCode == 0) {
             // Get the handlers of the Game
             var handlers = this.gameController.handlerToBroadcast(this.clientId);
 
@@ -153,7 +153,8 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
                     handler.sendMessage(response);
                 }
             } catch (Exception e) {
-                throw new RuntimeException(e); // TODO: Error handling
+                // TODO: Better logging
+                System.out.println("Exception:" + e.getMessage());
             }
         }
     }
