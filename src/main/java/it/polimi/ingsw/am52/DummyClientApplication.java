@@ -1,6 +1,8 @@
 package it.polimi.ingsw.am52;
 
-import it.polimi.ingsw.am52.json.*;
+import it.polimi.ingsw.am52.json.request.CreateLobbyData;
+import it.polimi.ingsw.am52.json.request.JoinLobbyData;
+import it.polimi.ingsw.am52.json.request.LeaveGameData;
 import it.polimi.ingsw.am52.network.rmi.Accepter;
 import it.polimi.ingsw.am52.network.rmi.ActionsRMI;
 import it.polimi.ingsw.am52.network.rmi.client.Connection;
@@ -40,17 +42,17 @@ public class DummyClientApplication {
 
             // connection.execute delegates execution to the proxy virtual view
             var res = this.connection.execute(new CreateLobbyData("Paoletto",2));
-            System.out.println(res.getString());
+            System.out.println(res);
 
             Thread.sleep(10000000);
 
             System.out.println("Uscito dallo sleep");
 
             var res1 = this.connection.execute(new LeaveGameData("test msg"));
-            System.out.println(res1.getString());
+            System.out.println(res1);
 
             var res2 = this.connection.execute(new JoinLobbyData("Paoletto",2));
-            System.out.println(res2.getString());
+            System.out.println(res2);
 
             // endregion
         } catch (Exception e) {

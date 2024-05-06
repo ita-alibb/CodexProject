@@ -1,4 +1,4 @@
-package it.polimi.ingsw.am52.json;
+package it.polimi.ingsw.am52.json.request;
 
 /**
  * The select objective request object. The method is "selectObjective" and the

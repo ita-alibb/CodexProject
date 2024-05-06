@@ -1,4 +1,4 @@
-package it.polimi.ingsw.am52.json;
+package it.polimi.ingsw.am52.json.request;
 
 /**
  * The leave game request object. The method is "leaveGame" and the

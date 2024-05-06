@@ -1,8 +1,9 @@
 package it.polimi.ingsw.am52.network.rmi;
 
 import it.polimi.ingsw.am52.controller.VirtualView;
+import it.polimi.ingsw.am52.json.BaseResponseData;
+import it.polimi.ingsw.am52.json.JsonMessage;
 import it.polimi.ingsw.am52.network.ClientHandler;
-import it.polimi.ingsw.am52.json.response.Response;
 import it.polimi.ingsw.am52.network.rmi.client.ConnectionRMI;
 
 import java.rmi.RemoteException;
@@ -69,9 +70,9 @@ public class ClientHandlerRMI implements ClientHandler,Runnable {
      * @param response the message to send
      */
     @Override
-    public void sendMessage(Response<?> response) {
+    public void sendMessage(JsonMessage<BaseResponseData> response) {
         try {
-            this.client.addQueue(response);
+            this.client.addQueue(response.getData());
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

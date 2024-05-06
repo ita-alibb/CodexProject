@@ -1,4 +1,6 @@
-package it.polimi.ingsw.am52.json;
+package it.polimi.ingsw.am52.json.request;
+
+import it.polimi.ingsw.am52.json.JsonMessage;
 
 /**
  * The base class of all client request's messages.

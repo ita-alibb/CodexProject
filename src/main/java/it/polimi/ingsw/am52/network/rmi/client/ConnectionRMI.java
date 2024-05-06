@@ -1,6 +1,6 @@
 package it.polimi.ingsw.am52.network.rmi.client;
 
-import it.polimi.ingsw.am52.json.response.Response;
+import it.polimi.ingsw.am52.json.BaseResponseData;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -22,5 +22,5 @@ public interface ConnectionRMI extends Remote {
      * @param response the response forwarded
      * @throws RemoteException As defined in Remote interface
      */
-    void addQueue(Response<?> response) throws RemoteException;
+    void addQueue(BaseResponseData response) throws RemoteException;
 }

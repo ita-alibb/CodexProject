@@ -2,8 +2,8 @@ package it.polimi.ingsw.modelTests.jsonTests.takeCardRequest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import it.polimi.ingsw.am52.json.TakeCardData;
-import it.polimi.ingsw.am52.json.TakeCardRequest;
+import it.polimi.ingsw.am52.json.request.TakeCardData;
+import it.polimi.ingsw.am52.json.request.TakeCardRequest;
 import it.polimi.ingsw.am52.json.JsonDeserializer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

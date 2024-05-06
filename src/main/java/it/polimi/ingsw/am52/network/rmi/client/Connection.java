@@ -1,10 +1,9 @@
 package it.polimi.ingsw.am52.network.rmi.client;
 
-import it.polimi.ingsw.am52.json.CreateLobbyData;
-import it.polimi.ingsw.am52.json.JoinLobbyData;
-import it.polimi.ingsw.am52.json.LeaveGameData;
-import it.polimi.ingsw.am52.json.response.Response;
-import it.polimi.ingsw.am52.json.response.Status;
+import it.polimi.ingsw.am52.json.BaseResponseData;
+import it.polimi.ingsw.am52.json.request.CreateLobbyData;
+import it.polimi.ingsw.am52.json.request.JoinLobbyData;
+import it.polimi.ingsw.am52.json.request.LeaveGameData;
 import it.polimi.ingsw.am52.network.rmi.ActionsRMI;
 
 import java.rmi.RemoteException;
@@ -48,8 +47,8 @@ public class Connection extends UnicastRemoteObject implements ConnectionRMI{
      * @throws RemoteException As defined in Remote interface
      */
     @Override
-    public void addQueue(Response<?> response) throws RemoteException {
-        System.out.println(response.getString());
+    public void addQueue(BaseResponseData response) throws RemoteException {
+        System.out.println("response received" + response.getStatus().errorCode);
         // add the response to the queue and ends method, so the server can resume.
     }
 
@@ -60,27 +59,27 @@ public class Connection extends UnicastRemoteObject implements ConnectionRMI{
      * @param data the request
      * @return the Response of the call
      */
-    public Response<Integer> execute(CreateLobbyData data) {
+    public BaseResponseData execute(CreateLobbyData data) {
         try {
             return this.view.createLobby(data);
         } catch (RemoteException e) {
-            return new Response<>(new Status(), 2, -1 );
+            return null;
         }
     }
 
-    public Response<String> execute(JoinLobbyData data) {
+    public BaseResponseData execute(JoinLobbyData data) {
         try {
             return this.view.joinLobby(data);
         } catch (RemoteException e) {
-            return new Response<>(new Status(), 2, e.getMessage() );
+            return null;
         }
     }
 
-    public Response<String> execute(LeaveGameData data) {
+    public BaseResponseData execute(LeaveGameData data) {
         try {
             return this.view.leaveGame(data);
         } catch (RemoteException e) {
-            return new Response<>(new Status(), 2, e.getMessage() );
+            return null;
         }
     }
 

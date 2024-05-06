@@ -1,4 +1,4 @@
-package it.polimi.ingsw.am52.json;
+package it.polimi.ingsw.am52.json.request;
 
 /**
  * The login request object. The method of this request is "joinLobby" and the

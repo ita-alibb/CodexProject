@@ -1,4 +1,4 @@
-package it.polimi.ingsw.am52.json;
+package it.polimi.ingsw.am52.json.request;
 
 import java.io.Serializable;
 

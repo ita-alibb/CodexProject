@@ -1,4 +1,4 @@
-package it.polimi.ingsw.am52.json;
+package it.polimi.ingsw.am52.json.request;
 
 /**
  * The base class of all client request's messages regarding a player

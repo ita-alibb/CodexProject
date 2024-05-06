@@ -1,11 +1,12 @@
 package it.polimi.ingsw.am52.controller;
 
+import it.polimi.ingsw.am52.json.response.JoinLobbyResponseData;
+import it.polimi.ingsw.am52.json.response.LeaveGameResponseData;
 import it.polimi.ingsw.am52.model.game.GameLobby;
 import it.polimi.ingsw.am52.model.game.GameManager;
 import it.polimi.ingsw.am52.network.ClientHandler;
 import it.polimi.ingsw.am52.network.Sender;
-import it.polimi.ingsw.am52.json.response.Response;
-import it.polimi.ingsw.am52.json.response.Status;
+import it.polimi.ingsw.am52.json.response.ResponseStatus;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class GameController {
      * Constructor of the GameController
      * @param lobby The Lobby linked to this Game
      */
-    public GameController(GameLobby lobby){
+    public GameController(GameLobby lobby) {
         this.lobby = lobby;
     }
 
@@ -39,17 +40,21 @@ public class GameController {
      * @param clientId the client who requested
      * @param user the user that joined
      */
-    public synchronized Response<String> joinLobby(int clientId, User user) {
+    public JoinLobbyResponseData joinLobby(int clientId, User user) {
         if (!this.lobby.addPlayer(user)) {
-            return new Response<String>(new Status(), 1,"Qui ci sara' la risposta Errore");
+            return new JoinLobbyResponseData(new ResponseStatus(503, "Cannot add Player"));
         }
 
-        Response<String> res;
+        JoinLobbyResponseData res;
 
         if (this.lobby.isFull()) {
-            res = this.startGame();
+            if(this.startGame()){
+                res = new JoinLobbyResponseData(new ResponseStatus(this.game.getStatusResponse()), this.getId());
+            } else {
+                res = new JoinLobbyResponseData(new ResponseStatus(503, "Cannot start Game"), this.getId());
+            }
         } else {
-            res = new Response<String>(new Status(), 0,"Qui ci sara' la risposta");
+            res = new JoinLobbyResponseData(new ResponseStatus(), this.getId());
         }
 
         // Notify the clients and Response
@@ -60,120 +65,25 @@ public class GameController {
      * Method to join a lobby.
      *
      */
-    public synchronized Response<String> leaveLobby(int clientId) {
+    public LeaveGameResponseData leaveLobby(int clientId) {
         var user = this.lobby.getPlayer(clientId);
 
-        if (user.isEmpty())
-        {
+        if (user.isEmpty()) {
             //TODO: ERROR
-            return new Response<String>(new Status(), 1,"Qui ci sara' la risposta Errore");
+            return new LeaveGameResponseData(new ResponseStatus(404, "User not found"));
         }
 
-        if (!this.lobby.removePlayer(user.get().getUsername()))
-        {
+        if (!this.lobby.removePlayer(user.get().getUsername())) {
             // TODO: ERROR
-            return new Response<String>(new Status(), 1,"Qui ci sara' la risposta Errore");
+            return new LeaveGameResponseData(new ResponseStatus(405, "Player cannot be removed"));
         }
 
-        if (this.lobby.isEmpty()){
+        if (this.lobby.isEmpty()) {
             ServerController.getInstance().deleteGame(this);
         }
 
         // Notify the clients and Response
-        var res = new Response<String>(new Status(), 0,"Qui ci sara' la risposta");
-        return res;
-    }
-
-    /**
-     * Method to draw a Resource card
-     * @param Nickname the nickname of the client who requested to draw a card (It is always sent with the network connection)
-     */
-    public Response<String> drawResourceCard(int clientId, String Nickname){
-        // Error if the player is not the current player
-        if (!game.getCurrentPlayer().getNickname().equals(Nickname)){
-            return new Response<String>(new Status(this.game.getStatusResponse()), 1,"Qui ci sara' la risposta Errore");
-        }
-
-        game.drawResourceCard(); // TODO: handle exception
-
-        // Notify the clients and Response
-        var res = new Response<String>(new Status(this.game.getStatusResponse()), 0,"Qui ci sara' la risposta");
-        return res;
-    }
-
-    /**
-     * Method to draw a Gold card
-     * @param Nickname the nickname of the client who requested to draw a card (It is always sent with the network connection)
-     */
-    public Response<String> drawGoldCard(int clientId, String Nickname){
-        // Error if the player is not the current player
-        if (!game.getCurrentPlayer().getNickname().equals(Nickname)){
-            return new Response<String>(new Status(this.game.getStatusResponse()), 1,"Qui ci sara' la risposta Errore");
-        }
-
-        game.drawGoldCard(); // TODO: handle exception
-
-        // Notify the clients and Response
-        var res = new Response<String>(new Status(this.game.getStatusResponse()), 0,"Qui ci sara' la risposta");
-        return res;
-    }
-
-    /**
-     * Method to take a Resource card
-     * @param Nickname the nickname of the client who requested to draw a card (It is always sent with the network connection)
-     * @param cardId the card to take
-     */
-    public Response<String> takeResourceCard(int clientId, String Nickname, int cardId){
-        // Error if the player is not the current player
-        if (!game.getCurrentPlayer().getNickname().equals(Nickname)){
-            return new Response<String>(new Status(this.game.getStatusResponse()), 1,"Qui ci sara' la risposta Errore");
-        }
-
-        game.takeResourceCard(cardId);
-
-        // Notify the clients and Response
-        var res = new Response<String>(new Status(this.game.getStatusResponse()), 0,"Qui ci sara' la risposta");
-        return res;
-    }
-
-    /**
-     * Method to take a Gold card
-     * @param Nickname the nickname of the client who requested to draw a card (It is always sent with the network connection)
-     * @param cardId the card to take
-     */
-    public Response<String> takeGoldCard(int clientId, String Nickname, int cardId){
-        // Error if the player is not the current player
-        if (!game.getCurrentPlayer().getNickname().equals(Nickname)){
-            return new Response<String>(new Status(this.game.getStatusResponse()), 1,"Qui ci sara' la risposta Errore");
-        }
-
-        game.takeGoldCard(cardId); // TODO: handle exception
-
-        // Notify the clients and Response
-        var res = new Response<String>(new Status(this.game.getStatusResponse()), 0,"Qui ci sara' la risposta");
-        return res;
-    }
-
-    /**
-     * Method to place a card
-     * @param Nickname the nickname of the player
-     * @param hPos the h position
-     * @param vPos the v position
-     * @param cardId the cardId placed
-     * @param face the card face chosen
-     * @return the response
-     */
-    public Response<String> placeCard(int clientId, String Nickname,int hPos, int vPos, int cardId, int face){
-        // Error if the player is not the current player
-        if (!game.getCurrentPlayer().getNickname().equals(Nickname)){
-            return new Response<String>(new Status(this.game.getStatusResponse()), 1,"Qui ci sara' la risposta Errore");
-        }
-
-        game.placeCard(hPos,vPos,cardId,face); //TODO: handle exception
-
-        // Notify the clients and Response
-        var res = new Response<String>(new Status(this.game.getStatusResponse()), 0,"Qui ci sara' la risposta");
-        return res;
+        return new LeaveGameResponseData(new ResponseStatus(), "Lobby leaved!");
     }
 
     //endregion
@@ -186,17 +96,19 @@ public class GameController {
      * Init the GameController
      * Notify all user by in the lobby
      */
-    private Response<String> startGame(){
+    private boolean startGame(){
         if (this.game != null){
-            return new Response<String>(new Status(), 1,"Qui ci sara' la risposta Errore");
+            return false;
         }
 
-        this.game = new GameManager(this.lobby.getPlayersNickname());
-
-
-        // Notify the clients and Response
-        var res = new Response<String>(new Status(this.game.getStatusResponse()), 0,"Qui ci sara' la risposta");
-        return res;
+        try {
+            this.game = new GameManager(this.lobby.getPlayersNickname());
+            return true;
+        } catch (Exception e) {
+            //TODO: better logging
+            System.out.println("Exception on startGame: " + e.getMessage());
+            return false;
+        }
     }
 
     /**
@@ -217,7 +129,6 @@ public class GameController {
     }
 
     /**
-     * TODO: Broadcast DELLA RISPOSTA SOLO IN CASO NON CI SIANO ERRORI!! INOLTRE SI PUO' RIMETTERE L'HANDLER DA ESCLUDERE E MANDARE IL MESSAGGIO ALLA FINE DEL THREAD CHE NEL CLIENTHANDLER CHIAMA LA VIRTUALVIEW
      * Private method to broadcast the responses
      * @param clientToExclude the client id who did the request, if you broadcast to him, he will receive double message
      */

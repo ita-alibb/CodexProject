@@ -3,8 +3,8 @@ package it.polimi.ingsw.modelTests.jsonTests.joinLobbyRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import it.polimi.ingsw.am52.json.JsonDeserializer;
-import it.polimi.ingsw.am52.json.JoinLobbyData;
-import it.polimi.ingsw.am52.json.JoinLobbyRequest;
+import it.polimi.ingsw.am52.json.request.JoinLobbyData;
+import it.polimi.ingsw.am52.json.request.JoinLobbyRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

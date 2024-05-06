@@ -3,8 +3,8 @@ package it.polimi.ingsw.modelTests.jsonTests.placeCardRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import it.polimi.ingsw.am52.json.JsonDeserializer;
-import it.polimi.ingsw.am52.json.PlaceCardData;
-import it.polimi.ingsw.am52.json.PlaceCardRequest;
+import it.polimi.ingsw.am52.json.request.PlaceCardData;
+import it.polimi.ingsw.am52.json.request.PlaceCardRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

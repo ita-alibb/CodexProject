@@ -1,8 +1,9 @@
 package it.polimi.ingsw.am52.network.tcp;
 
 import it.polimi.ingsw.am52.controller.VirtualView;
+import it.polimi.ingsw.am52.json.BaseResponseData;
+import it.polimi.ingsw.am52.json.JsonMessage;
 import it.polimi.ingsw.am52.network.ClientHandler;
-import it.polimi.ingsw.am52.json.response.Response;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -104,8 +105,11 @@ public class ClientHandlerTCP implements ClientHandler {
      * @param response the message to send
      */
     @Override
-    public void sendMessage(Response<?> response) {
-        // Serialize Object to json TODO: needs to be done as Requests
-        this.out.println(response.getString());
+    public void sendMessage(JsonMessage<BaseResponseData> response) {
+        try {
+            this.out.println(response.toJson());
+        } catch (Exception e) {
+            System.out.println("Exception on Serializing response: " + e.getMessage());
+        }
     }
 }

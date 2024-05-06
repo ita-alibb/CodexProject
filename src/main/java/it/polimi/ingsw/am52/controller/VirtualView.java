@@ -1,9 +1,11 @@
 package it.polimi.ingsw.am52.controller;
 
 import it.polimi.ingsw.am52.json.*;
+import it.polimi.ingsw.am52.json.request.CreateLobbyData;
+import it.polimi.ingsw.am52.json.request.JoinLobbyData;
+import it.polimi.ingsw.am52.json.request.LeaveGameData;
+import it.polimi.ingsw.am52.json.response.*;
 import it.polimi.ingsw.am52.network.ClientHandler;
-import it.polimi.ingsw.am52.json.response.Response;
-import it.polimi.ingsw.am52.json.response.Status;
 import it.polimi.ingsw.am52.network.rmi.ActionsRMI;
 
 import java.rmi.RemoteException;
@@ -39,27 +41,28 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
      * @param jsonMsg the json message read from the socket
      * @throws NoSuchMethodException when the request method do not exist
      */
-    public Response<?> execute(String jsonMsg) throws NoSuchMethodException {
-        ClientRequest request;
+    public JsonMessage<BaseResponseData> execute(String jsonMsg) throws NoSuchMethodException {
+        JsonMessage request;
         try {
             request = JsonDeserializer.deserializeRequest(jsonMsg);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage() + "from id: " + clientId);
-            //if the message cannot be deserialized we ignore it
+            // if the message cannot be deserialized we ignore it
             return null;
         }
 
-        Response res;
+        JsonMessage<BaseResponseData> res;
         try {
             res = switch (request.getMethod()) {
-                case JsonDeserializer.CREATE_LOBBY_METHOD -> this.createLobby((CreateLobbyData) request.getData());
-                case JsonDeserializer.JOIN_LOBBY_METHOD -> this.joinLobby((JoinLobbyData) request.getData());
-                case JsonDeserializer.LEAVE_GAME_METHOD -> this.leaveGame((LeaveGameData) request.getData());
+                case JsonDeserializer.CREATE_LOBBY_METHOD -> new CreateLobbyResponse(this.createLobby((CreateLobbyData) request.getData()));
+                case JsonDeserializer.JOIN_LOBBY_METHOD -> new JoinLobbyResponse(this.joinLobby((JoinLobbyData) request.getData()));
+                case JsonDeserializer.LEAVE_GAME_METHOD -> new LeaveGameResponse(this.leaveGame((LeaveGameData) request.getData()));
                 default -> throw new NoSuchMethodException("no method " + request.getMethod());
             };
         } catch (RemoteException e) {
-            // Add default response error
-            res = new Response<>(new Status(), 2, "Error: " + e.getMessage() );
+            System.out.println("Error: " + e.getMessage() + "from id: " + clientId);
+            // if the message is malformed we ignore it
+            return null;
         }
 
         return res;
@@ -82,34 +85,35 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
     //TODO: All this actions are implementation of the actual execution, and they must return the data needed in RMI, those are the actions exposed in the network for RMI
 
     /**
-     * Method to perform the joinLobby Request
-     * @param data the request
-     */
-    public Response<String> joinLobby(JoinLobbyData data) throws RemoteException {
-        var response = ServerController.getInstance().joinLobby(this.clientId, data);
-
-        // the client has joined a lobby, set the GameController, in this way we remove the bottleneck on ServerController by using directly the related GameController
-        if (response.errorCode == 0) {
-            this.gameController = ServerController.getInstance().getGameController(data.getLobbyId()).get();
-        }
-
-        this.broadcast(response);
-        return response;
-    }
-
-    /**
      * Method to perform the createLobby Request
      */
-    public Response<Integer> createLobby(CreateLobbyData data) throws RemoteException  {
+    public JoinLobbyResponseData createLobby(CreateLobbyData data) throws RemoteException  {
         var response = ServerController.getInstance().createLobby(this.clientId, data);
 
         // the client has joined a lobby, set the GameController, in this way we remove the bottleneck on ServerController by using directly the related GameController
         //The LobbyId is in the response of the controller TODO: the response must be implemented as the requests
-        if (response.errorCode == 0) {
-            this.gameController = ServerController.getInstance().getGameController(response.body).get();
+        if (response.getStatus().errorCode == 0) {
+            this.gameController = ServerController.getInstance().getGameController(response.getLobbyId()).get();
         }
 
-        this.broadcast(response);
+        this.broadcast(new CreateLobbyResponse(response));
+        return response;
+    }
+
+    /**
+     * Method to perform the joinLobby Request
+     * @param data the request
+     */
+    public JoinLobbyResponseData joinLobby(JoinLobbyData data) throws RemoteException {
+        var response = ServerController.getInstance().joinLobby(this.clientId, data);
+
+        // the client has joined a lobby, set the GameController, in this way we remove the bottleneck on ServerController by using directly the related GameController
+        if (response.getStatus().errorCode == 0) {
+            this.gameController = ServerController.getInstance().getGameController(data.getLobbyId()).get();
+        }
+
+        this.broadcast(new JoinLobbyResponse(response));
+
         return response;
     }
 
@@ -117,16 +121,17 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
      * Method to perform the leaveGame Request
      * @param data the request
      */
-    public Response<String> leaveGame(LeaveGameData data) throws RemoteException {
+    public LeaveGameResponseData leaveGame(LeaveGameData data) throws RemoteException {
         // The request here is useless, the only thing needed is the clientId, the body is empty
         var response = this.gameController.leaveLobby(this.clientId);
 
-        this.broadcast(response);
+        this.broadcast(new LeaveGameResponse(response));
 
         // Particular case, when you leave then you have to set the reference to null
-        if (response.errorCode == 0) {
+        if (response.getStatus().errorCode == 0) {
             this.gameController = null;
         }
+
         return response;
     }
 
@@ -138,8 +143,8 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
      * The list of client is retrieved from the GameController
      * @param response the Response to send to the client's. TODO: the response could be personalized for every client (ex: startGame, every client has a different response)
      */
-    private void broadcast(Response<?> response) {
-        if (this.gameController != null && response.errorCode == 0) {
+    private void broadcast(JsonMessage<BaseResponseData> response) {
+        if (this.gameController != null) {
             // Get the handlers of the Game
             var handlers = this.gameController.handlerToBroadcast(this.clientId);
 

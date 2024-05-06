@@ -1,11 +1,11 @@
 package it.polimi.ingsw.am52.controller;
 
-import it.polimi.ingsw.am52.json.CreateLobbyData;
-import it.polimi.ingsw.am52.json.JoinLobbyData;
+import it.polimi.ingsw.am52.json.request.CreateLobbyData;
+import it.polimi.ingsw.am52.json.request.JoinLobbyData;
+import it.polimi.ingsw.am52.json.response.JoinLobbyResponseData;
 import it.polimi.ingsw.am52.model.game.GameLobby;
 import it.polimi.ingsw.am52.network.ClientHandler;
-import it.polimi.ingsw.am52.json.response.Response;
-import it.polimi.ingsw.am52.json.response.Status;
+import it.polimi.ingsw.am52.json.response.ResponseStatus;
 
 import java.util.*;
 
@@ -53,28 +53,31 @@ public class ServerController {
     // region Endpoints
 
     /**
-     * Method to open a lobby.
-     *
+     * Method to request to open a lobby
+     * @param clientId the client who sent the request
+     * @param createLobbyData the data sent by the client
+     * @return the JoinLobbyResponseData
      */
-    public Response<Integer> createLobby(int clientId, CreateLobbyData createLobbyData) {
-        var handler = this.getHandler(clientId);
+    public JoinLobbyResponseData createLobby(int clientId, CreateLobbyData createLobbyData) {
+        try {
+            var handler = this.getHandler(clientId);
 
-        if (handler.isEmpty()) {
-            return new Response<Integer>(new Status(), 1,0);
+            if (handler.isEmpty()) {
+                return new JoinLobbyResponseData(new ResponseStatus(404, "Client not found"));
+            }
+
+            var id = this.getUniqueId();
+
+            var gameController = new GameController(new GameLobby(id, createLobbyData.getNumPlayers()));
+
+            this.gameControllerList.add(gameController);
+
+            var user = new User(createLobbyData.getNickname(), handler.get());
+
+            return gameController.joinLobby(clientId, user);
+        } catch (Exception e) {
+            return new JoinLobbyResponseData(new ResponseStatus(503, "Error on createLobby: " + e.getMessage()));
         }
-
-        var id = this.getUniqueId();
-
-        var gameController = new GameController(new GameLobby(id, createLobbyData.getNumPlayers()));
-
-        this.gameControllerList.add(gameController);
-
-        var user = new User(createLobbyData.getNickname(), handler.get());
-
-        gameController.joinLobby(clientId, user);
-        //tempo return
-        return new Response<Integer>(new Status(), 0,id);
-        // TODO: IN GENERAL ADD ALL "throws" in interface and methods that can throw exception and then handle them in the controller
     }
 
     /**
@@ -83,19 +86,29 @@ public class ServerController {
      * @param joinLobbyData the joinLobbyRequest's Data
      *
      */
-    public Response<String> joinLobby(int clientId, JoinLobbyData joinLobbyData) {
-        var gameController = this.getGameController(joinLobbyData.getLobbyId());
-        var handler = this.getHandler(clientId);
+    public JoinLobbyResponseData joinLobby(int clientId, JoinLobbyData joinLobbyData) {
+        try {
+            var gameController = this.getGameController(joinLobbyData.getLobbyId());
 
-        if (handler.isEmpty() || gameController.isEmpty())
-        {
-            // Fail Response, the username is not correct. TODO: How to send Responses?
-            return new Response<String>(new Status(), 1,"Qui ci sara' la risposta Errore");
+            if (gameController.isEmpty())
+            {
+                return new JoinLobbyResponseData(new ResponseStatus(404, "Game not found"));
+            }
+
+            var handler = this.getHandler(clientId);
+
+            if (handler.isEmpty())
+            {
+                return new JoinLobbyResponseData(new ResponseStatus(404, "Client not found"));
+            }
+
+
+            var user = new User(joinLobbyData.getNickname(), handler.get());
+
+            return gameController.get().joinLobby(clientId, user);
+        } catch (Exception e) {
+            return new JoinLobbyResponseData(new ResponseStatus(503, "Error on createLobby: " + e.getMessage()));
         }
-
-        var user = new User(joinLobbyData.getNickname(), handler.get());
-
-        return gameController.get().joinLobby(clientId, user);
     }
 
     // endregion

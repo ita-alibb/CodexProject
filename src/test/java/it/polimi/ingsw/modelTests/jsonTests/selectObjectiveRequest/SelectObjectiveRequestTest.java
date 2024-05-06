@@ -3,6 +3,8 @@ package it.polimi.ingsw.modelTests.jsonTests.selectObjectiveRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import it.polimi.ingsw.am52.json.*;
+import it.polimi.ingsw.am52.json.request.SelectObjectiveData;
+import it.polimi.ingsw.am52.json.request.SelectObjectiveRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
