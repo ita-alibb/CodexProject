@@ -6,10 +6,12 @@ import it.polimi.ingsw.am52.json.request.JoinLobbyData;
 import it.polimi.ingsw.am52.json.request.LeaveGameData;
 import it.polimi.ingsw.am52.json.response.*;
 import it.polimi.ingsw.am52.network.ClientHandler;
+import it.polimi.ingsw.am52.network.Sender;
 import it.polimi.ingsw.am52.network.rmi.ActionsRMI;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 
 /**
  * The VirtualView, it is instantiated in {@link it.polimi.ingsw.am52.network.ServerConnection} and assigned to a {@link ClientHandler}
@@ -146,7 +148,29 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
     private void broadcast(JsonMessage<BaseResponseData> response) {
         if (this.gameController != null && response.getData().getStatus().errorCode == 0) {
             // Get the handlers of the Game
-            var handlers = this.gameController.handlerToBroadcast(this.clientId);
+            List<Sender> handlers = this.gameController.handlerToBroadcast(this.clientId);
+
+            try {
+                for (var handler : handlers) {
+                    handler.sendMessage(response);
+                }
+            } catch (Exception e) {
+                // TODO: Better logging
+                System.out.println("Exception:" + e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Method called at last step of every execution.
+     * If the response is correct and the Client is in a Game the response is broadcast to every other user in the game.
+     * The list of client is retrieved from the GameController
+     * @param response the Response to send to the client's. TODO: the response could be personalized for every client (ex: startGame, every client has a different response)
+     */
+    private void broadcastPersonalized(JsonMessage<BaseResponseData> response) {
+        if (this.gameController != null && response.getData().getStatus().errorCode == 0) {
+            // Get the handlers of the Game
+            List<Sender> handlers = this.gameController.handlerToBroadcast(this.clientId);
 
             try {
                 for (var handler : handlers) {

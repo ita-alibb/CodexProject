@@ -84,6 +84,7 @@ public class ServerConnection extends UnicastRemoteObject implements Accepter, R
                     // add Handler to the Server, if fails close connection
                     ServerController.getInstance().addHandler(clientHandler);
                     this.clientConnections.execute(clientHandler);
+                    System.out.println("Client " + newId + " connected via TCP");
                 }
                 catch (Exception e) {
                     socket.close();
@@ -118,6 +119,7 @@ public class ServerConnection extends UnicastRemoteObject implements Accepter, R
         ServerController.getInstance().addHandler(clientHandler);
         this.clientConnections.execute(clientHandler);
 
+        System.out.println("Client " + newId + " connected via RMI");
         return newId;
     }
 

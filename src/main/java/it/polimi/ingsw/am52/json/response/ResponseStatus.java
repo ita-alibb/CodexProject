@@ -14,7 +14,7 @@ public class ResponseStatus implements Serializable {
     /**
      * The current player
      */
-    public int currPlayer;
+    public String currPlayer;
 
     /**
      * The error code
@@ -31,7 +31,7 @@ public class ResponseStatus implements Serializable {
      */
     public ResponseStatus() {
         this.gamePhase = GamePhase.LOBBY;
-        this.currPlayer = 0;
+        this.currPlayer = "";
         this.errorCode = 0;
         this.errorMessage = "";
     }
@@ -43,7 +43,7 @@ public class ResponseStatus implements Serializable {
      */
     public ResponseStatus(int errorCode, String errorMessage) {
         this.gamePhase = GamePhase.LOBBY;
-        this.currPlayer = 0;
+        this.currPlayer = "";
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
     }

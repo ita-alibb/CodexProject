@@ -3,9 +3,6 @@ package it.polimi.ingsw.am52.controller;
 import it.polimi.ingsw.am52.network.ClientHandler;
 import it.polimi.ingsw.am52.network.Sender;
 
-import java.util.Objects;
-import java.util.Optional;
-
 /**
  * The User class, it represents the connected clients to the server
  */
@@ -52,7 +49,7 @@ public class User {
     /**
      * @return The username of the user
      */
-    public String getUsername(){
+    public String getUsername() {
         return this.username;
     }
 

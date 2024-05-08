@@ -83,14 +83,21 @@ public class GameLobby {
     /**
      * Method to remove a new player from the lobby
      * @param nickName The nickname of the player to remove
-     * @return A bool indicating whether the Player has been removed
      */
-    public synchronized boolean removePlayer(String nickName) throws GameException {
-        if (!this.getPlayersNickname().contains(nickName)){
+    public synchronized void removePlayer(String nickName) throws GameException {
+        if (!this.players.removeIf(user -> user.getUsername().equals(nickName))) {
             throw new GameException("Player already not in lobby");
         }
+    }
 
-        return this.players.removeIf(user -> user.getUsername().equals(nickName));
+    /**
+     * Method to remove a new player from the lobby
+     * @param clientId The clientId of the player to remove
+     */
+    public synchronized void removePlayer(int clientId) throws GameException {
+        if (!this.players.removeIf(user -> user.getClientId() == clientId)) {
+            throw new GameException("Player already not in lobby");
+        }
     }
 
     /**

@@ -22,7 +22,7 @@ public class PhaseTest {
     @BeforeAll
     public static void setUp() {
         //Create a new instance of Phase, to test the getters
-        phase = new InitPhase();
+        phase = new InitPhase("Andrea");
         //Create an instance of GameManager, to test the passages of phases
         List<String> players = new ArrayList<>();
         players.add("Andrea");
@@ -37,7 +37,7 @@ public class PhaseTest {
     @DisplayName("Getters test")
     public void gettersTest() {
         assertEquals(GamePhase.INIT, phase.getPhase());
-        assertEquals(0, phase.getCurrPlayer());
+        assertEquals("Andrea", phase.getCurrPlayer());
         assertEquals(0, phase.getTurn());
         assertFalse(phase.isLastTurn());
     }
@@ -59,7 +59,7 @@ public class PhaseTest {
     public void placePhaseTest() {
         assertEquals(GamePhase.PLACING, manager.getStatus());
         //Update the used phase.
-        phase = new PlacingPhase();
+        phase = new PlacingPhase(phase);
         //We call the method to change the phase, which now should be DRAWING
         phase.next(manager);
         assertEquals(GamePhase.DRAWING, manager.getStatus());
@@ -71,7 +71,7 @@ public class PhaseTest {
     public void drawPhaseTest() {
         assertEquals(GamePhase.DRAWING, manager.getStatus());
         //Update the used phase
-        phase = new DrawingPhase();
+        phase = new DrawingPhase(phase);
         //We call the method to change the phase, which now should be again PLACING
         phase.next(manager);
         assertEquals(GamePhase.PLACING, manager.getStatus());

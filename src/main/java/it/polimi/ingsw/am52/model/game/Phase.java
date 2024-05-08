@@ -43,9 +43,9 @@ public abstract class Phase {
     protected int turn;
 
     /**
-     * The current player TODO: maybe this should be the nickname string?
+     * The current player
      */
-    protected int currPlayer;
+    protected String currPlayer;
 
     /**
      * The indicator of the very last turn
@@ -59,8 +59,13 @@ public abstract class Phase {
     /**
      * The constructor of the class Phase
      */
-    public Phase() {
+    public Phase(Phase oldPhase) {
+        this.turn = oldPhase.turn;
+        this.currPlayer = oldPhase.currPlayer;
+        this.isLastTurn = oldPhase.isLastTurn;
+    }
 
+    protected Phase() {
     }
 
     //endregion
@@ -95,7 +100,7 @@ public abstract class Phase {
     /**
      * @return The current player
      */
-    public int getCurrPlayer() {
+    public String getCurrPlayer() {
         return this.currPlayer;
     }
 
@@ -117,7 +122,7 @@ public abstract class Phase {
      * @param objectiveId   The ID of the card
      * @implNote This method can only be executed during the InitPhase; in the other phases, this will throw a new exception.
      */
-    synchronized public void setPlayerChosenObject(GameManager manager, PlayerSetup player, int objectiveId) {
+    public synchronized void setPlayerChosenObject(GameManager manager, PlayerSetup player, int objectiveId) {
         throw new PhaseException("Incorrect phase");
     }
 
@@ -128,7 +133,7 @@ public abstract class Phase {
      * @param side      The face of the card
      * @implNote This method can only be executed during the InitPhase; in the other phases, this will throw a new exception.
      */
-    synchronized public void placeStarterCard(PlayerBoardSetup player, StarterCard card, CardSide side) {
+    public synchronized void placeStarterCard(GameManager manager, PlayerBoardSetup player, StarterCard card, CardSide side) {
         throw new PhaseException("Incorrect phase");
     }
 
@@ -143,7 +148,7 @@ public abstract class Phase {
      * @param face      The face of the card
      * @implNote This method can only be executed during the PlacingPhase; in the other phases, this will throw a new exception.
      */
-    synchronized public void placeCard(GameManager manager, PlayerDrawing player, BoardSlot slot, KingdomCard card, KingdomCardFace face) {
+    public synchronized void placeCard(GameManager manager, PlayerDrawing player, BoardSlot slot, KingdomCard card, KingdomCardFace face) {
         throw new PhaseException("Incorrect phase");
     }
 
@@ -157,7 +162,7 @@ public abstract class Phase {
      * @param card      The card drawn
      * @implNote This method can only be executed during the DrawingPhase; in the other phases, this will throw a new exception.
      */
-    synchronized public void drawResourceCard(GameManager manager, PlayerDrawing player, ResourceCard card) {
+    public synchronized void drawResourceCard(GameManager manager, PlayerDrawing player, ResourceCard card) {
         throw new PhaseException("Incorrect phase");
     }
 
@@ -167,7 +172,7 @@ public abstract class Phase {
      * @param card      The card drawn
      * @implNote This method can only be executed during the DrawingPhase; in the other phases, this will throw a new exception.
      */
-    synchronized public void drawGoldCard(GameManager manager, PlayerDrawing player, GoldCard card) {
+    public synchronized void drawGoldCard(GameManager manager, PlayerDrawing player, GoldCard card) {
         throw new PhaseException("Incorrect phase");
     }
 
@@ -178,7 +183,7 @@ public abstract class Phase {
      * @param visibleCards  The List of the visible cards
      * @implNote This method can only be executed during the DrawingPhase; in the other phases, this will throw a new exception.
      */
-    synchronized public void takeResourceCard(GameManager manager, PlayerDrawing player, ResourceCard drawnCard, List<ResourceCard> visibleCards) {
+    public synchronized void takeResourceCard(GameManager manager, PlayerDrawing player, ResourceCard drawnCard, List<ResourceCard> visibleCards) {
         throw new PhaseException("Incorrect phase");
     }
 
@@ -189,7 +194,7 @@ public abstract class Phase {
      * @param visibleCards  The List of the visible cards
      * @implNote This method can only be executed during the DrawingPhase; in the other phases, this will throw a new exception.
      */
-    synchronized public void takeGoldCard(GameManager manager, PlayerDrawing player, GoldCard drawnCard, List<GoldCard> visibleCards) {
+    public synchronized void takeGoldCard(GameManager manager, PlayerDrawing player, GoldCard drawnCard, List<GoldCard> visibleCards) {
         throw new PhaseException("Incorrect phase");
     }
 
@@ -202,7 +207,7 @@ public abstract class Phase {
      * @return  The list with one or more winners, in case of a tie.
      * @implNote This method can only be executed during the EndPhase; in the other phases, this will throw a new exception.
      */
-    synchronized public List<PlayerInfo> getWinners(GameManager manager, List<PlayerInfo> players) {
+    public synchronized List<PlayerInfo> getWinners(GameManager manager, List<PlayerInfo> players) {
         throw new PhaseException("Incorrect phase");
     }
 

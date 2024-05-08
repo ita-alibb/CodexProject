@@ -73,7 +73,9 @@ public class GameController {
             return new LeaveGameResponseData(new ResponseStatus(404, "User not found"));
         }
 
-        if (!this.lobby.removePlayer(user.get().getUsername())) {
+        try {
+            this.lobby.removePlayer(user.get().getUsername());
+        } catch (Exception ex) {
             // TODO: ERROR
             return new LeaveGameResponseData(new ResponseStatus(405, "Player cannot be removed"));
         }
@@ -124,8 +126,14 @@ public class GameController {
      * @param handler the clientHandler that disconnects
      */
     public void disconnect(ClientHandler handler) {
-        ServerController.getInstance().disconnect(handler);
-        // TODO: How to handle disconnection? Set on User isConnected to false and enable reconnection or trigger the end phase of the game and shut down the game?
+        try {
+            // TODO: How to handle disconnection? Set on User isConnected to false and enable reconnection or trigger the end phase of the game and shut down the game?
+            this.lobby.removePlayer(handler.getClientId());
+            ServerController.getInstance().disconnect(handler);
+        } catch (Exception e) {
+            // TODO: Improve logging
+            System.out.println("Exception on disconnect: " + e.getMessage());
+        }
     }
 
     /**

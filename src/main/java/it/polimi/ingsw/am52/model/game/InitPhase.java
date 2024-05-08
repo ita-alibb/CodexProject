@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am52.model.game;
 
+import it.polimi.ingsw.am52.exceptions.PlayingBoardException;
 import it.polimi.ingsw.am52.model.cards.CardSide;
 import it.polimi.ingsw.am52.model.cards.StarterCard;
 import it.polimi.ingsw.am52.model.objectives.Objective;
@@ -16,9 +17,9 @@ public class InitPhase extends Phase {
     /**
      * Constructor of the class
      */
-    public InitPhase() {
+    public InitPhase(String firstPlayer) {
         this.phase = GamePhase.INIT;
-        this.currPlayer = 0;
+        this.currPlayer = firstPlayer;
         this.turn = 0;
         this.isLastTurn = false;
     }
@@ -31,19 +32,20 @@ public class InitPhase extends Phase {
      * {@inheritDoc}
      */
     @Override
-    synchronized public void next(GameManager manager) {
-        manager.setPhase(new PlacingPhase());
+    public synchronized void next(GameManager manager) {
+        manager.setPhase(new PlacingPhase(this));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    synchronized public void setPlayerChosenObject(GameManager manager, PlayerSetup player, int objectiveId) {
+    public synchronized void setPlayerChosenObject(GameManager manager, PlayerSetup player, int objectiveId) {
         //We call the method of the Interface PlayerSetup to choose the objective card of the player
         player.setSecretObjective(Objective.getObjectiveWithId(objectiveId));
-        //Check if all the players chose a secret objective
-        if (manager.getPlayerInfos().stream().allMatch(pInfo -> pInfo.getObjective() != null)) {
+
+        //Check if all the players chose a secret objective and placed the starter card
+        if (this.isSetupFinished(manager)) {
             this.next(manager);
         }
     }
@@ -52,9 +54,21 @@ public class InitPhase extends Phase {
      * {@inheritDoc}
      */
     @Override
-    synchronized public void placeStarterCard(PlayerBoardSetup player, StarterCard card, CardSide side) {
+    public synchronized void placeStarterCard(GameManager manager, PlayerBoardSetup player, StarterCard card, CardSide side) {
         player.placeStarterCardFace(side == CardSide.FRONT ? card.getFrontFace() : card.getBackFace());
+
+        //Check if all the players chose a secret objective and placed the starter card
+        if (this.isSetupFinished(manager)) {
+            this.next(manager);
+        }
     }
 
+    private synchronized boolean isSetupFinished(GameManager manager) {
+        try {
+            return manager.getPlayerInfos().stream().allMatch(pInfo -> pInfo.getObjective() != null) && manager.getPlayerInfos().stream().allMatch(pInfo -> pInfo.getPlayingBoard() != null);
+        } catch (PlayingBoardException e) {
+            return false;
+        }
+    }
     //endregion
 }

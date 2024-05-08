@@ -14,7 +14,8 @@ public class DrawingPhase extends Phase {
 
     //region Constructor
 
-    public DrawingPhase() {
+    public DrawingPhase(Phase oldPhase) {
+        super(oldPhase);
         this.phase = GamePhase.DRAWING;
     }
 
@@ -27,27 +28,25 @@ public class DrawingPhase extends Phase {
      * In this case, the normal next phase is PLACING, so the next phase is PlacingPhase
      */
     @Override
-    synchronized public void next(GameManager manager) {
+    public synchronized void next(GameManager manager) {
         //Update the current player
-        this.currPlayer = (this.currPlayer + 1) % manager.getPlayersCount();
-        //Update the phase, choosing the correct one thanks to the number of currentPlayer
-        if (this.currPlayer == 0) {
-            if (isLastTurn) {
-                manager.setPhase(new EndingPhase());
-            }
-            else {
-                if (manager.getScoreBoard().containsValue(20) || (manager.getResourceDeckCount() == 0 && manager.getGoldDeckCount() == 0)) {
-                    this.isLastTurn = true;
-                    manager.setPhase(new PlacingPhase());
-                }
-                else {
-                    manager.setPhase(new PlacingPhase());
+        var tmpPlayer = manager.getNextPlayer(this.currPlayer);
+
+        if (tmpPlayer != null) {
+            this.currPlayer = tmpPlayer;
+
+            //Update the phase, choosing the correct one thanks to the number of currentPlayer
+            if (manager.getPlayerInfos().get(0).getNickname().equals(this.currPlayer)) {
+                if (isLastTurn) {
+                    manager.setPhase(new EndingPhase(this));
+                    return;
+                } else {
+                    this.isLastTurn = (manager.getScoreBoard().containsValue(20) || (manager.getResourceDeckCount() == 0 && manager.getGoldDeckCount() == 0));
                     turn++;
                 }
             }
-        }
-        else {
-            manager.setPhase(new PlacingPhase());
+
+            manager.setPhase(new PlacingPhase(this));
         }
     }
 

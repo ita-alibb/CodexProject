@@ -37,6 +37,7 @@ public class Connection extends UnicastRemoteObject implements ConnectionRMI{
      */
     @Override
     public void heartBeat() throws RemoteException {
+        System.out.println("heartbeat");
         //heartbeat method, hopefully throws exception if the clients shut down and so this class instance is not valid anymore
     }
 

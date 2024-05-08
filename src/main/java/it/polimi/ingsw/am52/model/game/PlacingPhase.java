@@ -16,7 +16,8 @@ public class PlacingPhase extends Phase {
     /**
      * Constructor of the class
      */
-    public PlacingPhase() {
+    public PlacingPhase(Phase oldPhase) {
+        super(oldPhase);
         this.phase = GamePhase.PLACING;
     }
 
@@ -29,7 +30,7 @@ public class PlacingPhase extends Phase {
      */
     @Override
     synchronized public void next(GameManager manager) {
-        manager.setPhase(new DrawingPhase());
+        manager.setPhase(new DrawingPhase(this));
     }
 
     /**

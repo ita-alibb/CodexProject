@@ -5,6 +5,7 @@ import it.polimi.ingsw.am52.exceptions.PlayingBoardException;
 import it.polimi.ingsw.am52.model.cards.CardSide;
 import it.polimi.ingsw.am52.model.game.GameManager;
 import it.polimi.ingsw.am52.model.game.GamePhase;
+import it.polimi.ingsw.am52.model.player.PlayerInfo;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -18,22 +19,22 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class GameManagerTest {
-    private static List<String> players;
+    private static List<String> initList;
     private static GameManager manager;
 
     /**
      * Instantiate the List of Player, which comes from the Controller
      */
-    @BeforeEach
-    public void setUp() {
-        players = new ArrayList<>();
+    @BeforeAll
+    public static void setUp() {
+        initList = new ArrayList<String>();
         //Creating a list of nicknames
-        players.add("Andrea");      //PlayerId: 0
-        players.add("Livio");       //PlayerId: 1
-        players.add("Lorenzo");     //PlayerId: 2
-        players.add("William");     //PlayerId: 3
+        initList.add("Andrea");      //PlayerId: 0
+        initList.add("Livio");       //PlayerId: 1
+        initList.add("Lorenzo");     //PlayerId: 2
+        initList.add("William");     //PlayerId: 3
         //Create the object GameManager
-        manager = new GameManager(players);
+        manager = new GameManager(initList);
     }
     /**
      * Test on some exceptions thrown by the constructor, to add in future
@@ -43,6 +44,12 @@ public class GameManagerTest {
     @DisplayName("Test GameManager constructor exceptions")
     public void constructorExceptionTest() {
         //Add a player to the list
+        var players = new ArrayList<String>();
+        //Creating a list of nicknames
+        players.add("Andrea");      //PlayerId: 0
+        players.add("Livio");       //PlayerId: 1
+        players.add("Lorenzo");     //PlayerId: 2
+        players.add("William");
         players.add("Not expected");
         //Catch the exception
         GameException exception = assertThrows(GameException.class, () -> new GameManager(players));
@@ -64,63 +71,53 @@ public class GameManagerTest {
      */
     @Test
     @Order(2)
-    @DisplayName("Test GameManager Getters and Setters")
-    public void gettersTest() {
+    @DisplayName("Test GameManager Init")
+    public void InitTest() {
         //Players must be 4
-        assertEquals(players.size(), manager.getPlayersCount());
+        assertEquals(4, manager.getPlayersCount());
         //The given players are in the game; they are shuffled, so the order in players could be different
-        for (int i = 0; i < players.size(); i++) {
-            assertTrue(players.contains(manager.getPlayer(i).getNickname()));
+        for (String nickname : initList) {
+            assertNotNull(manager.getPlayer(nickname));
         }
-        //There aren't other players in the lobby but the ones given
-        for (int i = 0; i < players.size(); i++) {
-            assertNotEquals("Unknown", manager.getPlayer(i).getNickname());
-        }
-        //Starting the game, the game phase should be "INIT"
-        assertEquals(GamePhase.INIT, manager.getStatus());
+
         //The initial score of all players is zero
-        assertEquals(0, manager.getScoreBoard().get(0));
-        assertEquals(0, manager.getScoreBoard().get(1));
-        assertEquals(0, manager.getScoreBoard().get(2));
-        assertEquals(0, manager.getScoreBoard().get(3));
-        //The secret objective at this point should be null
-        assertNull(manager.getPlayer(0).getObjective());
-        //If we choose the Objective, this field should be occupied, and not null
-        manager.setPlayerChosenObject(0, manager.getPlayerObjectiveOptions(0).getFirst().getObjectiveId());
-        assertNotNull(manager.getPlayer(0).getObjective());
-        //To make sure we modify only the objective of the given player, the others' objectives should be null at the moment
-        assertNull(manager.getPlayer(1).getObjective());
-        //If we associate an objective to a Player, this is certainly different from the one of another player
-        manager.setPlayerChosenObject(1, manager.getPlayerObjectiveOptions(1).getFirst().getObjectiveId());
-        assertNotEquals(manager.getPlayer(0).getObjective(), manager.getPlayer(1).getObjective());
-        //Let's associate an objective to the other two players, and the game phase should change to DRAWING, because the game is starting
-        manager.setPlayerChosenObject(2, manager.getPlayerObjectiveOptions(2).getFirst().getObjectiveId());
-        manager.setPlayerChosenObject(3, manager.getPlayerObjectiveOptions(3).getFirst().getObjectiveId());
+        assertTrue(manager.getScoreBoard().values().stream().allMatch(s -> s == 0));
+
+        for (String nickname : manager.getPlayerInfos().stream().map(PlayerInfo::getNickname).toList()) {
+            // The game is still in INIT
+            assertEquals(GamePhase.INIT, manager.getStatus());
+            //Objective INIT
+            //The secret objective at this point should be null
+            assertNull(manager.getPlayer(nickname).getObjective());
+
+            //If we choose the Objective, this field should be occupied, and not null
+            manager.setPlayerChosenObject(nickname, manager.getPlayerObjectiveOptions(nickname).getFirst().getObjectiveId());
+            assertNotNull(manager.getPlayer(nickname).getObjective());
+
+            //PlayingBoard INIT
+            PlayingBoardException exception = assertThrows(PlayingBoardException.class, () -> manager.getPlayer(nickname).getPlayingBoard());
+            String expectedMessage = "The PlayingBoard for the player is not instantiated";
+            String actualMessage = exception.getMessage();
+            assertEquals(expectedMessage, actualMessage);
+            //Let's place the starter card
+            manager.placeStarterCard(
+                    nickname,
+                    manager.getPlayer(nickname).getStarterCard().getCardId(),
+                    CardSide.FRONT
+            );
+            //Now, if we invoke the same methods of before, this value will not be null
+            assertNotNull(manager.getPlayer(nickname).getPlayingBoard());
+        }
+
+        //The game phase should change to PLACING, because the game is starting
         assertEquals(GamePhase.PLACING, manager.getStatus());
     }
-    /**
-     * Test disconnection
-     */
-    @Test
-    @Order(3)
-    @DisplayName("Test GameManager disconnections system")
-    public void disconnectionTest() {
-        //PlayerId 2, image of the Player "Lorenzo", disconnect
-        String disconnectedPlayer = manager.getPlayer(2).getNickname();
-        manager.leaveGame(2);
-        //The player is no more in the list of players, and playersCount is 3 and no more 4
-        assertEquals(3, manager.getPlayersCount());
-        for (int i = 0; i < manager.getPlayersCount(); i++) {
-            assertNotEquals(disconnectedPlayer, manager.getPlayer(i).getNickname());
-        }
-        //Let's check if the ScoreBoard is correctly updated
-        assertNull(manager.getScoreBoard().get(2));
-    }
+
     /**
      * Test on drawing cards
      */
     @Test
-    @Order(4)
+    @Order(3)
     @DisplayName("Test GameManager cards handler")
     public void cardsHandlerTest() {
         /*
@@ -149,7 +146,7 @@ public class GameManagerTest {
     }
 
     @Test
-    @Order(5)
+    @Order(4)
     @DisplayName("Test on a simulated game turn")
     public void turnTest() {
         /*
@@ -161,38 +158,15 @@ public class GameManagerTest {
          * This test will be done with 4 players, so that we are sure that all the phases are coherently connected.
          */
 
-        //INIT phase
-
-        //After the initialization of the object GameManager, each player will choose the face of his starter card and the secret objective
-        for (int i = 0; i < manager.getPlayersCount(); i++) {
-            //While we are in the for, the game phase is INIT
-            assertEquals(GamePhase.INIT, manager.getStatus());
-            //After this passage, the PlayingBoard is null, so is generated an exception
-            int finalI = i;
-            PlayingBoardException exception = assertThrows(PlayingBoardException.class, () -> manager.getPlayer(finalI).getPlayingBoard());
-            String expectedMessage = "The PlayingBoard for the player is not instantiated";
-            String actualMessage = exception.getMessage();
-            assertEquals(expectedMessage, actualMessage);
-            //Let's place the starter card
-            manager.placeStarterCard(
-                    i,
-                    manager.getPlayer(i).getStarterCard().getCardId(),
-                    CardSide.FRONT
-            );
-            //Now, if we invoke the same methods of before, this value will not be null
-            assertNotNull(manager.getPlayer(i).getPlayingBoard());
-            //Let's set the objective of each player
-            manager.setPlayerChosenObject(i, manager.getPlayerObjectiveOptions(i).getFirst().getObjectiveId());
-            //Check if the objective has been inserted
-            assertNotNull(manager.getPlayer(i).getObjective());
-        }
-
         //GAME phase (PLACING-DRAWING)
 
         //The nickname of the first player to play, for a test on the order of the turn
         String firstPlayer = manager.getCurrentPlayer().getNickname();
 
-        for (int i = 0; i < manager.getPlayersCount(); i++) {
+        for (String nickname : manager.getPlayerInfos().stream().map(PlayerInfo::getNickname).toList()) {
+            // Check correct turn
+            assertEquals(nickname, manager.getCurrentPlayer().getNickname());
+
             //Once we are out of this loop, the game phase has changed into PLACING
             assertEquals(GamePhase.PLACING, manager.getStatus());
             //Now, we will use the value of currPlayer in GameManager to know which player is playing a turn.
@@ -214,7 +188,7 @@ public class GameManagerTest {
     }
 
     @Test
-    @Order(6)
+    @Order(5)
     @DisplayName("Test on another simulated game with errors")
     public void turnWithErrorsTest() {
         /*
@@ -222,38 +196,14 @@ public class GameManagerTest {
          * in the correct way. The errors will be indicated when done
          */
 
-        //INIT phase
-
-        //After the initialization of the object GameManager, each player will choose the face of his starter card and the secret objective
-        for (int i = 0; i < manager.getPlayersCount(); i++) {
-            //While we are in the for, the game phase is INIT
-            assertEquals(GamePhase.INIT, manager.getStatus());
-            //After this passage, the PlayingBoard is null, so is generated an exception
-            int finalI = i;
-            PlayingBoardException exception = assertThrows(PlayingBoardException.class, () -> manager.getPlayer(finalI).getPlayingBoard());
-            String expectedMessage = "The PlayingBoard for the player is not instantiated";
-            String actualMessage = exception.getMessage();
-            assertEquals(expectedMessage, actualMessage);
-            //Let's place the starter card
-            manager.placeStarterCard(
-                    i,
-                    manager.getPlayer(i).getStarterCard().getCardId(),
-                    CardSide.FRONT
-            );
-            //Now, if we invoke the same methods of before, this value will not be null
-            assertNotNull(manager.getPlayer(i).getPlayingBoard());
-            //Let's set the objective of each player
-            manager.setPlayerChosenObject(i, manager.getPlayerObjectiveOptions(i).getFirst().getObjectiveId());
-            //Check if the objective has been inserted
-            assertNotNull(manager.getPlayer(i).getObjective());
-        }
-
         //GAME phase (PLACING-DRAWING)
 
         //The nickname of the first player to play, for a test on the order of the turn
         String firstPlayer = manager.getCurrentPlayer().getNickname();
 
-        for (int i = 0; i < manager.getPlayersCount(); i++) {
+        for (String nickname : manager.getPlayerInfos().stream().map(PlayerInfo::getNickname).toList()) {
+            // Assert the turn change correctly
+            assertEquals(nickname, manager.getCurrentPlayer().getNickname());
             //Once we are out of this loop, the game phase has changed into PLACING
             assertEquals(GamePhase.PLACING, manager.getStatus());
             //ERROR: The Player wants to place a card which is not in his hand

@@ -67,9 +67,9 @@ public class GameManager {
      */
     private final Deck<GoldCard> goldCardDeck;
     /**
-     * The Scoreboard of the game; it contains the players' score
+     * The Scoreboard of the game; it contains the players' score the map is nickname:score
      */
-    private final Map<Integer, Integer> scoreBoard;
+    private final Map<String, Integer> scoreBoard;
 
     //endregion
 
@@ -88,8 +88,7 @@ public class GameManager {
         if (players.isEmpty()) {
             throw new GameException("Player list is empty");
         }
-        //Define the turn phase
-        this.phase = new InitPhase();
+
         //Create and initialize the dealer, which represents a fictitious deck of objective cards
         RandomDealer<Objective> objectiveDealer = Objective.getObjectiveDealer();
         objectiveDealer.init();
@@ -124,13 +123,13 @@ public class GameManager {
         var shuffledPlayers = new ArrayList<>(players);
         Collections.shuffle(shuffledPlayers);
         //Iterate for every player
-        for (String player : shuffledPlayers) {
+        for (String nickname : shuffledPlayers) {
             /*
              * Draw two random Objective cards and one Starter card to initialize a Player
              */
-            this.players.add(new Player(player, objectiveDealer.getNextItem(), objectiveDealer.getNextItem() , starterCardDeck.draw()));
+            this.players.add(new Player(nickname, objectiveDealer.getNextItem(), objectiveDealer.getNextItem() , starterCardDeck.draw()));
             //Add the player to the ScoreBoard, with his initial score, i.e. zero
-            this.scoreBoard.put(shuffledPlayers.indexOf(player), this.players.get(shuffledPlayers.indexOf(player)).getScore());
+            this.scoreBoard.put(nickname, 0);
             //Give to each player 2 resource card and 1 gold card in his hand, drawn by the corresponding decks
             this.players.getLast().drawCard(this.resourceCardDeck.draw());
             this.players.getLast().drawCard(this.resourceCardDeck.draw());
@@ -138,6 +137,9 @@ public class GameManager {
         }
         //Initialize the list of the disconnected player, as an empty list
         this.disconnectedPlayers = new ArrayList<>();
+
+        //Define the turn phase
+        this.phase = new InitPhase(this.players.getFirst().getNickname());
     }
 
     //endregion
@@ -148,37 +150,82 @@ public class GameManager {
      * After each move, updates the values in the scoreboard
      */
     private void updateScoreBoard() {
-        this.scoreBoard.put(this.phase.getCurrPlayer(), this.players.get(this.phase.getCurrPlayer()).getScore());
+        this.scoreBoard.put(this.phase.getCurrPlayer(), this.getPlayer(this.phase.getCurrPlayer()).getScore());
     }
 
     /**
-     * @param playerId The ID of the player
+     * @param nickname The nickname of the player
      * @return The player, with the Setup interface
      */
-    private PlayerSetup getPlayerSetup(int playerId) {
-        return this.players.get(playerId);
+    private PlayerSetup getPlayerSetup(String nickname) {
+        try{
+            return this.players.stream().filter(p -> p.getNickname().equals(nickname)).findFirst().get();
+        } catch (Exception e){
+            //TODO: maybe better handling
+            return null;
+        }
     }
 
     /**
-     * @param playerId  The ID of the player
+     * @param nickname The nickname of the player
      * @return The player with the BoardSetup interface
      */
-    private PlayerBoardSetup getPlayerBoardSetup(int playerId) {
-        return this.players.get(playerId);
+    private PlayerBoardSetup getPlayerBoardSetup(String nickname) {
+        try{
+            return this.players.stream().filter(p -> p.getNickname().equals(nickname)).findFirst().get();
+        } catch (Exception e){
+            //TODO: maybe better handling
+            return null;
+        }
     }
 
     /**
-     * @param playerId  The ID of the player
+     * @param nickname The nickname of the player
      * @return The player with the Drawing interface
      */
-    private PlayerDrawing getPlayerDrawing(int playerId) {
-        return this.players.get(playerId);
+    private PlayerDrawing getPlayerDrawing(String nickname) {
+        try{
+            return this.players.stream().filter(p -> p.getNickname().equals(nickname)).findFirst().get();
+        } catch (Exception e){
+            //TODO: maybe better handling
+            return null;
+        }
+    }
+
+    /**
+     * @param nickname The nickname of the player
+     * @return The information about an object Player, thanks to the interface PlayerInfo
+     */
+    public PlayerInfo getPlayer(String nickname) {
+        try{
+            return this.players.stream().filter(p -> p.getNickname().equals(nickname)).findFirst().get();
+        } catch (Exception e){
+            //TODO: maybe better handling
+            return null;
+        }
+    }
+
+    /**
+     * Used from the Phase to get the next player
+     *
+     * @param nickname The nickname of the player
+     * @return The nickname of the next player which has to play
+     */
+    public String getNextPlayer(String nickname) {
+        try{
+            var currPlayer = this.players.stream().filter(p -> p.getNickname().equals(nickname)).findFirst().get();
+            var index = (this.players.indexOf(currPlayer) + 1) % this.players.size();
+            return this.players.get(index).getNickname();
+        } catch (Exception e){
+            //TODO: maybe better handling
+            return null;
+        }
     }
 
     /**
      * @return The list of the players, using the interface PlayerInfo
      */
-    protected List<PlayerInfo> getPlayerInfos() {
+    public List<PlayerInfo> getPlayerInfos() {
         return new ArrayList<>(this.players);
     }
 
@@ -199,14 +246,6 @@ public class GameManager {
      */
     public int getPlayersCount() {
         return this.players.size();
-    }
-
-    /**
-     * @param playerId The ID of the player
-     * @return The information about an object Player, thanks to the interface PlayerInfo
-     */
-    public PlayerInfo getPlayer(int playerId) {
-        return this.players.get(playerId);
     }
 
     /**
@@ -232,11 +271,16 @@ public class GameManager {
 
     /**
      * Method used to show to player the two objective to choose
-     * @param playerId the player
+     * @param nickname the player
      * @return the player's objectives options
      */
-    public ArrayList<Objective> getPlayerObjectiveOptions(int playerId){
-        return this.players.get(playerId).getObjectiveOptions();
+    public ArrayList<Objective> getPlayerObjectiveOptions(String nickname){
+        try{
+            return this.players.stream().filter(p -> p.getNickname().equals(nickname)).findFirst().get().getObjectiveOptions();
+        } catch (Exception e){
+            //TODO: maybe better handling
+            return null;
+        }
     }
 
     /**
@@ -317,26 +361,28 @@ public class GameManager {
     /**
      * @return The scoreboard of the game
      */
-    public Map<Integer, Integer> getScoreBoard() {
+    public Map<String, Integer> getScoreBoard() {
         return this.scoreBoard;
     }
 
     /**
      * TODO: must be improved, not send the actual object
      */
-    public Phase getStatusResponse(){ return this.phase; }
+    public Phase getStatusResponse() {
+        return this.phase;
+    }
     //endregion
 
     //region Setters
 
     /**
      * Method used to set the chosen secret objective
-     * @param playerId the player to set
+     * @param nickname the player to set
      * @param objectiveId the objective chosen
      */
-    public void setPlayerChosenObject(int playerId, int objectiveId){
+    public void setPlayerChosenObject(String nickname, int objectiveId){
         try {
-            this.phase.setPlayerChosenObject(this, this.getPlayerSetup(playerId), objectiveId);
+            this.phase.setPlayerChosenObject(this, this.getPlayerSetup(nickname), objectiveId);
         } catch (PhaseException e) {
             throw new GameException(e.getMessage());
         }
@@ -348,15 +394,16 @@ public class GameManager {
 
     /**
      * Place a given starter card using the given face
-     * @param playerId  The player who place the card
+     * @param nickname  The player who place the card
      * @param cardId    The ID of the card
      * @param side      The face used by the card
      */
-    public void placeStarterCard(int playerId, int cardId, CardSide side) {
+    public void placeStarterCard(String nickname, int cardId, CardSide side) {
         try {
             //Use the ID to identify the player who made the move and use the correct face of the card
             this.phase.placeStarterCard(
-                    this.getPlayerBoardSetup(playerId),
+                    this,
+                    this.getPlayerBoardSetup(nickname),
                     StarterCard.getCardWithId(cardId),
                     side
             );
@@ -370,7 +417,7 @@ public class GameManager {
      * @param h         The horizontal coordinate
      * @param v         The vertical coordinate
      * @param cardId    The ID of the card
-     * @param face      The face used by the card, true if front, false if back
+     * @param face      The face used by the card, (0) if front, (1) if back
      */
     public void placeCard(int h, int v, int cardId, int face) {
         try {
@@ -469,21 +516,22 @@ public class GameManager {
 
     /**
      * Report a player disconnected
-     * @param playerId  The ID of the disconnected player
+     * @param nickname  The ID of the disconnected player
      */
-    public void leaveGame(int playerId) {
+    public void leaveGame(String nickname) {
         /*
          * Put the player in the disconnected list players and remove it from the playing players.
          * It could be useful for a system which is resilient to disconnection, because it doesn't block the game,
          * preventing the deletion of the data connected to the player who left.
          */
         //If the player isn't in the lobby, throws an exception
-        if (playerId >= this.players.size()) {
+        var player = this.players.stream().filter(p -> p.getNickname().equals(nickname)).findFirst();
+        if (player.isEmpty()) {
             throw new GameException("The selected player is not in the game");
         }
-        this.disconnectedPlayers.add(this.players.get(playerId));
-        this.players.remove(playerId);
-        this.scoreBoard.remove(playerId);
+        this.disconnectedPlayers.add(player.get());
+        this.players.remove(player.get());
+        this.scoreBoard.remove(nickname);
     }
 
     //endregion

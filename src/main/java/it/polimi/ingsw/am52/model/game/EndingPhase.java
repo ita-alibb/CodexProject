@@ -13,7 +13,8 @@ public class EndingPhase extends Phase {
 
     //region Constructor
 
-    public EndingPhase() {
+    public EndingPhase(Phase oldPhase) {
+        super(oldPhase);
         this.phase = GamePhase.END;
     }
 

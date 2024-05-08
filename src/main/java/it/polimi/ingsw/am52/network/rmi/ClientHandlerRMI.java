@@ -59,9 +59,12 @@ public class ClientHandlerRMI implements ClientHandler,Runnable {
                 Thread.sleep(10000);
             } catch (RemoteException | InterruptedException e) {
                 // TODO: disconnection
+                System.out.println("Client disconnected: " + this.clientId);
                 break;
             }
         }
+
+        this.view.disconnect(this);
     }
 
     /**
