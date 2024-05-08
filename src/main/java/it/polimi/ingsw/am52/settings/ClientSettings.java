@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Iterator;
 
 public class ClientSettings {
@@ -37,7 +40,7 @@ public class ClientSettings {
     /**
      * The ip address of the server to connect with.
      */
-    private final String ip;
+    private final String serverIp;
     /**
      * The number of port for the connection.
      */
@@ -74,7 +77,7 @@ public class ClientSettings {
             );
         }
 
-        this.ip = ip;
+        this.serverIp = ip;
         this.port = port;
         this.mode = mode;
         this.networkMode = network;
@@ -88,8 +91,8 @@ public class ClientSettings {
      *
      * @return The ip address of the server where to connect.
      */
-    public String getIp() {
-        return ip;
+    public String getServerIp() {
+        return serverIp;
     }
 
     /**
@@ -119,6 +122,57 @@ public class ClientSettings {
 
     //endregion
 
+    //region Public Static Methods
+
+    /**
+     * Load the client setting from a json file.  The json text should
+     * have the following fields (case-sensitive):
+     * <ul>
+     *     <li>"serverId": integer, the maximum number of concurrent games (min=1).</li>
+     *     <li>"port": integer, the port number bound by the server (min=1024, max=65535).</li>
+     *     <li>"mode": string, the verbosity level for logging ("verbose", "info", "warning", "error").</li>
+     *     <li>"network": string, the network connection ("socket", or "rmi")</li>
+     * </ul>
+     * If a field is missing, or it has an invalid value, the default value of that setting
+     ** is used.
+     * @param fileName The name of the file to load.
+     * @return The object containing the server settings specified n the file.
+     * @throws IOException If the file does not exist.
+     * @throws JsonProcessingException If the text is not a valid json-formatted text.
+     * @implNote The json text can have duplicate fields and in that case the value assigned for
+     * the duplicated setting is one of the specified values. If the json text has extra fields,
+     * they are ignored.
+     * @author Livio B.
+     */
+    public static ClientSettings loadJsonFile(String fileName) throws IOException {
+        // Create a Path object with the file name and invoke the overload that
+        // takes the path.
+        return loadJsonFile(Path.of(fileName));
+    }
+
+    /**
+     * Load the server setting from a json file.  The json text should
+     * have the following fields (case-sensitive):
+     * <ul>
+     *     <li>"maxLobbies": integer, the maximum number of concurrent games (min=1).</li>
+     *     <li>"port": integer, the port number bound by the server (min=1024, max=65535).</li>
+     *     <li>"verbosity": string, the verbosity level for logging ("verbose", "info", "warning", "error").</li>
+     * </ul>
+     * If a field is missing, or it has an invalid value, the default value of that setting
+     ** is used.
+     * @param filePath The path of the file to load.
+     * @return The object containing the server settings specified n the file.
+     * @throws IOException If the file does not exist.
+     * @throws JsonProcessingException If the text is not a valid json-formatted text.
+     * @implNote The json text can have duplicate fields and in that case the value assigned for
+     * the duplicated setting is one of the specified values. If the json text has extra fields,
+     * they are ignored.
+     * @author Livio B.
+     */
+    public static ClientSettings loadJsonFile(Path filePath) throws IOException{
+        // Parse json (Jackson).
+        return parseFromJson(Files.readString(filePath));
+    }
 
     /**
      * Parse a json text and return the ClientSettings object. The json text should
@@ -186,6 +240,8 @@ public class ClientSettings {
         // Return the client settings object with specified values.
         return new ClientSettings(serverIp, port, mode, network);
     }
+
+    //endregion
 
     /**
      * Get the server ip (String) from a json node object, representing the client settings.

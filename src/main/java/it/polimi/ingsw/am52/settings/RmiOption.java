@@ -1,7 +1,7 @@
 package it.polimi.ingsw.am52.settings;
 
 /**
- * Represent the rmi option for server and client application.
+ * Represent the rmi option fo the client, enable the RMI mode of the client.
  */
 public class RmiOption extends Option {
 
@@ -19,7 +19,7 @@ public class RmiOption extends Option {
 
     @Override
     public String getDescription() {
-        return String.format("%s/%s: use RMI network for communication.",
+        return String.format("%s/%s: set RMI port number for the server.",
                 getShortFlag(), getLongFlag());
     }
 }

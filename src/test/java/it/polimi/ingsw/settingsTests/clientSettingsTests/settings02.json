@@ -1,0 +1,5 @@
+{
+  "serverIp": "localhost",
+  "port": 1024,
+  "mode": "tui"
+}

@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
-import java.util.Optional;
-import java.util.OptionalInt;
 
 /**
  * The settings of the server.
@@ -24,9 +22,13 @@ public class ServerSettings {
      */
     private final int maxLobbies;
     /**
-     * The number of the port.
+     * The number of the socket port.
      */
-    private final OptionalInt port;
+    private final int socketPort;
+    /**
+     * The number of the rmi port.
+     */
+    private final int rmiPort;
     /**
      * The level of verbosity for logging.
      */
@@ -52,6 +54,16 @@ public class ServerSettings {
     public static final int PORT_MAX = 65535;
 
     /**
+     * The default socket port number.
+     */
+    public static final int DEF_SOCKET_PORT = 1024;
+
+    /**
+     * The default rmi port number.
+     */
+    public static final int DEF_RMI_PORT = 1025;
+
+    /**
      * The maximum allowed "maximum number" of concurrent games
      */
     public static final int MAX_LOBBIES = 10000;
@@ -66,10 +78,6 @@ public class ServerSettings {
      * The default number of maximum concurrency games.
      */
     public static final int DEF_MAX_LOBBIES = 1000;
-    /**
-     * The default port number.
-     */
-    public static final int DEF_PORT = 2000;
     /**
      * The default verbosity level.
      */
@@ -87,7 +95,7 @@ public class ServerSettings {
     /**
      * The server settings with all settings set to their default values.
      */
-    private static final ServerSettings defaultSettings = new ServerSettings(DEF_MAX_LOBBIES, DEF_PORT, DEF_VERBOSITY, DEF_PORT_MODE);
+    private static final ServerSettings defaultSettings = new ServerSettings(DEF_MAX_LOBBIES, DEF_VERBOSITY);
 
     //endregion
 
@@ -130,9 +138,10 @@ public class ServerSettings {
         // Set all settings to default values, they may be overwritten by values
         // in the json object.
         int maxLobbies = DEF_MAX_LOBBIES;   // Def. max lobbies
-        Optional<Integer> port = Optional.empty();  // Assume port number not assigned
+        int socketPort = DEF_SOCKET_PORT;   // Def. port number for socket
+        int rmiPort = DEF_RMI_PORT;         // Def. port number for rmi
         VerbosityLevel verbosity = DEF_VERBOSITY;   // Def. server logging verbosity
-        Optional<PortMode> portMode = Optional.empty();  // Assume port mode not assigned.
+        PortMode portMode = DEF_PORT_MODE;  // Def. port mode.
 
         // Get the iterator able to iterate over all json fields, and overwrite settings, if found.
         Iterator<String> iter = jsonNode.fieldNames();
@@ -151,10 +160,13 @@ public class ServerSettings {
                     // Get maxLobbies value from json, or use default value.
                     maxLobbies = jsonNode.get(field).asInt(DEF_MAX_LOBBIES);
                     break;
-                case "port":
+                case "socketPort":
                     // Get port value from json, or use default value.
-                    int portNumber = jsonNode.get(field).asInt(DEF_PORT);
-                    port = Optional.of(portNumber);
+                    socketPort = jsonNode.get(field).asInt(DEF_SOCKET_PORT);
+                    break;
+                case "rmiPort":
+                    // Get port value from json, or use default value.
+                    rmiPort = jsonNode.get(field).asInt(DEF_RMI_PORT);
                     break;
                 case "verbosity":
                     // Parse the verbosity value of the "verbosity" field.
@@ -162,41 +174,15 @@ public class ServerSettings {
                     break;
                 case "portMode":
                     // Parse the port mode value of the "portMode" field.
-                    PortMode portModeValue = parsePortMode(jsonNode.get(field).asText());
-                    portMode = Optional.of(portModeValue);
+                    portMode = parsePortMode(jsonNode.get(field).asText());
                 default:
                     // Ignore invalid (or additional) field names.
                     break;
             }
         }
 
-        // If both port number and port mode have NOT been set, then do NOT
-        // set the port number and set port mode as default ("auto").
-        if (port.isEmpty() && portMode.isEmpty()) {
-            return new ServerSettings(maxLobbies, verbosity);
-        }
-
-        // If the port number has been set.
-        if (port.isPresent()) {
-            // If the port mode has NOT been set, impose "fixed" mode.
-            if (portMode.isEmpty()) {
-                return new ServerSettings(maxLobbies, port.get(), verbosity, PortMode.FIXED);
-            } else {
-                // Return the object with the settings. The constructor validates the
-                // parameters passed to it.
-                return new ServerSettings(maxLobbies, port.get(), verbosity, portMode.get());
-            }
-        }
-
-        // Check port number and port mode compatibility, in case the port number has NOT been set.
-        // If the port number has NOT been set, but the port mode has been set to FIXED,
-        // then assign default port number.
-        if (portMode.get() == PortMode.FIXED) {
-            return new ServerSettings(maxLobbies, DEF_PORT, verbosity, portMode.get());
-        }
-
         // If the port number has NOT been set, and the port mode has been set to AUTO.
-        return new ServerSettings(maxLobbies, verbosity);
+        return new ServerSettings(maxLobbies, socketPort, rmiPort, verbosity, portMode);
     }
 
     /**
@@ -245,7 +231,7 @@ public class ServerSettings {
      */
     public static ServerSettings loadJsonFile(Path filePath) throws IOException{
         // Parse json (Jackson).
-        return ServerSettings.parseFromJson(Files.readString(filePath));
+        return parseFromJson(Files.readString(filePath));
     }
 
     //endregion
@@ -262,7 +248,8 @@ public class ServerSettings {
      */
     public ServerSettings(int maxLobbies, VerbosityLevel verbosity) {
         this.maxLobbies = (maxLobbies < MIN_LOBBIES || maxLobbies > MAX_LOBBIES) ? DEF_MAX_LOBBIES : maxLobbies;
-        this.port = OptionalInt.empty();
+        this.socketPort = DEF_SOCKET_PORT;
+        this.rmiPort = DEF_RMI_PORT;
         this.verbosity = verbosity;
         this.portMode = PortMode.AUTO;
     }
@@ -271,17 +258,29 @@ public class ServerSettings {
      * Create an object with the specified server settings.
      * @param maxLobbies The maximum number of concurrency games on the server. If the
      *                   specified value is less than 1, the DEF_MAX_LOBBIES value is assigned.
-     * @param port The number of port used for the socket connection. If the value is less than
-     *             1024 or greater than 65535, the DEF_PORT value is assigned.
+     * @param socketPort The number of port used for the socket connection. If the value is less than
+     *                   1024 or greater than 65535, the DEF_SOCKET_PORT value is assigned.
+     * @param rmiPort The number of port used for the socket connection. If the value is less than
+     *      *         1024 or greater than 65535, the DEF_RMI_PORT value is assigned.
      * @param verbosity The verbosity level for logging.
      * @param portMode The mode used to select the port number for the connection.
      * @author Livio B.
      */
-    public ServerSettings(int maxLobbies, int port, VerbosityLevel verbosity, PortMode portMode) {
+    public ServerSettings(int maxLobbies, int socketPort, int rmiPort, VerbosityLevel verbosity, PortMode portMode) {
+
         this.maxLobbies = (maxLobbies < MIN_LOBBIES || maxLobbies > MAX_LOBBIES) ? DEF_MAX_LOBBIES : maxLobbies;
-        this.port = OptionalInt.of((port < ServerSettings.PORT_MIN || port > ServerSettings.PORT_MAX) ? DEF_PORT : port);
+        this.socketPort = (socketPort < ServerSettings.PORT_MIN || socketPort > ServerSettings.PORT_MAX) ? DEF_SOCKET_PORT : socketPort;
+        this.rmiPort = (rmiPort < ServerSettings.PORT_MIN || rmiPort > ServerSettings.PORT_MAX) ? DEF_RMI_PORT : rmiPort;
         this.verbosity = verbosity;
         this.portMode = portMode;
+
+        if (this.portMode == PortMode.FIXED &&
+                (this.socketPort == this.rmiPort)) {
+            throw new IllegalArgumentException(
+                    String.format("Rmi port (%d) and Socket port (%d) cannot be equal in port mode %s.",
+                            this.rmiPort, this.socketPort, this.portMode)
+            );
+        }
     }
 
     //endregion
@@ -299,11 +298,20 @@ public class ServerSettings {
 
     /**
      *
-     * @return The port bound to the server.
+     * @return The port number for socket connection.
      * @author Livio B.
      */
-    public OptionalInt getPort() {
-        return this.port;
+    public int getSocketPort() {
+        return this.socketPort;
+    }
+
+    /**
+     *
+     * @return The port number for rmi connection.
+     * @author Livio B.
+     */
+    public int getRmiPort() {
+        return this.rmiPort;
     }
 
     /**
@@ -347,20 +355,47 @@ public class ServerSettings {
     }
 
     /**
-     * Convert a string to an integer that represents the port number bound by
+     * Convert a string to an integer that represents the socket port number bound by
      * the server. If the string is not a valid integer, or the value is
-     * less than 1024 or greater than 65535, the DEF_PORT value is returned.
+     * less than 1024 or greater than 65535, the DEF_SOCKET_PORT value is returned.
      * @param value The text to parse.
      * @return The integer parsed from text, representing the port number bound by
      *         the server.
      * @author Livio B.
      */
-    private static int parsePortNumber(String value) {
+    private static int parseSocketPortNumber(String value) {
+        return parsePortNumber(value, DEF_SOCKET_PORT);
+    }
+
+    /**
+     * Convert a string to an integer that represents the rmi port number bound by
+     * the server. If the string is not a valid integer, or the value is
+     * less than 1024 or greater than 65535, the DEF_RMI_PORT value is returned.
+     * @param value The text to parse.
+     * @return The integer parsed from text, representing the port number bound by
+     *         the server.
+     * @author Livio B.
+     */
+    private static int parseRmiPortNumber(String value) {
+        return parsePortNumber(value, DEF_RMI_PORT);
+    }
+
+    /**
+     * Convert a string to an integer that represents the port number bound by
+     * the server. If the string is not a valid integer, or the value is
+     * less than 1024 or greater than 65535, the default value is returned.
+     * @param value The text to parse.
+     * @param defaultValue The default value.
+     * @return The integer parsed from text, representing the port number bound by
+     *         the server.
+     * @author Livio B.
+     */
+    private static int parsePortNumber(String value, int defaultValue) {
         try {
             int port = Integer.parseInt(value);
-            return (port < ServerSettings.PORT_MIN || port > ServerSettings.PORT_MAX ) ? DEF_PORT : port;
+            return (port < ServerSettings.PORT_MIN || port > ServerSettings.PORT_MAX ) ? defaultValue : port;
         } catch (Exception e) {
-            return DEF_PORT;
+            return defaultValue;
         }
     }
 
@@ -425,10 +460,10 @@ public class ServerSettings {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("Server setting:%n"));
+        sb.append(String.format("Server settings:%n"));
         sb.append(String.format("  Max lobbies: %d%n", getMaxLobbies()));
-        String portText = getPort().isEmpty() ? "<none>" : String.format("%d", getPort().getAsInt());
-        sb.append(String.format("  Port: %s%n", portText));
+        sb.append(String.format("  Socket Port: %s%n", getSocketPort()));
+        sb.append(String.format("  RMI Port: %s%n", getRmiPort()));
         sb.append(String.format("  Port mode: %s%n", getPortMode()));
         sb.append(String.format("  Log verbosity: %s%n", getVerbosity()));
 

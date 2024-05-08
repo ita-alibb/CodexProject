@@ -45,7 +45,7 @@ public class CmdLineArgsReaderTest
         // Get the client settings.
         ClientSettings clientSettings = settings.getClientSettings();
         // Check ip address.
-        assertEquals("127.0.0.1", clientSettings.getIp());
+        assertEquals("127.0.0.1", clientSettings.getServerIp());
         // Check port number.
         assertEquals(5635, clientSettings.getPort());
         // Check client mode.
@@ -170,7 +170,7 @@ public class CmdLineArgsReaderTest
         // Get the client settings.
         ClientSettings clientSettings = settings.getClientSettings();
         // Check ip address.
-        assertEquals("127.0.0.1", clientSettings.getIp());
+        assertEquals("127.0.0.1", clientSettings.getServerIp());
         // Check port number.
         assertEquals(5635, clientSettings.getPort());
         // Check client mode.
@@ -193,7 +193,7 @@ public class CmdLineArgsReaderTest
         // Get the client settings.
         clientSettings = settings.getClientSettings();
         // Check ip address.
-        assertEquals("127.0.0.1", clientSettings.getIp());
+        assertEquals("127.0.0.1", clientSettings.getServerIp());
         // Check port number.
         assertEquals(5635, clientSettings.getPort());
         // Check client mode.
@@ -216,7 +216,7 @@ public class CmdLineArgsReaderTest
         // Get the client settings.
         clientSettings = settings.getClientSettings();
         // Check ip address.
-        assertEquals("127.0.0.1", clientSettings.getIp());
+        assertEquals("127.0.0.1", clientSettings.getServerIp());
         // Check port number.
         assertEquals(5635, clientSettings.getPort());
         // Check client mode.
@@ -239,7 +239,7 @@ public class CmdLineArgsReaderTest
         // Get the client settings.
         clientSettings = settings.getClientSettings();
         // Check ip address.
-        assertEquals("127.0.0.1", clientSettings.getIp());
+        assertEquals("127.0.0.1", clientSettings.getServerIp());
         // Check port number.
         assertEquals(5635, clientSettings.getPort());
         // Check client mode.
@@ -262,7 +262,7 @@ public class CmdLineArgsReaderTest
         // Get the client settings.
         clientSettings = settings.getClientSettings();
         // Check ip address.
-        assertEquals("127.0.0.1", clientSettings.getIp());
+        assertEquals("127.0.0.1", clientSettings.getServerIp());
         // Check port number.
         assertEquals(5635, clientSettings.getPort());
         // Check client mode.
@@ -300,7 +300,7 @@ public class CmdLineArgsReaderTest
         // Get the client settings.
         ClientSettings clientSettings = settings.getClientSettings();
         // Check ip address.
-        assertEquals("127.0.0.1", clientSettings.getIp());
+        assertEquals("127.0.0.1", clientSettings.getServerIp());
         // Check port number.
         assertEquals(5635, clientSettings.getPort());
         // Check client mode.
@@ -323,7 +323,7 @@ public class CmdLineArgsReaderTest
         // Get the client settings.
         clientSettings = settings.getClientSettings();
         // Check ip address.
-        assertEquals("127.0.0.1", clientSettings.getIp());
+        assertEquals("127.0.0.1", clientSettings.getServerIp());
         // Check port number.
         assertEquals(5635, clientSettings.getPort());
         // Check client mode.
@@ -346,7 +346,7 @@ public class CmdLineArgsReaderTest
         // Get the client settings.
         clientSettings = settings.getClientSettings();
         // Check ip address.
-        assertEquals("127.0.0.1", clientSettings.getIp());
+        assertEquals("127.0.0.1", clientSettings.getServerIp());
         // Check port number.
         assertEquals(5635, clientSettings.getPort());
         // Check client mode.
@@ -369,7 +369,7 @@ public class CmdLineArgsReaderTest
         // Get the client settings.
         clientSettings = settings.getClientSettings();
         // Check ip address.
-        assertEquals("127.0.0.1", clientSettings.getIp());
+        assertEquals("127.0.0.1", clientSettings.getServerIp());
         // Check port number.
         assertEquals(5635, clientSettings.getPort());
         // Check client mode.
@@ -392,7 +392,7 @@ public class CmdLineArgsReaderTest
         // Get the client settings.
         clientSettings = settings.getClientSettings();
         // Check ip address.
-        assertEquals("127.0.0.1", clientSettings.getIp());
+        assertEquals("127.0.0.1", clientSettings.getServerIp());
         // Check port number.
         assertEquals(5635, clientSettings.getPort());
         // Check client mode.
@@ -1021,7 +1021,7 @@ public class CmdLineArgsReaderTest
         // Get the client settings.
         ServerSettings serverSettings = settings.getServerSettings();
         // Check port number.
-        assertEquals(port, serverSettings.getPort());
+        assertEquals(port, serverSettings.getSocketPort());
         // Check max lobbies.
         assertEquals(maxLobbies, serverSettings.getMaxLobbies());
         // Check verbosity.

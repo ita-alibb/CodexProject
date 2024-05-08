@@ -1,6 +1,6 @@
 package it.polimi.ingsw.settingsTests.optionsTests;
 
-import it.polimi.ingsw.am52.settings.AutoOption;
+import it.polimi.ingsw.am52.settings.FixedPortOption;
 import it.polimi.ingsw.am52.settings.CmdLineArgsReader;
 import it.polimi.ingsw.am52.settings.Option;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +20,7 @@ public class AutoOptionTest
     @DisplayName("Auto option flags test")
     public void testFlags()
     {
-        AutoOption option = new AutoOption();
+        FixedPortOption option = new FixedPortOption();
 
         assertEquals("-a", option.getShortFlag());
         assertEquals("--auto", option.getLongFlag());
@@ -42,7 +42,7 @@ public class AutoOptionTest
     @DisplayName("AutoOption: parseOptionText() test")
     public void testParse()
     {
-        AutoOption option = new AutoOption();
+        FixedPortOption option = new FixedPortOption();
 
         // The parseOptionText() always throws, because there isn't any
         // required argument for this option.
