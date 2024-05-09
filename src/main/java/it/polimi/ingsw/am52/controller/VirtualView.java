@@ -4,6 +4,7 @@ import it.polimi.ingsw.am52.json.*;
 import it.polimi.ingsw.am52.json.request.CreateLobbyData;
 import it.polimi.ingsw.am52.json.request.JoinLobbyData;
 import it.polimi.ingsw.am52.json.request.LeaveGameData;
+import it.polimi.ingsw.am52.json.request.SelectObjectiveData;
 import it.polimi.ingsw.am52.json.response.*;
 import it.polimi.ingsw.am52.network.ClientHandler;
 import it.polimi.ingsw.am52.network.Sender;
@@ -59,6 +60,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
                 case JsonDeserializer.CREATE_LOBBY_METHOD -> new CreateLobbyResponse(this.createLobby((CreateLobbyData) request.getData()));
                 case JsonDeserializer.JOIN_LOBBY_METHOD -> new JoinLobbyResponse(this.joinLobby((JoinLobbyData) request.getData()));
                 case JsonDeserializer.LEAVE_GAME_METHOD -> new LeaveGameResponse(this.leaveGame((LeaveGameData) request.getData()));
+                case JsonDeserializer.SELECT_OBJECTIVE_METHOD -> new SelectObjectiveResponse(this.selectObjective((SelectObjectiveData) request.getData()));
                 default -> throw new NoSuchMethodException("no method " + request.getMethod());
             };
         } catch (RemoteException e) {
@@ -133,6 +135,18 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
         if (response.getStatus().errorCode == 0) {
             this.gameController = null;
         }
+
+        return response;
+    }
+
+    /**
+     * Method to perform selectObjective Request
+     * @param data  The request
+     */
+    public SelectObjectiveResponseData selectObjective(SelectObjectiveData data) throws RemoteException {
+        var response = this.gameController.selectObjective(this.clientId, data.getObjectiveId());
+
+        this.broadcast(new SelectObjectiveResponse(new SelectObjectiveResponseData(response.getStatus())));
 
         return response;
     }

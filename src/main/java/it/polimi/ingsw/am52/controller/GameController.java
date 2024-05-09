@@ -1,7 +1,10 @@
 package it.polimi.ingsw.am52.controller;
 
+import it.polimi.ingsw.am52.exceptions.GameException;
+import it.polimi.ingsw.am52.exceptions.PlayerException;
 import it.polimi.ingsw.am52.json.response.JoinLobbyResponseData;
 import it.polimi.ingsw.am52.json.response.LeaveGameResponseData;
+import it.polimi.ingsw.am52.json.response.SelectObjectiveResponseData;
 import it.polimi.ingsw.am52.model.game.GameLobby;
 import it.polimi.ingsw.am52.model.game.GameManager;
 import it.polimi.ingsw.am52.network.ClientHandler;
@@ -9,6 +12,7 @@ import it.polimi.ingsw.am52.network.Sender;
 import it.polimi.ingsw.am52.json.response.ResponseStatus;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Class to control the Game
@@ -86,6 +90,26 @@ public class GameController {
 
         // Notify the clients and Response
         return new LeaveGameResponseData(new ResponseStatus(), "Lobby leaved!");
+    }
+
+    /**
+     * Method to select the secret objective
+     * @param clientId  The ID of the client
+     * @param objective The ID of the chosen objective
+     */
+    public SelectObjectiveResponseData selectObjective(int clientId, int objective) {
+        try {
+            this.game.setPlayerChosenObject(this.lobby.getPlayer(clientId).get().getUsername(), objective);
+        } catch (NoSuchElementException e) {
+            return new SelectObjectiveResponseData(new ResponseStatus(this.game.getStatusResponse(), 404, "Player not found"));
+        } catch (PlayerException e) {
+            return new SelectObjectiveResponseData(new ResponseStatus(this.game.getStatusResponse(), 60, e.getMessage()));
+        } catch (GameException e) {
+            return new SelectObjectiveResponseData(new ResponseStatus(this.game.getStatusResponse(), 3, e.getMessage()));
+        }
+
+        //Notify the success of the action
+        return new SelectObjectiveResponseData(new ResponseStatus(this.game.getStatusResponse()), objective);
     }
 
     //endregion
