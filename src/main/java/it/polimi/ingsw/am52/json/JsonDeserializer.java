@@ -68,6 +68,10 @@ public class JsonDeserializer {
      * The label of the takeCard method.
      */
     public static final String TAKE_CARD_METHOD = "takeCard";
+    /**
+     * The label of the initGame method
+     */
+    public static final String INIT_GAME_METHOD = "initGame";
 
     //endregion
 
@@ -119,6 +123,7 @@ public class JsonDeserializer {
             // Cases with only "method" and DATA_FIELD fields (inherit form ClientRequest).
             case JOIN_LOBBY_METHOD:
             case CREATE_LOBBY_METHOD:
+            case INIT_GAME_METHOD:
                 return deserializeClientRequest(jsonNode, method);
 
             // Cases with also "playerId" and "lobbyId" fields (inherit from PlayerRequest).
@@ -211,6 +216,10 @@ public class JsonDeserializer {
             case CREATE_LOBBY_METHOD -> {
                 CreateLobbyData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), CreateLobbyData.class);
                 yield new CreateLobbyRequest(data);
+            }
+            case INIT_GAME_METHOD -> {
+                InitGameData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), InitGameData.class);
+                yield new InitGameRequest(data);
             }
             // Unknown method.
             default -> throw new IOException(String.format("Unknown method \"%s\".", method));

@@ -88,6 +88,7 @@ public class Player implements PlayerSetup, PlayerBoardSetup, PlayerInfo, Player
      * Used to set the secret objective
      * @param secretObjective The objective chosen by the player
      */
+    @Override
     public void setSecretObjective (Objective secretObjective) throws PlayerException {
         if (!(secretObjective.equals(this.firstObjective) || secretObjective.equals(this.secondObjective))){
             throw new PlayerException("The chosen card does not belong to the player chooses");

@@ -1,10 +1,7 @@
 package it.polimi.ingsw.am52.controller;
 
 import it.polimi.ingsw.am52.json.*;
-import it.polimi.ingsw.am52.json.request.CreateLobbyData;
-import it.polimi.ingsw.am52.json.request.JoinLobbyData;
-import it.polimi.ingsw.am52.json.request.LeaveGameData;
-import it.polimi.ingsw.am52.json.request.SelectObjectiveData;
+import it.polimi.ingsw.am52.json.request.*;
 import it.polimi.ingsw.am52.json.response.*;
 import it.polimi.ingsw.am52.network.ClientHandler;
 import it.polimi.ingsw.am52.network.Sender;
@@ -60,6 +57,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
                 case JsonDeserializer.CREATE_LOBBY_METHOD -> new CreateLobbyResponse(this.createLobby((CreateLobbyData) request.getData()));
                 case JsonDeserializer.JOIN_LOBBY_METHOD -> new JoinLobbyResponse(this.joinLobby((JoinLobbyData) request.getData()));
                 case JsonDeserializer.LEAVE_GAME_METHOD -> new LeaveGameResponse(this.leaveGame((LeaveGameData) request.getData()));
+                case JsonDeserializer.INIT_GAME_METHOD -> new InitGameResponse(this.initGame());
                 case JsonDeserializer.SELECT_OBJECTIVE_METHOD -> new SelectObjectiveResponse(this.selectObjective((SelectObjectiveData) request.getData()));
                 default -> throw new NoSuchMethodException("no method " + request.getMethod());
             };
@@ -91,6 +89,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
     /**
      * Method to perform the createLobby Request
      */
+    @Override
     public JoinLobbyResponseData createLobby(CreateLobbyData data) throws RemoteException  {
         var response = ServerController.getInstance().createLobby(this.clientId, data);
 
@@ -108,6 +107,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
      * Method to perform the joinLobby Request
      * @param data the request
      */
+    @Override
     public JoinLobbyResponseData joinLobby(JoinLobbyData data) throws RemoteException {
         var response = ServerController.getInstance().joinLobby(this.clientId, data);
 
@@ -125,6 +125,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
      * Method to perform the leaveGame Request
      * @param data the request
      */
+    @Override
     public LeaveGameResponseData leaveGame(LeaveGameData data) throws RemoteException {
         // The request here is useless, the only thing needed is the clientId, the body is empty
         var response = this.gameController.leaveLobby(this.clientId);
@@ -140,9 +141,23 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
     }
 
     /**
+     * Method to perform the fetch of data for game initialization
+     *
+     */
+    @Override
+    public InitGameResponseData initGame() throws RemoteException {
+        var response = this.gameController.initGame(this.clientId);
+
+        this.broadcast(new InitGameResponse(new InitGameResponseData(response.getStatus())));
+
+        return response;
+    }
+
+    /**
      * Method to perform selectObjective Request
      * @param data  The request
      */
+    @Override
     public SelectObjectiveResponseData selectObjective(SelectObjectiveData data) throws RemoteException {
         var response = this.gameController.selectObjective(this.clientId, data.getObjectiveId());
 
@@ -157,31 +172,9 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
      * Method called at last step of every execution.
      * If the response is correct and the Client is in a Game the response is broadcast to every other user in the game.
      * The list of client is retrieved from the GameController
-     * @param response the Response to send to the client's. TODO: the response could be personalized for every client (ex: startGame, every client has a different response)
+     * @param response the Response to send to the client's.
      */
     private void broadcast(JsonMessage<BaseResponseData> response) {
-        if (this.gameController != null && response.getData().getStatus().errorCode == 0) {
-            // Get the handlers of the Game
-            List<Sender> handlers = this.gameController.handlerToBroadcast(this.clientId);
-
-            try {
-                for (var handler : handlers) {
-                    handler.sendMessage(response);
-                }
-            } catch (Exception e) {
-                // TODO: Better logging
-                System.out.println("Exception:" + e.getMessage());
-            }
-        }
-    }
-
-    /**
-     * Method called at last step of every execution.
-     * If the response is correct and the Client is in a Game the response is broadcast to every other user in the game.
-     * The list of client is retrieved from the GameController
-     * @param response the Response to send to the client's. TODO: the response could be personalized for every client (ex: startGame, every client has a different response)
-     */
-    private void broadcastPersonalized(JsonMessage<BaseResponseData> response) {
         if (this.gameController != null && response.getData().getStatus().errorCode == 0) {
             // Get the handlers of the Game
             List<Sender> handlers = this.gameController.handlerToBroadcast(this.clientId);

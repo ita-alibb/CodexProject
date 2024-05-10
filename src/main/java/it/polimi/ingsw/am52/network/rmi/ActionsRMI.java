@@ -1,12 +1,7 @@
 package it.polimi.ingsw.am52.network.rmi;
 
-import it.polimi.ingsw.am52.json.request.CreateLobbyData;
-import it.polimi.ingsw.am52.json.request.JoinLobbyData;
-import it.polimi.ingsw.am52.json.request.LeaveGameData;
-import it.polimi.ingsw.am52.json.request.SelectObjectiveData;
-import it.polimi.ingsw.am52.json.response.JoinLobbyResponseData;
-import it.polimi.ingsw.am52.json.response.LeaveGameResponseData;
-import it.polimi.ingsw.am52.json.response.SelectObjectiveResponseData;
+import it.polimi.ingsw.am52.json.request.*;
+import it.polimi.ingsw.am52.json.response.*;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -38,6 +33,12 @@ public interface ActionsRMI extends Remote {
      * @param data the request
      */
     LeaveGameResponseData leaveGame(LeaveGameData data) throws RemoteException;
+
+    /**
+     * Method to fetch all information needed on game initialization
+     *
+     */
+    InitGameResponseData initGame() throws RemoteException;
 
     /**
      * Method to perform the selectObjective Request

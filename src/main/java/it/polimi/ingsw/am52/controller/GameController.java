@@ -2,15 +2,16 @@ package it.polimi.ingsw.am52.controller;
 
 import it.polimi.ingsw.am52.exceptions.GameException;
 import it.polimi.ingsw.am52.exceptions.PlayerException;
-import it.polimi.ingsw.am52.json.response.JoinLobbyResponseData;
-import it.polimi.ingsw.am52.json.response.LeaveGameResponseData;
-import it.polimi.ingsw.am52.json.response.SelectObjectiveResponseData;
+import it.polimi.ingsw.am52.json.response.*;
+import it.polimi.ingsw.am52.model.cards.Card;
 import it.polimi.ingsw.am52.model.game.GameLobby;
 import it.polimi.ingsw.am52.model.game.GameManager;
+import it.polimi.ingsw.am52.model.objectives.Objective;
 import it.polimi.ingsw.am52.network.ClientHandler;
 import it.polimi.ingsw.am52.network.Sender;
 import it.polimi.ingsw.am52.json.response.ResponseStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -110,6 +111,34 @@ public class GameController {
 
         //Notify the success of the action
         return new SelectObjectiveResponseData(new ResponseStatus(this.game.getStatusResponse()), objective);
+    }
+
+    /**
+     * Method to get the init game data
+     *
+     */
+    public InitGameResponseData initGame(int clientId) {
+        InitGameResponseData response;
+        try {
+            var nickname = this.lobby.getPlayer(clientId).get().getUsername();
+
+            response = new InitGameResponseData(
+                    new ResponseStatus(this.game.getStatusResponse()),
+                    this.lobby.getPlayersNickname(),
+                    this.game.getCommonObjectives(),
+                    this.game.getVisibleResourceCards(),
+                    this.game.getVisibleGoldCards(),
+                    this.game.getPlayer(nickname).getHand().stream().map(Card::getCardId).toList(),
+                    this.game.getPlayerObjectiveOptions(nickname).stream().map(Objective::getObjectiveId).toList(),
+                    this.game.getCurrentPlayer().getStarterCard().getCardId()
+            );
+        } catch (Exception e) {
+            // TODO: better logging
+            System.out.println("Exception thrown on GameController.initGame: " + e.getMessage());
+            response = new InitGameResponseData(new ResponseStatus(this.game.getStatusResponse(), 503, "Method not working"));
+        }
+
+        return response;
     }
 
     //endregion
