@@ -60,7 +60,7 @@ public class ConnectionTCP implements ActionsRMI {
                     try {
                         var res = JsonDeserializer.deserializeResponse(jsonResponse);
 
-                        if (res.getData().isBroadcast()) {
+                        if (res.getData().getIsBroadcast()) {
                             //TODO: here we receive the broadcast response, as in ConnectionRMI we need to process it to update the game
                             System.out.println("The data was a broadcast");
                         } else {
@@ -100,8 +100,8 @@ public class ConnectionTCP implements ActionsRMI {
         try {
             this.out.println(message.toJson());
 
-            // Wait the response to be received, 2 seconds timeout
-            return this.responseQueue.poll(2, TimeUnit.SECONDS).getData();
+            // Wait the response to be received, 20 seconds timeout
+            return this.responseQueue.poll(20, TimeUnit.SECONDS).getData();
         } catch (NullPointerException e){
             // TODO: se fa timeout che dobbiamo fare? In teoria la richiesta dovrebbe essere arrivata e la risposta prima o poi arrivera' -> No timeout?
             System.out.println("Request Timeout");

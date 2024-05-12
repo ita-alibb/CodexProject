@@ -99,7 +99,6 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
             this.gameController = ServerController.getInstance().getGameController(response.getLobbyId()).get();
         }
 
-        this.broadcast(new CreateLobbyResponse(response));
         return response;
     }
 
@@ -180,7 +179,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
             List<Sender> handlers = this.gameController.handlerToBroadcast(this.clientId);
 
             // Mark the response as a broadcast
-            response.getData().setIsBroadcast();
+            response.getData().setIsBroadcast(true);
 
             try {
                 for (var handler : handlers) {
@@ -190,6 +189,9 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
                 // TODO: Better logging
                 System.out.println("Exception:" + e.getMessage());
             }
+
+            // Un-mark the response as broadcast to send it to the caller
+            response.getData().setIsBroadcast(false);
         }
     }
 }

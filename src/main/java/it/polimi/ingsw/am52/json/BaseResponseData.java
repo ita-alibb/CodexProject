@@ -13,7 +13,7 @@ public abstract class BaseResponseData implements Serializable {
     /**
      * Indicates if the response is a broadcast of the response
      */
-    private boolean isBroadcast;
+    public boolean isBroadcast;
 
     /**
      * The Empty constructor
@@ -33,6 +33,16 @@ public abstract class BaseResponseData implements Serializable {
     }
 
     /**
+     * The Base constructor
+     * @param status the Response Status
+     * @param isBroadcast if the response is a broadcast
+     */
+    public BaseResponseData(ResponseStatus status, boolean isBroadcast) {
+        this.status = status;
+        this.isBroadcast = isBroadcast;
+    }
+
+    /**
      *
      * @return the status of the request
      */
@@ -42,10 +52,10 @@ public abstract class BaseResponseData implements Serializable {
 
     /**
      * Method used to mark the response as broadcast
-     *
+     * @param isBroadcast the new value
      */
-    public void setIsBroadcast() {
-        this.isBroadcast = true;
+    public void setIsBroadcast(boolean isBroadcast) {
+        this.isBroadcast = isBroadcast;
     }
 
     /**
@@ -53,7 +63,7 @@ public abstract class BaseResponseData implements Serializable {
      *
      * @return the isBroadcast property
      */
-    public boolean isBroadcast() {
+    public boolean getIsBroadcast() {
         return this.isBroadcast;
     }
 }

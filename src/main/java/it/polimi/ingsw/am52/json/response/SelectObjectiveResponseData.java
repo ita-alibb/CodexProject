@@ -21,6 +21,14 @@ public class SelectObjectiveResponseData extends BaseResponseData implements Ser
     //region Constructor
 
     /**
+     * The Empty constructor
+     */
+    public SelectObjectiveResponseData() {
+        super();
+        this.objective = -1;
+    }
+
+    /**
      * Create a selectObjective data object
      * @param status    The status of the response
      * @param objective The ID of the chosen objective

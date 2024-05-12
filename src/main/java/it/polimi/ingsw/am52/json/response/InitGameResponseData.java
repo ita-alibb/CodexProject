@@ -55,6 +55,20 @@ public class InitGameResponseData  extends BaseResponseData implements Serializa
     //region Constructors
 
     /**
+     * The Empty constructor needed for Jackson library
+     */
+    public InitGameResponseData() {
+        super();
+        this.playersNickname = new ArrayList<>();
+        this.commonObjectiveIds = new ArrayList<>();
+        this.visibleResourceCardIds = new ArrayList<>();
+        this.visibleGoldCardIds = new ArrayList<>();
+        this.playerHandCardIds = new ArrayList<>();
+        this.playerObjectiveCardIds = new ArrayList<>();
+        this.starterCardId = -1;
+    }
+
+    /**
      * Create a joinLobby data object.
      * @param status the status of the game
      * @param playersNickname the nickname of other players in the game

@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * The class to test the network
  */
 public class NetworkTest {
-    /*private static ServerConnection server;
+    private static ServerConnection server;
 
     @BeforeAll
     public static void setUp() {
@@ -90,24 +90,20 @@ public class NetworkTest {
     }
 
 
-    *//**
+    /**
      * Method to test a generic call, it will be serialized to Json and compared the strings
      * @param caller the client Connection that does the call
      * @param request the request
      * @param expectedResponse the expected response
-     *//*
+     */
     private void testCall(ActionsRMI caller, JsonMessage request, JsonMessage<BaseResponseData> expectedResponse) {
         try {
             var res = switch (request.getMethod()) {
-                case JsonDeserializer.CREATE_LOBBY_METHOD ->
-                        new CreateLobbyResponse(caller.createLobby((CreateLobbyData) request.getData()));
-                case JsonDeserializer.JOIN_LOBBY_METHOD ->
-                        new JoinLobbyResponse(caller.joinLobby((JoinLobbyData) request.getData()));
-                case JsonDeserializer.LEAVE_GAME_METHOD ->
-                        new LeaveGameResponse(caller.leaveGame((LeaveGameData) request.getData()));
+                case JsonDeserializer.CREATE_LOBBY_METHOD -> new CreateLobbyResponse(caller.createLobby((CreateLobbyData) request.getData()));
+                case JsonDeserializer.JOIN_LOBBY_METHOD -> new JoinLobbyResponse(caller.joinLobby((JoinLobbyData) request.getData()));
+                case JsonDeserializer.LEAVE_GAME_METHOD -> new LeaveGameResponse(caller.leaveGame((LeaveGameData) request.getData()));
                 case JsonDeserializer.INIT_GAME_METHOD -> new InitGameResponse(caller.initGame());
-                case JsonDeserializer.SELECT_OBJECTIVE_METHOD ->
-                        new SelectObjectiveResponse(caller.selectObjective((SelectObjectiveData) request.getData()));
+                case JsonDeserializer.SELECT_OBJECTIVE_METHOD -> new SelectObjectiveResponse(caller.selectObjective((SelectObjectiveData) request.getData()));
                 default -> throw new NoSuchMethodException("no method " + request.getMethod());
             };
 
@@ -115,5 +111,5 @@ public class NetworkTest {
         } catch (Exception ex) {
             assert false;
         }
-    }*/
+    }
 }

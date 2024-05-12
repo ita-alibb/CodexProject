@@ -3,6 +3,7 @@ package it.polimi.ingsw.am52.json.response;
 import it.polimi.ingsw.am52.json.BaseResponseData;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * The object representing the data for the leaveGame response.
@@ -19,6 +20,14 @@ public class LeaveGameResponseData extends BaseResponseData implements Serializa
     //endregion
 
     //region Constructor
+
+    /**
+     * The Empty constructor needed for Jackson library
+     */
+    public LeaveGameResponseData() {
+        super();
+        this.message = "";
+    }
 
     /**
      * Create a login data object.

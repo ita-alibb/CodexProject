@@ -21,6 +21,14 @@ public class JoinLobbyResponseData extends BaseResponseData implements Serializa
     //region Constructors
 
     /**
+     * The Empty constructor needed for Jackson library
+     */
+    public JoinLobbyResponseData() {
+        super();
+        this.lobbyId = -1;
+    }
+
+    /**
      * Create a joinLobby data object.
      * @param status The status of the response
      * @param lobbyId The id of the lobby joined.
