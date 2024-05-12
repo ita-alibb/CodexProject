@@ -1,23 +1,23 @@
 package it.polimi.ingsw.am52.json.request;
 
+import it.polimi.ingsw.am52.json.JsonMessage;
+
 /**
  * The object representing the data for the drawCard method.
  * The method requires the deck from which the card has been drawn.
  * @author Livio B.
  */
-public class DrawCardRequest extends PlayerRequest<DrawCardData> {
+public class DrawCardRequest extends JsonMessage<DrawCardData> {
 
     //region constructor
 
     /**
      * Creates the request object for the drawCard method, with the specified
      * data.
-     * @param playerId The player id.
-     * @param lobbyId The lobby id.
      * @param data The data for the drawCard method.
      */
-    public DrawCardRequest(int playerId, int lobbyId, DrawCardData data) {
-        super(playerId, lobbyId, data);
+    public DrawCardRequest(DrawCardData data) {
+        super(data);
     }
 
     //endregion

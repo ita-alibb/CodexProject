@@ -1,7 +1,5 @@
 {
   "method": "leaveGame",
-  "playerId": 1,
-  "lobbyId": 335,
   "data": {
     "message": "Bye Bye!"
   }

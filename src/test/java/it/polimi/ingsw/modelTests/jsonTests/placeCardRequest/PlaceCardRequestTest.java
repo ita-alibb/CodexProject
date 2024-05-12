@@ -44,7 +44,7 @@ public class PlaceCardRequestTest
         PlaceCardData data = new PlaceCardData(cardId, face);
 
         // Create the request object.
-        PlaceCardRequest request = new PlaceCardRequest(playerId, lobbyId, data);
+        PlaceCardRequest request = new PlaceCardRequest(data);
         String jsonText = null;
 
         // Serialize the request object.
@@ -61,17 +61,11 @@ public class PlaceCardRequestTest
         // Check there are four and only four fields, named "playerId", lobbyId",
         // "method", and "data".
         checkNodeFieldNames(jsonNode,
-                JsonDeserializer.PLAYER_ID_FIELD,
-                JsonDeserializer.LOBBY_ID_FIELD,
                 JsonDeserializer.METHOD_FIELD,
                 JsonDeserializer.DATA_FIELD);
 
         // Check the method is "placeCard".
         checkNodeFiledStringValue(jsonNode, JsonDeserializer.METHOD_FIELD, methodName);
-        // Check the value of the "playerId" field.
-        checkNodeFiledIntValue(jsonNode, JsonDeserializer.PLAYER_ID_FIELD, playerId);
-        // Check the value of the "lobbyId" field.
-        checkNodeFiledIntValue(jsonNode, JsonDeserializer.LOBBY_ID_FIELD, lobbyId);
 
         // Inspect the data object.
         JsonNode dataNode = jsonNode.get(JsonDeserializer.DATA_FIELD);
@@ -94,8 +88,6 @@ public class PlaceCardRequestTest
         // This file has the following json text:
         // {
         //  "method": "placeCard",
-        //  "playerId": 4,
-        //  "lobbyId": 633,
         //  "data": {
         //    "cardId": 11,
         //    "face": "front"
@@ -121,8 +113,6 @@ public class PlaceCardRequestTest
         try {
             PlaceCardRequest request = (PlaceCardRequest)JsonDeserializer.deserializeRequest(jsonText);
             assertEquals(JsonDeserializer.PLACE_CARD_METHOD, request.getMethod());
-            assertEquals(4, request.getPlayerId());
-            assertEquals(633, request.getLobbyId());
             assertEquals(11, request.getData().getCardId());
             assertEquals("front", request.getData().getFace());
         } catch (IOException e) {
@@ -142,8 +132,6 @@ public class PlaceCardRequestTest
         // This file has the following json text:
         // {
         //  "method": "placeCard",
-        //  "playerId": 1,
-        //  "lobbyId": 332,
         //  "data": {
         //    "cardId": 11,
         //  }
@@ -168,8 +156,6 @@ public class PlaceCardRequestTest
         try {
             PlaceCardRequest request = (PlaceCardRequest)JsonDeserializer.deserializeRequest(jsonText);
             assertEquals(JsonDeserializer.PLACE_CARD_METHOD, request.getMethod());
-            assertEquals(1, request.getPlayerId());
-            assertEquals(332, request.getLobbyId());
             assertEquals(11, request.getData().getCardId());
             assertEquals("", request.getData().getFace());
         } catch (IOException e) {

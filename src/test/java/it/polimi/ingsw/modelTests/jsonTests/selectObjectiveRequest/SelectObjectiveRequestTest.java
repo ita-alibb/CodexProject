@@ -43,7 +43,7 @@ public class SelectObjectiveRequestTest
         SelectObjectiveData data = new SelectObjectiveData(objectiveId);
 
         // Create the request object.
-        SelectObjectiveRequest request = new SelectObjectiveRequest(playerId, lobbyId, data);
+        SelectObjectiveRequest request = new SelectObjectiveRequest(data);
         String jsonText = null;
 
         // Serialize the request object.
@@ -60,17 +60,11 @@ public class SelectObjectiveRequestTest
         // Check there are four and only four fields, named "playerId", lobbyId",
         // "method", and "data".
         checkNodeFieldNames(jsonNode,
-                JsonDeserializer.PLAYER_ID_FIELD,
-                JsonDeserializer.LOBBY_ID_FIELD,
                 JsonDeserializer.METHOD_FIELD,
                 JsonDeserializer.DATA_FIELD);
 
         // Check the method is "selectObjective".
         checkNodeFiledStringValue(jsonNode, JsonDeserializer.METHOD_FIELD, methodName);
-        // Check the value of the "playerId" field.
-        checkNodeFiledIntValue(jsonNode, JsonDeserializer.PLAYER_ID_FIELD, playerId);
-        // Check the value of the "lobbyId" field.
-        checkNodeFiledIntValue(jsonNode, JsonDeserializer.LOBBY_ID_FIELD, lobbyId);
 
         // Inspect the data object.
         JsonNode dataNode = jsonNode.get(JsonDeserializer.DATA_FIELD);
@@ -92,8 +86,6 @@ public class SelectObjectiveRequestTest
         // This file has the following json text:
         // {
         //  "method": "selectObjective",
-        //  "playerId": 2,
-        //  "lobbyId": 941,
         //  "data": {
         //    "objectiveId": 9
         //  }
@@ -118,8 +110,6 @@ public class SelectObjectiveRequestTest
         try {
             SelectObjectiveRequest request = (SelectObjectiveRequest)JsonDeserializer.deserializeRequest(jsonText);
             assertEquals(JsonDeserializer.SELECT_OBJECTIVE_METHOD, request.getMethod());
-            assertEquals(2, request.getPlayerId());
-            assertEquals(941, request.getLobbyId());
             assertEquals(9, request.getData().getObjectiveId());
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -138,8 +128,6 @@ public class SelectObjectiveRequestTest
         // This file has the following json text:
         // {
         //  "method": "selectObjective",
-        //  "playerId": 2,
-        //  "lobbyId": 941,
         //  "data": {
         //  }
         //}
@@ -163,8 +151,6 @@ public class SelectObjectiveRequestTest
         try {
             SelectObjectiveRequest request = (SelectObjectiveRequest)JsonDeserializer.deserializeRequest(jsonText);
             assertEquals(JsonDeserializer.SELECT_OBJECTIVE_METHOD, request.getMethod());
-            assertEquals(2, request.getPlayerId());
-            assertEquals(941, request.getLobbyId());
             assertEquals(-1, request.getData().getObjectiveId());
             assert(true);
         } catch (IOException e) {

@@ -43,7 +43,7 @@ public class LeaveGameRequestTest
         LeaveGameData leaveData = new LeaveGameData(message);
 
         // Create the request object.
-        LeaveGameRequest request = new LeaveGameRequest(playerId, lobbyId, leaveData);
+        LeaveGameRequest request = new LeaveGameRequest(leaveData);
         String jsonText = null;
 
         // Serialize the request object.
@@ -60,17 +60,11 @@ public class LeaveGameRequestTest
         // Check there are four and only four fields, named "playerId", lobbyId",
         // "method", and "data".
         checkNodeFieldNames(jsonNode,
-                JsonDeserializer.PLAYER_ID_FIELD,
-                JsonDeserializer.LOBBY_ID_FIELD,
                 JsonDeserializer.METHOD_FIELD,
                 JsonDeserializer.DATA_FIELD);
 
         // Check the method is "leaveGame".
         checkNodeFiledStringValue(jsonNode, JsonDeserializer.METHOD_FIELD, methodName);
-        // Check the value of the "playerId" field.
-        checkNodeFiledIntValue(jsonNode, JsonDeserializer.PLAYER_ID_FIELD, playerId);
-        // Check the value of the "lobbyId" field.
-        checkNodeFiledIntValue(jsonNode, JsonDeserializer.LOBBY_ID_FIELD, lobbyId);
 
         // Inspect the data object.
         JsonNode dataNode = jsonNode.get(JsonDeserializer.DATA_FIELD);
@@ -92,8 +86,6 @@ public class LeaveGameRequestTest
         // This file has the following json text:
         // {
         //  "method": "leaveGame",
-        //  "playerId": 1,
-        //  "lobbyId": 335,
         //  "data": {
         //    "message": "Bye Bye!"
         //  }
@@ -116,8 +108,6 @@ public class LeaveGameRequestTest
         // Parse the json text.
         try {
             LeaveGameRequest request = (LeaveGameRequest) JsonDeserializer.deserializeRequest(jsonText);
-            assertEquals(1, request.getPlayerId());
-            assertEquals(335, request.getLobbyId());
             assertEquals(JsonDeserializer.LEAVE_GAME_METHOD, request.getMethod());
             assertEquals("Bye Bye!", request.getData().getMessage());
         } catch (IOException e) {

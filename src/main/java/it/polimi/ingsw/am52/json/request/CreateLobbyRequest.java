@@ -1,10 +1,12 @@
 package it.polimi.ingsw.am52.json.request;
 
+import it.polimi.ingsw.am52.json.JsonMessage;
+
 /**
  * The crete lobby request object. The method associated to this request
  * is "createLobby" and the data is a CreateLobbyData object.
  */
-public class CreateLobbyRequest extends ClientRequest<CreateLobbyData> {
+public class CreateLobbyRequest extends JsonMessage<CreateLobbyData> {
 
     //region Constructors
 

@@ -71,4 +71,18 @@ public class ResponseStatus implements Serializable {
         this.errorCode = 0;
         this.errorMessage = "";
     }
+
+    /**
+     * The constructor for UnitTests
+     * @param phase the phase of the Game
+     * @param currPlayer the nick of the curr player
+     * @param errorCode the error code of the call
+     * @param errorMessage the error message
+     */
+    public ResponseStatus(GamePhase phase, String currPlayer, int errorCode, String errorMessage) {
+        this.gamePhase = phase;
+        this.currPlayer = currPlayer;
+        this.errorCode = errorCode;
+        this.errorMessage = errorMessage;
+    }
 }

@@ -10,7 +10,7 @@ public class InitGameData implements java.io.Serializable {
     /**
      * Default constructor, for json deserialization purpose only.
      */
-    protected InitGameData() {
+    public InitGameData() {
     }
 
     //endregion

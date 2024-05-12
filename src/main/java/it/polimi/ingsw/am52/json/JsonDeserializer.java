@@ -3,6 +3,7 @@ package it.polimi.ingsw.am52.json;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.am52.json.request.*;
+import it.polimi.ingsw.am52.json.response.*;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -20,16 +21,6 @@ public class JsonDeserializer {
      * The name of the filed used to specify the method in the json request / response.
      */
     public static final String METHOD_FIELD = "method";
-
-    /**
-     * The name of the field used to specify the id of player.
-     */
-    public static final String PLAYER_ID_FIELD = "playerId";
-
-    /**
-     * The name of the field used to specify the id of the lobby.
-     */
-    public static final String LOBBY_ID_FIELD = "lobbyId";
 
     /**
      * The name of the field used to specify data of the request.
@@ -85,7 +76,7 @@ public class JsonDeserializer {
      * @throws IOException If an error occur in the deserialization process.
      * @author Livio B.
      */
-    public static ClientRequest deserializeRequest(String jsonText) throws IOException {
+    public static JsonMessage deserializeRequest(String jsonText) throws IOException {
         // Create the object mapper.
         ObjectMapper objectMapper = new ObjectMapper();
         // Deserialize into a json node object.
@@ -105,6 +96,27 @@ public class JsonDeserializer {
         throw new IOException(String.format("Field \"{%s\" not found in json object.", METHOD_FIELD));
     }
 
+
+    public static JsonMessage<BaseResponseData> deserializeResponse(String jsonResponse) throws IOException {
+        // Create the object mapper.
+        ObjectMapper objectMapper = new ObjectMapper();
+        // Deserialize into a json node object.
+        JsonNode jsonNode = objectMapper.readTree(jsonResponse);
+
+        // Get the iterator to iterate over all field names.
+        Iterator<String> iter = jsonNode.fieldNames();
+        // Iterate over all names.
+        while (iter.hasNext()) {
+            // Check for field "method".
+            if (iter.next().equals(METHOD_FIELD)) {
+                // Deserialize based on the method.
+                return deserializeResponse(jsonNode, jsonNode.get(METHOD_FIELD).asText());
+            }
+        }
+        // Field "method" not found in json.
+        throw new IOException(String.format("Field \"{%s\" not found in json object.", METHOD_FIELD));
+    }
+
     //endregion
 
     //region Private Static Methods
@@ -116,95 +128,8 @@ public class JsonDeserializer {
      * @return The java object of the request.
      * @throws IOException If an error occurs in the deserialization process.
      */
-    private static ClientRequest deserializeRequest(JsonNode jsonNode, String method) throws IOException {
-
-        // Switch on method of the request.
-        switch (method) {
-            // Cases with only "method" and DATA_FIELD fields (inherit form ClientRequest).
-            case JOIN_LOBBY_METHOD:
-            case CREATE_LOBBY_METHOD:
-            case INIT_GAME_METHOD:
-                return deserializeClientRequest(jsonNode, method);
-
-            // Cases with also "playerId" and "lobbyId" fields (inherit from PlayerRequest).
-            case LEAVE_GAME_METHOD:
-            case SELECT_OBJECTIVE_METHOD:
-            case PLACE_CARD_METHOD:
-            case PLACE_STARTER_CARD_METHOD:
-            case DRAW_CARD_METHOD:
-            case TAKE_CARD_METHOD:
-                return deserializePlayerRequest(jsonNode, method);
-            // Unknown method.
-            default:
-                throw new IOException(String.format("Unknown method \"%s\".", method));
-        }
-    }
-
-    /**
-     * Parse requests that inherit from PlayerRequest, that have"playerId" and "lobbyId" fields.
-     * @param jsonNode The json node to deserialize.
-     * @param method The method of the request.
-     * @return The request object.
-     * @throws IOException If an error occurs during the deserialization process.
-     */
-    private static ClientRequest deserializePlayerRequest(JsonNode jsonNode, String method) throws IOException {
-
-        // Get the "playerId" and "lobbyId" fields' values.
-        int playerId , lobbyId;
-        try {
-            // Get them from the json node.
-            playerId = jsonNode.get(PLAYER_ID_FIELD).asInt();
-            lobbyId = jsonNode.get(LOBBY_ID_FIELD).asInt();
-        } catch (Exception ex) {
-            // Throws on error.
-            throw new IOException(
-                    String.format("Missing field \"%s\" and/or \"%s\" in the player request json text.",
-                            PLAYER_ID_FIELD, LOBBY_ID_FIELD));
-        }
-
+    private static JsonMessage deserializeRequest(JsonNode jsonNode, String method) throws IOException {
         // Get an ObjectMapper for deserialization.
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        // Switch on method (to select the type of the request data).
-        return switch (method) {
-            case LEAVE_GAME_METHOD -> {
-                LeaveGameData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), LeaveGameData.class);
-                yield new LeaveGameRequest(playerId, lobbyId, data);
-            }
-            case SELECT_OBJECTIVE_METHOD -> {
-                SelectObjectiveData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), SelectObjectiveData.class);
-                yield new SelectObjectiveRequest(playerId, lobbyId, data);
-            }
-            case PLACE_STARTER_CARD_METHOD -> {
-                PlaceCardData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), PlaceCardData.class);
-                yield new PlaceStarterCardRequest(playerId, lobbyId, data);
-            }
-            case PLACE_CARD_METHOD -> {
-                PlaceCardData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), PlaceCardData.class);
-                yield new PlaceCardRequest(playerId, lobbyId, data);
-            }
-            case DRAW_CARD_METHOD -> {
-                DrawCardData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), DrawCardData.class);
-                yield new DrawCardRequest(playerId, lobbyId, data);
-            }
-            case TAKE_CARD_METHOD -> {
-                TakeCardData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), TakeCardData.class);
-                yield new TakeCardRequest(playerId, lobbyId, data);
-            }
-            // Unknown method.
-            default -> throw new IOException(String.format("Unknown method \"%s\".", method));
-        };
-    }
-
-    /**
-     * Parse requests that inherit from ClientRequest, with only "data" field.
-     * @param jsonNode The json node to deserialize.
-     * @param method The method of the request.
-     * @return The request object.
-     * @throws IOException If an error occurs during the deserialization process.
-     */
-    private static ClientRequest deserializeClientRequest(JsonNode jsonNode, String method) throws IOException {
-        // Get a ObjectMapper.
         ObjectMapper objectMapper = new ObjectMapper();
 
         // Switch on method (to select the type of the request data).
@@ -221,6 +146,70 @@ public class JsonDeserializer {
                 InitGameData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), InitGameData.class);
                 yield new InitGameRequest(data);
             }
+            case LEAVE_GAME_METHOD -> {
+                LeaveGameData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), LeaveGameData.class);
+                yield new LeaveGameRequest(data);
+            }
+            case SELECT_OBJECTIVE_METHOD -> {
+                SelectObjectiveData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), SelectObjectiveData.class);
+                yield new SelectObjectiveRequest(data);
+            }
+            case PLACE_STARTER_CARD_METHOD -> {
+                PlaceCardData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), PlaceCardData.class);
+                yield new PlaceStarterCardRequest(data);
+            }
+            case PLACE_CARD_METHOD -> {
+                PlaceCardData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), PlaceCardData.class);
+                yield new PlaceCardRequest(data);
+            }
+            case DRAW_CARD_METHOD -> {
+                DrawCardData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), DrawCardData.class);
+                yield new DrawCardRequest(data);
+            }
+            case TAKE_CARD_METHOD -> {
+                TakeCardData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), TakeCardData.class);
+                yield new TakeCardRequest(data);
+            }
+            // Unknown method.
+            default -> throw new IOException(String.format("Unknown method \"%s\".", method));
+        };
+    }
+
+    /**
+     * Deserialize the jsonNode into the appropriate java response object.
+     * @param jsonNode The json node to deserialize.
+     * @param method The method of the request.
+     * @return The java object of the request.
+     * @throws IOException If an error occurs in the deserialization process.
+     */
+    private static JsonMessage<BaseResponseData> deserializeResponse(JsonNode jsonNode, String method) throws IOException {
+        // Get an ObjectMapper for deserialization.
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        // Switch on method (to select the type of the request data).
+        return switch (method) {
+            case JOIN_LOBBY_METHOD -> {
+                JoinLobbyResponseData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), JoinLobbyResponseData.class);
+                yield new JoinLobbyResponse(data);
+            }
+            case CREATE_LOBBY_METHOD -> {
+                JoinLobbyResponseData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), JoinLobbyResponseData.class);
+                yield new CreateLobbyResponse(data);
+            }
+            case INIT_GAME_METHOD -> {
+                InitGameResponseData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), InitGameResponseData.class);
+                yield new InitGameResponse(data);
+            }
+            case LEAVE_GAME_METHOD -> {
+                LeaveGameResponseData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), LeaveGameResponseData.class);
+                yield new LeaveGameResponse(data);
+            }
+            case SELECT_OBJECTIVE_METHOD -> {
+                SelectObjectiveResponseData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), SelectObjectiveResponseData.class);
+                yield new SelectObjectiveResponse(data);
+            }
+            //TODO: add new responses;
+
             // Unknown method.
             default -> throw new IOException(String.format("Unknown method \"%s\".", method));
         };

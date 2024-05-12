@@ -11,13 +11,11 @@ import it.polimi.ingsw.am52.network.ClientHandler;
 import it.polimi.ingsw.am52.network.Sender;
 import it.polimi.ingsw.am52.json.response.ResponseStatus;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
  * Class to control the Game
- * TODO: Maybe all methods sends and accepts specific class of response, that will be in network shared. like in REST API
  */
 public class GameController {
     /**

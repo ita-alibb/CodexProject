@@ -44,7 +44,7 @@ public class TakeCardRequestTest
         TakeCardData data = new TakeCardData(cardId, type);
 
         // Create the request object.
-        TakeCardRequest request = new TakeCardRequest(playerId, lobbyId, data);
+        TakeCardRequest request = new TakeCardRequest(data);
         String jsonText = null;
 
         // Serialize the request object.
@@ -61,17 +61,11 @@ public class TakeCardRequestTest
         // Check there are four and only four fields, named "playerId", lobbyId",
         // "method", and "data".
         checkNodeFieldNames(jsonNode,
-                JsonDeserializer.PLAYER_ID_FIELD,
-                JsonDeserializer.LOBBY_ID_FIELD,
                 JsonDeserializer.METHOD_FIELD,
                 JsonDeserializer.DATA_FIELD);
 
         // Check the method is "takeCard".
         checkNodeFiledStringValue(jsonNode, JsonDeserializer.METHOD_FIELD, methodName);
-        // Check the value of the "playerId" field.
-        checkNodeFiledIntValue(jsonNode, JsonDeserializer.PLAYER_ID_FIELD, playerId);
-        // Check the value of the "lobbyId" field.
-        checkNodeFiledIntValue(jsonNode, JsonDeserializer.LOBBY_ID_FIELD, lobbyId);
 
         // Inspect the data object.
         JsonNode dataNode = jsonNode.get(JsonDeserializer.DATA_FIELD);
@@ -94,8 +88,6 @@ public class TakeCardRequestTest
         // This file has the following json text:
         // {
         //  "method": "takeCard",
-        //  "playerId": 3,
-        //  "lobbyId": 889,
         //  "data": {
         //    "cardId": 69,
         //    "type": "gold"
@@ -121,8 +113,6 @@ public class TakeCardRequestTest
         try {
             TakeCardRequest request = (TakeCardRequest)JsonDeserializer.deserializeRequest(jsonText);
             assertEquals(JsonDeserializer.TAKE_CARD_METHOD, request.getMethod());
-            assertEquals(3, request.getPlayerId());
-            assertEquals(889, request.getLobbyId());
             assertEquals(69, request.getData().getCardId());
             assertEquals("gold", request.getData().getType());
         } catch (IOException e) {
@@ -142,8 +132,6 @@ public class TakeCardRequestTest
         // This file has the following json text:
         // {
         //  "method": "takeCard",
-        //  "playerId": 4,
-        //  "lobbyId": 2335,
         //  "data": {
         //    "type": "resource"
         //  }
@@ -168,8 +156,6 @@ public class TakeCardRequestTest
         try {
             TakeCardRequest request = (TakeCardRequest)JsonDeserializer.deserializeRequest(jsonText);
             assertEquals(JsonDeserializer.TAKE_CARD_METHOD, request.getMethod());
-            assertEquals(4, request.getPlayerId());
-            assertEquals(2335, request.getLobbyId());
             assertEquals(-1, request.getData().getCardId());
             assertEquals("resource", request.getData().getType());
         } catch (IOException e) {

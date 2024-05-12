@@ -179,6 +179,9 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
             // Get the handlers of the Game
             List<Sender> handlers = this.gameController.handlerToBroadcast(this.clientId);
 
+            // Mark the response as a broadcast
+            response.getData().setIsBroadcast();
+
             try {
                 for (var handler : handlers) {
                     handler.sendMessage(response);

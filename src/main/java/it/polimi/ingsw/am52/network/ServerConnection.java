@@ -4,7 +4,7 @@ import it.polimi.ingsw.am52.controller.ServerController;
 import it.polimi.ingsw.am52.controller.VirtualView;
 import it.polimi.ingsw.am52.network.rmi.Accepter;
 import it.polimi.ingsw.am52.network.rmi.ClientHandlerRMI;
-import it.polimi.ingsw.am52.network.rmi.client.ConnectionRMI;
+import it.polimi.ingsw.am52.network.rmi.client.RemoteConnection;
 import it.polimi.ingsw.am52.network.tcp.ClientHandlerTCP;
 
 import java.net.ServerSocket;
@@ -105,7 +105,7 @@ public class ServerConnection extends UnicastRemoteObject implements Accepter, R
      * @throws RemoteException Implementation of Remote interface
      */
     @Override
-    public int accept(ConnectionRMI client) throws RemoteException {
+    public int accept(RemoteConnection client) throws RemoteException {
         int newId = this.getUniqueClientId();
 
         VirtualView virtualView = new VirtualView(newId);

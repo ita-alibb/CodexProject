@@ -4,7 +4,7 @@ import it.polimi.ingsw.am52.controller.VirtualView;
 import it.polimi.ingsw.am52.json.BaseResponseData;
 import it.polimi.ingsw.am52.json.JsonMessage;
 import it.polimi.ingsw.am52.network.ClientHandler;
-import it.polimi.ingsw.am52.network.rmi.client.ConnectionRMI;
+import it.polimi.ingsw.am52.network.rmi.client.RemoteConnection;
 
 import java.rmi.RemoteException;
 
@@ -20,7 +20,7 @@ public class ClientHandlerRMI implements ClientHandler,Runnable {
     /**
      * The client object exposed by the client
      */
-    private final ConnectionRMI client;
+    private final RemoteConnection client;
 
     /**
      * The virtual view assigned to the client, it is called directly by the Client because it is exposed in the network
@@ -33,7 +33,7 @@ public class ClientHandlerRMI implements ClientHandler,Runnable {
      * @param client the client instance received through the network
      * @param virtualView the virtual view instantiated by the server
      */
-    public ClientHandlerRMI(int clientId, ConnectionRMI client, VirtualView virtualView) {
+    public ClientHandlerRMI(int clientId, RemoteConnection client, VirtualView virtualView) {
         this.clientId = clientId;
         this.client = client;
         this.view = virtualView;
@@ -69,13 +69,13 @@ public class ClientHandlerRMI implements ClientHandler,Runnable {
 
     /**
      * Method used to forward a response to the Client.
-     * Calls a method in the client's object to add the response in the client object response queue to elaborate it
+     * Calls a method in the client's object to process the response in the client, it will be processed in another thread to speed-up de server
      * @param response the message to send
      */
     @Override
     public void sendMessage(JsonMessage<BaseResponseData> response) {
         try {
-            this.client.addQueue(response.getData());
+            this.client.sendMessage(response.getData());
         } catch (RemoteException e) {
             // TODO: better logging
             System.out.println("Error on sending for client " + this.clientId + "exception: " + e.getMessage());

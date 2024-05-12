@@ -1,10 +1,12 @@
 package it.polimi.ingsw.am52.json.request;
 
+import it.polimi.ingsw.am52.json.JsonMessage;
+
 /**
  * The InitGameRequest request object. The method associated to this request
  * is "initGame" and the data is a CreateLobbyData object.
  */
-public class InitGameRequest extends ClientRequest<InitGameData> {
+public class InitGameRequest extends JsonMessage<InitGameData> {
 
     //region Constructors
 

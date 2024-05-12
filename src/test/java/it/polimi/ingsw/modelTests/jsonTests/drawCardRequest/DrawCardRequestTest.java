@@ -43,7 +43,7 @@ public class DrawCardRequestTest
         DrawCardData data = new DrawCardData(deck);
 
         // Create the request object.
-        DrawCardRequest request = new DrawCardRequest(playerId, lobbyId, data);
+        DrawCardRequest request = new DrawCardRequest(data);
         String jsonText = null;
 
         // Serialize the request object.
@@ -60,17 +60,11 @@ public class DrawCardRequestTest
         // Check there are four and only four fields, named "playerId", lobbyId",
         // "method", and "data".
         checkNodeFieldNames(jsonNode,
-                JsonDeserializer.PLAYER_ID_FIELD,
-                JsonDeserializer.LOBBY_ID_FIELD,
                 JsonDeserializer.METHOD_FIELD,
                 JsonDeserializer.DATA_FIELD);
 
         // Check the method is "selectObjective".
         checkNodeFiledStringValue(jsonNode, JsonDeserializer.METHOD_FIELD, methodName);
-        // Check the value of the "playerId" field.
-        checkNodeFiledIntValue(jsonNode, JsonDeserializer.PLAYER_ID_FIELD, playerId);
-        // Check the value of the "lobbyId" field.
-        checkNodeFiledIntValue(jsonNode, JsonDeserializer.LOBBY_ID_FIELD, lobbyId);
 
         // Inspect the data object.
         JsonNode dataNode = jsonNode.get(JsonDeserializer.DATA_FIELD);
@@ -118,8 +112,6 @@ public class DrawCardRequestTest
         try {
             DrawCardRequest request = (DrawCardRequest)JsonDeserializer.deserializeRequest(jsonText);
             assertEquals(JsonDeserializer.DRAW_CARD_METHOD, request.getMethod());
-            assertEquals(2, request.getPlayerId());
-            assertEquals(89, request.getLobbyId());
             assertEquals("gold", request.getData().getDeck());
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -163,8 +155,6 @@ public class DrawCardRequestTest
         try {
             DrawCardRequest request = (DrawCardRequest)JsonDeserializer.deserializeRequest(jsonText);
             assertEquals(JsonDeserializer.DRAW_CARD_METHOD, request.getMethod());
-            assertEquals(2, request.getPlayerId());
-            assertEquals(89, request.getLobbyId());
             assertEquals("", request.getData().getDeck());
         } catch (IOException e) {
             System.out.println(e.getMessage());

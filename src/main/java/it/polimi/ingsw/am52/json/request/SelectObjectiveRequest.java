@@ -1,10 +1,12 @@
 package it.polimi.ingsw.am52.json.request;
 
+import it.polimi.ingsw.am52.json.JsonMessage;
+
 /**
  * The select objective request object. The method is "selectObjective" and the
  * data is a SelectObjectiveData object.
  */
-public class SelectObjectiveRequest extends PlayerRequest<SelectObjectiveData> {
+public class SelectObjectiveRequest extends JsonMessage<SelectObjectiveData> {
 
     //region Constructor
 
@@ -12,8 +14,8 @@ public class SelectObjectiveRequest extends PlayerRequest<SelectObjectiveData> {
      * Creates a select objective request with the specified data.
      * @param leaveData The login data.
      */
-    public SelectObjectiveRequest(int playerId, int lobbyId, SelectObjectiveData leaveData) {
-        super(playerId, lobbyId, leaveData);
+    public SelectObjectiveRequest(SelectObjectiveData leaveData) {
+        super(leaveData);
     }
 
     //endregion
