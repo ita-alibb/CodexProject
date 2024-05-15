@@ -88,6 +88,7 @@ public class NetworkTest {
 
         // CHECK THAT THE RESPONSE AFTER SECOND JOIN (lobby full) THE STATUS IS INIT
         var firstPlayer = initRes.getData().getStatus().currPlayer;
+        var secondPlayer = Objects.equals(firstPlayer, "Andrea") ? "Lorenzo" : "Andrea";
         this.match(new JoinLobbyResponse(new JoinLobbyResponseData(new ResponseStatus(GamePhase.INIT, firstPlayer, 0, ""), 1)), initRes);
         //endregion
 
@@ -187,12 +188,15 @@ public class NetworkTest {
         assertEquals(GamePhase.PLACING,selectObjective2.getStatus().gamePhase);
         // endregion
 
-        // region PlaceCardResponse
+        // region PlaceCardResponse first
         System.out.println("-----PLACECARD PHASE-----");
-        var currentPlayer = firstPlayer;
         var currentClient = Objects.equals(firstPlayer, "Andrea") ? firstClient : secondClient;
+        var nextClient = Objects.equals(firstPlayer, "Lorenzo") ? firstClient : secondClient;
         var currentInit = Objects.equals(firstPlayer, "Andrea") ? init1 : init2;
+        var nextInit = Objects.equals(firstPlayer, "Lorenzo") ? init1 : init2;
         var currentBoardSlot = Objects.equals(firstPlayer, "Andrea") ? starterPlace1.getBoardSlots() : starterPlace2.getBoardSlots();
+        var nextBoardSlot = Objects.equals(firstPlayer, "Lorenzo") ? starterPlace1.getBoardSlots() : starterPlace2.getBoardSlots();
+
         PlaceCardData currentPlaceData = new PlaceCardData(
                 currentInit.playerHandCardIds.getFirst(),
                 1,
@@ -212,6 +216,72 @@ public class NetworkTest {
 
         assertEquals(GamePhase.DRAWING,place1.getStatus().gamePhase);
         assertEquals(firstPlayer,place1.getStatus().currPlayer);
+        // endregion
+
+        // region DrawCardResponse first
+        System.out.println("-----DRAWCARD PHASE-----");
+        DrawCardData currentDrawData = new DrawCardData(0);  // ResourceCard
+
+        var draw1 = (DrawCardResponseData)this.call(
+                currentClient,
+                new DrawCardRequest(currentDrawData)
+        ).getData();
+
+        assertNotNull(draw1);
+        assertEquals(0,draw1.getDeck());
+        assertNotEquals(0,draw1.getCardId());
+
+        assertEquals(0,draw1.getStatus().errorCode);
+
+        assertEquals(GamePhase.PLACING,draw1.getStatus().gamePhase);
+        assertEquals(secondPlayer,draw1.getStatus().currPlayer);
+        // endregion
+
+        // region PlaceCardResponse second
+        System.out.println("-----PLACECARD PHASE-----");
+
+        PlaceCardData nextPlaceData = new PlaceCardData(
+                nextInit.playerHandCardIds.getFirst(),
+                1,
+                nextBoardSlot.get((int)(Math.random() * nextBoardSlot.size()))
+        );
+
+        var place2 = (PlaceCardResponseData)this.call(
+                nextClient,
+                new PlaceCardRequest(nextPlaceData)
+        ).getData();
+
+        assertNotNull(place2);
+        assertNotNull(place2.getAvailableSlots());
+        assertNotNull(place2.getPlacedSlot());
+
+        assertEquals(0,place2.getStatus().errorCode);
+
+        assertEquals(GamePhase.DRAWING,place2.getStatus().gamePhase);
+        assertEquals(secondPlayer,place2.getStatus().currPlayer);
+        // endregion
+
+        // region TakeCardResponse second
+        System.out.println("-----TAKECARD PHASE-----");
+        TakeCardData nextTakeData = new TakeCardData(
+                init2.visibleGoldCardIds.getFirst(),
+                1
+        );  // GoldCard
+
+        var take2 = (TakeCardResponseData)this.call(
+                nextClient,
+                new TakeCardRequest(nextTakeData)
+        ).getData();
+
+        assertNotNull(take2);
+        assertEquals(init2.visibleGoldCardIds.getFirst(),take2.getTakenCardId());
+        assertNotEquals(-1,take2.getShownCardId());
+        assertEquals(1,take2.getType());
+
+        assertEquals(0,take2.getStatus().errorCode);
+
+        assertEquals(GamePhase.PLACING,take2.getStatus().gamePhase);
+        assertEquals(firstPlayer,take2.getStatus().currPlayer);
         // endregion
     }
 
@@ -244,6 +314,8 @@ public class NetworkTest {
                 case JsonDeserializer.SELECT_OBJECTIVE_METHOD -> new SelectObjectiveResponse(caller.selectObjective((SelectObjectiveData) request.getData()));
                 case JsonDeserializer.PLACE_STARTER_CARD_METHOD -> new PlaceStarterCardResponse(caller.placeStarterCard((PlaceStarterCardData) request.getData()));
                 case JsonDeserializer.PLACE_CARD_METHOD -> new PlaceCardResponse(caller.placeCard((PlaceCardData) request.getData()));
+                case JsonDeserializer.DRAW_CARD_METHOD -> new DrawCardResponse(caller.drawCard((DrawCardData) request.getData()));
+                case JsonDeserializer.TAKE_CARD_METHOD -> new TakeCardResponse(caller.takeCard((TakeCardData) request.getData()));
                 default -> throw new NoSuchMethodException("no method " + request.getMethod());
             };
         } catch (Exception ex) {

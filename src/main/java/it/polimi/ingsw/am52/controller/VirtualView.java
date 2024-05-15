@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am52.controller;
 
 import it.polimi.ingsw.am52.json.*;
+import it.polimi.ingsw.am52.json.dto.DrawType;
 import it.polimi.ingsw.am52.json.request.*;
 import it.polimi.ingsw.am52.json.response.*;
 import it.polimi.ingsw.am52.network.ClientHandler;
@@ -61,6 +62,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
                 case JsonDeserializer.SELECT_OBJECTIVE_METHOD -> new SelectObjectiveResponse(this.selectObjective((SelectObjectiveData) request.getData()));
                 case JsonDeserializer.PLACE_STARTER_CARD_METHOD -> new PlaceStarterCardResponse(this.placeStarterCard((PlaceStarterCardData) request.getData()));
                 case JsonDeserializer.PLACE_CARD_METHOD -> new PlaceCardResponse(this.placeCard((PlaceCardData) request.getData()));
+                case JsonDeserializer.TAKE_CARD_METHOD -> new TakeCardResponse(this.takeCard((TakeCardData) request.getData()));
                 case JsonDeserializer.DRAW_CARD_METHOD -> new DrawCardResponse(this.drawCard((DrawCardData) request.getData()));
                 default -> throw new NoSuchMethodException("no method " + request.getMethod());
             };
@@ -214,6 +216,19 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
                 response.getDeck(),
                 response.isEmpty()
         )));
+
+        return response;
+    }
+
+    /**
+     * Method to perform the takeCard request
+     * @param data The request
+     */
+    @Override
+    public TakeCardResponseData takeCard(TakeCardData data) throws RemoteException {
+        var response = this.gameController.takeCard(this.clientId, data.getCardId(), data.getType());
+
+        this.broadcast(new TakeCardResponse(response));
 
         return response;
     }

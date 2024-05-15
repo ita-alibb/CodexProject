@@ -17,9 +17,9 @@ public class TakeCardData implements Serializable {
     private final int cardId;
 
     /**
-     * The type of card taken by the palyer.
+     * The type of card taken by the player, int representing enum {@link it.polimi.ingsw.am52.json.dto.DrawType}.
      */
-    private final String type;
+    private final int type;
 
     //endregion
 
@@ -29,7 +29,7 @@ public class TakeCardData implements Serializable {
      * Default constructor, for deserialization purpose only.
      */
     protected TakeCardData() {
-        this(-1, "");
+        this(-1, -1);
     }
 
     /**
@@ -37,7 +37,7 @@ public class TakeCardData implements Serializable {
      * @param cardId The id of the card taken by the player.
      * @param type The type of the card, resource or gold.
      */
-    public TakeCardData(int cardId, String type) {
+    public TakeCardData(int cardId, int type) {
         // Assign private fields.
         this.cardId = cardId;
         this.type = type;
@@ -59,7 +59,7 @@ public class TakeCardData implements Serializable {
      *
      * @return The type of the card, resource or gold.
      */
-    public String getType() {
+    public int getType() {
         return this.type;
     }
 

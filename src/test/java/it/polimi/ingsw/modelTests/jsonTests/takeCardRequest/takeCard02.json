@@ -1,6 +1,6 @@
 {
   "method": "takeCard",
   "data": {
-    "type": "resource"
+    "type": 0
   }
 }

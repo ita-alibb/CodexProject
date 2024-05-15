@@ -61,7 +61,7 @@ public class GameLobby {
      * @return A bool indicating whether the nickname is valid
      */
     private boolean validateNickName(String nickName) {
-        return nickName != null && !nickName.isBlank() && nickName.length() <= MAX_NAME_LENGTH && !this.players.contains(nickName);
+        return nickName != null && !nickName.isBlank() && nickName.length() <= MAX_NAME_LENGTH && !this.getPlayersNickname().contains(nickName);
     }
 
     /**

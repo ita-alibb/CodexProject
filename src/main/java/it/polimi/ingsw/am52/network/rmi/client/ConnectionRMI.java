@@ -199,5 +199,20 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
         }
     }
 
+    /**
+     * Method to perform the takeCard request
+     *
+     * @param data The request
+     */
+    @Override
+    public TakeCardResponseData takeCard(TakeCardData data) throws RemoteException {
+        try {
+            return this.view.takeCard(data);
+        } catch (RemoteException e) {
+            //TODO: handle remote exception
+            return null;
+        }
+    }
+
     //end region
 }

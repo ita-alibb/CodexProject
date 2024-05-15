@@ -485,7 +485,7 @@ public class GameManager {
      * Take the visible resource card on the board and draw another card to fill the gap
      * @param cardId    The ID of the visible card
      */
-    public void takeResourceCard(int cardId) {
+    public int takeResourceCard(int cardId) {
         //If the List of the visible resource cards doesn't contain the card, throw an exception
         if (!this.visibleResourceCards.contains(ResourceCard.getCardWithId(cardId))) {
             throw new GameException("The card selected is not a visible card");
@@ -501,6 +501,11 @@ public class GameManager {
             } catch (PhaseException e) {
                 throw new GameException(e.getMessage());
             }
+
+            var newCard = this.resourceCardDeck.draw();
+            this.visibleResourceCards.add(newCard);
+
+            return newCard.getCardId();
         }
     }
 
@@ -508,7 +513,7 @@ public class GameManager {
      * Take the visible gold card on the board and draw another card to fill the gap
      * @param cardId    The ID of the visible card
      */
-    public void takeGoldCard(int cardId) {
+    public int takeGoldCard(int cardId) {
         //If the List of the visible resource cards doesn't contain the card, throw an exception
         if (!this.visibleGoldCards.contains(GoldCard.getCardWithId(cardId))) {
             throw new GameException("The card selected is not a visible card");
@@ -524,6 +529,11 @@ public class GameManager {
             } catch (PhaseException e) {
                 throw new GameException(e.getMessage());
             }
+
+            var newCard = this.goldCardDeck.draw();
+            this.visibleGoldCards.add(newCard);
+
+            return newCard.getCardId();
         }
     }
 

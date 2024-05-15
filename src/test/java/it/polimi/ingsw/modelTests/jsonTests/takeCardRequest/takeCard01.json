@@ -2,6 +2,6 @@
   "method": "takeCard",
   "data": {
     "cardId": 69,
-    "type": "gold"
+    "type": 1
   }
 }

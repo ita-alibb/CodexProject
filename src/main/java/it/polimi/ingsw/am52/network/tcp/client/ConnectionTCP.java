@@ -67,7 +67,6 @@ public class ConnectionTCP implements ActionsRMI {
                             // If the response is not a broadcast then one of the ActionRMI method is waiting for the response to be added in the queue
                             // the offer methods inserts the element in the queue only if a thread is waiting for it, timeout handled
                             if (!responseQueue.offer(res)){
-                                // TODO: aggiungiamo la risposta (che prima o poi arrivera') ad una lista di risposte in timeout? O ignoriamo e diamo per socntato che la connessione e' caduta e la partita persa?
                                 System.out.println("Request thread timed out");
                             }
                         }
@@ -103,7 +102,6 @@ public class ConnectionTCP implements ActionsRMI {
             // Wait the response to be received, 20 seconds timeout
             return this.responseQueue.poll(20, TimeUnit.SECONDS).getData();
         } catch (NullPointerException e){
-            // TODO: se fa timeout che dobbiamo fare? In teoria la richiesta dovrebbe essere arrivata e la risposta prima o poi arrivera' -> No timeout?
             System.out.println("Request Timeout");
         } catch (Exception e) {
             System.out.println("Exception on sending request to server; exception: " + e.getMessage());
@@ -184,5 +182,15 @@ public class ConnectionTCP implements ActionsRMI {
     @Override
     public synchronized DrawCardResponseData drawCard(DrawCardData data) throws RemoteException {
         return (DrawCardResponseData) this.send(new DrawCardRequest(data));
+    }
+
+    /**
+     * Method to perform the takeCard request
+     *
+     * @param data The request
+     */
+    @Override
+    public TakeCardResponseData takeCard(TakeCardData data) throws RemoteException {
+        return (TakeCardResponseData) this.send(new TakeCardRequest(data));
     }
 }

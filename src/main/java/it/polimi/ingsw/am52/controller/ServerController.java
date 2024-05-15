@@ -74,7 +74,7 @@ public class ServerController {
 
             var user = new User(createLobbyData.getNickname(), handler.get());
 
-            return gameController.joinLobby(clientId, user);
+            return gameController.joinLobby(user);
         } catch (Exception e) {
             return new JoinLobbyResponseData(new ResponseStatus(503, "Error on createLobby: " + e.getMessage()));
         }
@@ -105,7 +105,7 @@ public class ServerController {
 
             var user = new User(joinLobbyData.getNickname(), handler.get());
 
-            return gameController.get().joinLobby(clientId, user);
+            return gameController.get().joinLobby(user);
         } catch (Exception e) {
             return new JoinLobbyResponseData(new ResponseStatus(503, "Error on createLobby: " + e.getMessage()));
         }

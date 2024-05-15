@@ -220,6 +220,10 @@ public class JsonDeserializer {
                 DrawCardResponseData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), DrawCardResponseData.class);
                 yield new DrawCardResponse(data);
             }
+            case TAKE_CARD_METHOD -> {
+                TakeCardResponseData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), TakeCardResponseData.class);
+                yield new TakeCardResponse(data);
+            }
             //TODO: add new responses;
 
             // Unknown method.

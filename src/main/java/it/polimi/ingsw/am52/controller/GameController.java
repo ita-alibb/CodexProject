@@ -1,7 +1,7 @@
 package it.polimi.ingsw.am52.controller;
 
 import it.polimi.ingsw.am52.exceptions.*;
-import it.polimi.ingsw.am52.json.dto.DrawType;
+import it.polimi.ingsw.am52.json.dto.*;
 import it.polimi.ingsw.am52.json.response.*;
 import it.polimi.ingsw.am52.model.cards.Card;
 import it.polimi.ingsw.am52.model.game.GameLobby;
@@ -40,28 +40,31 @@ public class GameController {
 
     /**
      * The method to join the lobby
-     * @param clientId the client who requested
      * @param user the user that joined
      */
-    public JoinLobbyResponseData joinLobby(int clientId, User user) {
-        if (!this.lobby.addPlayer(user)) {
-            return new JoinLobbyResponseData(new ResponseStatus(503, "Cannot add Player"));
-        }
-
-        JoinLobbyResponseData res;
-
-        if (this.lobby.isFull()) {
-            if(this.startGame()){
-                res = new JoinLobbyResponseData(new ResponseStatus(this.game.getStatusResponse()), this.getId());
-            } else {
-                res = new JoinLobbyResponseData(new ResponseStatus(503, "Cannot start Game"), this.getId());
+    public JoinLobbyResponseData joinLobby(User user) {
+        try {
+            if (!this.lobby.addPlayer(user)) {
+                return new JoinLobbyResponseData(new ResponseStatus(403, "Nickname not available"));
             }
-        } else {
-            res = new JoinLobbyResponseData(new ResponseStatus(), this.getId());
-        }
 
-        // Notify the clients and Response
-        return res;
+            JoinLobbyResponseData res;
+
+            if (this.lobby.isFull()) {
+                if(this.startGame()){
+                    res = new JoinLobbyResponseData(new ResponseStatus(this.game.getStatusResponse()), this.getId());
+                } else {
+                    res = new JoinLobbyResponseData(new ResponseStatus(503, "Cannot start Game"), this.getId());
+                }
+            } else {
+                res = new JoinLobbyResponseData(new ResponseStatus(), this.getId());
+            }
+
+            // Notify the clients and Response
+            return res;
+        } catch (Exception ex) {
+            return new JoinLobbyResponseData(new ResponseStatus(503, "Cannot add player"));
+        }
     }
 
     /**
@@ -212,6 +215,9 @@ public class GameController {
                     isEmpty = true;
                 }
             }
+            case null -> {
+                return new DrawCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 1, "Invalid deck"));
+            }
         }
 
         return new DrawCardResponseData(
@@ -250,6 +256,37 @@ public class GameController {
         return response;
     }
 
+    /**
+     * Method to get the init game data
+     *
+     */
+    public TakeCardResponseData takeCard(int clientId, int cardId, int type) {
+        try {
+            var drawType = DrawType.fromInteger(type);
+            if (!Objects.equals(this.getNickname(clientId), this.game.getCurrentPlayer().getNickname())) {
+                return new TakeCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 3, "Not your turn!"));
+            }
+
+            int shownCard;
+
+            if (drawType == DrawType.RESOURCE){
+                shownCard = this.game.takeResourceCard(cardId);
+            } else if (drawType == DrawType.GOLD) {
+                shownCard = this.game.takeGoldCard(cardId);
+            } else {
+                return new TakeCardResponseData(new ResponseStatus(this.game.getStatusResponse(),400, "Bad request type"));
+            }
+
+            return new TakeCardResponseData(
+                    new ResponseStatus(this.game.getStatusResponse()),
+                    cardId,
+                    shownCard,
+                    type
+                    );
+        } catch (Exception ex) {
+            return new TakeCardResponseData(new ResponseStatus(this.game.getStatusResponse(),503, "Exception on take card"));
+        }
+    }
     //endregion
 
     // region Utilities

@@ -38,7 +38,7 @@ public class TakeCardRequestTest
 
         // Take card data.
         final int cardId = 31;
-        final String type = "resource";
+        final int type = 0;
 
         // Create the data object of the request.
         TakeCardData data = new TakeCardData(cardId, type);
@@ -75,7 +75,7 @@ public class TakeCardRequestTest
 
         // Check the filed values.
         checkNodeFiledIntValue(dataNode, "cardId", cardId);
-        checkNodeFiledStringValue(dataNode, "type", type);
+        checkNodeFiledIntValue(dataNode, "type", type);
 
     }
 
@@ -114,7 +114,7 @@ public class TakeCardRequestTest
             TakeCardRequest request = (TakeCardRequest)JsonDeserializer.deserializeRequest(jsonText);
             assertEquals(JsonDeserializer.TAKE_CARD_METHOD, request.getMethod());
             assertEquals(69, request.getData().getCardId());
-            assertEquals("gold", request.getData().getType());
+            assertEquals(1, request.getData().getType());
         } catch (IOException e) {
             System.out.println(e.getMessage());
             assert(false);
@@ -157,7 +157,7 @@ public class TakeCardRequestTest
             TakeCardRequest request = (TakeCardRequest)JsonDeserializer.deserializeRequest(jsonText);
             assertEquals(JsonDeserializer.TAKE_CARD_METHOD, request.getMethod());
             assertEquals(-1, request.getData().getCardId());
-            assertEquals("resource", request.getData().getType());
+            assertEquals(0, request.getData().getType());
         } catch (IOException e) {
             System.out.println(e.getMessage());
             assert(false);
