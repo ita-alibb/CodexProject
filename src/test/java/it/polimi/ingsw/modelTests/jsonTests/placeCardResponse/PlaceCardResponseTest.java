@@ -170,7 +170,7 @@ public class PlaceCardResponseTest {
             assertEquals(JsonDeserializer.PLACE_CARD_METHOD, response.getMethod());
 
             //Extract the data from the response
-            var dataNode = (PlaceCardResponseData) response.getData();
+            var dataNode = response.getData();
 
             //Check all the data
             assertEquals(64, dataNode.getCardId());

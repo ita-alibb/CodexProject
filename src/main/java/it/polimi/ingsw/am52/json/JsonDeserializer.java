@@ -216,6 +216,10 @@ public class JsonDeserializer {
                 PlaceCardResponseData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), PlaceCardResponseData.class);
                 yield new PlaceCardResponse(data);
             }
+            case DRAW_CARD_METHOD -> {
+                DrawCardResponseData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), DrawCardResponseData.class);
+                yield new DrawCardResponse(data);
+            }
             //TODO: add new responses;
 
             // Unknown method.

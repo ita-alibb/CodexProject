@@ -176,4 +176,13 @@ public class ConnectionTCP implements ActionsRMI {
     public synchronized PlaceCardResponseData placeCard(PlaceCardData data) throws RemoteException {
         return (PlaceCardResponseData) this.send(new PlaceCardRequest(data));
     }
+
+    /**
+     * Method to perform the drawCard request
+     * @param data  The request
+     */
+    @Override
+    public synchronized DrawCardResponseData drawCard(DrawCardData data) throws RemoteException {
+        return (DrawCardResponseData) this.send(new DrawCardRequest(data));
+    }
 }

@@ -57,4 +57,10 @@ public interface ActionsRMI extends Remote {
      * @param data  The request
      */
     PlaceCardResponseData placeCard(PlaceCardData data) throws RemoteException;
+
+    /**
+     * Method to perform the drawCard request
+     * @param data  The request
+     */
+    DrawCardResponseData drawCard(DrawCardData data) throws RemoteException;
 }

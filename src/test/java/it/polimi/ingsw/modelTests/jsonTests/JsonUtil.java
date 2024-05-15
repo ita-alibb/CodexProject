@@ -42,6 +42,17 @@ public class JsonUtil {
     }
 
     /**
+     * Check that the specified json node has the specified boolean value
+     * for the specified field.
+     * @param node      The json node
+     * @param fieldName The field name
+     * @param value     The boolean value of the node's field to check
+     */
+    public static void checkNodeFiledBooleanValue(JsonNode node, String fieldName, boolean value) {
+        assertEquals(value, node.get(fieldName).asBoolean());
+    }
+
+    /**
      * Check that the specified json node has all and only the specified fields.
      * @param node The json node to check.
      * @param fieldNames The list of field names to check.

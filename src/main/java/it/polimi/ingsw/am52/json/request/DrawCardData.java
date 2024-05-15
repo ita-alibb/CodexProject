@@ -14,7 +14,7 @@ public class DrawCardData implements Serializable {
     /**
      * The deck from which the card is has been drawn.
      */
-    private final String deck;
+    private final int deck;
 
     //endregion
 
@@ -24,14 +24,14 @@ public class DrawCardData implements Serializable {
      * Default constructor, for deserialization purpose only.
      */
     protected DrawCardData() {
-        this("");
+        this(-1);
     }
 
     /**
      * Create the object of the PlaceCard data.
      * @param deck The deck from which the card has been drawn.
      */
-    public DrawCardData(String deck) {
+    public DrawCardData(int deck) {
         // Assign private fields.
         this.deck = deck;
     }
@@ -44,7 +44,7 @@ public class DrawCardData implements Serializable {
      *
      * @return The deck from which the card has been drawn.
      */
-    public String getDeck() {
+    public int getDeck() {
         return this.deck;
     }
 

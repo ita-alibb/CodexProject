@@ -1,0 +1,15 @@
+{
+  "data" : {
+    "status" : {
+      "gamePhase" : "LOBBY",
+      "currPlayer" : "",
+      "errorCode" : 0,
+      "errorMessage" : ""
+    },
+    "isBroadcast" : false,
+    "cardId" : 26,
+    "deck" : 0,
+    "isEmpty" : false
+  },
+  "method" : "drawCard"
+}

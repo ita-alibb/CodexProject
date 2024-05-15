@@ -445,6 +445,10 @@ public class GameManager {
 
     /**
      * Draw a random card from the resource deck
+     * @throws GameException            The phase is not correct
+     * @throws DeckException            There are no more items in the dealer
+     * @throws IllegalStateException    There are no more items in the list
+     * @throws PlayerException          The hand of the player has already 3 cards or adding a duplicate card
      */
     public void drawResourceCard() {
         try {
@@ -460,6 +464,10 @@ public class GameManager {
 
     /**
      * Draw a random card from the gold deck
+     * @throws GameException            The phase is not correct
+     * @throws DeckException            There are no more items in the dealer
+     * @throws IllegalStateException    There are no more items in the list
+     * @throws PlayerException          The hand of the player has already 3 cards or adding a duplicate card
      */
     public void drawGoldCard() {
         try {

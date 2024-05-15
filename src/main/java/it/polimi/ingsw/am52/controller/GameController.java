@@ -1,9 +1,7 @@
 package it.polimi.ingsw.am52.controller;
 
-import it.polimi.ingsw.am52.exceptions.CardException;
-import it.polimi.ingsw.am52.exceptions.GameException;
-import it.polimi.ingsw.am52.exceptions.PlayerException;
-import it.polimi.ingsw.am52.exceptions.PlayingBoardException;
+import it.polimi.ingsw.am52.exceptions.*;
+import it.polimi.ingsw.am52.json.dto.DrawType;
 import it.polimi.ingsw.am52.json.response.*;
 import it.polimi.ingsw.am52.model.cards.Card;
 import it.polimi.ingsw.am52.model.game.GameLobby;
@@ -171,6 +169,56 @@ public class GameController {
                 this.game.getPlayer(this.getNickname(clientId)).getPlayingBoard().getAvailableSlots().toList(),
                 this.getNickname(clientId),
                 this.game.getScoreBoard().get(this.getNickname(clientId))
+        );
+    }
+
+    /**
+     * Method to draw a card
+     * @param clientId  The ID of the client
+     * @param deck      The deck to draw from
+     */
+    public DrawCardResponseData drawCard(int clientId, int deck) {
+        if (!Objects.equals(this.getNickname(clientId), this.game.getCurrentPlayer().getNickname())) {
+            return new DrawCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 3, "Not your turn!"));
+        }
+        try {
+            switch (DrawType.fromInteger(deck)) {
+                case DrawType.RESOURCE -> this.game.drawResourceCard();
+                case DrawType.GOLD -> this.game.drawGoldCard();
+                case null, default -> {
+                    return new DrawCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 1, "Invalid deck"));
+                }
+            }
+        } catch (PlayerException e) {
+            return new DrawCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 32, e.getMessage()));
+        } catch (DeckException e) {
+            return new DrawCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 70, e.getMessage()));
+        } catch (IllegalStateException e) {
+            return new DrawCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 99, e.getMessage()));
+        } catch (GameException e) {
+            return new DrawCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 3, e.getMessage()));
+        }
+
+        //Notify the success of the action
+        boolean isEmpty = false;
+        switch (DrawType.fromInteger(deck)) {
+            case DrawType.RESOURCE -> {
+                if (this.game.getResourceDeckCount() == 0) {
+                    isEmpty = true;
+                }
+            }
+            case DrawType.GOLD -> {
+                if (this.game.getGoldDeckCount() == 0) {
+                    isEmpty = true;
+                }
+            }
+        }
+
+        return new DrawCardResponseData(
+                new ResponseStatus(this.game.getStatusResponse()),
+                this.game.getPlayer(this.getNickname(clientId)).getHand().toList().getLast().getCardId(),
+                deck,
+                isEmpty
         );
     }
 

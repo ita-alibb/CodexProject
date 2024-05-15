@@ -37,7 +37,7 @@ public class DrawCardRequestTest
         final String methodName = JsonDeserializer.DRAW_CARD_METHOD;
 
         // Draw card data.
-        final String deck = "resource";
+        final int deck = 0;
 
         // Create the data object of the request.
         DrawCardData data = new DrawCardData(deck);
@@ -73,8 +73,7 @@ public class DrawCardRequestTest
         checkNodeFieldNames(dataNode, "deck");
 
         // Check the filed values.
-        checkNodeFiledStringValue(dataNode, "deck", deck);
-
+        checkNodeFiledIntValue(dataNode, "deck", deck);
     }
 
     /**
@@ -112,7 +111,7 @@ public class DrawCardRequestTest
         try {
             DrawCardRequest request = (DrawCardRequest)JsonDeserializer.deserializeRequest(jsonText);
             assertEquals(JsonDeserializer.DRAW_CARD_METHOD, request.getMethod());
-            assertEquals("gold", request.getData().getDeck());
+            assertEquals(1, request.getData().getDeck());
         } catch (IOException e) {
             System.out.println(e.getMessage());
             assert(false);
@@ -155,7 +154,7 @@ public class DrawCardRequestTest
         try {
             DrawCardRequest request = (DrawCardRequest)JsonDeserializer.deserializeRequest(jsonText);
             assertEquals(JsonDeserializer.DRAW_CARD_METHOD, request.getMethod());
-            assertEquals("", request.getData().getDeck());
+            assertEquals(-1, request.getData().getDeck());
         } catch (IOException e) {
             System.out.println(e.getMessage());
             assert(false);

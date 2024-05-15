@@ -61,6 +61,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
                 case JsonDeserializer.SELECT_OBJECTIVE_METHOD -> new SelectObjectiveResponse(this.selectObjective((SelectObjectiveData) request.getData()));
                 case JsonDeserializer.PLACE_STARTER_CARD_METHOD -> new PlaceStarterCardResponse(this.placeStarterCard((PlaceStarterCardData) request.getData()));
                 case JsonDeserializer.PLACE_CARD_METHOD -> new PlaceCardResponse(this.placeCard((PlaceCardData) request.getData()));
+                case JsonDeserializer.DRAW_CARD_METHOD -> new DrawCardResponse(this.drawCard((DrawCardData) request.getData()));
                 default -> throw new NoSuchMethodException("no method " + request.getMethod());
             };
         } catch (RemoteException e) {
@@ -195,6 +196,23 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
                 response.getPlacedSlot(),
                 response.getPlayer(),
                 response.getScore()
+        )));
+
+        return response;
+    }
+
+    /**
+     * Method to perform drawCard request
+     * @param data  The request
+     */
+    @Override
+    public DrawCardResponseData drawCard(DrawCardData data) throws RemoteException {
+        var response = this.gameController.drawCard(this.clientId, data.getDeck());
+
+        this.broadcast(new DrawCardResponse(new DrawCardResponseData(
+                response.getStatus(),
+                response.getDeck(),
+                response.isEmpty()
         )));
 
         return response;
