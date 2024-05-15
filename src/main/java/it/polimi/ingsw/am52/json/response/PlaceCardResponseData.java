@@ -45,6 +45,10 @@ public class PlaceCardResponseData extends BaseResponseData implements Serializa
      * The player who place the card and the update on his score. These two elements are necessary together to map the scores on the scoreboard in the client
      */
     private final String player;
+
+    /**
+     * The score obtained by the player
+     */
     private final int score;
 
     //endregion
@@ -170,7 +174,11 @@ public class PlaceCardResponseData extends BaseResponseData implements Serializa
      */
     @JsonSetter("placedSlot")
     public void setPlacedSlot(BoardSlot placedSlot) {
-        this.placedSlot = new BoardSlot(placedSlot.getHoriz(), placedSlot.getVert());
+        if (placedSlot != null) {
+            this.placedSlot = new BoardSlot(placedSlot.getHoriz(), placedSlot.getVert());
+        } else {
+            this.placedSlot = null;
+        }
     }
 
 

@@ -16,6 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.rmi.RemoteException;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -70,6 +71,8 @@ public class NetworkTest {
             return;
         }
 
+        // region LobbyPhase
+        System.out.println("-----LOBBY PHASE-----");
         //First client create lobby
         this.testCallExactMatch(
             firstClient,
@@ -83,17 +86,20 @@ public class NetworkTest {
             new JoinLobbyRequest(new JoinLobbyData("Lorenzo", 1))
         );
 
-        // Join lobby created by third client
+        // CHECK THAT THE RESPONSE AFTER SECOND JOIN (lobby full) THE STATUS IS INIT
+        var firstPlayer = initRes.getData().getStatus().currPlayer;
+        this.match(new JoinLobbyResponse(new JoinLobbyResponseData(new ResponseStatus(GamePhase.INIT, firstPlayer, 0, ""), 1)), initRes);
+        //endregion
+
+        // Create lobby created by third client
         this.testCallExactMatch(
                 thirdClient,
                 new CreateLobbyRequest(new CreateLobbyData("Livio", 2)),
                 new CreateLobbyResponse(new JoinLobbyResponseData(new ResponseStatus(GamePhase.LOBBY, "", 0, ""), 2))
         );
 
-        var firstPlayer = initRes.getData().getStatus().currPlayer;
-        this.match(new JoinLobbyResponse(new JoinLobbyResponseData(new ResponseStatus(GamePhase.INIT, firstPlayer, 0, ""), 1)), initRes);
-
         // region InitGameResponses
+        System.out.println("-----INITGAME PHASE-----");
         var init1 = (InitGameResponseData)call(
                 firstClient,
                 new InitGameRequest(new InitGameData())
@@ -117,12 +123,21 @@ public class NetworkTest {
                 .filter(init2.playerHandCardIds::contains)
                 .collect(Collectors.toSet());
         assertEquals(0, commonCards.size());
+        Set<Integer> commonObjectives = init1.playerObjectiveCardIds.stream()
+                .distinct()
+                .filter(init2.playerObjectiveCardIds::contains)
+                .collect(Collectors.toSet());
+        assertEquals(0, commonObjectives.size());
 
         assertEquals(0,init1.getStatus().errorCode);
         assertEquals(0,init2.getStatus().errorCode);
+
+        assertEquals(GamePhase.INIT,init1.getStatus().gamePhase);
+        assertEquals(GamePhase.INIT,init1.getStatus().gamePhase);
         // endregion
 
         // region PlaceStarterCardResponses
+        System.out.println("-----PLACESTARTERCARD PHASE-----");
         var starterPlace1 = (PlaceStarterCardResponseData)this.call(
                 firstClient,
                 new PlaceStarterCardRequest(new PlaceStarterCardData(init1.starterCardId, 0))
@@ -142,8 +157,62 @@ public class NetworkTest {
 
         assertEquals(0,starterPlace1.getStatus().errorCode);
         assertEquals(0,starterPlace2.getStatus().errorCode);
+
+        assertEquals(GamePhase.INIT,init1.getStatus().gamePhase);
+        assertEquals(GamePhase.INIT,init1.getStatus().gamePhase);
         // endregion
 
+        // region SelectObjectivesResponses
+        System.out.println("-----SELECTOBJECTIVES PHASE-----");
+        var selectObjective1 = (SelectObjectiveResponseData)this.call(
+                firstClient,
+                new SelectObjectiveRequest(new SelectObjectiveData(init1.playerObjectiveCardIds.getLast()))
+        ).getData();
+
+        var selectObjective2 = (SelectObjectiveResponseData)this.call(
+                secondClient,
+                new SelectObjectiveRequest(new SelectObjectiveData(init2.playerObjectiveCardIds.getFirst()))
+        ).getData();
+
+        assertNotNull(selectObjective1);
+        assertNotNull(selectObjective2);
+        assertEquals(init1.playerObjectiveCardIds.getLast(),selectObjective1.getObjective());
+        assertEquals(init2.playerObjectiveCardIds.getFirst(),selectObjective2.getObjective());
+
+        assertEquals(0,selectObjective1.getStatus().errorCode);
+        assertEquals(0,selectObjective2.getStatus().errorCode);
+
+        assertEquals(GamePhase.INIT,selectObjective1.getStatus().gamePhase);
+        //After second the init is complete, phase placing
+        assertEquals(GamePhase.PLACING,selectObjective2.getStatus().gamePhase);
+        // endregion
+
+        // region PlaceCardResponse
+        System.out.println("-----PLACECARD PHASE-----");
+        var currentPlayer = firstPlayer;
+        var currentClient = Objects.equals(firstPlayer, "Andrea") ? firstClient : secondClient;
+        var currentInit = Objects.equals(firstPlayer, "Andrea") ? init1 : init2;
+        var currentBoardSlot = Objects.equals(firstPlayer, "Andrea") ? starterPlace1.getBoardSlots() : starterPlace2.getBoardSlots();
+        PlaceCardData currentPlaceData = new PlaceCardData(
+                currentInit.playerHandCardIds.getFirst(),
+                1,
+                currentBoardSlot.get((int)(Math.random() * currentBoardSlot.size()))
+        );
+
+        var place1 = (PlaceCardResponseData)this.call(
+                currentClient,
+                new PlaceCardRequest(currentPlaceData)
+        ).getData();
+
+        assertNotNull(place1);
+        assertNotNull(place1.getAvailableSlots());
+        assertNotNull(place1.getPlacedSlot());
+
+        assertEquals(0,place1.getStatus().errorCode);
+
+        assertEquals(GamePhase.DRAWING,place1.getStatus().gamePhase);
+        assertEquals(firstPlayer,place1.getStatus().currPlayer);
+        // endregion
     }
 
     /**
@@ -174,6 +243,7 @@ public class NetworkTest {
                 case JsonDeserializer.INIT_GAME_METHOD -> new InitGameResponse(caller.initGame());
                 case JsonDeserializer.SELECT_OBJECTIVE_METHOD -> new SelectObjectiveResponse(caller.selectObjective((SelectObjectiveData) request.getData()));
                 case JsonDeserializer.PLACE_STARTER_CARD_METHOD -> new PlaceStarterCardResponse(caller.placeStarterCard((PlaceStarterCardData) request.getData()));
+                case JsonDeserializer.PLACE_CARD_METHOD -> new PlaceCardResponse(caller.placeCard((PlaceCardData) request.getData()));
                 default -> throw new NoSuchMethodException("no method " + request.getMethod());
             };
         } catch (Exception ex) {

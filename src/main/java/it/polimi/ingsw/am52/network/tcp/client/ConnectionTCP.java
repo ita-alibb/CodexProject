@@ -62,7 +62,7 @@ public class ConnectionTCP implements ActionsRMI {
 
                         if (res.getData().getIsBroadcast()) {
                             //TODO: here we receive the broadcast response, as in ConnectionRMI we need to process it to update the game
-                            System.out.println("The data was a broadcast");
+                            System.out.println("response received BROADCAST TCP");
                         } else {
                             // If the response is not a broadcast then one of the ActionRMI method is waiting for the response to be added in the queue
                             // the offer methods inserts the element in the queue only if a thread is waiting for it, timeout handled

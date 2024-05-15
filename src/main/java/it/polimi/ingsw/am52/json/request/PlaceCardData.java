@@ -89,7 +89,11 @@ public class PlaceCardData implements Serializable {
      */
     @JsonSetter("placedSlot")
     public void setPlacedSlot(BoardSlot placedSlot) {
-        this.placedSlot = new BoardSlot(placedSlot.getHoriz(), placedSlot.getVert());
+        if (placedSlot != null) {
+            this.placedSlot = new BoardSlot(placedSlot.getHoriz(), placedSlot.getVert());
+        } else {
+            this.placedSlot = null;
+        }
     }
 
     //endregion
