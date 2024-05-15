@@ -146,7 +146,7 @@ public class ConnectionTCP implements ActionsRMI {
      */
     @Override
     public synchronized InitGameResponseData initGame() throws RemoteException {
-        return (InitGameResponseData)this.send(new InitGameRequest(new InitGameData()));
+        return (InitGameResponseData)this.send(new InitGameRequest(null));
     }
 
     /**
@@ -157,5 +157,23 @@ public class ConnectionTCP implements ActionsRMI {
     @Override
     public synchronized SelectObjectiveResponseData selectObjective(SelectObjectiveData data) throws RemoteException {
         return (SelectObjectiveResponseData)this.send(new SelectObjectiveRequest(data));
+    }
+
+    /**
+     * Method to perform the placeStarterCard request
+     * @param data  The request
+     */
+    @Override
+    public synchronized PlaceStarterCardResponseData placeStarterCard(PlaceStarterCardData data) throws RemoteException {
+        return (PlaceStarterCardResponseData) this.send(new PlaceStarterCardRequest(data));
+    }
+
+    /**
+     * Method to perform the placeCard request
+     * @param data  The request
+     */
+    @Override
+    public synchronized PlaceCardResponseData placeCard(PlaceCardData data) throws RemoteException {
+        return (PlaceCardResponseData) this.send(new PlaceCardRequest(data));
     }
 }

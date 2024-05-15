@@ -145,10 +145,10 @@ public abstract class Phase {
      * Place a card of a player
      * @param slot      The slot where the player wants to place the card
      * @param card      The card to be placed
-     * @param face      The face of the card
+     * @param side      The side of the card
      * @implNote This method can only be executed during the PlacingPhase; in the other phases, this will throw a new exception.
      */
-    public synchronized void placeCard(GameManager manager, PlayerDrawing player, BoardSlot slot, KingdomCard card, KingdomCardFace face) {
+    public synchronized void placeCard(GameManager manager, PlayerDrawing player, BoardSlot slot, KingdomCard card, CardSide side) {
         throw new PhaseException("Incorrect phase");
     }
 

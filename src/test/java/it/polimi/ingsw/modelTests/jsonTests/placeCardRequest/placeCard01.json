@@ -2,6 +2,10 @@
   "method": "placeCard",
   "data": {
     "cardId": 11,
-    "face": "front"
+    "face": 0,
+    "placedSlot" : {
+      "h" : 0,
+      "v" : 0
+    }
   }
 }

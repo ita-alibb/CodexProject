@@ -21,7 +21,7 @@ public class SelectObjectiveResponseData extends BaseResponseData implements Ser
     //region Constructor
 
     /**
-     * The Empty constructor
+     * The empty constructor needed for Jackson library
      */
     public SelectObjectiveResponseData() {
         super();

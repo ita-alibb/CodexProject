@@ -1,5 +1,10 @@
 package it.polimi.ingsw.am52.json.request;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
+import it.polimi.ingsw.am52.json.dto.*;
+
 import java.io.Serializable;
 
 /**
@@ -20,7 +25,12 @@ public class PlaceCardData implements Serializable {
     /**
      * The visible face of the card.
      */
-    private final String face;
+    private final int face;
+
+    /**
+     * The slot where the card is supposed to be placed
+     */
+    private BoardSlot placedSlot;
 
     //endregion
 
@@ -30,18 +40,20 @@ public class PlaceCardData implements Serializable {
      * Default constructor, for deserialization purpose only.
      */
     protected PlaceCardData() {
-        this(-1, "");
+        this(-1, -1, null);
     }
 
     /**
      * Create the object of the PlaceCard data.
-     * @param cardId The card id.
-     * @param visibleFace The visible face (front or back).
+     * @param cardId        The card id
+     * @param visibleFace   The visible face (front or back)
+     * @param placedSlot    The slot where the card is supposed to be placed
      */
-    public PlaceCardData(int cardId, String visibleFace) {
+    public PlaceCardData(int cardId, int visibleFace, BoardSlot placedSlot) {
         // Assign private fields.
         this.cardId = cardId;
         this.face = visibleFace;
+        this.placedSlot = placedSlot;
     }
 
     //endregion
@@ -60,8 +72,24 @@ public class PlaceCardData implements Serializable {
      *
      * @return The face of the card.
      */
-    public String getFace() {
+    public int getFace() {
         return this.face;
+    }
+
+    /**
+     * @return The slot where the card has been placed
+     */
+    @JsonSerialize(as = BoardSlotInfo.class)
+    public BoardSlot getPlacedSlot() {
+        return this.placedSlot;
+    }
+
+    /**
+     * Setter for deserializing purpose
+     */
+    @JsonSetter("placedSlot")
+    public void setPlacedSlot(BoardSlot placedSlot) {
+        this.placedSlot = new BoardSlot(placedSlot.getHoriz(), placedSlot.getVert());
     }
 
     //endregion

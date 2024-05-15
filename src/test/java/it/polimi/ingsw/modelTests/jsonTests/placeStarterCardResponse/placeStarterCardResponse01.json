@@ -1,0 +1,24 @@
+{
+  "data" : {
+    "status" : {
+      "gamePhase" : "LOBBY",
+      "currPlayer" : "",
+      "errorCode" : 0,
+      "errorMessage" : ""
+    },
+    "isBroadcast" : false,
+    "cardId" : 81,
+    "face" : 0,
+    "availableSlots" : [
+      {
+        "h" : 1,
+        "v" : 1
+      },
+      {
+        "h" : 2,
+        "v" : 2
+      }
+    ]
+  },
+  "method" : "placeStarterCard"
+}

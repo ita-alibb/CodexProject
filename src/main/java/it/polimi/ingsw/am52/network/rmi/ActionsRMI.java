@@ -45,4 +45,16 @@ public interface ActionsRMI extends Remote {
      * @param data  The request
      */
     SelectObjectiveResponseData selectObjective(SelectObjectiveData data) throws RemoteException;
+
+    /**
+     * Method to perform the placeStarterCard request
+     * @param data  The request
+     */
+    PlaceStarterCardResponseData placeStarterCard(PlaceStarterCardData data) throws RemoteException;
+
+    /**
+     * Method to perform the placeCard request
+     * @param data  The request
+     */
+    PlaceCardResponseData placeCard(PlaceCardData data) throws RemoteException;
 }

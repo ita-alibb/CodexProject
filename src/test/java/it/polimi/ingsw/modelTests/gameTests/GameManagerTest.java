@@ -6,6 +6,7 @@ import it.polimi.ingsw.am52.model.cards.CardSide;
 import it.polimi.ingsw.am52.model.game.GameManager;
 import it.polimi.ingsw.am52.model.game.GamePhase;
 import it.polimi.ingsw.am52.model.player.PlayerInfo;
+import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -99,11 +100,11 @@ public class GameManagerTest {
             String expectedMessage = "The PlayingBoard for the player is not instantiated";
             String actualMessage = exception.getMessage();
             assertEquals(expectedMessage, actualMessage);
-            //Let's place the starter card
+            //Let's place the starter card with the front side visible, so the index is 0
             manager.placeStarterCard(
                     nickname,
                     manager.getPlayer(nickname).getStarterCard().getCardId(),
-                    CardSide.FRONT
+                    0
             );
             //Now, if we invoke the same methods of before, this value will not be null
             assertNotNull(manager.getPlayer(nickname).getPlayingBoard());
@@ -172,10 +173,12 @@ public class GameManagerTest {
             //Now, we will use the value of currPlayer in GameManager to know which player is playing a turn.
             //The first player will place the first card in his hand, and will draw a resource card
             manager.placeCard(
-                    manager.getCurrentPlayer().getPlayingBoard().getAvailableSlots().get(0).getHoriz(),
-                    manager.getCurrentPlayer().getPlayingBoard().getAvailableSlots().get(0).getVert(),
                     manager.getCurrentPlayer().getHand().get(0).getCardId(),
-                    1
+                    1,
+                    new BoardSlot(
+                            manager.getCurrentPlayer().getPlayingBoard().getAvailableSlots().get(0).getHoriz(),
+                            manager.getCurrentPlayer().getPlayingBoard().getAvailableSlots().get(0).getVert()
+                    )
             );
             //Now, the new game phase is DRAWING
             assertEquals(GamePhase.DRAWING, manager.getStatus());
@@ -207,27 +210,35 @@ public class GameManagerTest {
             //Once we are out of this loop, the game phase has changed into PLACING
             assertEquals(GamePhase.PLACING, manager.getStatus());
             //ERROR: The Player wants to place a card which is not in his hand
-            GameException exception = assertThrows(GameException.class, () -> manager.placeCard(manager.getCurrentPlayer().getPlayingBoard().getAvailableSlots().get(0).getHoriz(),
-                    manager.getCurrentPlayer().getPlayingBoard().getAvailableSlots().get(0).getVert(),
+            GameException exception = assertThrows(GameException.class, () -> manager.placeCard(
                     manager.getVisibleResourceCards().getFirst(),
-                    1));
+                    1,
+                    new BoardSlot(
+                            manager.getCurrentPlayer().getPlayingBoard().getAvailableSlots().get(0).getHoriz(),
+                            manager.getCurrentPlayer().getPlayingBoard().getAvailableSlots().get(0).getVert()
+                    )
+            ));
             String expectedMessage = "Trying to place a card that is not on the player's hand";
             String actualMessage = exception.getMessage();
             assertEquals(expectedMessage, actualMessage);
             //Now, we will use the value of currPlayer in GameManager to know which player is playing a turn.
             //The player will place the first card in his hand, and will draw a resource card.
             manager.placeCard(
-                    manager.getCurrentPlayer().getPlayingBoard().getAvailableSlots().get(0).getHoriz(),
-                    manager.getCurrentPlayer().getPlayingBoard().getAvailableSlots().get(0).getVert(),
                     manager.getCurrentPlayer().getHand().get(0).getCardId(),
-                    1
+                    1,
+                    new BoardSlot(
+                            manager.getCurrentPlayer().getPlayingBoard().getAvailableSlots().get(0).getHoriz(),
+                            manager.getCurrentPlayer().getPlayingBoard().getAvailableSlots().get(0).getVert()
+                    )
             );
             //ERROR: Placing another card during the same turn, in the wrong phase of the game
             GameException exception1 = assertThrows(GameException.class, () -> manager.placeCard(
-                    manager.getCurrentPlayer().getPlayingBoard().getAvailableSlots().get(0).getHoriz(),
-                    manager.getCurrentPlayer().getPlayingBoard().getAvailableSlots().get(0).getVert(),
                     manager.getCurrentPlayer().getHand().get(0).getCardId(),
-                    1
+                    1,
+                    new BoardSlot(
+                            manager.getCurrentPlayer().getPlayingBoard().getAvailableSlots().get(0).getHoriz(),
+                            manager.getCurrentPlayer().getPlayingBoard().getAvailableSlots().get(0).getVert()
+                    )
             ));
             String expectedMessage1 = "Incorrect phase";
             actualMessage = exception1.getMessage();

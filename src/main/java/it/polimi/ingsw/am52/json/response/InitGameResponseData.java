@@ -17,37 +17,37 @@ public class InitGameResponseData  extends BaseResponseData implements Serializa
     /**
      * The Players of the game
      */
-    private final List<String> playersNickname;
+    public final List<String> playersNickname;
 
     /**
      * The common objectives in a game
      */
-    private final List<Integer> commonObjectiveIds;
+    public final List<Integer> commonObjectiveIds;
 
     /**
      * The visible resource cards
      */
-    private final List<Integer> visibleResourceCardIds;
+    public final List<Integer> visibleResourceCardIds;
 
     /**
      * The visible gold cards
      */
-    private final List<Integer> visibleGoldCardIds;
+    public final List<Integer> visibleGoldCardIds;
 
     /**
      * The player's hand card ids
      */
-    private final List<Integer> playerHandCardIds;
+    public final List<Integer> playerHandCardIds;
 
     /**
      * The player's objective card ids
      */
-    private final List<Integer> playerObjectiveCardIds;
+    public final List<Integer> playerObjectiveCardIds;
 
     /**
      * The player's starter card id
      */
-    private final Integer starterCardId;
+    public final Integer starterCardId;
 
 
     //endregion

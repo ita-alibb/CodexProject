@@ -1,7 +1,13 @@
 package it.polimi.ingsw.am52.model.playingBoards;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.am52.json.dto.BoardSlotInfo;
 import it.polimi.ingsw.am52.model.cards.CornerLocation;
 import it.polimi.ingsw.am52.exceptions.PlayingBoardException;
+
+import java.io.Serializable;
 
 /**
  * Immutable class that represents the position of a slot in the Playing board.
@@ -10,7 +16,7 @@ import it.polimi.ingsw.am52.exceptions.PlayingBoardException;
  * the root slot, because it has a special meaning in Playing board (only the 
  * starter card can be placed on the root slot).
  */
-public class BoardSlot {
+public class BoardSlot implements Serializable, BoardSlotInfo {
 
     //region Private Fields
 
@@ -20,7 +26,7 @@ public class BoardSlot {
     private final int h;
 
     /**
-     * The vertcal coordinate of this slot on the playing board.
+     * The vertical coordinate of this slot on the playing board.
      */
     private final int v;
 
@@ -77,7 +83,7 @@ public class BoardSlot {
     /**
      * 
      * @param refSlot The reference slot.
-     * @return The slot on the playingboard at the left of the specified slot.
+     * @return The slot on the playing board at the left of the specified slot.
      */
     public static BoardSlot computeLeftSlot(BoardSlot refSlot) {
         return new BoardSlot(refSlot.getHoriz()-2, refSlot.getVert());
@@ -87,37 +93,37 @@ public class BoardSlot {
      * Computes the coordinates of the slot positioned in the top-right corner
      * of the specified slot.
      * @param refSlot The reference slot.
-     * @return The slot on the playing board at the top-right corner of the specified slot.
+     * @return The slot on the playing board in the top-right corner of the specified slot.
      */
     private BoardSlot computeTopRightSlot(BoardSlot refSlot) {
         return new BoardSlot(refSlot.getHoriz() + 1, refSlot.getVert() + 1);
     }
 
     /**
-     * Computes the coordinates of the slot positioned at the bottom-right corner
+     * Computes the coordinates of the slot positioned in the bottom-right corner
      * of the specified slot.
      * @param refSlot The reference slot.
-     * @return The slot on the playingboard at the bottom-right corner of the specified slot.
+     * @return The slot on the playing board in the bottom-right corner of the specified slot.
      */
     private BoardSlot computeBottomRightSlot(BoardSlot refSlot) {
         return new BoardSlot(refSlot.getHoriz() + 1, refSlot.getVert() - 1);
     }
 
     /**
-     * Computes the coordinates of the slot positioned at the bottom-left corner
+     * Computes the coordinates of the slot positioned in the bottom-left corner
      * of the specified slot.
      * @param refSlot The reference slot.
-     * @return The slot on the playingboard at the bottom-left corner of the specified slot.
+     * @return The slot on the playing board in the bottom-left corner of the specified slot.
      */
     private BoardSlot computeBottomLeftSlot(BoardSlot refSlot) {
         return new BoardSlot(refSlot.getHoriz() - 1, refSlot.getVert() - 1);
     }
 
     /**
-     * Computes the coordinates of the slot positioned at the top-left corner
+     * Computes the coordinates of the slot positioned in the top-left corner
      * of the specified slot.
      * @param refSlot The reference slot.
-     * @return The slot on the playingboard at the top-left corner of the specified slot.
+     * @return The slot on the playing board in the top-left corner of the specified slot.
      */
     private BoardSlot computeTopLeftSlot(BoardSlot refSlot) {
         return new BoardSlot(refSlot.getHoriz() - 1, refSlot.getVert() + 1);
@@ -127,7 +133,18 @@ public class BoardSlot {
 
     //region Constructor
 
-    public BoardSlot(int horiz, int vert) throws IllegalArgumentException {
+    public BoardSlot() {
+        this.h = 0;
+        this.v = 0;
+    }
+
+    @JsonCreator
+    public BoardSlot(
+            @JsonProperty("h")
+            int horiz,
+            @JsonProperty("v")
+            int vert
+    ) throws IllegalArgumentException {
 
         // Check if the coordinate pair is valid.
         if (!validateCoords(horiz, vert)) {
@@ -147,6 +164,7 @@ public class BoardSlot {
      * 
      * @return The horizontal coordinate of this board slot.
      */
+    @JsonGetter("h")
     public int getHoriz() {
         return h;
     }
@@ -155,6 +173,7 @@ public class BoardSlot {
      * 
      * @return The vertical coordinate of this board slot.
      */
+    @JsonGetter("v")
     public int getVert() {
         return v;
     }
@@ -168,7 +187,7 @@ public class BoardSlot {
      * This is a special slot position, because only the starter card can be placed on the
      * root slot.
      *
-     * @return True if the specified slot is the root slot, i.e. with coordiates (0,0).
+     * @return True if the specified slot is the root slot, i.e. with coordinates (0,0).
      */
     public boolean isRootSlot() {
         return getHoriz() == 0 && getVert() == 0;
@@ -242,7 +261,7 @@ public class BoardSlot {
 
     /**
      * 
-     * @return The position of the slot at the top-right corner
+     * @return The position of the slot in the top-right corner
      * of this slot in the playing board.
      */
     public BoardSlot getTopRightSlot() {
@@ -251,7 +270,7 @@ public class BoardSlot {
 
     /**
      * 
-     * @return The position of the slot at the bottom-right corner
+     * @return The position of the slot in the bottom-right corner
      * of this slot in the playing board.
      */
     public BoardSlot getBottomRightSlot() {

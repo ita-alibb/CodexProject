@@ -8,7 +8,7 @@ import it.polimi.ingsw.am52.json.JsonMessage;
  * visible on its playing board.
  * @author Livio B.
  */
-public class PlaceStarterCardRequest extends JsonMessage<PlaceCardData> {
+public class PlaceStarterCardRequest extends JsonMessage<PlaceStarterCardData> {
 
     //region constructor
 
@@ -17,7 +17,7 @@ public class PlaceStarterCardRequest extends JsonMessage<PlaceCardData> {
      * data.
      * @param data The data for the placeStarterCard method.
      */
-    public PlaceStarterCardRequest(PlaceCardData data) {
+    public PlaceStarterCardRequest(PlaceStarterCardData data) {
         super(data);
     }
 

@@ -1,18 +1,20 @@
 package it.polimi.ingsw.am52.controller;
 
+import it.polimi.ingsw.am52.exceptions.CardException;
 import it.polimi.ingsw.am52.exceptions.GameException;
 import it.polimi.ingsw.am52.exceptions.PlayerException;
+import it.polimi.ingsw.am52.exceptions.PlayingBoardException;
 import it.polimi.ingsw.am52.json.response.*;
 import it.polimi.ingsw.am52.model.cards.Card;
 import it.polimi.ingsw.am52.model.game.GameLobby;
 import it.polimi.ingsw.am52.model.game.GameManager;
 import it.polimi.ingsw.am52.model.objectives.Objective;
+import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
 import it.polimi.ingsw.am52.network.ClientHandler;
 import it.polimi.ingsw.am52.network.Sender;
 import it.polimi.ingsw.am52.json.response.ResponseStatus;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * Class to control the Game
@@ -98,7 +100,7 @@ public class GameController {
      */
     public SelectObjectiveResponseData selectObjective(int clientId, int objective) {
         try {
-            this.game.setPlayerChosenObject(this.lobby.getPlayer(clientId).get().getUsername(), objective);
+            this.game.setPlayerChosenObject(this.getNickname(clientId), objective);
         } catch (NoSuchElementException e) {
             return new SelectObjectiveResponseData(new ResponseStatus(this.game.getStatusResponse(), 404, "Player not found"));
         } catch (PlayerException e) {
@@ -112,13 +114,74 @@ public class GameController {
     }
 
     /**
+     * Method to place the starter card
+     * @param clientId  The ID of the client
+     * @param cardId    The ID of the starter card
+     * @param face      The face of the starter card
+     */
+    public PlaceStarterCardResponseData placeStarterCard(int clientId, int cardId, int face) {
+        try {
+            this.game.placeStarterCard(this.getNickname(clientId), cardId, face);
+        } catch (NoSuchElementException e) {
+            return new PlaceStarterCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 404, "Player not found"));
+        } catch (PlayingBoardException e) {
+            return new PlaceStarterCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 50, e.getMessage()));
+        } catch (GameException e) {
+            return new PlaceStarterCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 3, e.getMessage()));
+        }
+
+        //Notify the success of the action
+        return new PlaceStarterCardResponseData(
+                new ResponseStatus(this.game.getStatusResponse()),
+                cardId,
+                face,
+                this.game.getPlayer(this.getNickname(clientId)).getPlayingBoard().getAvailableSlots().toList()
+        );
+    }
+
+    /**
+     * Method to place a card
+     * @param clientId  The ID of the client
+     * @param cardId    The ID of the card
+     * @param face      The face of the card
+     * @param slot      The position of the card
+     */
+    public PlaceCardResponseData placeCard(int clientId, int cardId, int face, BoardSlot slot) {
+        if (!Objects.equals(this.getNickname(clientId), this.game.getCurrentPlayer().getNickname())) {
+            return new PlaceCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 3, "Not your turn!"));
+        }
+        try {
+            this.game.placeCard(cardId, face, slot);
+        } catch (PlayerException e) {
+            return new PlaceCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 32, e.getMessage()));
+        } catch (CardException e) {
+            return new PlaceCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 30, e.getMessage()));
+        } catch (PlayingBoardException e) {
+            return new PlaceCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 31, e.getMessage()));
+        } catch (GameException e) {
+            return new PlaceCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 3, e.getMessage()));
+        }
+
+        //Notify the success of the action
+        return new PlaceCardResponseData(
+                new ResponseStatus(this.game.getStatusResponse()),
+                cardId,
+                face,
+                slot,
+                this.game.getPlayer(this.getNickname(clientId)).getPlayingBoard().getAvailableSlots().toList(),
+                this.getNickname(clientId),
+                this.game.getScoreBoard().get(this.getNickname(clientId))
+        );
+    }
+
+    /**
      * Method to get the init game data
      *
      */
     public InitGameResponseData initGame(int clientId) {
         InitGameResponseData response;
         try {
-            var nickname = this.lobby.getPlayer(clientId).get().getUsername();
+            var nickname = this.getNickname(clientId);
 
             response = new InitGameResponseData(
                     new ResponseStatus(this.game.getStatusResponse()),
@@ -128,7 +191,7 @@ public class GameController {
                     this.game.getVisibleGoldCards(),
                     this.game.getPlayer(nickname).getHand().stream().map(Card::getCardId).toList(),
                     this.game.getPlayerObjectiveOptions(nickname).stream().map(Objective::getObjectiveId).toList(),
-                    this.game.getCurrentPlayer().getStarterCard().getCardId()
+                    this.game.getPlayer(nickname).getStarterCard().getCardId()
             );
         } catch (Exception e) {
             // TODO: better logging
@@ -162,6 +225,13 @@ public class GameController {
             System.out.println("Exception on startGame: " + e.getMessage());
             return false;
         }
+    }
+
+    /**
+     * @return The username of the player who made an action
+     */
+    private String getNickname(int clientId) {
+        return this.lobby.getPlayer(clientId).get().getUsername();
     }
 
     /**

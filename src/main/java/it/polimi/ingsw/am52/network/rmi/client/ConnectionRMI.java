@@ -1,14 +1,8 @@
 package it.polimi.ingsw.am52.network.rmi.client;
 
 import it.polimi.ingsw.am52.json.BaseResponseData;
-import it.polimi.ingsw.am52.json.request.CreateLobbyData;
-import it.polimi.ingsw.am52.json.request.JoinLobbyData;
-import it.polimi.ingsw.am52.json.request.LeaveGameData;
-import it.polimi.ingsw.am52.json.request.SelectObjectiveData;
-import it.polimi.ingsw.am52.json.response.InitGameResponseData;
-import it.polimi.ingsw.am52.json.response.JoinLobbyResponseData;
-import it.polimi.ingsw.am52.json.response.LeaveGameResponseData;
-import it.polimi.ingsw.am52.json.response.SelectObjectiveResponseData;
+import it.polimi.ingsw.am52.json.request.*;
+import it.polimi.ingsw.am52.json.response.*;
 import it.polimi.ingsw.am52.network.rmi.Accepter;
 import it.polimi.ingsw.am52.network.rmi.ActionsRMI;
 
@@ -159,6 +153,34 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
             return this.view.selectObjective(data);
         } catch (RemoteException e) {
             // TODO: handle remote exception
+            return null;
+        }
+    }
+
+    /**
+     * Method to perform the placeStarterCard request
+     * @param data  The request
+     */
+    @Override
+    public PlaceStarterCardResponseData placeStarterCard(PlaceStarterCardData data) throws RemoteException {
+        try {
+            return this.view.placeStarterCard(data);
+        } catch (RemoteException e) {
+            // TODO: handle remote exception
+            return null;
+        }
+    }
+
+    /**
+     * Method to perform the placeCard request
+     * @param data  The request
+     */
+    @Override
+    public PlaceCardResponseData placeCard(PlaceCardData data) throws RemoteException {
+        try {
+            return this.view.placeCard(data);
+        } catch (RemoteException e) {
+            //TODO: handle remote exception
             return null;
         }
     }

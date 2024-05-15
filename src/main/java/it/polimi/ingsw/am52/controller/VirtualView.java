@@ -59,6 +59,8 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
                 case JsonDeserializer.LEAVE_GAME_METHOD -> new LeaveGameResponse(this.leaveGame((LeaveGameData) request.getData()));
                 case JsonDeserializer.INIT_GAME_METHOD -> new InitGameResponse(this.initGame());
                 case JsonDeserializer.SELECT_OBJECTIVE_METHOD -> new SelectObjectiveResponse(this.selectObjective((SelectObjectiveData) request.getData()));
+                case JsonDeserializer.PLACE_STARTER_CARD_METHOD -> new PlaceStarterCardResponse(this.placeStarterCard((PlaceStarterCardData) request.getData()));
+                case JsonDeserializer.PLACE_CARD_METHOD -> new PlaceCardResponse(this.placeCard((PlaceCardData) request.getData()));
                 default -> throw new NoSuchMethodException("no method " + request.getMethod());
             };
         } catch (RemoteException e) {
@@ -161,6 +163,39 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
         var response = this.gameController.selectObjective(this.clientId, data.getObjectiveId());
 
         this.broadcast(new SelectObjectiveResponse(new SelectObjectiveResponseData(response.getStatus())));
+
+        return response;
+    }
+
+    /**
+     * Method to perform placeStarterCard request
+     * @param data  The request
+     */
+    @Override
+    public PlaceStarterCardResponseData placeStarterCard(PlaceStarterCardData data) throws RemoteException {
+        var response = this.gameController.placeStarterCard(this.clientId, data.getCardId(), data.getFace());
+
+        this.broadcast(new PlaceStarterCardResponse(new PlaceStarterCardResponseData(response.getStatus(), response.getCardId(), response.getFace())));
+
+        return response;
+    }
+
+    /**
+     * Method to perform placeCard request
+     * @param data  The request
+     */
+    @Override
+    public PlaceCardResponseData placeCard(PlaceCardData data) throws RemoteException {
+        var response = this.gameController.placeCard(this.clientId, data.getCardId(), data.getFace(), data.getPlacedSlot());
+
+        this.broadcast(new PlaceCardResponse(new PlaceCardResponseData(
+                response.getStatus(),
+                response.getCardId(),
+                response.getFace(),
+                response.getPlacedSlot(),
+                response.getPlayer(),
+                response.getScore()
+        )));
 
         return response;
     }

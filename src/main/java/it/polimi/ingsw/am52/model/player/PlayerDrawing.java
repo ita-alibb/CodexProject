@@ -1,6 +1,8 @@
 package it.polimi.ingsw.am52.model.player;
 
 import it.polimi.ingsw.am52.exceptions.PlayerException;
+import it.polimi.ingsw.am52.model.cards.CardFace;
+import it.polimi.ingsw.am52.model.cards.CardSide;
 import it.polimi.ingsw.am52.model.cards.KingdomCard;
 import it.polimi.ingsw.am52.model.cards.KingdomCardFace;
 import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
@@ -23,7 +25,7 @@ public interface PlayerDrawing {
      * 3. Add points to score
      * @param location The location in which the card is placed
      * @param card The placedCard that must be removed from the hand of the player
-     * @param face The face chosen
+     * @param side The side chosen
      */
-    void placeCard(BoardSlot location, KingdomCard card, KingdomCardFace face) throws PlayerException;
+    void placeCard(BoardSlot location, KingdomCard card, CardSide side) throws PlayerException;
 }

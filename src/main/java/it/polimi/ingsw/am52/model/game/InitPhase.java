@@ -55,7 +55,7 @@ public class InitPhase extends Phase {
      */
     @Override
     public synchronized void placeStarterCard(GameManager manager, PlayerBoardSetup player, StarterCard card, CardSide side) {
-        player.placeStarterCardFace(side == CardSide.FRONT ? card.getFrontFace() : card.getBackFace());
+        player.placeStarterCardFace(card, side);
 
         //Check if all the players chose a secret objective and placed the starter card
         if (this.isSetupFinished(manager)) {

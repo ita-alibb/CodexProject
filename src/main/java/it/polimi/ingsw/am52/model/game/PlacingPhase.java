@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am52.model.game;
 
+import it.polimi.ingsw.am52.model.cards.CardSide;
 import it.polimi.ingsw.am52.model.cards.KingdomCard;
 import it.polimi.ingsw.am52.model.cards.KingdomCardFace;
 import it.polimi.ingsw.am52.model.player.PlayerDrawing;
@@ -37,8 +38,8 @@ public class PlacingPhase extends Phase {
      * {@inheritDoc}
      */
     @Override
-    synchronized public void placeCard(GameManager manager, PlayerDrawing player, BoardSlot slot, KingdomCard card, KingdomCardFace face) {
-        player.placeCard(slot, card, face);
+    synchronized public void placeCard(GameManager manager, PlayerDrawing player, BoardSlot slot, KingdomCard card, CardSide side) {
+        player.placeCard(slot, card, side);
         this.next(manager);
     }
 

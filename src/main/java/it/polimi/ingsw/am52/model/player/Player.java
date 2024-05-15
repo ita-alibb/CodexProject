@@ -102,20 +102,20 @@ public class Player implements PlayerSetup, PlayerBoardSetup, PlayerInfo, Player
     /**
      * Used to instantiate the Player's PlayingBoard
      *
-     * @param card The starter card face chosen by the player
+     * @param card The starter card of the player
+     * @param side The side chosen
      */
     @Override
-    public void placeStarterCardFace(StarterCardFace card) throws PlayingBoardException {
+    public void placeStarterCardFace(StarterCard card, CardSide side) throws PlayingBoardException {
+        if (card.getCardId() != this.starterCard.getCardId()){
+            throw new PlayingBoardException("The provided StarterCardFace does not belong to the StarterCard chosen by the player");
+        }
 
         if (this.playingBoard != null){
             throw new PlayingBoardException("The PlayingBoard for the player is already instantiated");
         }
 
-        if (!this.starterCard.getSide(card).isPresent()){
-            throw new PlayingBoardException("The provided StarterCardFace does not belong to the StarterCard chosen by the player");
-        }
-
-        this.playingBoard = new PlayingBoard(card);
+        this.playingBoard = new PlayingBoard(side == CardSide.FRONT ? card.getFrontFace() : card.getBackFace());
     }
 
     /**
@@ -203,16 +203,12 @@ public class Player implements PlayerSetup, PlayerBoardSetup, PlayerInfo, Player
      * {@inheritDoc}
      */
     @Override
-    public void placeCard(BoardSlot location, KingdomCard card, KingdomCardFace face) throws PlayerException {
+    public void placeCard(BoardSlot location, KingdomCard card, CardSide side) throws PlayerException {
         if (this.cardHand.stream().map(Card::getCardId).noneMatch(id -> id == card.getCardId())){
             throw new PlayerException("Trying to place a card that is not on the player's hand");
         }
 
-        if (card.getSide(face).isEmpty()){
-            throw new PlayerException("Trying to place a face that does not belong to card");
-        }
-
-        int bonus = this.playingBoard.placeCard(location, face);
+        int bonus = this.playingBoard.placeCard(location, side == CardSide.FRONT ? card.getFrontFace() : card.getBackFace());
 
         this.cardHand.remove(card);
 

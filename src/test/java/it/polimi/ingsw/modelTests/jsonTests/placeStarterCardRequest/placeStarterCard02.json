@@ -1,6 +1,6 @@
 {
   "method": "placeStarterCard",
   "data": {
-    "face": "back"
+    "face": 1
   }
 }

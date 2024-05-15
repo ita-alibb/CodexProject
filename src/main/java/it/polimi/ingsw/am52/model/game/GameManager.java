@@ -1,8 +1,6 @@
 package it.polimi.ingsw.am52.model.game;
 
-import it.polimi.ingsw.am52.exceptions.GameException;
-import it.polimi.ingsw.am52.exceptions.PhaseException;
-import it.polimi.ingsw.am52.exceptions.PlayerException;
+import it.polimi.ingsw.am52.exceptions.*;
 import it.polimi.ingsw.am52.model.cards.*;
 import it.polimi.ingsw.am52.model.decks.Deck;
 import it.polimi.ingsw.am52.model.decks.RandomDealer;
@@ -379,6 +377,8 @@ public class GameManager {
      * Method used to set the chosen secret objective
      * @param nickname the player to set
      * @param objectiveId the objective chosen
+     * @throws GameException    The phase is not correct
+     * @throws PlayerException          The objective cannot be chosen by the player or has been already chosen
      */
     public void setPlayerChosenObject(String nickname, int objectiveId){
         try {
@@ -397,15 +397,17 @@ public class GameManager {
      * @param nickname  The player who place the card
      * @param cardId    The ID of the card
      * @param side      The face used by the card
+     * @throws GameException            The phase is not correct
+     * @throws PlayingBoardException    The Playing Board of the player has already been instantiated or the player doesn't have the given starter card
      */
-    public void placeStarterCard(String nickname, int cardId, CardSide side) {
+    public void placeStarterCard(String nickname, int cardId, int side) {
         try {
             //Use the ID to identify the player who made the move and use the correct face of the card
             this.phase.placeStarterCard(
                     this,
                     this.getPlayerBoardSetup(nickname),
                     StarterCard.getCardWithId(cardId),
-                    side
+                    CardSide.fromInteger(side)
             );
         } catch (PhaseException e) {
             throw new GameException(e.getMessage());
@@ -414,12 +416,15 @@ public class GameManager {
 
     /**
      * Place a given generic card in a certain position
-     * @param h         The horizontal coordinate
-     * @param v         The vertical coordinate
      * @param cardId    The ID of the card
      * @param face      The face used by the card, (0) if front, (1) if back
+     * @param slot      The position of the card
+     * @throws GameException            The phase is not correct
+     * @throws CardException            The card doesn't exist
+     * @throws PlayerException          The card isn't in the player's hand or the face does not belong to the card
+     * @throws PlayingBoardException    There aren't enough resources or items on the board
      */
-    public void placeCard(int h, int v, int cardId, int face) {
+    public void placeCard(int cardId, int face, BoardSlot slot) {
         try {
             //Create the object KingdomCard
             KingdomCard card = KingdomCard.getCardWithId(cardId);
@@ -427,9 +432,9 @@ public class GameManager {
             phase.placeCard(
                     this,
                     this.getPlayerDrawing(this.phase.getCurrPlayer()),
-                    new BoardSlot(h, v),
+                    slot,
                     card,
-                    (CardSide.fromInteger(face) == CardSide.FRONT) ? card.getFrontFace() : card.getBackFace()
+                    CardSide.fromInteger(face)
             );
             //Update the value in the ScoreBoard
             this.updateScoreBoard();

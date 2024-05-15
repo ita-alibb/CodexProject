@@ -3,7 +3,7 @@ package it.polimi.ingsw.modelTests.jsonTests.placeStarterCardRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import it.polimi.ingsw.am52.json.*;
-import it.polimi.ingsw.am52.json.request.PlaceCardData;
+import it.polimi.ingsw.am52.json.request.PlaceStarterCardData;
 import it.polimi.ingsw.am52.json.request.PlaceStarterCardRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,10 +38,10 @@ public class PlaceStarterCardRequestTest
 
         // Place card data.
         final int cardId = 81;
-        final String face = "front";
+        final int face = 0;
 
         // Create the data object of the request.
-        PlaceCardData data = new PlaceCardData(cardId, face);
+        PlaceStarterCardData data = new PlaceStarterCardData(cardId, face);
 
         // Create the request object.
         PlaceStarterCardRequest request = new PlaceStarterCardRequest(data);
@@ -75,7 +75,7 @@ public class PlaceStarterCardRequestTest
 
         // Check the filed values.
         checkNodeFiledIntValue(dataNode, "cardId", cardId);
-        checkNodeFiledStringValue(dataNode, "face", face);
+        checkNodeFiledIntValue(dataNode, "face", face);
 
     }
 
@@ -114,7 +114,7 @@ public class PlaceStarterCardRequestTest
             PlaceStarterCardRequest request = (PlaceStarterCardRequest)JsonDeserializer.deserializeRequest(jsonText);
             assertEquals(JsonDeserializer.PLACE_STARTER_CARD_METHOD, request.getMethod());
             assertEquals(85, request.getData().getCardId());
-            assertEquals("back", request.getData().getFace());
+            assertEquals(1, request.getData().getFace());
         } catch (IOException e) {
             System.out.println(e.getMessage());
             assert(false);
@@ -157,7 +157,7 @@ public class PlaceStarterCardRequestTest
             PlaceStarterCardRequest request = (PlaceStarterCardRequest)JsonDeserializer.deserializeRequest(jsonText);
             assertEquals(JsonDeserializer.PLACE_STARTER_CARD_METHOD, request.getMethod());
             assertEquals(-1, request.getData().getCardId());
-            assertEquals("back", request.getData().getFace());
+            assertEquals(1, request.getData().getFace());
         } catch (IOException e) {
             System.out.println(e.getMessage());
             assert(false);

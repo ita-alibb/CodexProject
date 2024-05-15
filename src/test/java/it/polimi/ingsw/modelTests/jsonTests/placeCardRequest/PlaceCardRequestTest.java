@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import it.polimi.ingsw.am52.json.JsonDeserializer;
 import it.polimi.ingsw.am52.json.request.PlaceCardData;
+import it.polimi.ingsw.am52.json.request.PlaceStarterCardData;
 import it.polimi.ingsw.am52.json.request.PlaceCardRequest;
+import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,8 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static it.polimi.ingsw.modelTests.jsonTests.JsonUtil.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit test for the PlaceCardRequest class.
@@ -38,10 +39,11 @@ public class PlaceCardRequestTest
 
         // Place card data.
         final int cardId = 31;
-        final String face = "front";
+        final int face = 0;
+        //final BoardSlot slot = new BoardSlot(1, 1);
 
         // Create the data object of the request.
-        PlaceCardData data = new PlaceCardData(cardId, face);
+        PlaceCardData data = new PlaceCardData(cardId, face, new BoardSlot(0, 0));
 
         // Create the request object.
         PlaceCardRequest request = new PlaceCardRequest(data);
@@ -71,12 +73,13 @@ public class PlaceCardRequestTest
         JsonNode dataNode = jsonNode.get(JsonDeserializer.DATA_FIELD);
 
         // Check there are two and only two fields "cardId" and "face".
-        checkNodeFieldNames(dataNode, "cardId", "face");
+        checkNodeFieldNames(dataNode, "cardId", "face", "placedSlot");
 
         // Check the filed values.
         checkNodeFiledIntValue(dataNode, "cardId", cardId);
-        checkNodeFiledStringValue(dataNode, "face", face);
-
+        checkNodeFiledIntValue(dataNode, "face", face);
+        checkNodeFiledIntValue(dataNode.get("placedSlot"), "h", 0);
+        checkNodeFiledIntValue(dataNode.get("placedSlot"), "v", 0);
     }
 
     /**
@@ -90,7 +93,11 @@ public class PlaceCardRequestTest
         //  "method": "placeCard",
         //  "data": {
         //    "cardId": 11,
-        //    "face": "front"
+        //    "face": "front",
+        //    "placedSlot": {
+        //      "h" : 0,
+        //      "v" : 0
+        //    }
         //  }
         //}
 
@@ -114,7 +121,9 @@ public class PlaceCardRequestTest
             PlaceCardRequest request = (PlaceCardRequest)JsonDeserializer.deserializeRequest(jsonText);
             assertEquals(JsonDeserializer.PLACE_CARD_METHOD, request.getMethod());
             assertEquals(11, request.getData().getCardId());
-            assertEquals("front", request.getData().getFace());
+            assertEquals(0, request.getData().getFace());
+            assertEquals(0, request.getData().getPlacedSlot().getHoriz());
+            assertEquals(0, request.getData().getPlacedSlot().getVert());
         } catch (IOException e) {
             System.out.println(e.getMessage());
             assert(false);
@@ -157,7 +166,8 @@ public class PlaceCardRequestTest
             PlaceCardRequest request = (PlaceCardRequest)JsonDeserializer.deserializeRequest(jsonText);
             assertEquals(JsonDeserializer.PLACE_CARD_METHOD, request.getMethod());
             assertEquals(11, request.getData().getCardId());
-            assertEquals("", request.getData().getFace());
+            assertEquals(-1, request.getData().getFace());
+            assertNull(request.getData().getPlacedSlot());
         } catch (IOException e) {
             System.out.println(e.getMessage());
             assert(false);

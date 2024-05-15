@@ -2,6 +2,6 @@
   "method": "placeStarterCard",
   "data": {
     "cardId": 85,
-    "face": "back"
+    "face": 1
   }
 }

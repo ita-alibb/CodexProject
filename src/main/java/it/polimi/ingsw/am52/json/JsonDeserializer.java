@@ -155,7 +155,7 @@ public class JsonDeserializer {
                 yield new SelectObjectiveRequest(data);
             }
             case PLACE_STARTER_CARD_METHOD -> {
-                PlaceCardData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), PlaceCardData.class);
+                PlaceStarterCardData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), PlaceStarterCardData.class);
                 yield new PlaceStarterCardRequest(data);
             }
             case PLACE_CARD_METHOD -> {
@@ -207,6 +207,14 @@ public class JsonDeserializer {
             case SELECT_OBJECTIVE_METHOD -> {
                 SelectObjectiveResponseData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), SelectObjectiveResponseData.class);
                 yield new SelectObjectiveResponse(data);
+            }
+            case PLACE_STARTER_CARD_METHOD -> {
+                PlaceStarterCardResponseData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), PlaceStarterCardResponseData.class);
+                yield new PlaceStarterCardResponse(data);
+            }
+            case PLACE_CARD_METHOD -> {
+                PlaceCardResponseData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), PlaceCardResponseData.class);
+                yield new PlaceCardResponse(data);
             }
             //TODO: add new responses;
 

@@ -1,0 +1,34 @@
+{
+  "data" : {
+    "status" : {
+      "gamePhase" : "LOBBY",
+      "currPlayer" : "",
+      "errorCode" : 0,
+      "errorMessage" : ""
+    },
+    "isBroadcast" : false,
+    "cardId" : 64,
+    "face" : 1,
+    "player" : "Andrea",
+    "score" : 18,
+    "placedSlot" : {
+      "h" : 1,
+      "v" : 1
+    },
+    "availableSlots" : [
+      {
+        "h" : 2,
+        "v" : 2
+      },
+      {
+        "h" : 3,
+        "v" : 3
+      },
+      {
+        "h" : -1,
+        "v" : -3
+      }
+    ]
+  },
+  "method" : "placeCard"
+}
