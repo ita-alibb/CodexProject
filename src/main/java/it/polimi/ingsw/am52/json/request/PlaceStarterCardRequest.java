@@ -26,6 +26,14 @@ public class PlaceStarterCardRequest extends JsonMessage<PlaceStarterCardData> {
     //region Overrides
 
     /**
+     * @return The data associated to this message.
+     */
+    @Override
+    public PlaceStarterCardData getData() {
+        return super.data;
+    }
+
+    /**
      *
      * @return The "placeStarterCard" method.
      */

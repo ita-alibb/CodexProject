@@ -26,6 +26,14 @@ public class TakeCardRequest extends JsonMessage<TakeCardData> {
     //region Overrides
 
     /**
+     * @return The data associated to this message.
+     */
+    @Override
+    public TakeCardData getData() {
+        return super.data;
+    }
+
+    /**
      *
      * @return The "takeCard" method.
      */

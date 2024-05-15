@@ -32,5 +32,13 @@ public class InitGameResponse  extends JsonMessage<BaseResponseData> {
         return "initGame";
     }
 
+    /**
+     *
+     * @return The data associated to this message.
+     */
+    @Override
+    public InitGameResponseData getData() {
+        return (InitGameResponseData) super.data;
+    }
     //endregion
 }

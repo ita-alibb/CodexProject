@@ -31,5 +31,13 @@ public class SelectObjectiveResponse extends JsonMessage<BaseResponseData> {
         return "selectObjective";
     }
 
+    /**
+     *
+     * @return The data associated to this message.
+     */
+    @Override
+    public SelectObjectiveResponseData getData() {
+        return (SelectObjectiveResponseData) super.data;
+    }
     //endregion
 }

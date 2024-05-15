@@ -32,5 +32,13 @@ public class LeaveGameResponse extends JsonMessage<BaseResponseData> {
         return "leaveGame";
     }
 
+    /**
+     *
+     * @return The data associated to this message.
+     */
+    @Override
+    public LeaveGameResponseData getData() {
+        return (LeaveGameResponseData) super.data;
+    }
     //endregion
 }

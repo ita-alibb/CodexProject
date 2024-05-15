@@ -33,6 +33,14 @@ public class JoinLobbyRequest extends JsonMessage<JoinLobbyData> {
     //region Overrides
 
     /**
+     * @return The data associated to this message.
+     */
+    @Override
+    public JoinLobbyData getData() {
+        return super.data;
+    }
+
+    /**
      *
      * @return The "joinLobby" method.
      */

@@ -25,6 +25,14 @@ public class DrawCardRequest extends JsonMessage<DrawCardData> {
     //region Overrides
 
     /**
+     * @return The data associated to this message.
+     */
+    @Override
+    public DrawCardData getData() {
+        return super.data;
+    }
+
+    /**
      *
      * @return The "drawCard" method.
      */

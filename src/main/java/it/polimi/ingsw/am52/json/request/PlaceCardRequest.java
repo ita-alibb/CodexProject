@@ -26,6 +26,14 @@ public class PlaceCardRequest extends JsonMessage<PlaceCardData> {
     //region Overrides
 
     /**
+     * @return The data associated to this message.
+     */
+    @Override
+    public PlaceCardData getData() {
+        return super.data;
+    }
+
+    /**
      *
      * @return The "placeCard" method.
      */

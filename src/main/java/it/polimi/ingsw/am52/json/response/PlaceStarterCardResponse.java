@@ -30,5 +30,13 @@ public class PlaceStarterCardResponse extends JsonMessage<BaseResponseData> {
         return "placeStarterCard";
     }
 
+    /**
+     *
+     * @return The data associated to this message.
+     */
+    @Override
+    public PlaceStarterCardResponseData getData() {
+        return (PlaceStarterCardResponseData) super.data;
+    }
     //endregion
 }

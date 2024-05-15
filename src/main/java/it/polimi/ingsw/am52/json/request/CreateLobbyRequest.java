@@ -34,6 +34,14 @@ public class CreateLobbyRequest extends JsonMessage<CreateLobbyData> {
     //region Overrides
 
     /**
+     * @return The data associated to this message.
+     */
+    @Override
+    public CreateLobbyData getData() {
+        return super.data;
+    }
+
+    /**
      *
      * @return The "createLobby" method.
      */

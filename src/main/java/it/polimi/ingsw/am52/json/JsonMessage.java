@@ -17,7 +17,7 @@ public abstract class JsonMessage<TData> {
     /**
      * The data of this request.
      */
-    private final TData data;
+    protected final TData data;
 
     // endregion
 
@@ -40,9 +40,7 @@ public abstract class JsonMessage<TData> {
      *
      * @return The data associated to this message.
      */
-    public TData getData() {
-        return this.data;
-    }
+    public abstract TData getData();
 
     //endregion
 

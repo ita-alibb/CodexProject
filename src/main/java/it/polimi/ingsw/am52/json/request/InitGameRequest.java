@@ -23,6 +23,14 @@ public class InitGameRequest extends JsonMessage<InitGameData> {
     //region Overrides
 
     /**
+     * @return The data associated to this message.
+     */
+    @Override
+    public InitGameData getData() {
+        return super.data;
+    }
+
+    /**
      *
      * @return The "createLobby" method.
      */

@@ -32,5 +32,13 @@ public class JoinLobbyResponse extends JsonMessage<BaseResponseData> {
         return "joinLobby";
     }
 
+    /**
+     *
+     * @return The data associated to this message.
+     */
+    @Override
+    public JoinLobbyResponseData getData() {
+        return (JoinLobbyResponseData) super.data;
+    }
     //endregion
 }

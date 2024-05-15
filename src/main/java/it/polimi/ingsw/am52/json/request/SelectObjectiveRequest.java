@@ -23,6 +23,14 @@ public class SelectObjectiveRequest extends JsonMessage<SelectObjectiveData> {
     //region Overrides
 
     /**
+     * @return The data associated to this message.
+     */
+    @Override
+    public SelectObjectiveData getData() {
+        return super.data;
+    }
+
+    /**
      *
      * @return The "selectObjective" method.
      */

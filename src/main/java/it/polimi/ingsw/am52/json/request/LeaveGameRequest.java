@@ -23,6 +23,14 @@ public class LeaveGameRequest extends JsonMessage<LeaveGameData> {
     //region Overrides
 
     /**
+     * @return The data associated to this message.
+     */
+    @Override
+    public LeaveGameData getData() {
+        return super.data;
+    }
+
+    /**
      *
      * @return The "leaveGame" method.
      */
