@@ -1,7 +1,6 @@
 package it.polimi.ingsw.am52.controller;
 
 import it.polimi.ingsw.am52.json.*;
-import it.polimi.ingsw.am52.json.dto.DrawType;
 import it.polimi.ingsw.am52.json.request.*;
 import it.polimi.ingsw.am52.json.response.*;
 import it.polimi.ingsw.am52.network.ClientHandler;
@@ -57,7 +56,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
             res = switch (request.getMethod()) {
                 case JsonDeserializer.CREATE_LOBBY_METHOD -> new CreateLobbyResponse(this.createLobby((CreateLobbyData) request.getData()));
                 case JsonDeserializer.JOIN_LOBBY_METHOD -> new JoinLobbyResponse(this.joinLobby((JoinLobbyData) request.getData()));
-                case JsonDeserializer.LEAVE_GAME_METHOD -> new LeaveGameResponse(this.leaveGame((LeaveGameData) request.getData()));
+                case JsonDeserializer.LEAVE_GAME_METHOD -> new LeaveGameResponse(this.leaveGame());
                 case JsonDeserializer.INIT_GAME_METHOD -> new InitGameResponse(this.initGame());
                 case JsonDeserializer.SELECT_OBJECTIVE_METHOD -> new SelectObjectiveResponse(this.selectObjective((SelectObjectiveData) request.getData()));
                 case JsonDeserializer.PLACE_STARTER_CARD_METHOD -> new PlaceStarterCardResponse(this.placeStarterCard((PlaceStarterCardData) request.getData()));
@@ -102,7 +101,11 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
         // the client has joined a lobby, set the GameController, in this way we remove the bottleneck on ServerController by using directly the related GameController
         //The LobbyId is in the response of the controller TODO: the response must be implemented as the requests
         if (response.getStatus().errorCode == 0) {
-            this.gameController = ServerController.getInstance().getGameController(response.getLobbyId()).get();
+            try{
+                this.gameController = ServerController.getInstance().getGameController(response.getLobbyId()).get();
+            } catch (Exception e){
+                return new JoinLobbyResponseData(new ResponseStatus(404, "Game not found"));
+            }
         }
 
         return response;
@@ -118,7 +121,11 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
 
         // the client has joined a lobby, set the GameController, in this way we remove the bottleneck on ServerController by using directly the related GameController
         if (response.getStatus().errorCode == 0) {
-            this.gameController = ServerController.getInstance().getGameController(data.getLobbyId()).get();
+            try{
+                this.gameController = ServerController.getInstance().getGameController(response.getLobbyId()).get();
+            } catch (Exception e){
+                return new JoinLobbyResponseData(new ResponseStatus(404, "Game not found"));
+            }
         }
 
         this.broadcast(new JoinLobbyResponse(response));
@@ -128,10 +135,9 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
 
     /**
      * Method to perform the leaveGame Request
-     * @param data the request
      */
     @Override
-    public LeaveGameResponseData leaveGame(LeaveGameData data) throws RemoteException {
+    public LeaveGameResponseData leaveGame() throws RemoteException {
         // The request here is useless, the only thing needed is the clientId, the body is empty
         var response = this.gameController.leaveLobby(this.clientId);
 
@@ -163,7 +169,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
      */
     @Override
     public EndGameResponseData endGame() throws RemoteException {
-        var response = this.gameController.endGame(this.clientId);
+        var response = this.gameController.endGame();
 
         this.broadcast(new EndGameResponse(response));
 

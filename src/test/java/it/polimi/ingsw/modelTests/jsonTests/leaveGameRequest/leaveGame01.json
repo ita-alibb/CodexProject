@@ -1,6 +1,5 @@
 {
   "method": "leaveGame",
   "data": {
-    "message": "Bye Bye!"
   }
 }

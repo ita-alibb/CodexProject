@@ -10,43 +10,12 @@ import java.io.Serializable;
  */
 public class LeaveGameData implements Serializable {
 
-    //region Private Fields
-
-    /**
-     * The goodbye message.
-     */
-    private final String message;
-
-    //endregion
-
     //region Constructor
 
     /**
      * Default constructor, for json deserialization purpose only.
      */
-    protected LeaveGameData() {
-        this.message = "";
-    }
-
-    /**
-     * Create a login data object.
-     * @param message The nickname of the player.
-     */
-    public LeaveGameData(String message) {
-        // Assign private fields.
-        this.message = message;
-    }
-
-    //endregion
-
-    //region Getters
-
-    /**
-     *
-     * @return The goodbye message.
-     */
-    public String getMessage() {
-        return message;
+    public LeaveGameData() {
     }
 
     //endregion

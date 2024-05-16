@@ -37,7 +37,7 @@ public class DrawCardResponseData extends BaseResponseData implements Serializab
      */
     public DrawCardResponseData() {
         super();
-        this.cardId = 0;
+        this.cardId = -1;
         this.deck = -1;
         this.isEmpty = false;
     }

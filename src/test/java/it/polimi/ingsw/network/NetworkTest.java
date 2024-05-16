@@ -188,6 +188,13 @@ public class NetworkTest {
         assertEquals(GamePhase.PLACING,selectObjective2.getStatus().gamePhase);
         // endregion
 
+        // Leave lobby created by third client
+        this.testCallExactMatch(
+                thirdClient,
+                new LeaveGameRequest(new LeaveGameData()),
+                new LeaveGameResponse(new LeaveGameResponseData(new ResponseStatus(GamePhase.LOBBY, "", 0, ""), "Bye Bye Livio"))
+        );
+
         // region PlaceCardResponse first
         System.out.println("-----PLACECARD PHASE-----");
         var currentClient = Objects.equals(firstPlayer, "Andrea") ? firstClient : secondClient;
@@ -309,7 +316,7 @@ public class NetworkTest {
             return switch (request.getMethod()) {
                 case JsonDeserializer.CREATE_LOBBY_METHOD -> new CreateLobbyResponse(caller.createLobby((CreateLobbyData) request.getData()));
                 case JsonDeserializer.JOIN_LOBBY_METHOD -> new JoinLobbyResponse(caller.joinLobby((JoinLobbyData) request.getData()));
-                case JsonDeserializer.LEAVE_GAME_METHOD -> new LeaveGameResponse(caller.leaveGame((LeaveGameData) request.getData()));
+                case JsonDeserializer.LEAVE_GAME_METHOD -> new LeaveGameResponse(caller.leaveGame());
                 case JsonDeserializer.INIT_GAME_METHOD -> new InitGameResponse(caller.initGame());
                 case JsonDeserializer.SELECT_OBJECTIVE_METHOD -> new SelectObjectiveResponse(caller.selectObjective((SelectObjectiveData) request.getData()));
                 case JsonDeserializer.PLACE_STARTER_CARD_METHOD -> new PlaceStarterCardResponse(caller.placeStarterCard((PlaceStarterCardData) request.getData()));

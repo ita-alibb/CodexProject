@@ -131,12 +131,10 @@ public class ConnectionTCP implements ActionsRMI {
 
     /**
      * Method to perform the leaveGame Request
-     *
-     * @param data the request
      */
     @Override
-    public synchronized LeaveGameResponseData leaveGame(LeaveGameData data) throws RemoteException {
-        return (LeaveGameResponseData)this.send(new LeaveGameRequest(data));
+    public synchronized LeaveGameResponseData leaveGame() throws RemoteException {
+        return (LeaveGameResponseData)this.send(new LeaveGameRequest(null));
     }
 
     /**

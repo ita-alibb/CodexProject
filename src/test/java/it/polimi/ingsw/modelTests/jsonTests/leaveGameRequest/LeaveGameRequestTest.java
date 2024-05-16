@@ -3,7 +3,6 @@ package it.polimi.ingsw.modelTests.jsonTests.leaveGameRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import it.polimi.ingsw.am52.json.*;
-import it.polimi.ingsw.am52.json.request.LeaveGameData;
 import it.polimi.ingsw.am52.json.request.LeaveGameRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,22 +27,11 @@ public class LeaveGameRequestTest
     @DisplayName("Test json serialization, method toJson()")
     public void toJsonTest()
     {
-        // The player id.
-        final int playerId = 3;
-        // The lobby id.
-        final int lobbyId = 1036;
-
         // The method name.
         final String methodName = JsonDeserializer.LEAVE_GAME_METHOD;
 
-        // Leave game data.
-        final String message = "Goodbye to all!";
-
-        // Create the data object of the request.
-        LeaveGameData leaveData = new LeaveGameData(message);
-
         // Create the request object.
-        LeaveGameRequest request = new LeaveGameRequest(leaveData);
+        LeaveGameRequest request = new LeaveGameRequest(null);
         String jsonText = null;
 
         // Serialize the request object.
@@ -65,16 +53,6 @@ public class LeaveGameRequestTest
 
         // Check the method is "leaveGame".
         checkNodeFiledStringValue(jsonNode, JsonDeserializer.METHOD_FIELD, methodName);
-
-        // Inspect the data object.
-        JsonNode dataNode = jsonNode.get(JsonDeserializer.DATA_FIELD);
-
-        // Check there are one and only one field, named "message".
-        checkNodeFieldNames(dataNode, "message");
-
-        // Check the filed values.
-        checkNodeFiledStringValue(dataNode, "message", message);
-
     }
 
     /**
@@ -87,7 +65,6 @@ public class LeaveGameRequestTest
         // {
         //  "method": "leaveGame",
         //  "data": {
-        //    "message": "Bye Bye!"
         //  }
 
         // Path and filename of the json settings file.
@@ -109,7 +86,6 @@ public class LeaveGameRequestTest
         try {
             LeaveGameRequest request = (LeaveGameRequest) JsonDeserializer.deserializeRequest(jsonText);
             assertEquals(JsonDeserializer.LEAVE_GAME_METHOD, request.getMethod());
-            assertEquals("Bye Bye!", request.getData().getMessage());
         } catch (IOException e) {
             System.out.println(e.getMessage());
             assert(false);

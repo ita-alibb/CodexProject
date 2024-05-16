@@ -30,9 +30,8 @@ public interface ActionsRMI extends Remote {
     /**
      * Method to perform the leaveGame Request
      *
-     * @param data the request
      */
-    LeaveGameResponseData leaveGame(LeaveGameData data) throws RemoteException;
+    LeaveGameResponseData leaveGame() throws RemoteException;
 
     /**
      * Method to fetch all information needed on game initialization

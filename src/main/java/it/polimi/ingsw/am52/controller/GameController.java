@@ -45,6 +45,10 @@ public class GameController {
      */
     public JoinLobbyResponseData joinLobby(User user) {
         try {
+            if (this.game != null) {
+                return new JoinLobbyResponseData(new ResponseStatus(403, "Game already started"));
+            }
+
             if (!this.lobby.addPlayer(user)) {
                 return new JoinLobbyResponseData(new ResponseStatus(403, "Nickname not available"));
             }
@@ -76,14 +80,14 @@ public class GameController {
         var user = this.lobby.getPlayer(clientId);
 
         if (user.isEmpty()) {
-            //TODO: ERROR
             return new LeaveGameResponseData(new ResponseStatus(404, "User not found"));
         }
+
+        var nick = user.get().getUsername();
 
         try {
             this.lobby.removePlayer(user.get().getUsername());
         } catch (Exception ex) {
-            // TODO: ERROR
             return new LeaveGameResponseData(new ResponseStatus(405, "Player cannot be removed"));
         }
 
@@ -92,7 +96,7 @@ public class GameController {
         }
 
         // Notify the clients and Response
-        return new LeaveGameResponseData(new ResponseStatus(), "Lobby leaved!");
+        return new LeaveGameResponseData(new ResponseStatus(), "Bye Bye " + nick);
     }
 
     /**
@@ -260,14 +264,9 @@ public class GameController {
     /**
      * Method to handle the ending phase of a game
      */
-    public EndGameResponseData endGame(int clientId) {
+    public EndGameResponseData endGame() {
         try {
-            List<PlayerInfo> tempWinners = this.game.getWinners();
-            List<String> winners = new ArrayList<>();
-
-            for (PlayerInfo player : tempWinners) {
-                winners.add(player.getNickname());
-            }
+            List<String> winners = this.game.getWinners().stream().map(PlayerInfo::getNickname).toList();
 
             return new EndGameResponseData(new ResponseStatus(this.game.getStatusResponse()), winners);
         } catch (GameException e) {

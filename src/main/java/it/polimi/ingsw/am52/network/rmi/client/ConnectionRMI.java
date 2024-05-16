@@ -116,13 +116,11 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
 
     /**
      * Method to perform the leaveGame Request
-     *
-     * @param data the request
      */
     @Override
-    public LeaveGameResponseData leaveGame(LeaveGameData data) throws RemoteException {
+    public LeaveGameResponseData leaveGame() throws RemoteException {
         try {
-            return this.view.leaveGame(data);
+            return this.view.leaveGame();
         } catch (RemoteException e) {
             // TODO: handle remote exception
             return null;

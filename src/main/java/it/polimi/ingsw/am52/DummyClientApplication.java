@@ -48,7 +48,7 @@ public class DummyClientApplication {
 
             System.out.println("Uscito dallo sleep");
 
-            var res1 = this.connectionRMI.leaveGame(new LeaveGameData("test msg"));
+            var res1 = this.connectionRMI.leaveGame();
             System.out.println(res1);
 
             var res2 = this.connectionRMI.joinLobby(new JoinLobbyData("Paoletto",2));
