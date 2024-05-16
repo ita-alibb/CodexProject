@@ -64,6 +64,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
                 case JsonDeserializer.PLACE_CARD_METHOD -> new PlaceCardResponse(this.placeCard((PlaceCardData) request.getData()));
                 case JsonDeserializer.TAKE_CARD_METHOD -> new TakeCardResponse(this.takeCard((TakeCardData) request.getData()));
                 case JsonDeserializer.DRAW_CARD_METHOD -> new DrawCardResponse(this.drawCard((DrawCardData) request.getData()));
+                case JsonDeserializer.END_GAME_METHOD -> new EndGameResponse(this.endGame());
                 default -> throw new NoSuchMethodException("no method " + request.getMethod());
             };
         } catch (RemoteException e) {
@@ -153,6 +154,18 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
         var response = this.gameController.initGame(this.clientId);
 
         this.broadcast(new InitGameResponse(new InitGameResponseData(response.getStatus())));
+
+        return response;
+    }
+
+    /**
+     * Method to perform the end phase of a game
+     */
+    @Override
+    public EndGameResponseData endGame() throws RemoteException {
+        var response = this.gameController.endGame(this.clientId);
+
+        this.broadcast(new EndGameResponse(response));
 
         return response;
     }

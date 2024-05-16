@@ -7,6 +7,7 @@ import it.polimi.ingsw.am52.model.cards.Card;
 import it.polimi.ingsw.am52.model.game.GameLobby;
 import it.polimi.ingsw.am52.model.game.GameManager;
 import it.polimi.ingsw.am52.model.objectives.Objective;
+import it.polimi.ingsw.am52.model.player.PlayerInfo;
 import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
 import it.polimi.ingsw.am52.network.ClientHandler;
 import it.polimi.ingsw.am52.network.Sender;
@@ -254,6 +255,24 @@ public class GameController {
         }
 
         return response;
+    }
+
+    /**
+     * Method to handle the ending phase of a game
+     */
+    public EndGameResponseData endGame(int clientId) {
+        try {
+            List<PlayerInfo> tempWinners = this.game.getWinners();
+            List<String> winners = new ArrayList<>();
+
+            for (PlayerInfo player : tempWinners) {
+                winners.add(player.getNickname());
+            }
+
+            return new EndGameResponseData(new ResponseStatus(this.game.getStatusResponse()), winners);
+        } catch (GameException e) {
+            return new EndGameResponseData(new ResponseStatus(this.game.getStatusResponse(), 3, e.getMessage()));
+        }
     }
 
     /**

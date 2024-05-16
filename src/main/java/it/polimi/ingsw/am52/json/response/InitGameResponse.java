@@ -12,7 +12,7 @@ public class InitGameResponse  extends JsonMessage<BaseResponseData> {
     //region Constructors
 
     /**
-     * Creates a init game response.
+     * Creates an init game response.
      * @param initGameResponseData The init game data.
      */
     public InitGameResponse(InitGameResponseData initGameResponseData) {

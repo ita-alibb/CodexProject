@@ -1,0 +1,18 @@
+{
+  "data" : {
+    "status" : {
+      "gamePhase" : "LOBBY",
+      "currPlayer" : "",
+      "errorCode" : 0,
+      "errorMessage" : ""
+    },
+    "isBroadcast" : false,
+    "winners" : [
+      "Livio",
+      "Lorenzo",
+      "Andrea",
+      "William"
+    ]
+  },
+  "method" : "endGame"
+}

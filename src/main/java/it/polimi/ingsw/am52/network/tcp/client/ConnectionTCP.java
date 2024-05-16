@@ -193,4 +193,12 @@ public class ConnectionTCP implements ActionsRMI {
     public TakeCardResponseData takeCard(TakeCardData data) throws RemoteException {
         return (TakeCardResponseData) this.send(new TakeCardRequest(data));
     }
+
+    /**
+     * Method to perform the endGame request
+     */
+    @Override
+    public synchronized EndGameResponseData endGame() throws RemoteException {
+        return (EndGameResponseData) this.send(new EndGameRequest(null));
+    }
 }

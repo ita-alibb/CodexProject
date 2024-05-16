@@ -346,6 +346,7 @@ public class GameManager {
 
     /**
      * @return The winner or the list of the winners. Could be one or more, in case of a tie.
+     * @throws GameException    The phase is not correct
      */
     public List<PlayerInfo> getWinners() {
         try {

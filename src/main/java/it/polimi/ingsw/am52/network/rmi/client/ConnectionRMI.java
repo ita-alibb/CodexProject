@@ -214,5 +214,18 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
         }
     }
 
+    /**
+     * Method to perform the endGame request
+     */
+    @Override
+    public EndGameResponseData endGame() throws RemoteException {
+        try {
+            return this.view.endGame();
+        } catch (RemoteException e) {
+            //TODO: handle remote exception
+            return null;
+        }
+    }
+
     //end region
 }

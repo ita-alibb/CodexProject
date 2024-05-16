@@ -63,6 +63,10 @@ public class JsonDeserializer {
      * The label of the initGame method
      */
     public static final String INIT_GAME_METHOD = "initGame";
+    /**
+     * The label of the endGame method
+     */
+    public static final String END_GAME_METHOD = "endGame";
 
     //endregion
 
@@ -170,6 +174,10 @@ public class JsonDeserializer {
                 TakeCardData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), TakeCardData.class);
                 yield new TakeCardRequest(data);
             }
+            case END_GAME_METHOD -> {
+                EndGameData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), EndGameData.class);
+                yield new EndGameRequest(data);
+            }
             // Unknown method.
             default -> throw new IOException(String.format("Unknown method \"%s\".", method));
         };
@@ -223,6 +231,10 @@ public class JsonDeserializer {
             case TAKE_CARD_METHOD -> {
                 TakeCardResponseData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), TakeCardResponseData.class);
                 yield new TakeCardResponse(data);
+            }
+            case END_GAME_METHOD -> {
+                EndGameResponseData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), EndGameResponseData.class);
+                yield new EndGameResponse(data);
             }
             //TODO: add new responses;
 
