@@ -56,6 +56,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
             res = switch (request.getMethod()) {
                 case JsonDeserializer.CREATE_LOBBY_METHOD -> new CreateLobbyResponse(this.createLobby((CreateLobbyData) request.getData()));
                 case JsonDeserializer.JOIN_LOBBY_METHOD -> new JoinLobbyResponse(this.joinLobby((JoinLobbyData) request.getData()));
+                case JsonDeserializer.LIST_LOBBY_METHOD -> new ListLobbyResponse(this.listLobby());
                 case JsonDeserializer.LEAVE_GAME_METHOD -> new LeaveGameResponse(this.leaveGame());
                 case JsonDeserializer.INIT_GAME_METHOD -> new InitGameResponse(this.initGame());
                 case JsonDeserializer.SELECT_OBJECTIVE_METHOD -> new SelectObjectiveResponse(this.selectObjective((SelectObjectiveData) request.getData()));
@@ -131,6 +132,18 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
         this.broadcast(new JoinLobbyResponse(response));
 
         return response;
+    }
+
+    /**
+     * Method to perform the listLobby Request
+     */
+    @Override
+    public ListLobbyResponseData listLobby() throws RemoteException {
+        if (this.gameController == null){
+            return new ListLobbyResponseData(new ResponseStatus(403, "Already in lobby"));
+        }
+
+        return ServerController.getInstance().getLobbyList();
     }
 
     /**

@@ -28,6 +28,12 @@ public interface ActionsRMI extends Remote {
     JoinLobbyResponseData joinLobby(JoinLobbyData data) throws RemoteException;
 
     /**
+     * Method to perform the listLobby Request
+     *
+     */
+    ListLobbyResponseData listLobby() throws RemoteException;
+
+    /**
      * Method to perform the leaveGame Request
      *
      */

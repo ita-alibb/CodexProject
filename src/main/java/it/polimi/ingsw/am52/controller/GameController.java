@@ -368,5 +368,13 @@ public class GameController {
         return this.lobby.handlerToBroadcast(clientToExclude);
     }
 
+    /**
+     * Method used to return he number of player that can enter the lobby
+     * @return the number of free spaces
+     */
+    public int getFreeSpace() {
+        return this.lobby.getFreeSpace();
+    }
+
     // endregion
 }

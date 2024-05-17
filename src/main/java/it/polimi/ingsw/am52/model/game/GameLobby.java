@@ -172,5 +172,13 @@ public class GameLobby {
     public List<Sender> handlerToBroadcast(int clientIdToExclude) {
         return this.players.stream().filter(u -> u.getClientId() != clientIdToExclude).map(User::getHandler).toList();
     }
+
+    /**
+     * Get free spaces
+     * @return the free spaces
+     */
+    public int getFreeSpace(){
+        return this.maxPlayers - this.players.size();
+    }
 }
 

@@ -115,6 +115,19 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
     }
 
     /**
+     * Method to perform the listLobby Request
+     */
+    @Override
+    public ListLobbyResponseData listLobby() throws RemoteException {
+        try {
+            return this.view.listLobby();
+        } catch (RemoteException e) {
+            // TODO: handle remote exception
+            return null;
+        }
+    }
+
+    /**
      * Method to perform the leaveGame Request
      */
     @Override

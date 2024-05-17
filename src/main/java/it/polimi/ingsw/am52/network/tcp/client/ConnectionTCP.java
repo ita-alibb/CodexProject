@@ -130,6 +130,14 @@ public class ConnectionTCP implements ActionsRMI {
     }
 
     /**
+     * Method to perform the listLobby Request
+     */
+    @Override
+    public ListLobbyResponseData listLobby() throws RemoteException {
+        return (ListLobbyResponseData) this.send(new ListLobbyRequest(null));
+    }
+
+    /**
      * Method to perform the leaveGame Request
      */
     @Override

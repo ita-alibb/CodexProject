@@ -3,11 +3,13 @@ package it.polimi.ingsw.am52.controller;
 import it.polimi.ingsw.am52.json.request.CreateLobbyData;
 import it.polimi.ingsw.am52.json.request.JoinLobbyData;
 import it.polimi.ingsw.am52.json.response.JoinLobbyResponseData;
+import it.polimi.ingsw.am52.json.response.ListLobbyResponseData;
 import it.polimi.ingsw.am52.model.game.GameLobby;
 import it.polimi.ingsw.am52.network.ClientHandler;
 import it.polimi.ingsw.am52.json.response.ResponseStatus;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Class to handle the Server actions, it is instantiated only once
@@ -51,6 +53,18 @@ public class ServerController {
     }
 
     // region Endpoints
+
+    /**
+     * Method to get the list of lobbies
+     * @return
+     */
+    public ListLobbyResponseData getLobbyList() {
+        try{
+            return new ListLobbyResponseData(new ResponseStatus(), this.getLobbies());
+        } catch (Exception e) {
+            return new ListLobbyResponseData(new ResponseStatus(503, "Error on createLobby: " + e.getMessage()));
+        }
+    }
 
     /**
      * Method to request to open a lobby
@@ -162,6 +176,15 @@ public class ServerController {
      */
     private synchronized int getUniqueId() {
         return ++maxId;
+    }
+
+    /**
+     *
+     * @return The hashmap for ListLobbies response
+     */
+    private synchronized Map<Integer,Integer> getLobbies() {
+        return this.gameControllerList.stream()
+                .collect(Collectors.toMap(GameController::getId, GameController::getFreeSpace));
     }
     // endregion
 }

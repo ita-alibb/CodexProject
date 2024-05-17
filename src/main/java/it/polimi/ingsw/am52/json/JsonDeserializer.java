@@ -32,6 +32,10 @@ public class JsonDeserializer {
      */
     public static final String JOIN_LOBBY_METHOD = "joinLobby";
     /**
+     * The label of the login method.
+     */
+    public static final String LIST_LOBBY_METHOD = "listLobby";
+    /**
      * The label of the createLobby method.
      */
     public static final String CREATE_LOBBY_METHOD = "createLobby";
@@ -142,6 +146,10 @@ public class JsonDeserializer {
                 JoinLobbyData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), JoinLobbyData.class);
                 yield new JoinLobbyRequest(data);
             }
+            case LIST_LOBBY_METHOD -> {
+                ListLobbyData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), ListLobbyData.class);
+                yield new ListLobbyRequest(data);
+            }
             case CREATE_LOBBY_METHOD -> {
                 CreateLobbyData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), CreateLobbyData.class);
                 yield new CreateLobbyRequest(data);
@@ -203,6 +211,10 @@ public class JsonDeserializer {
             case CREATE_LOBBY_METHOD -> {
                 JoinLobbyResponseData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), JoinLobbyResponseData.class);
                 yield new CreateLobbyResponse(data);
+            }
+            case LIST_LOBBY_METHOD -> {
+                ListLobbyResponseData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), ListLobbyResponseData.class);
+                yield new ListLobbyResponse(data);
             }
             case INIT_GAME_METHOD -> {
                 InitGameResponseData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), InitGameResponseData.class);
