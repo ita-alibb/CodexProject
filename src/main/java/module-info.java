@@ -7,7 +7,9 @@ module it.polimi.ingsw.am52 {
     requires java.rmi;
 
     opens it.polimi.ingsw.am52 to javafx.fxml;
+    opens it.polimi.ingsw.am52.view to javafx.fxml;
     exports it.polimi.ingsw.am52;
+    exports it.polimi.ingsw.am52.view;
     exports it.polimi.ingsw.am52.exceptions;
     exports it.polimi.ingsw.am52.model.cards;
     exports it.polimi.ingsw.am52.model.player;
@@ -29,5 +31,7 @@ module it.polimi.ingsw.am52 {
     exports it.polimi.ingsw.am52.network.rmi.client to java.rmi;
     exports it.polimi.ingsw.am52.json to com.fasterxml.jackson.databind;
     exports it.polimi.ingsw.am52.json.dto;
+
+
 
 }
