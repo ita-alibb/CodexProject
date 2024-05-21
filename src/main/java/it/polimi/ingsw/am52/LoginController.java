@@ -26,6 +26,7 @@ public class LoginController {
 
         WaitingController scene2Controller = loader.getController();
         scene2Controller.display(username);
+        ConnectionController.setusername(username);
 
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);

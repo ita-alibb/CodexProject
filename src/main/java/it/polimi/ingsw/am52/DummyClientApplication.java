@@ -43,16 +43,18 @@ public class DummyClientApplication {
             // connection.execute delegates execution to the proxy virtual view
             var res = this.connectionRMI.createLobby(new CreateLobbyData("Paoletto",2));
             System.out.println(res);
+            System.out.println(this.connectionRMI.listLobby().getLobbies());
 
             Thread.sleep(10 * 1000);
 
             System.out.println("Uscito dallo sleep");
 
-            var res1 = this.connectionRMI.leaveGame();
+            /*var res1 = this.connectionRMI.leaveGame();
             System.out.println(res1);
 
             var res2 = this.connectionRMI.joinLobby(new JoinLobbyData("Paoletto",2));
-            System.out.println(res2);
+            System.out.println(res2);*/
+            System.out.println(this.connectionRMI.listLobby().getLobbies());
 
             // endregion
         } catch (Exception e) {
