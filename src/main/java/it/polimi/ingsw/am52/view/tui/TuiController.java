@@ -6,6 +6,7 @@ import it.polimi.ingsw.am52.network.client.Connection;
 import it.polimi.ingsw.am52.network.client.ConnectionRMI;
 import it.polimi.ingsw.am52.network.client.ConnectionTCP;
 import it.polimi.ingsw.am52.network.server.rmi.ActionsRMI;
+import it.polimi.ingsw.am52.view.tui.state.ViewType;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.io.IOException;
@@ -49,6 +50,9 @@ public class TuiController {
     public static void createLobby(String nickname, int maxPlayers) {
         try {
             ViewModelState.getInstance().update(INSTANCE.createLobby(new CreateLobbyData(nickname, maxPlayers)));
+            // TODO: Add check successful call
+            // Change automatically the view displayed
+            TuiPrinter.getInstance().setType(ViewType.LOBBY);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -57,6 +61,9 @@ public class TuiController {
     public static void joinLobby(String nickname, int lobbyId) {
         try {
             ViewModelState.getInstance().update(INSTANCE.joinLobby(new JoinLobbyData(nickname, lobbyId)));
+            // TODO: Add check successful call
+            // Change automatically the view displayed
+            TuiPrinter.getInstance().setType(ViewType.LOBBY);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
