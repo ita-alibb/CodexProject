@@ -1,9 +1,8 @@
-package it.polimi.ingsw.am52.network.tcp.client;
+package it.polimi.ingsw.am52.network.client;
 
 import it.polimi.ingsw.am52.json.*;
 import it.polimi.ingsw.am52.json.request.*;
 import it.polimi.ingsw.am52.json.response.*;
-import it.polimi.ingsw.am52.network.rmi.ActionsRMI;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,8 +13,9 @@ import java.rmi.RemoteException;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 
-public class ConnectionTCP implements ActionsRMI {
+public class ConnectionTCP implements Connection, Runnable{
 
+    private static ConnectionTCP INSTANCE;
     /**
      * The client socket
      */
@@ -48,44 +48,51 @@ public class ConnectionTCP implements ActionsRMI {
 
         this.responseQueue = new SynchronousQueue<>();
 
+        // TODO: debug log
+        System.out.println("initialized");
+    }
+
+    /**
+     * Runs this operation.
+     */
+    @Override
+    public void run() {
+        // TODO: debug log
+        System.out.println("Listening Thread started");
+
         // Initialize Listening thread
-        new Thread(() ->{
+        String jsonResponse;
 
-            String jsonResponse;
+        try {
+            while((jsonResponse = in.readLine()) != null){
+                System.out.println("received: " + jsonResponse);
 
-            try {
-                while((jsonResponse = in.readLine()) != null){
-                    System.out.println("received: " + jsonResponse);
-
-                    try {
-                        var res = JsonDeserializer.deserializeResponse(jsonResponse);
-
-                        if (res.getData().getIsBroadcast()) {
-                            //TODO: here we receive the broadcast response, as in ConnectionRMI we need to process it to update the game
-                            System.out.println("response received BROADCAST TCP");
-                        } else {
-                            // If the response is not a broadcast then one of the ActionRMI method is waiting for the response to be added in the queue
-                            // the offer methods inserts the element in the queue only if a thread is waiting for it, timeout handled
-                            if (!responseQueue.offer(res)){
-                                System.out.println("Request thread timed out");
-                            }
-                        }
-                    } catch (Exception e) {
-                        System.out.println("Deserialize throw exception:" + e.getMessage());
-                    }
-                }
-            } catch (IOException e) {
-                // break the loop and finally call the disconnection
-            } finally {
                 try {
-                    this.socket.close();
-                } catch (IOException e) {
-                    System.out.println("Exception closing socket: exception: " + e.getMessage());
+                    var res = JsonDeserializer.deserializeResponse(jsonResponse);
+
+                    if (res.getData().getIsBroadcast()) {
+                        //TODO: here we receive the broadcast response, as in ConnectionRMI we need to process it to update the game
+                        System.out.println("response received BROADCAST TCP");
+                    } else {
+                        // If the response is not a broadcast then one of the ActionRMI method is waiting for the response to be added in the queue
+                        // the offer methods inserts the element in the queue only if a thread is waiting for it, timeout handled
+                        if (!responseQueue.offer(res)){
+                            System.out.println("Request thread timed out");
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("Deserialize throw exception:" + e.getMessage());
                 }
             }
-        }).start();
-
-        System.out.println("initialized");
+        } catch (IOException e) {
+            // break the loop and finally call the disconnection
+        } finally {
+            try {
+                this.socket.close();
+            } catch (IOException e) {
+                System.out.println("Exception closing socket: exception: " + e.getMessage());
+            }
+        }
     }
 
     /**

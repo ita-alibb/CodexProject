@@ -7,15 +7,17 @@ import it.polimi.ingsw.am52.json.JsonMessage;
 import it.polimi.ingsw.am52.json.request.*;
 import it.polimi.ingsw.am52.json.response.*;
 import it.polimi.ingsw.am52.model.game.GamePhase;
-import it.polimi.ingsw.am52.network.ServerConnection;
-import it.polimi.ingsw.am52.network.rmi.ActionsRMI;
-import it.polimi.ingsw.am52.network.rmi.client.ConnectionRMI;
-import it.polimi.ingsw.am52.network.tcp.client.ConnectionTCP;
+import it.polimi.ingsw.am52.network.server.ServerConnection;
+import it.polimi.ingsw.am52.network.server.rmi.ActionsRMI;
+import it.polimi.ingsw.am52.network.client.ConnectionRMI;
+import it.polimi.ingsw.am52.network.client.ConnectionTCP;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -48,6 +50,7 @@ public class NetworkTest {
         ActionsRMI firstClient;
         try {
             firstClient = new ConnectionTCP();
+            new Thread((ConnectionTCP)firstClient).start();
         } catch (Exception ex){
             assert false;
             return;
@@ -66,6 +69,7 @@ public class NetworkTest {
         ActionsRMI thirdClient;
         try {
             thirdClient = new ConnectionTCP();
+            new Thread((ConnectionTCP)thirdClient).start();
         } catch (Exception ex){
             assert false;
             return;
@@ -73,13 +77,16 @@ public class NetworkTest {
 
         // region LobbyPhase
         System.out.println("-----LOBBY PHASE-----");
+        List<String> players = new ArrayList<>();
+        players.add("Andrea");
         //First client create lobby
         this.testCallExactMatch(
             firstClient,
             new CreateLobbyRequest(new CreateLobbyData("Andrea", 2)),
-            new CreateLobbyResponse(new JoinLobbyResponseData(new ResponseStatus(GamePhase.LOBBY, "", 0, ""), 1))
+            new CreateLobbyResponse(new JoinLobbyResponseData(new ResponseStatus(GamePhase.LOBBY, "", 0, ""), 1, players))
         );
 
+        players.add("Lorenzo");
         // second client join lobby
         var initRes = (JoinLobbyResponse) this.call(
             secondClient,
@@ -89,14 +96,14 @@ public class NetworkTest {
         // CHECK THAT THE RESPONSE AFTER SECOND JOIN (lobby full) THE STATUS IS INIT
         var firstPlayer = initRes.getData().getStatus().currPlayer;
         var secondPlayer = Objects.equals(firstPlayer, "Andrea") ? "Lorenzo" : "Andrea";
-        this.match(new JoinLobbyResponse(new JoinLobbyResponseData(new ResponseStatus(GamePhase.INIT, firstPlayer, 0, ""), 1)), initRes);
+        this.match(new JoinLobbyResponse(new JoinLobbyResponseData(new ResponseStatus(GamePhase.INIT, firstPlayer, 0, ""), 1, players)), initRes);
         //endregion
 
         // Create lobby created by third client
         this.testCallExactMatch(
                 thirdClient,
                 new CreateLobbyRequest(new CreateLobbyData("Livio", 2)),
-                new CreateLobbyResponse(new JoinLobbyResponseData(new ResponseStatus(GamePhase.LOBBY, "", 0, ""), 2))
+                new CreateLobbyResponse(new JoinLobbyResponseData(new ResponseStatus(GamePhase.LOBBY, "", 0, ""), 2, new ArrayList<>(){{add("Livio");}}))
         );
 
         // region InitGameResponses

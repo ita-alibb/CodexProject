@@ -2,13 +2,7 @@ package it.polimi.ingsw.am52;
 
 import it.polimi.ingsw.am52.json.request.CreateLobbyData;
 import it.polimi.ingsw.am52.json.request.JoinLobbyData;
-import it.polimi.ingsw.am52.json.request.LeaveGameData;
-import it.polimi.ingsw.am52.network.rmi.Accepter;
-import it.polimi.ingsw.am52.network.rmi.ActionsRMI;
-import it.polimi.ingsw.am52.network.rmi.client.ConnectionRMI;
-
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
+import it.polimi.ingsw.am52.network.client.ConnectionRMI;
 
 /**
  * Dummy RMI client application

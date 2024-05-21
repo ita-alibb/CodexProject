@@ -1,4 +1,4 @@
-package it.polimi.ingsw.am52.network;
+package it.polimi.ingsw.am52.network.server;
 
 /**
  * Interface that both RMI and TCP connection shares

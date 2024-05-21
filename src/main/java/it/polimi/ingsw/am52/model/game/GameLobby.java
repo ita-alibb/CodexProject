@@ -2,7 +2,7 @@ package it.polimi.ingsw.am52.model.game;
 
 import it.polimi.ingsw.am52.controller.User;
 import it.polimi.ingsw.am52.exceptions.GameException;
-import it.polimi.ingsw.am52.network.Sender;
+import it.polimi.ingsw.am52.network.server.Sender;
 
 import java.util.ArrayList;
 import java.util.List;

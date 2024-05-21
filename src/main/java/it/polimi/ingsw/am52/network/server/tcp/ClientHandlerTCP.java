@@ -1,9 +1,9 @@
-package it.polimi.ingsw.am52.network.tcp;
+package it.polimi.ingsw.am52.network.server.tcp;
 
 import it.polimi.ingsw.am52.controller.VirtualView;
 import it.polimi.ingsw.am52.json.BaseResponseData;
 import it.polimi.ingsw.am52.json.JsonMessage;
-import it.polimi.ingsw.am52.network.ClientHandler;
+import it.polimi.ingsw.am52.network.server.ClientHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;

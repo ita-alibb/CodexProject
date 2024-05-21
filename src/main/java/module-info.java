@@ -23,11 +23,12 @@ module it.polimi.ingsw.am52 {
     opens it.polimi.ingsw.am52.model.game to com.fasterxml.jackson.databind;
 
     exports it.polimi.ingsw.am52.controller to java.rmi;
-    exports it.polimi.ingsw.am52.network to java.rmi;
+    exports it.polimi.ingsw.am52.network.server to java.rmi;
+    exports it.polimi.ingsw.am52.network.client to java.rmi;
 
-    exports it.polimi.ingsw.am52.network.rmi to java.rmi;
-    exports it.polimi.ingsw.am52.network.rmi.client to java.rmi;
+    exports it.polimi.ingsw.am52.network.server.rmi to java.rmi;
+    exports it.polimi.ingsw.am52.network.server.tcp to java.rmi;
     exports it.polimi.ingsw.am52.json to com.fasterxml.jackson.databind;
     exports it.polimi.ingsw.am52.json.dto;
-
+    exports it.polimi.ingsw.am52.view.tui to java.rmi;
 }

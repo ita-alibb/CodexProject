@@ -1,11 +1,11 @@
-package it.polimi.ingsw.am52.network;
+package it.polimi.ingsw.am52.network.server;
 
 import it.polimi.ingsw.am52.controller.ServerController;
 import it.polimi.ingsw.am52.controller.VirtualView;
-import it.polimi.ingsw.am52.network.rmi.Accepter;
-import it.polimi.ingsw.am52.network.rmi.ClientHandlerRMI;
-import it.polimi.ingsw.am52.network.rmi.client.RemoteConnection;
-import it.polimi.ingsw.am52.network.tcp.ClientHandlerTCP;
+import it.polimi.ingsw.am52.network.server.rmi.Accepter;
+import it.polimi.ingsw.am52.network.server.rmi.ClientHandlerRMI;
+import it.polimi.ingsw.am52.network.client.RemoteConnection;
+import it.polimi.ingsw.am52.network.server.tcp.ClientHandlerTCP;
 
 import java.net.ServerSocket;
 import java.net.Socket;

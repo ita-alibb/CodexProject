@@ -5,7 +5,7 @@ import it.polimi.ingsw.am52.json.request.JoinLobbyData;
 import it.polimi.ingsw.am52.json.response.JoinLobbyResponseData;
 import it.polimi.ingsw.am52.json.response.ListLobbyResponseData;
 import it.polimi.ingsw.am52.model.game.GameLobby;
-import it.polimi.ingsw.am52.network.ClientHandler;
+import it.polimi.ingsw.am52.network.server.ClientHandler;
 import it.polimi.ingsw.am52.json.response.ResponseStatus;
 
 import java.util.*;

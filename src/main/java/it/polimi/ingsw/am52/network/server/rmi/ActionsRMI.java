@@ -1,4 +1,4 @@
-package it.polimi.ingsw.am52.network.rmi;
+package it.polimi.ingsw.am52.network.server.rmi;
 
 import it.polimi.ingsw.am52.json.request.*;
 import it.polimi.ingsw.am52.json.response.*;

@@ -9,8 +9,8 @@ import it.polimi.ingsw.am52.model.game.GameManager;
 import it.polimi.ingsw.am52.model.objectives.Objective;
 import it.polimi.ingsw.am52.model.player.PlayerInfo;
 import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
-import it.polimi.ingsw.am52.network.ClientHandler;
-import it.polimi.ingsw.am52.network.Sender;
+import it.polimi.ingsw.am52.network.server.ClientHandler;
+import it.polimi.ingsw.am52.network.server.Sender;
 import it.polimi.ingsw.am52.json.response.ResponseStatus;
 
 import java.util.*;
@@ -57,12 +57,12 @@ public class GameController {
 
             if (this.lobby.isFull()) {
                 if(this.startGame()){
-                    res = new JoinLobbyResponseData(new ResponseStatus(this.game.getStatusResponse()), this.getId());
+                    res = new JoinLobbyResponseData(new ResponseStatus(this.game.getStatusResponse()), this.getId(), this.lobby.getPlayersNickname());
                 } else {
-                    res = new JoinLobbyResponseData(new ResponseStatus(503, "Cannot start Game"), this.getId());
+                    res = new JoinLobbyResponseData(new ResponseStatus(503, "Cannot start Game"), this.getId(), this.lobby.getPlayersNickname());
                 }
             } else {
-                res = new JoinLobbyResponseData(new ResponseStatus(), this.getId());
+                res = new JoinLobbyResponseData(new ResponseStatus(), this.getId(), this.lobby.getPlayersNickname());
             }
 
             // Notify the clients and Response

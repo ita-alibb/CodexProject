@@ -1,7 +1,6 @@
 package it.polimi.ingsw.am52;
 
-import it.polimi.ingsw.am52.controller.ServerController;
-import it.polimi.ingsw.am52.network.ServerConnection;
+import it.polimi.ingsw.am52.network.server.ServerConnection;
 
 import java.rmi.RemoteException;
 

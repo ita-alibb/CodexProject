@@ -1,15 +1,8 @@
 package it.polimi.ingsw.modelTests.gameTests;
 
-import it.polimi.ingsw.am52.controller.User;
-import it.polimi.ingsw.am52.exceptions.GameException;
 import it.polimi.ingsw.am52.model.game.GameLobby;
-import it.polimi.ingsw.am52.network.tcp.ClientHandlerTCP;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.util.Objects;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class GameLobbyTest {
     /**

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.am52.network.rmi.client;
+package it.polimi.ingsw.am52.network.client;
 
 import it.polimi.ingsw.am52.json.BaseResponseData;
 

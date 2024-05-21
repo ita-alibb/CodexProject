@@ -1,10 +1,10 @@
-package it.polimi.ingsw.am52.network.rmi;
+package it.polimi.ingsw.am52.network.server.rmi;
 
 import it.polimi.ingsw.am52.controller.VirtualView;
 import it.polimi.ingsw.am52.json.BaseResponseData;
 import it.polimi.ingsw.am52.json.JsonMessage;
-import it.polimi.ingsw.am52.network.ClientHandler;
-import it.polimi.ingsw.am52.network.rmi.client.RemoteConnection;
+import it.polimi.ingsw.am52.network.server.ClientHandler;
+import it.polimi.ingsw.am52.network.client.RemoteConnection;
 
 import java.rmi.RemoteException;
 

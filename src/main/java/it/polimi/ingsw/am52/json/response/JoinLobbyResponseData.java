@@ -3,6 +3,8 @@ package it.polimi.ingsw.am52.json.response;
 import it.polimi.ingsw.am52.json.BaseResponseData;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The object representing the data for the joinLobby response.
@@ -16,6 +18,10 @@ public class JoinLobbyResponseData extends BaseResponseData implements Serializa
      */
     private final int lobbyId;
 
+    /**
+     * The list of username in the lobby.
+     */
+    private final List<String> nicknames;
     //endregion
 
     //region Constructors
@@ -26,17 +32,21 @@ public class JoinLobbyResponseData extends BaseResponseData implements Serializa
     public JoinLobbyResponseData() {
         super();
         this.lobbyId = -1;
+        this.nicknames = new ArrayList<>();
     }
 
     /**
      * Create a joinLobby data object.
      * @param status The status of the response
      * @param lobbyId The id of the lobby joined.
+     * @param nicknames The nicknames in the lobby
      */
-    public JoinLobbyResponseData(ResponseStatus status, int lobbyId) {
+    public JoinLobbyResponseData(ResponseStatus status, int lobbyId, List<String> nicknames) {
         // Assign private fields.
         super(status);
         this.lobbyId = lobbyId;
+        this.nicknames = nicknames;
+
     }
 
     /**
@@ -47,6 +57,7 @@ public class JoinLobbyResponseData extends BaseResponseData implements Serializa
         // Assign private fields.
         super(status);
         this.lobbyId = -1;
+        this.nicknames = new ArrayList<>();
     }
 
     //endregion
@@ -59,6 +70,14 @@ public class JoinLobbyResponseData extends BaseResponseData implements Serializa
      */
     public int getLobbyId() {
         return lobbyId;
+    }
+
+    /**
+     *
+     * @return The nicknames
+     */
+    public List<String> getNicknames() {
+        return nicknames;
     }
 
     //endregion

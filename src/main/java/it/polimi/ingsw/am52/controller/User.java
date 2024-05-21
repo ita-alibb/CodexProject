@@ -1,7 +1,7 @@
 package it.polimi.ingsw.am52.controller;
 
-import it.polimi.ingsw.am52.network.ClientHandler;
-import it.polimi.ingsw.am52.network.Sender;
+import it.polimi.ingsw.am52.network.server.ClientHandler;
+import it.polimi.ingsw.am52.network.server.Sender;
 
 /**
  * The User class, it represents the connected clients to the server

@@ -3,19 +3,21 @@ package it.polimi.ingsw.am52.controller;
 import it.polimi.ingsw.am52.json.*;
 import it.polimi.ingsw.am52.json.request.*;
 import it.polimi.ingsw.am52.json.response.*;
-import it.polimi.ingsw.am52.network.ClientHandler;
-import it.polimi.ingsw.am52.network.Sender;
-import it.polimi.ingsw.am52.network.rmi.ActionsRMI;
+import it.polimi.ingsw.am52.network.server.ClientHandler;
+import it.polimi.ingsw.am52.network.server.Sender;
+import it.polimi.ingsw.am52.network.server.ServerConnection;
+import it.polimi.ingsw.am52.network.server.rmi.ActionsRMI;
+import it.polimi.ingsw.am52.network.server.tcp.ClientHandlerTCP;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 /**
- * The VirtualView, it is instantiated in {@link it.polimi.ingsw.am52.network.ServerConnection} and assigned to a {@link ClientHandler}
+ * The VirtualView, it is instantiated in {@link ServerConnection} and assigned to a {@link ClientHandler}
  * All request from both RMI and TCP pass from the linked instance of this class.
  * RMI: client calls directly method implementation of {@link ActionsRMI}
- * TCP: the request arrived to the {@link it.polimi.ingsw.am52.network.tcp.ClientHandlerTCP} is executed by the linked VirtualView
+ * TCP: the request arrived to the {@link ClientHandlerTCP} is executed by the linked VirtualView
  */
 public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
     /**
@@ -37,7 +39,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
     }
 
     /**
-     * Method used by the {@link it.polimi.ingsw.am52.network.tcp.ClientHandlerTCP} to dispatch the execution of the method, it is thrown on new thread.
+     * Method used by the {@link ClientHandlerTCP} to dispatch the execution of the method, it is thrown on new thread.
      * @param jsonMsg the json message read from the socket
      * @throws NoSuchMethodException when the request method do not exist
      */

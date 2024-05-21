@@ -1,10 +1,10 @@
-package it.polimi.ingsw.am52.network.rmi.client;
+package it.polimi.ingsw.am52.network.client;
 
 import it.polimi.ingsw.am52.json.BaseResponseData;
 import it.polimi.ingsw.am52.json.request.*;
 import it.polimi.ingsw.am52.json.response.*;
-import it.polimi.ingsw.am52.network.rmi.Accepter;
-import it.polimi.ingsw.am52.network.rmi.ActionsRMI;
+import it.polimi.ingsw.am52.network.server.rmi.Accepter;
+import it.polimi.ingsw.am52.network.server.rmi.ActionsRMI;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -17,7 +17,9 @@ import java.rmi.server.UnicastRemoteObject;
  * Is the class that has instance on Client-side and is forwarded through the network to be called by the server to forward responses
  *
  */
-public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnection, ActionsRMI {
+public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnection, Connection {
+
+    private static ConnectionRMI INSTANCE;
 
     /**
      * The VirtualView exposed by the server
@@ -53,7 +55,7 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
      */
     @Override
     public void heartBeat() throws RemoteException {
-        System.out.println("heartbeat");
+        System.out.print("heartbeat");
         //heartbeat method, hopefully throws exception if the clients shut down and so this class instance is not valid anymore
     }
 
@@ -70,15 +72,7 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
         new Thread(() -> {
             // TODO: use the response to update the game
 
-            //test to remove
-            try {
-                Thread.sleep(1000 * 60);
-                System.out.println(" Aspettato tempo ma risposta e' gia' arrivata giusto?");
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
             // end test
-
         }).start();
     }
 
@@ -237,6 +231,5 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
             return null;
         }
     }
-
     //end region
 }
