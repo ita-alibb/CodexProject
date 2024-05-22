@@ -1,22 +1,21 @@
 package it.polimi.ingsw.am52.view.tui;
 
-import it.polimi.ingsw.am52.view.tui.state.ViewType;
-
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.concurrent.*;
 
 /**
  * This class is used to read the input stream.
  */
 public class InputReader implements Runnable {
-    private final BufferedReader reader;
+    private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final BufferedReader br;
 
     private final List<Character> validCommands;
 
-    public InputReader(List<Character> validCommands) {
-        reader = new BufferedReader(new InputStreamReader(System.in));
+    private InputReader(List<Character> validCommands) {
+        br = new BufferedReader(new InputStreamReader(System.in));
         this.validCommands = validCommands;
     }
 
@@ -28,17 +27,30 @@ public class InputReader implements Runnable {
         try {
             //TODO: verify ON INPUT
             String input;
+            // mark the current position in the stream
+            br.mark(1);
+            // wait until there is data to complete a readLine()
+            while (!br.ready()) {
+                Thread.sleep(200);
+            }
             do {
-                reader.reset();
-                input = reader.readLine();
-            } while (this.checkValidCommand(input));
-            reader.close();
+                input = br.readLine();
+            } while (!this.checkValidCommand(input));
 
-            // TODO: MAYBE IMPLEMENT A COMMAND PATTERN
+            // reset the stream to the marked position
+            br.reset();
+
             this.executeCommand(input);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * The method used to handle only one thread in Stream.in
+     */
+    public static void readLine(List<Character> validCommands) {
+        executorService.submit(new InputReader(validCommands));
     }
 
     private void executeCommand(String input) {

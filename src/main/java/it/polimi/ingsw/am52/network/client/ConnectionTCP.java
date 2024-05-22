@@ -3,6 +3,7 @@ package it.polimi.ingsw.am52.network.client;
 import it.polimi.ingsw.am52.json.*;
 import it.polimi.ingsw.am52.json.request.*;
 import it.polimi.ingsw.am52.json.response.*;
+import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -71,6 +72,7 @@ public class ConnectionTCP implements Connection, Runnable{
                     var res = JsonDeserializer.deserializeResponse(jsonResponse);
 
                     if (res.getData().getIsBroadcast()) {
+                        ViewModelState.getInstance().broadcastUpdate(res.getData());
                         //TODO: here we receive the broadcast response, as in ConnectionRMI we need to process it to update the game
                         System.out.println("response received BROADCAST TCP");
                     } else {

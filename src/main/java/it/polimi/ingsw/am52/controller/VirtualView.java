@@ -141,7 +141,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
      */
     @Override
     public ListLobbyResponseData listLobby() throws RemoteException {
-        if (this.gameController == null){
+        if (this.gameController != null){
             return new ListLobbyResponseData(new ResponseStatus(403, "Already in lobby"));
         }
 

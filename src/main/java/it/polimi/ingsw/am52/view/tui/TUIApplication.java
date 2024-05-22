@@ -15,6 +15,9 @@ public class TUIApplication {
                 TuiController.setConnection(true);
             }
 
+            // First call to init model
+            TuiController.getLobbyList();
+
             TuiPrinter.getInstance().update();
         } catch (Exception e) {
             e.printStackTrace();

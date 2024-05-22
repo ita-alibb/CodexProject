@@ -14,7 +14,7 @@ import java.rmi.RemoteException;
 
 /**
  * To the client the connection is now a Singleton.
- * One can access the connection from everywhere in Client ( with {@link #getConnection() Get the client Connection}) and be sure that the connection is always the same
+ * One can access the connection from everywhere in Client and be sure that the connection is always the same
  * The INSTANCE is initialized (with  {@link #setConnection(boolean isTcp) Set the client Connection to be TCP or RMI}) only on startup of Client and can be called only once per Application
  */
 public class TuiController {
@@ -41,7 +41,7 @@ public class TuiController {
     // region STATIC (singleton pattern) Methods called by the view to update the ViewModel
     public static void getLobbyList() {
         try {
-            ViewModelState.getInstance().update(INSTANCE.listLobby());
+            ViewModelState.getInstance().updateLobbyList(INSTANCE.listLobby());
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -49,7 +49,7 @@ public class TuiController {
 
     public static void createLobby(String nickname, int maxPlayers) {
         try {
-            ViewModelState.getInstance().update(INSTANCE.createLobby(new CreateLobbyData(nickname, maxPlayers)));
+            ViewModelState.getInstance().updateJoinLobby(INSTANCE.createLobby(new CreateLobbyData(nickname, maxPlayers)));
             // TODO: Add check successful call
             // Change automatically the view displayed
             TuiPrinter.getInstance().setType(ViewType.LOBBY);
@@ -60,10 +60,8 @@ public class TuiController {
 
     public static void joinLobby(String nickname, int lobbyId) {
         try {
-            ViewModelState.getInstance().update(INSTANCE.joinLobby(new JoinLobbyData(nickname, lobbyId)));
+            ViewModelState.getInstance().updateJoinLobby(INSTANCE.joinLobby(new JoinLobbyData(nickname, lobbyId)));
             // TODO: Add check successful call
-            // Change automatically the view displayed
-            TuiPrinter.getInstance().setType(ViewType.LOBBY);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

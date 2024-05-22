@@ -5,6 +5,7 @@ import it.polimi.ingsw.am52.json.request.*;
 import it.polimi.ingsw.am52.json.response.*;
 import it.polimi.ingsw.am52.network.server.rmi.Accepter;
 import it.polimi.ingsw.am52.network.server.rmi.ActionsRMI;
+import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -55,7 +56,7 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
      */
     @Override
     public void heartBeat() throws RemoteException {
-        System.out.print("heartbeat");
+        /*System.out.print("heartbeat");*/
         //heartbeat method, hopefully throws exception if the clients shut down and so this class instance is not valid anymore
     }
 
@@ -71,7 +72,7 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
         // add the response to the queue and ends method, so the server can resume.
         new Thread(() -> {
             // TODO: use the response to update the game
-
+            ViewModelState.getInstance().broadcastUpdate(response);
             // end test
         }).start();
     }

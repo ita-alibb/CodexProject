@@ -6,6 +6,8 @@ import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 import java.util.ArrayList;
 import java.util.Map;
 
+import static it.polimi.ingsw.am52.view.tui.InputReader.readLine;
+
 public class TuiLobbyView extends TuiView {
     public TuiLobbyView() {
         super(ViewType.LOBBY);
@@ -16,7 +18,7 @@ public class TuiLobbyView extends TuiView {
         //draw view
         var players = ViewModelState.getInstance().getNicknames();
         System.out.println("          ┌────────────────────────────────────────────────────────────────────────────┐");
-        System.out.printf("          │                              LOBBY                   ID:%d                  │", ViewModelState.getInstance().getCurrentLobbyId());
+        System.out.printf("          │                              LOBBY                   ID:%d                  │%n", ViewModelState.getInstance().getCurrentLobbyId());
         System.out.println("          ├────────────────────────────────────────────────────────────────────────────┤");
         for (var player : players) {
             System.out.printf("          │                           " + player + "                         │%n");
@@ -33,12 +35,10 @@ public class TuiLobbyView extends TuiView {
         System.out.println("          └──────────────────────────────────────────────────────────────────────┘");
 
 
-        new Thread(new InputReader(
+        readLine(
                 new ArrayList<>(){{
-                    add('J');
-                    add('C');
-                    add('R');
+                    add('L');
                 };}
-        )).start();
+        );
     }
 }

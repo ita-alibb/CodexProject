@@ -46,8 +46,5 @@ public class TuiPrinter implements ModelObserver {
      */
     public void setType(ViewType type) {
         this.type = type;
-
-        // Update the view
-        this.update();
     }
 }
