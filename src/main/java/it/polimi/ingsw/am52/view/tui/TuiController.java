@@ -11,6 +11,7 @@ import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.List;
 
 /**
  * To the client the connection is now a Singleton.

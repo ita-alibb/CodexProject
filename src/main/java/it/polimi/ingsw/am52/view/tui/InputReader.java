@@ -2,7 +2,6 @@ package it.polimi.ingsw.am52.view.tui;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.List;
 import java.util.concurrent.*;
 
 /**
@@ -12,11 +11,8 @@ public class InputReader implements Runnable {
     private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final BufferedReader br;
 
-    private final List<Character> validCommands;
-
-    private InputReader(List<Character> validCommands) {
+    private InputReader() {
         br = new BufferedReader(new InputStreamReader(System.in));
-        this.validCommands = validCommands;
     }
 
     /**
@@ -33,9 +29,8 @@ public class InputReader implements Runnable {
             while (!br.ready()) {
                 Thread.sleep(200);
             }
-            do {
-                input = br.readLine();
-            } while (!this.checkValidCommand(input));
+
+            input = br.readLine();
 
             // reset the stream to the marked position
             br.reset();
@@ -49,20 +44,23 @@ public class InputReader implements Runnable {
     /**
      * The method used to handle only one thread in Stream.in
      */
-    public static void readLine(List<Character> validCommands) {
-        executorService.submit(new InputReader(validCommands));
+    public static void readLine() {
+        executorService.execute(new InputReader());
     }
 
     private void executeCommand(String input) {
+
+        if (!TuiPrinter.checkValidCommand(input.charAt(0))){
+            // Command not valid, run new scanner thread and end current thread
+            readLine();
+            return;
+        }
+
         // TODO: COMMANDS can be registered with multiple reads (one read for J, one for nickname asking for it, one for id asking for it) here can be useful a strategy pattern in this case
         switch (input.charAt(0)) {
             case 'J': TuiController.joinLobby(input.substring(4), (int) (input.charAt(2) - '0')); break;
             case 'C': TuiController.createLobby(input.substring(4), (int) (input.charAt(2) - '0')); break;
             case 'R': TuiController.getLobbyList(); break;
         }
-    }
-
-    private boolean checkValidCommand(String input) {
-        return validCommands.contains(input.charAt(0));
     }
 }

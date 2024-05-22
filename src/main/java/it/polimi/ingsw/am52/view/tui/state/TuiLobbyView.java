@@ -1,16 +1,21 @@
 package it.polimi.ingsw.am52.view.tui.state;
 
-import it.polimi.ingsw.am52.view.tui.InputReader;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 
 import static it.polimi.ingsw.am52.view.tui.InputReader.readLine;
 
 public class TuiLobbyView extends TuiView {
     public TuiLobbyView() {
         super(ViewType.LOBBY);
+    }
+
+    public static List<Character> getAvailableCommands() {
+        return new ArrayList<>(){{
+            add('L');
+        };};
     }
 
     @Override
@@ -35,10 +40,6 @@ public class TuiLobbyView extends TuiView {
         System.out.println("          └──────────────────────────────────────────────────────────────────────┘");
 
 
-        readLine(
-                new ArrayList<>(){{
-                    add('L');
-                };}
-        );
+        readLine();
     }
 }
