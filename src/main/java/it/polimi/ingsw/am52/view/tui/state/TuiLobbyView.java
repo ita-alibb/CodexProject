@@ -5,8 +5,6 @@ import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.polimi.ingsw.am52.view.tui.InputReader.readLine;
-
 public class TuiLobbyView extends TuiView {
     public TuiLobbyView() {
         super(ViewType.LOBBY);
@@ -38,8 +36,5 @@ public class TuiLobbyView extends TuiView {
         System.out.println("          ├──────────────────────────────────────────────────────────────────────┤");
         System.out.println("          │ - (L) leave_lobby -> leave lobby                                     │");
         System.out.println("          └──────────────────────────────────────────────────────────────────────┘");
-
-
-        readLine();
     }
 }

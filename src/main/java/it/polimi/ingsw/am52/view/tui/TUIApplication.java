@@ -4,6 +4,8 @@ import it.polimi.ingsw.am52.network.client.Connection;
 
 import java.util.Objects;
 
+import static it.polimi.ingsw.am52.view.tui.InputReader.readLine;
+
 public class TUIApplication {
     public static void main(String[] args) {
         Connection connection;
@@ -18,7 +20,11 @@ public class TUIApplication {
             // First call to init model
             TuiController.getLobbyList();
 
+            // Print View
             TuiPrinter.getInstance().update();
+
+            // Start Listening thread
+            readLine();
         } catch (Exception e) {
             e.printStackTrace();
         }

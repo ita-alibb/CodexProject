@@ -62,5 +62,7 @@ public class InputReader implements Runnable {
             case 'C': TuiController.createLobby(input.substring(4), (int) (input.charAt(2) - '0')); break;
             case 'R': TuiController.getLobbyList(); break;
         }
+
+        readLine();
     }
 }
