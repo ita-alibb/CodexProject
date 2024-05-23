@@ -1,11 +1,12 @@
 package it.polimi.ingsw.am52.view.tui.strategy;
 
+import it.polimi.ingsw.am52.json.response.ResponseStatus;
 import it.polimi.ingsw.am52.view.tui.TuiController;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.util.Scanner;
 
-public class JoinLobbyStrategy implements Strategy {
+public class JoinLobbyStrategy extends Strategy {
     //region Constructor
 
     /**
@@ -23,7 +24,8 @@ public class JoinLobbyStrategy implements Strategy {
      * {@inheritDoc}
      */
     @Override
-    public void execute() {
+    public ResponseStatus executeWithNetworkCall() {
+        ResponseStatus networkResponse;
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("          ┌──────────────────────────────────────────────────────────────────────┐");
@@ -36,14 +38,20 @@ public class JoinLobbyStrategy implements Strategy {
             System.out.print(  "          │ - Enter the ID of the lobby you want to join: ");
             id = scanner.nextInt();
             if (ViewModelState.getInstance().getLobbies().containsKey(id)) {
-                TuiController.joinLobby(username, id);
+                networkResponse = TuiController.joinLobby(username, id);
                 break;
             }
             System.out.println("         │ The given lobby doesn't exist");
         }
-        System.out.println(  "          ┌──────────────────────────────────────────────────────────────────────┐");
-        System.out.println(  "          │                           Lobby joined!                              │");
-        System.out.println(  "          └──────────────────────────────────────────────────────────────────────┘");
+
+        //handle only good case, bad case is automatically handled by Strategy abstract class
+        if (networkResponse != null && networkResponse.errorCode == 0) {
+            System.out.println("          ┌──────────────────────────────────────────────────────────────────────┐");
+            System.out.println("          │                           Lobby joined!                              │");
+            System.out.println("          └──────────────────────────────────────────────────────────────────────┘");
+        }
+
+        return networkResponse;
     }
 
     //endregion

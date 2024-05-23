@@ -13,8 +13,10 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
 
 import static it.polimi.ingsw.modelTests.jsonTests.JsonUtil.*;
+import static java.util.Map.entry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -41,7 +43,7 @@ public class LeaveGameResponseTest {
         final ResponseStatus status = new ResponseStatus();
 
         //Create the data object of the response
-        LeaveGameResponseData data = new LeaveGameResponseData(status, username);
+        LeaveGameResponseData data = new LeaveGameResponseData(status, username,  Map.ofEntries(entry(1, 0)));
 
         //Create the response object
         LeaveGameResponse response = new LeaveGameResponse(data);
@@ -67,7 +69,7 @@ public class LeaveGameResponseTest {
         JsonNode dataNode = jsonNode.get(JsonDeserializer.DATA_FIELD);
 
         //Check if there are 3 fields, named "username", "isBroadcast" and "status"
-        checkNodeFieldNames(dataNode, "status", "isBroadcast", "username");
+        checkNodeFieldNames(dataNode, "status", "isBroadcast", "username", "lobbies");
 
         //Check fields values
         checkNodeFiledStringValue(dataNode, "username", username);

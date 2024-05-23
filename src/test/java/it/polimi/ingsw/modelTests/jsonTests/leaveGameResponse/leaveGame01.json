@@ -7,7 +7,10 @@
       "errorMessage" : ""
     },
   "isBroadcast" : false,
-  "username" : "Lorenzo"
+  "username" : "Lorenzo",
+  "lobbies" : {
+    "1" : 0
+  }
   },
   "method" : "leaveGame"
 }

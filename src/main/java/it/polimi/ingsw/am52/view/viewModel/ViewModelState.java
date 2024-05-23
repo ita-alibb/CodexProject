@@ -1,7 +1,6 @@
 package it.polimi.ingsw.am52.view.viewModel;
 
 import it.polimi.ingsw.am52.json.BaseResponseData;
-import it.polimi.ingsw.am52.json.response.CreateLobbyResponse;
 import it.polimi.ingsw.am52.json.response.JoinLobbyResponseData;
 import it.polimi.ingsw.am52.json.response.LeaveGameResponseData;
 import it.polimi.ingsw.am52.json.response.ListLobbyResponseData;
@@ -16,6 +15,11 @@ import java.util.Map;
 public class ViewModelState extends ModelObservable {
 
     private static ViewModelState INSTANCE;
+
+    /**
+     * The type of view printed in terminal
+     */
+    private ViewType type;
 
     /**
      * The lobby list
@@ -35,6 +39,7 @@ public class ViewModelState extends ModelObservable {
     //Singleton, every calls edit this class here. Then every View displays what they need starting from here Ex: Menu
     private ViewModelState(){
         super();
+        type = ViewType.MENU;
         lobbies = new HashMap<Integer,Integer>();
         nicknames = new ArrayList<>();
     }
@@ -67,7 +72,7 @@ public class ViewModelState extends ModelObservable {
         this.nicknames = joinLobby.getNicknames();
 
         // Change automatically the view displayed
-        TuiPrinter.getInstance().setType(ViewType.LOBBY);
+        this.type = ViewType.LOBBY;
         this.notifyObservers();
     }
 
@@ -77,11 +82,13 @@ public class ViewModelState extends ModelObservable {
             this.nicknames = new ArrayList<>();
 
             // Change automatically the view displayed
-            TuiPrinter.getInstance().setType(ViewType.MENU);
+            this.type = ViewType.MENU;
         }
         else {
             this.nicknames = this.removeNickname(leaveGame.getUsername());
         }
+
+        this.lobbies = leaveGame.getLobbies();
 
         this.notifyObservers();
     }
@@ -115,6 +122,14 @@ public class ViewModelState extends ModelObservable {
             }
         }
         return newNicknames;
+    }
+
+    /**
+     * Method to get the view that has to be shown
+     * @return the view Type
+     */
+    public ViewType getViewTypeShown() {
+        return type;
     }
 
     //endregion

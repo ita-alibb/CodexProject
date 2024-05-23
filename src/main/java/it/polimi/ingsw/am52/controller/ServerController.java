@@ -56,7 +56,7 @@ public class ServerController {
 
     /**
      * Method to get the list of lobbies
-     * @return
+     * @return The getLobbyList response
      */
     public ListLobbyResponseData getLobbyList() {
         try{
@@ -182,7 +182,7 @@ public class ServerController {
      *
      * @return The hashmap for ListLobbies response
      */
-    private synchronized Map<Integer,Integer> getLobbies() {
+    protected synchronized Map<Integer,Integer> getLobbies() {
         return this.gameControllerList.stream()
                 .collect(Collectors.toMap(GameController::getId, GameController::getFreeSpace));
     }

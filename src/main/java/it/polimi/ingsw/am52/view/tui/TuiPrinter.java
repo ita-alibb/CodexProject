@@ -9,20 +9,11 @@ import it.polimi.ingsw.am52.view.tui.state.ViewType;
 import it.polimi.ingsw.am52.view.viewModel.ModelObserver;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
-import java.util.ArrayList;
-import java.util.List;
-
 //Context of the StatePattern
 public class TuiPrinter implements ModelObserver {
     private static TuiPrinter INSTANCE;
 
-    /**
-     * The type of view printed in terminal
-     */
-    private static ViewType type;
-
     private TuiPrinter() {
-        type = ViewType.MENU;
         // register the printer to
         ViewModelState.getInstance().registerObserver(this);
     }
@@ -42,7 +33,7 @@ public class TuiPrinter implements ModelObserver {
      * @return true if valid, false otherwise
      */
     public static boolean checkValidCommand(Character c) {
-        return switch (type) {
+        return switch (ViewModelState.getInstance().getViewTypeShown()) {
             case MENU -> TuiMenuView.getAvailableCommands().contains(c);
             case LOBBY -> TuiLobbyView.getAvailableCommands().contains(c);
             default -> false;
@@ -53,17 +44,9 @@ public class TuiPrinter implements ModelObserver {
      * Method called to update the viewModel
      */
     public void update(){
-        switch (type) {
+        switch (ViewModelState.getInstance().getViewTypeShown()) {
             case MENU: new TuiMenuView().print(); break;
             case LOBBY: new TuiLobbyView().print(); break;
         }
-    }
-
-    /**
-     * Method to change the displayed view
-     * @param type the view type
-     */
-    public void setType(ViewType type) {
-        TuiPrinter.type = type;
     }
 }

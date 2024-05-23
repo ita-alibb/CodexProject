@@ -16,12 +16,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Map.entry;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -199,8 +197,7 @@ public class NetworkTest {
         this.testCallExactMatch(
                 thirdClient,
                 new LeaveGameRequest(new LeaveGameData()),
-                new LeaveGameResponse(new LeaveGameResponseData(new ResponseStatus(GamePhase.LOBBY, "", 0, ""), "Livio"))
-        );
+                new LeaveGameResponse(new LeaveGameResponseData(new ResponseStatus(GamePhase.LOBBY, "", 0, ""), "Livio", Map.ofEntries(entry(1, 0)))));
 
         // region PlaceCardResponse first
         System.out.println("-----PLACECARD PHASE-----");

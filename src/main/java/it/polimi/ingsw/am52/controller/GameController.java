@@ -96,7 +96,7 @@ public class GameController {
         }
 
         // Notify the clients and Response
-        return new LeaveGameResponseData(new ResponseStatus(), nick);
+        return new LeaveGameResponseData(new ResponseStatus(), nick, ServerController.getInstance().getLobbies());
     }
 
     /**

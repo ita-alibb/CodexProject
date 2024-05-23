@@ -1,8 +1,9 @@
 package it.polimi.ingsw.am52.view.tui.strategy;
 
+import it.polimi.ingsw.am52.json.response.ResponseStatus;
 import it.polimi.ingsw.am52.view.tui.TuiController;
 
-public class ReloadLobbyStrategy implements Strategy {
+public class ReloadLobbyStrategy extends Strategy {
 
     //region Constructor
 
@@ -21,8 +22,8 @@ public class ReloadLobbyStrategy implements Strategy {
      * {@inheritDoc}
      */
     @Override
-    public void execute() {
-        TuiController.getLobbyList();
+    public ResponseStatus executeWithNetworkCall() {
+        return TuiController.getLobbyList();
     }
 
     //endregion

@@ -1,8 +1,9 @@
 package it.polimi.ingsw.am52.view.tui.strategy;
 
+import it.polimi.ingsw.am52.json.response.ResponseStatus;
 import it.polimi.ingsw.am52.view.tui.TuiController;
 
-public class LeaveLobbyStrategy implements Strategy {
+public class LeaveLobbyStrategy extends Strategy {
 
     //region Constructor
 
@@ -21,8 +22,8 @@ public class LeaveLobbyStrategy implements Strategy {
      * {@inheritDoc}
      */
     @Override
-    public void execute() {
-        TuiController.leaveLobby();
+    public ResponseStatus executeWithNetworkCall() {
+        return TuiController.leaveLobby();
     }
 
     //endregion

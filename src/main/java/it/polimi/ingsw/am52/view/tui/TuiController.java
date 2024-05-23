@@ -40,39 +40,59 @@ public class TuiController {
     }
 
     // region STATIC (singleton pattern) Methods called by the view to update the ViewModel
-    public static void getLobbyList() {
+    public static ResponseStatus getLobbyList() {
         try {
-            ViewModelState.getInstance().updateLobbyList(INSTANCE.listLobby());
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            var result = INSTANCE.listLobby();
+            if (result.getStatus().errorCode == 0) {
+                ViewModelState.getInstance().updateLobbyList(result);
+            }
+
+            //if the call is not correct the viewModelState is not edited and the caller will handle the bad response
+            return result.getStatus();
+        } catch (Exception e) {
+            return new ResponseStatus(999, "Fatal exception");
         }
     }
 
-    public static void createLobby(String nickname, int maxPlayers) {
+    public static ResponseStatus createLobby(String nickname, int maxPlayers) {
         try {
-            ViewModelState.getInstance().updateJoinLobby(INSTANCE.createLobby(new CreateLobbyData(nickname, maxPlayers)));
-            // TODO: Add check successful call
-            // Change automatically the view displayed
-            TuiPrinter.getInstance().setType(ViewType.LOBBY);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            var result = INSTANCE.createLobby(new CreateLobbyData(nickname, maxPlayers));
+            if (result.getStatus().errorCode == 0) {
+                ViewModelState.getInstance().updateJoinLobby(result);
+            }
+
+            //if the call is not correct the viewModelState is not edited and the caller will handle the bad response
+            return result.getStatus();
+        } catch (Exception e) {
+            return new ResponseStatus(999, "Fatal exception");
         }
     }
 
-    public static void joinLobby(String nickname, int lobbyId) {
+    public static ResponseStatus joinLobby(String nickname, int lobbyId) {
         try {
-            ViewModelState.getInstance().updateJoinLobby(INSTANCE.joinLobby(new JoinLobbyData(nickname, lobbyId)));
-            // TODO: Add check successful call
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            var result = INSTANCE.joinLobby(new JoinLobbyData(nickname, lobbyId));
+            if (result.getStatus().errorCode == 0) {
+                ViewModelState.getInstance().updateJoinLobby(result);
+            }
+
+            //if the call is not correct the viewModelState is not edited and the caller will handle the bad response
+            return result.getStatus();
+        } catch (Exception e) {
+            return new ResponseStatus(999, "Fatal exception");
         }
     }
 
-    public static void leaveLobby() {
+    public static ResponseStatus leaveLobby() {
         try  {
-            ViewModelState.getInstance().updateLeaveGame(INSTANCE.leaveGame());
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            var result = INSTANCE.leaveGame();
+            if (result.getStatus().errorCode == 0) {
+                ViewModelState.getInstance().updateLeaveGame(result);
+            }
+
+            //if the call is not correct the viewModelState is not edited and the caller will handle the bad response
+            return result.getStatus();
+        } catch (Exception e) {
+            return new ResponseStatus(999, "Fatal exception");
         }
     }
     // endregion
