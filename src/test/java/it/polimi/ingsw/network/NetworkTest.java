@@ -199,7 +199,7 @@ public class NetworkTest {
         this.testCallExactMatch(
                 thirdClient,
                 new LeaveGameRequest(new LeaveGameData()),
-                new LeaveGameResponse(new LeaveGameResponseData(new ResponseStatus(GamePhase.LOBBY, "", 0, ""), "Bye Bye Livio"))
+                new LeaveGameResponse(new LeaveGameResponseData(new ResponseStatus(GamePhase.LOBBY, "", 0, ""), "Livio"))
         );
 
         // region PlaceCardResponse first

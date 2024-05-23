@@ -1,0 +1,13 @@
+{
+  "data" : {
+    "status" : {
+      "gamePhase" : "LOBBY",
+      "currPlayer" : "",
+      "errorCode" : 0,
+      "errorMessage" : ""
+    },
+  "isBroadcast" : false,
+  "username" : "Lorenzo"
+  },
+  "method" : "leaveGame"
+}

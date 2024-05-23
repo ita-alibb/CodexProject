@@ -86,7 +86,7 @@ public class GameController {
         var nick = user.get().getUsername();
 
         try {
-            this.lobby.removePlayer(user.get().getUsername());
+            this.lobby.removePlayer(nick);
         } catch (Exception ex) {
             return new LeaveGameResponseData(new ResponseStatus(405, "Player cannot be removed"));
         }
@@ -96,7 +96,7 @@ public class GameController {
         }
 
         // Notify the clients and Response
-        return new LeaveGameResponseData(new ResponseStatus(), "Bye Bye " + nick);
+        return new LeaveGameResponseData(new ResponseStatus(), nick);
     }
 
     /**

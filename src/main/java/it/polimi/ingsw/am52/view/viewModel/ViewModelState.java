@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am52.view.viewModel;
 
 import it.polimi.ingsw.am52.json.BaseResponseData;
+import it.polimi.ingsw.am52.json.response.CreateLobbyResponse;
 import it.polimi.ingsw.am52.json.response.JoinLobbyResponseData;
 import it.polimi.ingsw.am52.json.response.LeaveGameResponseData;
 import it.polimi.ingsw.am52.json.response.ListLobbyResponseData;
@@ -50,6 +51,9 @@ public class ViewModelState extends ModelObservable {
         if (response instanceof JoinLobbyResponseData) {
             this.updateJoinLobby((JoinLobbyResponseData) response);
         }
+        else if (response instanceof LeaveGameResponseData) {
+            this.updateLeaveGame((LeaveGameResponseData) response);
+        }
     }
 
     // region Setters used by controller to edit the Model, REMEMBER TO CALL this.notifyObservers(); at end of method
@@ -68,11 +72,17 @@ public class ViewModelState extends ModelObservable {
     }
 
     public void updateLeaveGame(LeaveGameResponseData leaveGame){
-        this.currentLobbyId = -1;
-        this.nicknames = new ArrayList<>();
+        if (!leaveGame.isBroadcast) {
+            this.currentLobbyId = -1;
+            this.nicknames = new ArrayList<>();
 
-        // Change automatically the view displayed
-        TuiPrinter.getInstance().setType(ViewType.MENU);
+            // Change automatically the view displayed
+            TuiPrinter.getInstance().setType(ViewType.MENU);
+        }
+        else {
+            this.nicknames = this.removeNickname(leaveGame.getUsername());
+        }
+
         this.notifyObservers();
     }
     // endregion
@@ -94,4 +104,18 @@ public class ViewModelState extends ModelObservable {
         this.nicknames = nicknames;
     }
     // endregion
+
+    //region Utils
+
+    private List<String> removeNickname(String nickname) {
+        List<String> newNicknames = new ArrayList<>();
+        for (String nick : nicknames) {
+            if (!nick.equals(nickname)) {
+                newNicknames.add(nick);
+            }
+        }
+        return newNicknames;
+    }
+
+    //endregion
 }

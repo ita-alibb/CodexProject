@@ -67,6 +67,14 @@ public class TuiController {
             throw new RuntimeException(e);
         }
     }
+
+    public static void leaveLobby() {
+        try  {
+            ViewModelState.getInstance().updateLeaveGame(INSTANCE.leaveGame());
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
     // endregion
 
     //INVECE DI GETCONNECTION QUESTO SINGLETON IMPLEMENTA TUTTI I METODI DELLA CONNECTION (cosi' da qualsiasi parte possiamo chiamare ogni metodo) lui internamente

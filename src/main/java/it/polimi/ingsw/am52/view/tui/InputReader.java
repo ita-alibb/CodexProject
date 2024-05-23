@@ -1,5 +1,7 @@
 package it.polimi.ingsw.am52.view.tui;
 
+import it.polimi.ingsw.am52.view.tui.strategy.*;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.concurrent.*;
@@ -10,6 +12,11 @@ import java.util.concurrent.*;
 public class InputReader implements Runnable {
     private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final BufferedReader br;
+
+    /**
+     * The Strategy adopted
+     */
+    private Strategy strategy;
 
     private InputReader() {
         br = new BufferedReader(new InputStreamReader(System.in));
@@ -58,11 +65,28 @@ public class InputReader implements Runnable {
 
         // TODO: COMMANDS can be registered with multiple reads (one read for J, one for nickname asking for it, one for id asking for it) here can be useful a strategy pattern in this case
         switch (input.charAt(0)) {
-            case 'J': TuiController.joinLobby(input.substring(4), (int) (input.charAt(2) - '0')); break;
-            case 'C': TuiController.createLobby(input.substring(4), (int) (input.charAt(2) - '0')); break;
-            case 'R': TuiController.getLobbyList(); break;
+            case 'J': this.setStrategy(new JoinLobbyStrategy()); break;
+            case 'C': this.setStrategy(new CreateLobbyStrategy()); break;
+            case 'R': this.setStrategy(new ReloadLobbyStrategy()); break;
+            case 'L': this.setStrategy(new LeaveLobbyStrategy()); break;
         }
+        this.execute();
 
         readLine();
+    }
+
+    /**
+     * The method to set the new strategy to execute the right command
+     * @param strategy  The new strategy
+     */
+    private void setStrategy(Strategy strategy) {
+        this.strategy = strategy;
+    }
+
+    /**
+     * Execute the right method, using the Strategy Pattern
+     */
+    private void execute() {
+        this.strategy.execute();
     }
 }
