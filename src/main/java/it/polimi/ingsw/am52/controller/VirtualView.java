@@ -172,11 +172,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
      */
     @Override
     public InitGameResponseData initGame() throws RemoteException {
-        var response = this.gameController.initGame(this.clientId);
-
-        this.broadcast(new InitGameResponse(new InitGameResponseData(response.getStatus())));
-
-        return response;
+        return this.gameController.initGame(this.clientId);
     }
 
     /**

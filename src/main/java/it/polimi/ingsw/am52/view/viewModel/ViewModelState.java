@@ -1,10 +1,12 @@
 package it.polimi.ingsw.am52.view.viewModel;
 
 import it.polimi.ingsw.am52.json.BaseResponseData;
+import it.polimi.ingsw.am52.json.response.*;
+import it.polimi.ingsw.am52.model.game.GamePhase;
+import it.polimi.ingsw.am52.view.tui.TuiController;
 import it.polimi.ingsw.am52.json.response.JoinLobbyResponseData;
 import it.polimi.ingsw.am52.json.response.LeaveGameResponseData;
 import it.polimi.ingsw.am52.json.response.ListLobbyResponseData;
-import it.polimi.ingsw.am52.view.tui.TuiPrinter;
 import it.polimi.ingsw.am52.view.tui.state.ViewType;
 
 import java.util.ArrayList;
@@ -36,12 +38,72 @@ public class ViewModelState extends ModelObservable {
      */
     private List<String> nicknames;
 
+    /**
+     * The common objectives of the game
+     */
+    private List<Integer> commonObjectives;
+
+    /**
+     * The visible resource cards
+     */
+    private List<Integer> visibleResourceCards;
+
+    /**
+     * The visible gold cards
+     */
+    private List<Integer> visibleGoldCards;
+
+    /**
+     * This player's hand
+     */
+    private List<Integer> playerHand;
+
+    /**
+     * This player's objective cards to choose
+     */
+    private List<Integer> playerObjectives;
+
+    /**
+     * This player's starter card
+     */
+    private int starterCard;
+
+    /**
+     * true if the resource deck is full, otherwise false
+     */
+    private boolean resourceDeck;
+
+    /**
+     * true if the gold deck is full, otherwise false
+     */
+    private boolean goldDeck;
+
+    /**
+     * The score, associated to his player
+     */
+    private Map<String, Integer> scoreboard;
+
+    /**
+     * The phase of the game
+     */
+    private GamePhase phase;
+
     //Singleton, every calls edit this class here. Then every View displays what they need starting from here Ex: Menu
     private ViewModelState(){
         super();
         type = ViewType.MENU;
         lobbies = new HashMap<Integer,Integer>();
         nicknames = new ArrayList<>();
+        commonObjectives = new ArrayList<>();
+        visibleResourceCards = new ArrayList<>();
+        visibleGoldCards = new ArrayList<>();
+        playerHand = new ArrayList<>();
+        playerObjectives = new ArrayList<>();
+        starterCard = -1;
+        resourceDeck = true;
+        goldDeck = true;
+        scoreboard = new HashMap<>();
+        phase = GamePhase.LOBBY;
     }
 
     public synchronized static ViewModelState getInstance() {
@@ -70,16 +132,22 @@ public class ViewModelState extends ModelObservable {
     public void updateJoinLobby(JoinLobbyResponseData joinLobby){
         this.currentLobbyId = joinLobby.getLobbyId();
         this.nicknames = joinLobby.getNicknames();
+        this.phase = joinLobby.getStatus().gamePhase;
 
         // Change automatically the view displayed
         this.type = ViewType.LOBBY;
         this.notifyObservers();
+
+        if (this.phase == GamePhase.INIT) {
+            TuiController.initGame();
+        }
     }
 
     public void updateLeaveGame(LeaveGameResponseData leaveGame){
         if (!leaveGame.isBroadcast) {
             this.currentLobbyId = -1;
             this.nicknames = new ArrayList<>();
+            this.phase = leaveGame.getStatus().gamePhase;
 
             // Change automatically the view displayed
             this.type = ViewType.MENU;
@@ -88,8 +156,26 @@ public class ViewModelState extends ModelObservable {
             this.nicknames = this.removeNickname(leaveGame.getUsername());
         }
 
-        this.lobbies = leaveGame.getLobbies();
+        this.notifyObservers();
+    }
 
+    public void updateInitGame(InitGameResponseData initGame) {
+        this.nicknames = initGame.playersNickname;
+        this.commonObjectives = initGame.commonObjectiveIds;
+        this.visibleResourceCards = initGame.visibleResourceCardIds;
+        this.visibleGoldCards = initGame.visibleGoldCardIds;
+        this.playerHand = initGame.playerHandCardIds;
+        this.playerObjectives = initGame.playerObjectiveCardIds;
+        this.starterCard = initGame.starterCardId;
+        // TODO : Check on possible incoming errors
+        this.phase = initGame.getStatus().gamePhase;
+        this.scoreboard = new HashMap<>();
+        for (String nick : this.nicknames) {
+            this.scoreboard.put(nick,0);
+        }
+
+        //Change automatically the view displayed
+        this.type = ViewType.COMMON_BOARD;
         this.notifyObservers();
     }
     // endregion
@@ -107,8 +193,48 @@ public class ViewModelState extends ModelObservable {
         return nicknames;
     }
 
-    public void setNicknames(List<String> nicknames) {
-        this.nicknames = nicknames;
+    public List<Integer> getCommonObjectives() {
+        return commonObjectives;
+    }
+
+    public List<Integer> getVisibleResourceCards() {
+        return visibleResourceCards;
+    }
+
+    public List<Integer> getVisibleGoldCards() {
+        return visibleGoldCards;
+    }
+
+    public List<Integer> getPlayerHand() {
+        return playerHand;
+    }
+
+    public List<Integer> getPlayerObjectives() {
+        return playerObjectives;
+    }
+
+    public int getStarterCard() {
+        return starterCard;
+    }
+
+    public boolean getResourceDeck() {
+        return resourceDeck;
+    }
+
+    public boolean getGoldDeck() {
+        return goldDeck;
+    }
+
+    public GamePhase getPhase() {
+        return phase;
+    }
+
+    public ViewType getType() {
+        return type;
+    }
+
+    public Map<String, Integer> getScoreboard() {
+        return scoreboard;
     }
     // endregion
 
@@ -130,6 +256,14 @@ public class ViewModelState extends ModelObservable {
      */
     public ViewType getViewTypeShown() {
         return type;
+    }
+
+    /**
+     * Method to set the view that has to be shown
+     * @param type  The view to be set
+     */
+    public void setViewTypeShown(ViewType type) {
+        this.type = type;
     }
 
     //endregion

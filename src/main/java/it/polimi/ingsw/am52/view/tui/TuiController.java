@@ -2,6 +2,7 @@ package it.polimi.ingsw.am52.view.tui;
 
 import it.polimi.ingsw.am52.json.request.*;
 import it.polimi.ingsw.am52.json.response.*;
+import it.polimi.ingsw.am52.model.game.GamePhase;
 import it.polimi.ingsw.am52.network.client.Connection;
 import it.polimi.ingsw.am52.network.client.ConnectionRMI;
 import it.polimi.ingsw.am52.network.client.ConnectionTCP;
@@ -93,6 +94,14 @@ public class TuiController {
             return result.getStatus();
         } catch (Exception e) {
             return new ResponseStatus(999, "Fatal exception");
+        }
+    }
+
+    public static void initGame() {
+        try {
+            ViewModelState.getInstance().updateInitGame(INSTANCE.initGame());
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
         }
     }
     // endregion

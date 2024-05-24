@@ -1,11 +1,6 @@
 package it.polimi.ingsw.am52.view.tui;
 
-import it.polimi.ingsw.am52.json.JsonDeserializer;
-import it.polimi.ingsw.am52.json.request.*;
-import it.polimi.ingsw.am52.json.response.*;
-import it.polimi.ingsw.am52.view.tui.state.TuiLobbyView;
-import it.polimi.ingsw.am52.view.tui.state.TuiMenuView;
-import it.polimi.ingsw.am52.view.tui.state.ViewType;
+import it.polimi.ingsw.am52.view.tui.state.*;
 import it.polimi.ingsw.am52.view.viewModel.ModelObserver;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
@@ -36,6 +31,8 @@ public class TuiPrinter implements ModelObserver {
         return switch (ViewModelState.getInstance().getViewTypeShown()) {
             case MENU -> TuiMenuView.getAvailableCommands().contains(c);
             case LOBBY -> TuiLobbyView.getAvailableCommands().contains(c);
+            case COMMON_BOARD -> TuiCommonBoardView.getAvailableCommands().contains(c);
+            case BOARD -> TuiBoardView.getAvailableCommands().contains(c);
             default -> false;
         };
     }
@@ -47,6 +44,8 @@ public class TuiPrinter implements ModelObserver {
         switch (ViewModelState.getInstance().getViewTypeShown()) {
             case MENU: new TuiMenuView().print(); break;
             case LOBBY: new TuiLobbyView().print(); break;
+            case COMMON_BOARD: new TuiCommonBoardView().print(); break;
+            case BOARD: new TuiBoardView().print(); break;
         }
     }
 }

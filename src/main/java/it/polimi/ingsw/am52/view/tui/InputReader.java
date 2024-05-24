@@ -69,6 +69,7 @@ public class InputReader implements Runnable {
             case 'C': this.setStrategy(new CreateLobbyStrategy()); break;
             case 'R': this.setStrategy(new ReloadLobbyStrategy()); break;
             case 'L': this.setStrategy(new LeaveLobbyStrategy()); break;
+            case 'B': this.setStrategy(new ShowBoardStrategy()); break;
         }
         this.execute();
 
