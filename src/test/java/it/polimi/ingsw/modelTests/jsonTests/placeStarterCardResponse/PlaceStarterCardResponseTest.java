@@ -42,13 +42,14 @@ public class PlaceStarterCardResponseTest {
         //Place starter card data
         final int cardId = 81;
         final int face = 0;
+        final String nickname = "Andrea";
         final List<BoardSlot> availableSlots = new ArrayList<>();
         availableSlots.add(new BoardSlot(1, 1));
         availableSlots.add(new BoardSlot(2, 2));
         final ResponseStatus status = new ResponseStatus();
 
         //Create the data object of the response
-        PlaceStarterCardResponseData data = new PlaceStarterCardResponseData(status, cardId, face, availableSlots);
+        PlaceStarterCardResponseData data = new PlaceStarterCardResponseData(status, cardId, face, nickname, availableSlots);
 
         //Create the response object
         PlaceStarterCardResponse response = new PlaceStarterCardResponse(data);

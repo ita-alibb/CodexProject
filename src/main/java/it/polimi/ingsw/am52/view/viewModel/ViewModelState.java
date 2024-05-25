@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am52.view.viewModel;
 
 import it.polimi.ingsw.am52.json.BaseResponseData;
+import it.polimi.ingsw.am52.json.dto.DrawType;
 import it.polimi.ingsw.am52.json.response.*;
 import it.polimi.ingsw.am52.model.game.GamePhase;
 import it.polimi.ingsw.am52.view.tui.TuiController;
@@ -9,10 +10,7 @@ import it.polimi.ingsw.am52.json.response.LeaveGameResponseData;
 import it.polimi.ingsw.am52.json.response.ListLobbyResponseData;
 import it.polimi.ingsw.am52.view.tui.state.ViewType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ViewModelState extends ModelObservable {
 
@@ -22,6 +20,11 @@ public class ViewModelState extends ModelObservable {
      * The type of view printed in terminal
      */
     private ViewType type;
+
+    /**
+     * The POV shown
+     */
+    private String viewTypeNickname;
 
     /**
      * The lobby list
@@ -34,9 +37,24 @@ public class ViewModelState extends ModelObservable {
     private int currentLobbyId = -1;
 
     /**
-     * The players in lobby
+     * The nicknames in the lobby
      */
     private List<String> nicknames;
+
+    /**
+     * My nickname in the lobby
+     */
+    private String clientNickname;
+
+    /**
+     * The order in the game
+     */
+    private int turnOrder;
+
+    /**
+     * The list of opponents
+     */
+    private List<OpponentModel> opponents;
 
     /**
      * The common objectives of the game
@@ -64,9 +82,19 @@ public class ViewModelState extends ModelObservable {
     private List<Integer> playerObjectives;
 
     /**
-     * This player's starter card
+     * The objectiveSelected
+     */
+    private int secretObjective;
+
+    /**
+     * The starter card received
      */
     private int starterCard;
+
+    /**
+     * This player's board
+     */
+    private Map<BoardSlotOrdered, CardIds> board;
 
     /**
      * true if the resource deck is full, otherwise false
@@ -88,22 +116,30 @@ public class ViewModelState extends ModelObservable {
      */
     private GamePhase phase;
 
+    /**
+     * The current player
+     */
+    private String currentPlayer;
+
     //Singleton, every calls edit this class here. Then every View displays what they need starting from here Ex: Menu
     private ViewModelState(){
         super();
         type = ViewType.MENU;
-        lobbies = new HashMap<Integer,Integer>();
+        lobbies = new HashMap<>();
         nicknames = new ArrayList<>();
+        clientNickname = "";
         commonObjectives = new ArrayList<>();
         visibleResourceCards = new ArrayList<>();
         visibleGoldCards = new ArrayList<>();
         playerHand = new ArrayList<>();
         playerObjectives = new ArrayList<>();
-        starterCard = -1;
+        board = new HashMap<>();
         resourceDeck = true;
         goldDeck = true;
         scoreboard = new HashMap<>();
+        secretObjective = -1;
         phase = GamePhase.LOBBY;
+        currentPlayer = "";
     }
 
     public synchronized static ViewModelState getInstance() {
@@ -146,6 +182,7 @@ public class ViewModelState extends ModelObservable {
     public void updateLeaveGame(LeaveGameResponseData leaveGame){
         if (!leaveGame.isBroadcast) {
             this.currentLobbyId = -1;
+            this.clientNickname = "";
             this.nicknames = new ArrayList<>();
             this.phase = leaveGame.getStatus().gamePhase;
 
@@ -153,14 +190,25 @@ public class ViewModelState extends ModelObservable {
             this.type = ViewType.MENU;
         }
         else {
-            this.nicknames = this.removeNickname(leaveGame.getUsername());
+            this.nicknames.remove(leaveGame.getUsername());
         }
+        this.lobbies = leaveGame.getLobbies();
 
         this.notifyObservers();
     }
 
     public void updateInitGame(InitGameResponseData initGame) {
         this.nicknames = initGame.playersNickname;
+        //init opponent representation
+        int i = 0;
+        for (String nickname : this.nicknames){
+            if (!Objects.equals(nickname, this.clientNickname)) {
+                this.opponents.add(new OpponentModel(nickname, i++));
+            } else {
+                this.turnOrder = i++;
+            }
+        }
+
         this.commonObjectives = initGame.commonObjectiveIds;
         this.visibleResourceCards = initGame.visibleResourceCardIds;
         this.visibleGoldCards = initGame.visibleGoldCardIds;
@@ -177,6 +225,102 @@ public class ViewModelState extends ModelObservable {
         //Change automatically the view displayed
         this.type = ViewType.COMMON_BOARD;
         this.notifyObservers();
+    }
+
+    public void updateSelectObjective(SelectObjectiveResponseData selectObjective) {
+        if (!selectObjective.isBroadcast) {
+            this.secretObjective = selectObjective.getObjective();
+            this.playerObjectives.remove(selectObjective.getObjective());
+        }
+
+        this.phase = selectObjective.getStatus().gamePhase;
+
+        if (this.phase == GamePhase.PLACING) {
+            this.currentPlayer = selectObjective.getStatus().currPlayer;
+            this.type = ViewType.BOARD;
+        }
+
+        this.notifyObservers();
+    }
+
+    public void updatePlaceStarterCard(PlaceStarterCardResponseData placeStarterCard) {
+        if (Objects.equals(placeStarterCard.getNickname(), this.clientNickname)) {
+            this.board.put(new BoardSlotOrdered(0,0, 0), new CardIds(placeStarterCard.getCardId(), placeStarterCard.getFace()));
+        } else {
+            this.opponents.stream().filter(o -> Objects.equals(o.getNickname(), placeStarterCard.getNickname())).findFirst().get().addCard(new BoardSlotOrdered(0,0, 0), new CardIds(placeStarterCard.getCardId(), placeStarterCard.getFace()));
+        }
+
+        this.phase = placeStarterCard.getStatus().gamePhase;
+
+        if (this.phase == GamePhase.PLACING) {
+            this.currentPlayer = placeStarterCard.getStatus().currPlayer;
+            this.type = ViewType.BOARD;
+        }
+
+        this.notifyObservers();
+    }
+
+    public void updatePlaceCard(PlaceCardResponseData placeCard) {
+        if (Objects.equals(this.currentPlayer, this.clientNickname)) {
+            int order = this.board.entrySet().stream().max((entry1, entry2) -> entry1.getKey().order > entry2.getKey().order ? 1 : -1).get().getKey().order + 1;
+            this.board.put(new BoardSlotOrdered(placeCard.getPlacedSlot(), order), new CardIds(placeCard.getCardId(), placeCard.getFace()));
+        } else {
+            var opponent = this.opponents.stream().filter(o -> Objects.equals(o.getNickname(), this.currentPlayer)).findFirst().get();
+            int order = opponent.getBoard().entrySet().stream().max((entry1, entry2) -> entry1.getKey().order > entry2.getKey().order ? 1 : -1).get().getKey().order + 1;
+            opponent.addCard(new BoardSlotOrdered(placeCard.getPlacedSlot(), order), new CardIds(placeCard.getCardId(), placeCard.getFace()));
+        }
+
+        this.phase = placeCard.getStatus().gamePhase;
+
+        this.notifyObservers();
+    }
+
+    public void updateDrawCard(DrawCardResponseData drawCard) {
+        if (!drawCard.isBroadcast) {
+            this.playerHand.add(drawCard.getCardId());
+
+            switch (DrawType.fromInteger(drawCard.getDeck())) {
+                case DrawType.GOLD : this.goldDeck = !drawCard.isEmpty(); break;
+                case DrawType.RESOURCE: this.resourceDeck = !drawCard.isEmpty(); break;
+                case null : break;
+            }
+        }
+
+        this.phase = drawCard.getStatus().gamePhase;
+        this.currentPlayer = drawCard.getStatus().currPlayer;
+
+        this.notifyObservers();
+    }
+
+    public void updateTakeCard(TakeCardResponseData takeCard) {
+        if (!takeCard.isBroadcast) {
+            this.playerHand.add(takeCard.getTakenCardId());
+        }
+
+        switch (DrawType.fromInteger(takeCard.getType())) {
+            case DrawType.GOLD : {
+                this.goldDeck = !takeCard.isEmpty();
+                this.visibleGoldCards.remove(takeCard.getTakenCardId());
+                this.visibleGoldCards.add(takeCard.getShownCardId());
+                break;
+            }
+            case DrawType.RESOURCE: {
+                this.resourceDeck = !takeCard.isEmpty();
+                this.visibleResourceCards.remove(takeCard.getTakenCardId());
+                this.visibleResourceCards.add(takeCard.getShownCardId());
+                break;
+            }
+            case null : break;
+        }
+
+        this.phase = takeCard.getStatus().gamePhase;
+        this.currentPlayer = takeCard.getStatus().currPlayer;
+
+        this.notifyObservers();
+    }
+
+    public void updateEndGame(EndGameResponseData endGame) {
+        //TODO: how to call?
     }
     // endregion
 
@@ -236,19 +380,26 @@ public class ViewModelState extends ModelObservable {
     public Map<String, Integer> getScoreboard() {
         return scoreboard;
     }
+
+    public int getSecretObjective() {
+        return secretObjective;
+    }
+
+    public String getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public Map<BoardSlotOrdered, CardIds> getBoard() {
+        //Maybe call here to transform id into cards
+        if (Objects.equals(this.clientNickname, this.viewTypeNickname)){
+            return this.board;
+        } else {
+            return this.opponents.stream().filter(o -> Objects.equals(o.getNickname(), this.viewTypeNickname)).findFirst().get().getBoard();
+        }
+    }
     // endregion
 
     //region Utils
-
-    private List<String> removeNickname(String nickname) {
-        List<String> newNicknames = new ArrayList<>();
-        for (String nick : nicknames) {
-            if (!nick.equals(nickname)) {
-                newNicknames.add(nick);
-            }
-        }
-        return newNicknames;
-    }
 
     /**
      * Method to get the view that has to be shown
@@ -258,12 +409,40 @@ public class ViewModelState extends ModelObservable {
         return type;
     }
 
+    public String getViewTypeNickname() {
+        return viewTypeNickname;
+    }
+
     /**
      * Method to set the view that has to be shown
      * @param type  The view to be set
      */
     public void setViewTypeShown(ViewType type) {
         this.type = type;
+    }
+
+    public boolean setViewTypeNickname(String viewTypeNickname) {
+        if (this.nicknames.contains(viewTypeNickname)) {
+            this.viewTypeNickname = viewTypeNickname;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isClientView() {
+        return Objects.equals(this.clientNickname, this.viewTypeNickname);
+    }
+
+    public String getClientNickname() {
+        return clientNickname;
+    }
+
+    public void setClientNickname(String clientNickname) {
+        this.clientNickname = clientNickname;
+    }
+
+    public boolean isClientTurn() {
+        return Objects.equals(this.clientNickname, this.currentPlayer);
     }
 
     //endregion

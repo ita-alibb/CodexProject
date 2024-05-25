@@ -9,6 +9,7 @@
     "isBroadcast" : false,
     "cardId" : 81,
     "face" : 0,
+    "nickname" : "Andrea",
     "availableSlots" : [
       {
         "h" : 1,

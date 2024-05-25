@@ -1,37 +1,35 @@
 package it.polimi.ingsw.am52.view.tui.state;
 
-import it.polimi.ingsw.am52.model.game.GamePhase;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TuiCommonBoardView extends TuiView {
-    public TuiCommonBoardView() {
-        super(ViewType.COMMON_BOARD);
+public class TuiSetupView extends TuiView {
+    public TuiSetupView() {
+        super(ViewType.SETUP);
     }
-    public static List<Character> getAvailableCommands() {
-        var available = new ArrayList<Character>(){{
-            add('B');
-            add('P');
-        }};
-        if (ViewModelState.getInstance().getPhase() == GamePhase.DRAWING) {
-            available.add('D');
-            available.add('T');
-        }
 
+    public static List<Character> getAvailableCommands() {
+        var available = new ArrayList<Character>();
+
+        if (ViewModelState.getInstance().getBoard().size() == 0) { // if the card is not already in the board
+            available.add('S');
+        }
+        if (ViewModelState.getInstance().getSecretObjective() == -1) { //if the objective is not chosen yet
+            available.add('O');
+        }
         return available;
     }
 
     @Override
     protected void printView() {
+        var starterCardId = ViewModelState.getInstance().getStarterCard();
+        var objectiveIds = ViewModelState.getInstance().getPlayerObjectives();
+
         System.out.println("          ┌────────────────────────────────────────────────────────────────────────────┐");
-        System.out.printf( "          │ %-74s │%n", "Resource card deck: " + ViewModelState.getInstance().getResourceDeck());
-        System.out.printf( "          │ %-74s │%n", "Gold card deck: " + ViewModelState.getInstance().getGoldDeck());
-        System.out.printf( "          │ %-74s │%n", "Resource card deck: " + ViewModelState.getInstance().getResourceDeck());
-        System.out.printf( "          │ %-74s │%n", "Visible gold cards: " + ViewModelState.getInstance().getVisibleGoldCards());
-        System.out.printf( "          │ %-74s │%n", "Visible resource cards: " + ViewModelState.getInstance().getVisibleResourceCards());
-        System.out.printf( "          │ %-74s │%n", "Scores: " + ViewModelState.getInstance().getScoreboard().toString());
+        System.out.printf( "          │ %-74s │%n", "Starter Card: " + starterCardId);
+        System.out.printf( "          │ %-74s │%n", "Your secret objectives: " + objectiveIds.getFirst() + " " + objectiveIds.getLast());
         System.out.println("          └────────────────────────────────────────────────────────────────────────────┘");
     }
 
@@ -40,12 +38,12 @@ public class TuiCommonBoardView extends TuiView {
         System.out.println("          ┌──────────────────────────────────────────────────────────────────────┐");
         System.out.println("          │                             COMMANDS                                 │");
         System.out.println("          ├──────────────────────────────────────────────────────────────────────┤");
-        if (ViewModelState.getInstance().getPhase() == GamePhase.DRAWING) {
-            System.out.println("          │ - (D) draw_card -> draw a card from a chosen deck                    │");
-            System.out.println("          │ - (T) take_card -> take a card from the one chosen                   │");
+        if (ViewModelState.getInstance().getBoard().size() == 0) { // if the card is not already in the board
+            System.out.println("          │ - (S) placeStarterCardFace -> place the selected face in the board   │");
         }
-        System.out.println("          │ - (O) other_board -> show the game board of another player           │");
-        System.out.println("          │ - (B) board -> show your game board                                  │");
+        if (ViewModelState.getInstance().getSecretObjective() == -1) { //if the objective is not chosen yet
+            System.out.println("          │ - (O) selectObjective -> select one of the two secretObjective       │");
+        }
         System.out.println("          └──────────────────────────────────────────────────────────────────────┘");
     }
 }

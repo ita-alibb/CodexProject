@@ -208,7 +208,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
     public PlaceStarterCardResponseData placeStarterCard(PlaceStarterCardData data) throws RemoteException {
         var response = this.gameController.placeStarterCard(this.clientId, data.getCardId(), data.getFace());
 
-        this.broadcast(new PlaceStarterCardResponse(new PlaceStarterCardResponseData(response.getStatus(), response.getCardId(), response.getFace())));
+        this.broadcast(new PlaceStarterCardResponse(new PlaceStarterCardResponseData(response.getStatus(), response.getCardId(), response.getFace(), response.getNickname())));
 
         return response;
     }

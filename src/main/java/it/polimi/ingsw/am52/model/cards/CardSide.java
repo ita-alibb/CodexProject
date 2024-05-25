@@ -15,8 +15,8 @@ public enum CardSide {
     BACK;
 
     /**
-     * Static method to convert an integer to a GameState object
-     * @param i The index of the states of a game
+     * Static method to convert an integer to a CardSide object
+     * @param i The index
      * @return The object in the position i
      */
     public static CardSide fromInteger(int i) {
@@ -24,6 +24,17 @@ public enum CardSide {
             case 0 -> FRONT;
             case 1 -> BACK;
             default -> null;
+        };
+    }
+
+    /**
+     * Static method to convert to an integer a CardSide object
+     * @return The int value
+     */
+    public int toInteger() {
+        return switch (this) {
+            case FRONT -> 0;
+            case BACK -> 1;
         };
     }
 }

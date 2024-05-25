@@ -25,4 +25,15 @@ public enum DrawType {
             default -> null;
         };
     }
+
+    /**
+     * Static method to convert to an integer a CardSide object
+     * @return The int value
+     */
+    public int toInteger() {
+        return switch (this) {
+            case RESOURCE -> 0;
+            case GOLD -> 1;
+        };
+    }
 }

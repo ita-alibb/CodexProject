@@ -27,6 +27,11 @@ public class PlaceStarterCardResponseData extends BaseResponseData implements Se
     private final int face;
 
     /**
+     * The nickname of the player
+     */
+    private final String nickname;
+
+    /**
      * The available positions on the board
      */
     @JsonSerialize(using = BoardSlotSerializer.class)
@@ -44,6 +49,7 @@ public class PlaceStarterCardResponseData extends BaseResponseData implements Se
         super();
         this.cardId = -1;
         this.face = -1;
+        this.nickname = "";
         this.boardSlots = null;
     }
 
@@ -51,13 +57,15 @@ public class PlaceStarterCardResponseData extends BaseResponseData implements Se
      * Create a placeStarterCard data object
      * @param status        The status of the response
      * @param cardId        The ID of the chosen starter card
+     * @param nickname      The nickname of the caller
      * @param face          The face of the starter card
      * @param boardSlots    The available slots on the board of the player
      */
-    public PlaceStarterCardResponseData(ResponseStatus status, int cardId, int face, List<BoardSlot>boardSlots) {
+    public PlaceStarterCardResponseData(ResponseStatus status, int cardId, int face, String nickname, List<BoardSlot>boardSlots) {
         super(status);
         this.cardId = cardId;
         this.face = face;
+        this.nickname = nickname;
         this.boardSlots = boardSlots;
     }
 
@@ -69,6 +77,7 @@ public class PlaceStarterCardResponseData extends BaseResponseData implements Se
         super(status);
         this.cardId = -1;
         this.face = -1;
+        this.nickname = "";
         this.boardSlots = null;
     }
 
@@ -77,11 +86,13 @@ public class PlaceStarterCardResponseData extends BaseResponseData implements Se
      * @param status    The status of the response
      * @param cardId    The ID of the starter card
      * @param face      The face of the starter card
+     * @param nickname      The nickname of the caller
      */
-    public PlaceStarterCardResponseData(ResponseStatus status, int cardId, int face) {
+    public PlaceStarterCardResponseData(ResponseStatus status, int cardId, int face, String nickname) {
         super(status);
         this.cardId = cardId;
         this.face = face;
+        this.nickname = nickname;
         this.boardSlots = null;
     }
 
@@ -108,6 +119,14 @@ public class PlaceStarterCardResponseData extends BaseResponseData implements Se
      */
     public List<BoardSlot> getBoardSlots() {
         return this.boardSlots;
+    }
+
+    /**
+     *
+     * @return The nickname of the caller
+     */
+    public String getNickname() {
+        return nickname;
     }
 
     //endregion

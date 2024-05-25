@@ -31,9 +31,9 @@ public class TuiPrinter implements ModelObserver {
         return switch (ViewModelState.getInstance().getViewTypeShown()) {
             case MENU -> TuiMenuView.getAvailableCommands().contains(c);
             case LOBBY -> TuiLobbyView.getAvailableCommands().contains(c);
+            case SETUP -> TuiSetupView.getAvailableCommands().contains(c);
             case COMMON_BOARD -> TuiCommonBoardView.getAvailableCommands().contains(c);
             case BOARD -> TuiBoardView.getAvailableCommands().contains(c);
-            default -> false;
         };
     }
 
@@ -44,6 +44,7 @@ public class TuiPrinter implements ModelObserver {
         switch (ViewModelState.getInstance().getViewTypeShown()) {
             case MENU: new TuiMenuView().print(); break;
             case LOBBY: new TuiLobbyView().print(); break;
+            case SETUP: new TuiSetupView().print(); break;
             case COMMON_BOARD: new TuiCommonBoardView().print(); break;
             case BOARD: new TuiBoardView().print(); break;
         }

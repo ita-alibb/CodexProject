@@ -141,6 +141,7 @@ public class GameController {
                 new ResponseStatus(this.game.getStatusResponse()),
                 cardId,
                 face,
+                this.getNickname(clientId),
                 this.game.getPlayer(this.getNickname(clientId)).getPlayingBoard().getAvailableSlots().toList()
         );
     }
@@ -286,11 +287,18 @@ public class GameController {
             }
 
             int shownCard;
+            boolean isEmpty = false;
 
             if (drawType == DrawType.RESOURCE){
                 shownCard = this.game.takeResourceCard(cardId);
+                if (this.game.getResourceDeckCount() == 0) {
+                    isEmpty = true;
+                }
             } else if (drawType == DrawType.GOLD) {
                 shownCard = this.game.takeGoldCard(cardId);
+                if (this.game.getGoldDeckCount() == 0) {
+                    isEmpty = true;
+                }
             } else {
                 return new TakeCardResponseData(new ResponseStatus(this.game.getStatusResponse(),400, "Bad request type"));
             }
@@ -299,7 +307,8 @@ public class GameController {
                     new ResponseStatus(this.game.getStatusResponse()),
                     cardId,
                     shownCard,
-                    type
+                    type,
+                    isEmpty
                     );
         } catch (Exception ex) {
             return new TakeCardResponseData(new ResponseStatus(this.game.getStatusResponse(),503, "Exception on take card"));

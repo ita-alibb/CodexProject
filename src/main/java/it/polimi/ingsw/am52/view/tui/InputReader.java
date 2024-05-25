@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am52.view.tui;
 
 import it.polimi.ingsw.am52.view.tui.strategy.*;
+import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -64,13 +65,47 @@ public class InputReader implements Runnable {
         }
 
         // TODO: COMMANDS can be registered with multiple reads (one read for J, one for nickname asking for it, one for id asking for it) here can be useful a strategy pattern in this case
-        switch (input.charAt(0)) {
-            case 'J': this.setStrategy(new JoinLobbyStrategy()); break;
-            case 'C': this.setStrategy(new CreateLobbyStrategy()); break;
-            case 'R': this.setStrategy(new ReloadLobbyStrategy()); break;
-            case 'L': this.setStrategy(new LeaveLobbyStrategy()); break;
-            case 'B': this.setStrategy(new ShowBoardStrategy()); break;
+        switch (ViewModelState.getInstance().getViewTypeShown()) {
+            case MENU : {
+                switch (input.charAt(0)) {
+                    case 'J': this.setStrategy(new JoinLobbyStrategy()); break;
+                    case 'C': this.setStrategy(new CreateLobbyStrategy()); break;
+                    case 'R': this.setStrategy(new ReloadLobbyStrategy()); break;
+                }
+                break;
+            }
+            case LOBBY: {
+                if (input.charAt(0) == 'L') {
+                    this.setStrategy(new LeaveLobbyStrategy());
+                }
+                break;
+            }
+            case SETUP: {
+                switch (input.charAt(0)) {
+                    case 'S': this.setStrategy(new PlaceStarterCardStrategy()); break;
+                    case 'O': this.setStrategy(new SelectObjectiveStrategy()); break;
+                }
+                break;
+            }
+            case BOARD: {
+                switch (input.charAt(0)) {
+                    case 'P': this.setStrategy(new PlaceCardStrategy()); break;
+                    case 'O': this.setStrategy(new ShowBoardStrategy(true)); break;
+                    case 'C': this.setStrategy(new ShowCommonBoardStrategy()); break;
+                }
+                break;
+            }
+            case COMMON_BOARD: {
+                switch (input.charAt(0)) {
+                    case 'D': this.setStrategy(new DrawCardStrategy()); break;
+                    case 'T': this.setStrategy(new TakeCardStrategy()); break;
+                    case 'O': this.setStrategy(new ShowBoardStrategy(true)); break;
+                    case 'B': this.setStrategy(new ShowBoardStrategy(false)); break;
+                }
+                break;
+            }
         }
+
         this.execute();
 
         readLine();
