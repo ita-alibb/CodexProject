@@ -75,11 +75,12 @@ public class PlaceStarterCardResponseTest {
         JsonNode dataNode = jsonNode.get(JsonDeserializer.DATA_FIELD);
 
         //Check if there are 3 fields, "cardId", "face" and "availableSlots"
-        checkNodeFieldNames(dataNode, "status", "isBroadcast", "cardId", "face", "availableSlots");
+        checkNodeFieldNames(dataNode, "status", "isBroadcast", "cardId", "face", "availableSlots", "nickname");
 
         //Check the field values
         checkNodeFiledIntValue(dataNode, "cardId", cardId);
         checkNodeFiledIntValue(dataNode, "face", face);
+        checkNodeFiledStringValue(dataNode, "nickname", nickname);
 
         //Check the slots values
         JsonNode slotsNode = dataNode.get("availableSlots");
@@ -145,6 +146,7 @@ public class PlaceStarterCardResponseTest {
             //Check all the data
             assertEquals(81, dataNode.getCardId());
             assertEquals(0, dataNode.getFace());
+            assertEquals("Andrea", dataNode.getNickname());
 
             final List<BoardSlot> availableSlots = dataNode.getBoardSlots();
             assertEquals(2, availableSlots.size());

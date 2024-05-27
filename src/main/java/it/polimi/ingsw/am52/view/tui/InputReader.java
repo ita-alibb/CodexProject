@@ -58,7 +58,7 @@ public class InputReader implements Runnable {
 
     private void executeCommand(String input) {
 
-        if (!TuiPrinter.checkValidCommand(input.charAt(0))){
+        if (!TuiPrinter.checkValidCommand(input.toUpperCase().charAt(0))){
             // Command not valid, run new scanner thread and end current thread
             readLine();
             return;
@@ -67,7 +67,7 @@ public class InputReader implements Runnable {
         // TODO: COMMANDS can be registered with multiple reads (one read for J, one for nickname asking for it, one for id asking for it) here can be useful a strategy pattern in this case
         switch (ViewModelState.getInstance().getViewTypeShown()) {
             case MENU : {
-                switch (input.charAt(0)) {
+                switch (input.toUpperCase().charAt(0)) {
                     case 'J': this.setStrategy(new JoinLobbyStrategy()); break;
                     case 'C': this.setStrategy(new CreateLobbyStrategy()); break;
                     case 'R': this.setStrategy(new ReloadLobbyStrategy()); break;
@@ -75,20 +75,20 @@ public class InputReader implements Runnable {
                 break;
             }
             case LOBBY: {
-                if (input.charAt(0) == 'L') {
+                if (input.toUpperCase().charAt(0) == 'L') {
                     this.setStrategy(new LeaveLobbyStrategy());
                 }
                 break;
             }
             case SETUP: {
-                switch (input.charAt(0)) {
+                switch (input.toUpperCase().charAt(0)) {
                     case 'S': this.setStrategy(new PlaceStarterCardStrategy()); break;
                     case 'O': this.setStrategy(new SelectObjectiveStrategy()); break;
                 }
                 break;
             }
             case BOARD: {
-                switch (input.charAt(0)) {
+                switch (input.toUpperCase().charAt(0)) {
                     case 'P': this.setStrategy(new PlaceCardStrategy()); break;
                     case 'O': this.setStrategy(new ShowBoardStrategy(true)); break;
                     case 'C': this.setStrategy(new ShowCommonBoardStrategy()); break;
@@ -96,7 +96,7 @@ public class InputReader implements Runnable {
                 break;
             }
             case COMMON_BOARD: {
-                switch (input.charAt(0)) {
+                switch (input.toUpperCase().charAt(0)) {
                     case 'D': this.setStrategy(new DrawCardStrategy()); break;
                     case 'T': this.setStrategy(new TakeCardStrategy()); break;
                     case 'O': this.setStrategy(new ShowBoardStrategy(true)); break;

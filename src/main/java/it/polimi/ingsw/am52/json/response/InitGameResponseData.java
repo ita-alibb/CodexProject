@@ -17,37 +17,37 @@ public class InitGameResponseData  extends BaseResponseData implements Serializa
     /**
      * The Players of the game
      */
-    public final List<String> playersNickname;
+    private final List<String> playersNickname;
 
     /**
      * The common objectives in a game
      */
-    public final List<Integer> commonObjectiveIds;
+    private final List<Integer> commonObjectiveIds;
 
     /**
      * The visible resource cards
      */
-    public final List<Integer> visibleResourceCardIds;
+    private final List<Integer> visibleResourceCardIds;
 
     /**
      * The visible gold cards
      */
-    public final List<Integer> visibleGoldCardIds;
+    private final List<Integer> visibleGoldCardIds;
 
     /**
      * The player's hand card ids
      */
-    public final List<Integer> playerHandCardIds;
+    private final List<Integer> playerHandCardIds;
 
     /**
      * The player's objective card ids
      */
-    public final List<Integer> playerObjectiveCardIds;
+    private final List<Integer> playerObjectiveCardIds;
 
     /**
      * The player's starter card id
      */
-    public final Integer starterCardId;
+    private final Integer starterCardId;
 
 
     //endregion
@@ -106,6 +106,34 @@ public class InitGameResponseData  extends BaseResponseData implements Serializa
         this.playerHandCardIds = new ArrayList<>();
         this.playerObjectiveCardIds = new ArrayList<>();
         this.starterCardId = -1;
+    }
+
+    public List<String> getPlayersNickname() {
+        return playersNickname;
+    }
+
+    public List<Integer> getCommonObjectiveIds() {
+        return commonObjectiveIds;
+    }
+
+    public List<Integer> getVisibleResourceCardIds() {
+        return visibleResourceCardIds;
+    }
+
+    public List<Integer> getVisibleGoldCardIds() {
+        return visibleGoldCardIds;
+    }
+
+    public List<Integer> getPlayerHandCardIds() {
+        return playerHandCardIds;
+    }
+
+    public List<Integer> getPlayerObjectiveCardIds() {
+        return playerObjectiveCardIds;
+    }
+
+    public Integer getStarterCardId() {
+        return starterCardId;
     }
 
     //endregion

@@ -362,7 +362,12 @@ public class GameController {
         try {
             // TODO: How to handle disconnection? Set on User isConnected to false and enable reconnection or trigger the end phase of the game and shut down the game?
             this.lobby.removePlayer(handler.getClientId());
+
             ServerController.getInstance().disconnect(handler);
+
+            if (this.lobby.isEmpty()) {
+                ServerController.getInstance().deleteGame(this);
+            }
         } catch (Exception e) {
             // TODO: Improve logging
             System.out.println("Exception on disconnect: " + e.getMessage());

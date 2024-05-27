@@ -118,20 +118,20 @@ public class NetworkTest {
 
         assertNotNull(init1);
         assertNotNull(init2);
-        assertEquals(init2.playersNickname,init1.playersNickname);
-        assertEquals(init2.visibleResourceCardIds,init1.visibleResourceCardIds);
-        assertEquals(init2.visibleGoldCardIds,init1.visibleGoldCardIds);
-        assertEquals(init2.commonObjectiveIds,init1.commonObjectiveIds);
-        assertNotEquals(init2.starterCardId,init1.starterCardId);
-        assertNotEquals(init2.playerHandCardIds,init1.playerHandCardIds);
-        Set<Integer> commonCards = init1.playerHandCardIds.stream()
+        assertEquals(init2.getPlayersNickname(),init1.getPlayersNickname());
+        assertEquals(init2.getVisibleResourceCardIds(),init1.getVisibleResourceCardIds());
+        assertEquals(init2.getVisibleGoldCardIds(),init1.getVisibleGoldCardIds());
+        assertEquals(init2.getCommonObjectiveIds(),init1.getCommonObjectiveIds());
+        assertNotEquals(init2.getStarterCardId(),init1.getStarterCardId());
+        assertNotEquals(init2.getPlayerHandCardIds(),init1.getPlayerHandCardIds());
+        Set<Integer> commonCards = init1.getPlayerHandCardIds().stream()
                 .distinct()
-                .filter(init2.playerHandCardIds::contains)
+                .filter(init2.getPlayerHandCardIds()::contains)
                 .collect(Collectors.toSet());
         assertEquals(0, commonCards.size());
-        Set<Integer> commonObjectives = init1.playerObjectiveCardIds.stream()
+        Set<Integer> commonObjectives = init1.getPlayerObjectiveCardIds().stream()
                 .distinct()
-                .filter(init2.playerObjectiveCardIds::contains)
+                .filter(init2.getPlayerObjectiveCardIds()::contains)
                 .collect(Collectors.toSet());
         assertEquals(0, commonObjectives.size());
 
@@ -146,18 +146,18 @@ public class NetworkTest {
         System.out.println("-----PLACESTARTERCARD PHASE-----");
         var starterPlace1 = (PlaceStarterCardResponseData)this.call(
                 firstClient,
-                new PlaceStarterCardRequest(new PlaceStarterCardData(init1.starterCardId, 0))
+                new PlaceStarterCardRequest(new PlaceStarterCardData(init1.getStarterCardId(), 0))
         ).getData();
 
         var starterPlace2 = (PlaceStarterCardResponseData)this.call(
                 secondClient,
-                new PlaceStarterCardRequest(new PlaceStarterCardData(init2.starterCardId, 1))
+                new PlaceStarterCardRequest(new PlaceStarterCardData(init2.getStarterCardId(), 1))
         ).getData();
 
         assertNotNull(starterPlace1);
         assertNotNull(starterPlace2);
-        assertEquals(init1.starterCardId,starterPlace1.getCardId());
-        assertEquals(init2.starterCardId,starterPlace2.getCardId());
+        assertEquals(init1.getStarterCardId(),starterPlace1.getCardId());
+        assertEquals(init2.getStarterCardId(),starterPlace2.getCardId());
         assertEquals(0,starterPlace1.getFace());
         assertEquals(1,starterPlace2.getFace());
 
@@ -172,18 +172,18 @@ public class NetworkTest {
         System.out.println("-----SELECTOBJECTIVES PHASE-----");
         var selectObjective1 = (SelectObjectiveResponseData)this.call(
                 firstClient,
-                new SelectObjectiveRequest(new SelectObjectiveData(init1.playerObjectiveCardIds.getLast()))
+                new SelectObjectiveRequest(new SelectObjectiveData(init1.getPlayerObjectiveCardIds().getLast()))
         ).getData();
 
         var selectObjective2 = (SelectObjectiveResponseData)this.call(
                 secondClient,
-                new SelectObjectiveRequest(new SelectObjectiveData(init2.playerObjectiveCardIds.getFirst()))
+                new SelectObjectiveRequest(new SelectObjectiveData(init2.getPlayerObjectiveCardIds().getFirst()))
         ).getData();
 
         assertNotNull(selectObjective1);
         assertNotNull(selectObjective2);
-        assertEquals(init1.playerObjectiveCardIds.getLast(),selectObjective1.getObjective());
-        assertEquals(init2.playerObjectiveCardIds.getFirst(),selectObjective2.getObjective());
+        assertEquals(init1.getPlayerObjectiveCardIds().getLast(),selectObjective1.getObjective());
+        assertEquals(init2.getPlayerObjectiveCardIds().getFirst(),selectObjective2.getObjective());
 
         assertEquals(0,selectObjective1.getStatus().errorCode);
         assertEquals(0,selectObjective2.getStatus().errorCode);
@@ -209,7 +209,7 @@ public class NetworkTest {
         var nextBoardSlot = Objects.equals(firstPlayer, "Lorenzo") ? starterPlace1.getBoardSlots() : starterPlace2.getBoardSlots();
 
         PlaceCardData currentPlaceData = new PlaceCardData(
-                currentInit.playerHandCardIds.getFirst(),
+                currentInit.getPlayerHandCardIds().getFirst(),
                 1,
                 currentBoardSlot.get((int)(Math.random() * currentBoardSlot.size()))
         );
@@ -252,7 +252,7 @@ public class NetworkTest {
         System.out.println("-----PLACECARD PHASE-----");
 
         PlaceCardData nextPlaceData = new PlaceCardData(
-                nextInit.playerHandCardIds.getFirst(),
+                nextInit.getPlayerHandCardIds().getFirst(),
                 1,
                 nextBoardSlot.get((int)(Math.random() * nextBoardSlot.size()))
         );
@@ -275,7 +275,7 @@ public class NetworkTest {
         // region TakeCardResponse second
         System.out.println("-----TAKECARD PHASE-----");
         TakeCardData nextTakeData = new TakeCardData(
-                init2.visibleGoldCardIds.getFirst(),
+                init2.getVisibleGoldCardIds().getFirst(),
                 1
         );  // GoldCard
 
@@ -285,7 +285,7 @@ public class NetworkTest {
         ).getData();
 
         assertNotNull(take2);
-        assertEquals(init2.visibleGoldCardIds.getFirst(),take2.getTakenCardId());
+        assertEquals(init2.getVisibleGoldCardIds().getFirst(),take2.getTakenCardId());
         assertNotEquals(-1,take2.getShownCardId());
         assertEquals(1,take2.getType());
 

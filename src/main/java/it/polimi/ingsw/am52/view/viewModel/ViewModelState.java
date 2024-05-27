@@ -141,6 +141,7 @@ public class ViewModelState extends ModelObservable {
         secretObjective = -1;
         phase = GamePhase.LOBBY;
         currentPlayer = "";
+        opponents = new ArrayList<>();
     }
 
     public synchronized static ViewModelState getInstance() {
@@ -157,6 +158,21 @@ public class ViewModelState extends ModelObservable {
         }
         else if (response instanceof LeaveGameResponseData) {
             this.updateLeaveGame((LeaveGameResponseData) response);
+        }
+        else if (response instanceof SelectObjectiveResponseData) {
+            this.updateSelectObjective((SelectObjectiveResponseData) response);
+        }
+        else if (response instanceof PlaceStarterCardResponseData) {
+            this.updatePlaceStarterCard((PlaceStarterCardResponseData) response);
+        }
+        else if (response instanceof PlaceCardResponseData) {
+            this.updatePlaceCard((PlaceCardResponseData) response);
+        }
+        else if (response instanceof DrawCardResponseData) {
+            this.updateDrawCard((DrawCardResponseData) response);
+        }
+        else if (response instanceof TakeCardResponseData) {
+            this.updateTakeCard((TakeCardResponseData) response);
         }
     }
 
@@ -176,6 +192,7 @@ public class ViewModelState extends ModelObservable {
         this.notifyObservers();
 
         if (this.phase == GamePhase.INIT) {
+            // TODO: Handle errors
             TuiController.initGame();
         }
     }
@@ -199,7 +216,7 @@ public class ViewModelState extends ModelObservable {
     }
 
     public void updateInitGame(InitGameResponseData initGame) {
-        this.nicknames = initGame.playersNickname;
+        this.nicknames = initGame.getPlayersNickname();
         //init opponent representation
         int i = 0;
         for (String nickname : this.nicknames){
@@ -210,12 +227,12 @@ public class ViewModelState extends ModelObservable {
             }
         }
 
-        this.commonObjectives = initGame.commonObjectiveIds;
-        this.visibleResourceCards = initGame.visibleResourceCardIds;
-        this.visibleGoldCards = initGame.visibleGoldCardIds;
-        this.playerHand = initGame.playerHandCardIds;
-        this.playerObjectives = initGame.playerObjectiveCardIds;
-        this.starterCard = initGame.starterCardId;
+        this.commonObjectives = initGame.getCommonObjectiveIds();
+        this.visibleResourceCards = initGame.getVisibleResourceCardIds();
+        this.visibleGoldCards = initGame.getVisibleGoldCardIds();
+        this.playerHand = initGame.getPlayerHandCardIds();
+        this.playerObjectives = initGame.getPlayerObjectiveCardIds();
+        this.starterCard = initGame.getStarterCardId();
         // TODO : Check on possible incoming errors
         this.phase = initGame.getStatus().gamePhase;
         this.scoreboard = new HashMap<>();
@@ -224,7 +241,7 @@ public class ViewModelState extends ModelObservable {
         }
 
         //Change automatically the view displayed
-        this.type = ViewType.COMMON_BOARD;
+        this.type = ViewType.SETUP;
         this.notifyObservers();
     }
 
@@ -438,6 +455,7 @@ public class ViewModelState extends ModelObservable {
 
     public void setClientNickname(String clientNickname) {
         this.clientNickname = clientNickname;
+        this.viewTypeNickname = clientNickname;
     }
 
     public boolean isClientTurn() {
