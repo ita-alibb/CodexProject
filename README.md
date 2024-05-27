@@ -17,17 +17,24 @@ The target set at the beginning of the project development is to reach the final
 - Socket
 - One Additional Feature: Multiple Matches
 
-Based on the progress of the project, the implementation of a further additional unctionality will be evaluated.
+Based on the progress of the project, the implementation of a further additional functionality will be evaluated.
 
-## Current Progress of Works (Updated 9/4/24)
+## Current Progress of Works (Updated 27/05/24)
 The follwing activities have been completed:
 - UML of the game model
-- Peer review (group AM09)
+- First Peer review (group AM09)
+- UML of the Network
+- Complete testing on Model and Controller/Network
+- Sequence diagram of sample calls
+- Implementation of the Network for both RMI and TCP
+- Second Peer review 
+- UML of the client Architecture
+- Implementation of Client
+- Implementation of complete workflow for TUI
 
 Partially completed:
-- Implementation of the game model classes (90% completed)
-- Testing of the game model classes (70% completed)
+- Beautify TUI (80%)
+- Check error handling (80%)
 
 Early stage:
-- Comunication protocol (json)
-- Controller on server skeleton
+- GUI
