@@ -4,6 +4,7 @@ import it.polimi.ingsw.am52.json.BaseResponseData;
 import it.polimi.ingsw.am52.json.dto.DrawType;
 import it.polimi.ingsw.am52.json.response.*;
 import it.polimi.ingsw.am52.model.game.GamePhase;
+import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
 import it.polimi.ingsw.am52.view.tui.TuiController;
 import it.polimi.ingsw.am52.json.response.JoinLobbyResponseData;
 import it.polimi.ingsw.am52.json.response.LeaveGameResponseData;
@@ -94,7 +95,7 @@ public class ViewModelState extends ModelObservable {
     /**
      * This player's board
      */
-    private Map<BoardSlotOrdered, CardIds> board;
+    private final BoardMap<BoardSlot,CardIds> board;
 
     /**
      * true if the resource deck is full, otherwise false
@@ -133,7 +134,7 @@ public class ViewModelState extends ModelObservable {
         visibleGoldCards = new ArrayList<>();
         playerHand = new ArrayList<>();
         playerObjectives = new ArrayList<>();
-        board = new HashMap<>();
+        board = new BoardMap<>();
         resourceDeck = true;
         goldDeck = true;
         scoreboard = new HashMap<>();
@@ -149,7 +150,7 @@ public class ViewModelState extends ModelObservable {
         return INSTANCE;
     }
 
-    public void broadcastUpdate(BaseResponseData response) {
+    public synchronized void broadcastUpdate(BaseResponseData response) {
         //TODO: needs to think a better handling
         if (response instanceof JoinLobbyResponseData) {
             this.updateJoinLobby((JoinLobbyResponseData) response);
@@ -245,9 +246,9 @@ public class ViewModelState extends ModelObservable {
 
     public void updatePlaceStarterCard(PlaceStarterCardResponseData placeStarterCard) {
         if (Objects.equals(placeStarterCard.getNickname(), this.clientNickname)) {
-            this.board.put(new BoardSlotOrdered(0,0, 0), new CardIds(placeStarterCard.getCardId(), placeStarterCard.getFace()));
+            this.board.put(new BoardSlot(0,0), new CardIds(placeStarterCard.getCardId(), placeStarterCard.getFace()));
         } else {
-            this.opponents.stream().filter(o -> Objects.equals(o.getNickname(), placeStarterCard.getNickname())).findFirst().get().addCard(new BoardSlotOrdered(0,0, 0), new CardIds(placeStarterCard.getCardId(), placeStarterCard.getFace()));
+            this.opponents.stream().filter(o -> Objects.equals(o.getNickname(), placeStarterCard.getNickname())).findFirst().get().addCard(new BoardSlot(0,0), new CardIds(placeStarterCard.getCardId(), placeStarterCard.getFace()));
         }
 
         this.phase = placeStarterCard.getStatus().gamePhase;
@@ -262,12 +263,10 @@ public class ViewModelState extends ModelObservable {
 
     public void updatePlaceCard(PlaceCardResponseData placeCard) {
         if (Objects.equals(this.currentPlayer, this.clientNickname)) {
-            int order = this.board.entrySet().stream().max((entry1, entry2) -> entry1.getKey().order > entry2.getKey().order ? 1 : -1).get().getKey().order + 1;
-            this.board.put(new BoardSlotOrdered(placeCard.getPlacedSlot(), order), new CardIds(placeCard.getCardId(), placeCard.getFace()));
+            this.board.put(placeCard.getPlacedSlot(), new CardIds(placeCard.getCardId(), placeCard.getFace()));
         } else {
             var opponent = this.opponents.stream().filter(o -> Objects.equals(o.getNickname(), this.currentPlayer)).findFirst().get();
-            int order = opponent.getBoard().entrySet().stream().max((entry1, entry2) -> entry1.getKey().order > entry2.getKey().order ? 1 : -1).get().getKey().order + 1;
-            opponent.addCard(new BoardSlotOrdered(placeCard.getPlacedSlot(), order), new CardIds(placeCard.getCardId(), placeCard.getFace()));
+            opponent.addCard(placeCard.getPlacedSlot(), new CardIds(placeCard.getCardId(), placeCard.getFace()));
         }
 
         this.phase = placeCard.getStatus().gamePhase;
@@ -389,7 +388,7 @@ public class ViewModelState extends ModelObservable {
         return currentPlayer;
     }
 
-    public Map<BoardSlotOrdered, CardIds> getBoard() {
+    public BoardMap<BoardSlot, CardIds> getBoard() {
         //Maybe call here to transform id into cards
         if (Objects.equals(this.clientNickname, this.viewTypeNickname)){
             return this.board;

@@ -141,6 +141,7 @@ public abstract class StarterCardFrontFace extends StarterCardFace {
      * front face.
      * @return The permanent resources of the front face.
      */
+    @Override
     public ResourcesCounter getPermanentResources() {
         return this.permanentResources;
     }

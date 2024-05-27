@@ -15,8 +15,9 @@ public abstract class KingdomBackFace extends KingdomCardFace {
      * All back faces of Kingdom cards have a permanent resource.
      * @return The permanent resource of the card face.
      */
-    public Resource getPermanentResource() {
-        return getKingdom().getResource();
+    @Override
+    public ResourcesCounter getPermanentResources() {
+        return new ResourcesCounter(getKingdom().getResource());
     }
 
     //endregion
@@ -54,7 +55,7 @@ public abstract class KingdomBackFace extends KingdomCardFace {
         ResourcesCounter cornerResources = super.getResources();
 
         // Add the permanent resource and return the result.
-        return ResourcesCounter.add(cornerResources, new ResourcesCounter(getPermanentResource()));
+        return ResourcesCounter.add(cornerResources, getPermanentResources());
     }
 
     //endregion

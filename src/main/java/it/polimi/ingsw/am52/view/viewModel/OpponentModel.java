@@ -1,7 +1,6 @@
 package it.polimi.ingsw.am52.view.viewModel;
 
-import java.util.HashMap;
-import java.util.Map;
+import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
 
 public class OpponentModel {
     /**
@@ -17,15 +16,15 @@ public class OpponentModel {
     /**
      * This player's board
      */
-    private final Map<BoardSlotOrdered, CardIds> board;
+    private final BoardMap<BoardSlot, CardIds> board;
 
     public OpponentModel(String nickname, int turnOrder) {
         this.nickname = nickname;
         this.turnOrder = turnOrder;
-        this.board = new HashMap<>();
+        this.board = new BoardMap<>();
     }
 
-    public void addCard(BoardSlotOrdered slot, CardIds cardIds) {
+    public void addCard(BoardSlot slot, CardIds cardIds) {
         this.board.put(slot, cardIds);
     }
 
@@ -33,7 +32,7 @@ public class OpponentModel {
         return nickname;
     }
 
-    public Map<BoardSlotOrdered, CardIds> getBoard() {
+    public BoardMap<BoardSlot, CardIds> getBoard() {
         return board;
     }
 

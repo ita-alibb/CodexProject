@@ -139,5 +139,8 @@ public abstract class CardFace implements Pluggable, ResourcesProvider {
         return resources;
     }
 
+    public ResourcesCounter getPermanentResources() {
+        return new ResourcesCounter();
+    }
     //endregion
 }

@@ -40,7 +40,7 @@ public class TuiPrinter implements ModelObserver {
     /**
      * Method called to update the viewModel
      */
-    public void update(){
+    public synchronized void update(){
         switch (ViewModelState.getInstance().getViewTypeShown()) {
             case MENU: new TuiMenuView().print(); break;
             case LOBBY: new TuiLobbyView().print(); break;

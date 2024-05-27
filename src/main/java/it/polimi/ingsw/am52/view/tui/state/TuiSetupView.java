@@ -13,7 +13,7 @@ public class TuiSetupView extends TuiView {
     public static List<Character> getAvailableCommands() {
         var available = new ArrayList<Character>();
 
-        if (ViewModelState.getInstance().getBoard().size() == 0) { // if the card is not already in the board
+        if (ViewModelState.getInstance().getBoard().isEmpty()) { // if the card is not already in the board
             available.add('S');
         }
         if (ViewModelState.getInstance().getSecretObjective() == -1) { //if the objective is not chosen yet
@@ -38,7 +38,7 @@ public class TuiSetupView extends TuiView {
         System.out.println("          ┌──────────────────────────────────────────────────────────────────────┐");
         System.out.println("          │                             COMMANDS                                 │");
         System.out.println("          ├──────────────────────────────────────────────────────────────────────┤");
-        if (ViewModelState.getInstance().getBoard().size() == 0) { // if the card is not already in the board
+        if (ViewModelState.getInstance().getBoard().isEmpty()) { // if the card is not already in the board
             System.out.println("          │ - (S) placeStarterCardFace -> place the selected face in the board   │");
         }
         if (ViewModelState.getInstance().getSecretObjective() == -1) { //if the objective is not chosen yet
