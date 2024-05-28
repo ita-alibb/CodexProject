@@ -63,6 +63,7 @@ public class TuiController {
         try {
             var result = INSTANCE.createLobby(new CreateLobbyData(nickname, maxPlayers));
             if (result.getStatus().errorCode == 0) {
+                ViewModelState.getInstance().setClientNickname(nickname);
                 ViewModelState.getInstance().updateJoinLobby(result);
             }
 

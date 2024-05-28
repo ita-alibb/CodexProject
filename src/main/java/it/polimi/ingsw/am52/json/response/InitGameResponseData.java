@@ -125,11 +125,11 @@ public class InitGameResponseData  extends BaseResponseData implements Serializa
     }
 
     public List<Integer> getPlayerHandCardIds() {
-        return playerHandCardIds;
+        return new ArrayList<>(this.playerHandCardIds);
     }
 
     public List<Integer> getPlayerObjectiveCardIds() {
-        return playerObjectiveCardIds;
+        return new ArrayList<>(this.playerObjectiveCardIds);
     }
 
     public Integer getStarterCardId() {

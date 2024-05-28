@@ -98,6 +98,11 @@ public class ViewModelState extends ModelObservable {
     private final BoardMap<BoardSlot,CardIds> board;
 
     /**
+     * The available slots for placing
+     */
+    private List<BoardSlot> availableSlots;
+
+    /**
      * true if the resource deck is full, otherwise false
      */
     private boolean resourceDeck;
@@ -142,6 +147,7 @@ public class ViewModelState extends ModelObservable {
         phase = GamePhase.LOBBY;
         currentPlayer = "";
         opponents = new ArrayList<>();
+        availableSlots = new ArrayList<>();
     }
 
     public synchronized static ViewModelState getInstance() {
@@ -248,7 +254,7 @@ public class ViewModelState extends ModelObservable {
     public void updateSelectObjective(SelectObjectiveResponseData selectObjective) {
         if (!selectObjective.isBroadcast) {
             this.secretObjective = selectObjective.getObjective();
-            this.playerObjectives.remove(selectObjective.getObjective());
+            this.playerObjectives.remove((Integer) selectObjective.getObjective());
         }
 
         this.phase = selectObjective.getStatus().gamePhase;
@@ -258,12 +264,15 @@ public class ViewModelState extends ModelObservable {
             this.type = ViewType.BOARD;
         }
 
-        this.notifyObservers();
+        if (!selectObjective.isBroadcast || this.phase == GamePhase.PLACING) {
+            this.notifyObservers();
+        }
     }
 
     public void updatePlaceStarterCard(PlaceStarterCardResponseData placeStarterCard) {
         if (Objects.equals(placeStarterCard.getNickname(), this.clientNickname)) {
             this.board.put(new BoardSlot(0,0), new CardIds(placeStarterCard.getCardId(), placeStarterCard.getFace()));
+            this.availableSlots = placeStarterCard.getBoardSlots();
         } else {
             this.opponents.stream().filter(o -> Objects.equals(o.getNickname(), placeStarterCard.getNickname())).findFirst().get().addCard(new BoardSlot(0,0), new CardIds(placeStarterCard.getCardId(), placeStarterCard.getFace()));
         }
@@ -275,12 +284,15 @@ public class ViewModelState extends ModelObservable {
             this.type = ViewType.BOARD;
         }
 
-        this.notifyObservers();
+        if (!placeStarterCard.isBroadcast || this.phase == GamePhase.PLACING) {
+            this.notifyObservers();
+        }
     }
 
     public void updatePlaceCard(PlaceCardResponseData placeCard) {
         if (Objects.equals(this.currentPlayer, this.clientNickname)) {
             this.board.put(placeCard.getPlacedSlot(), new CardIds(placeCard.getCardId(), placeCard.getFace()));
+            this.availableSlots = placeCard.getAvailableSlots();
         } else {
             var opponent = this.opponents.stream().filter(o -> Objects.equals(o.getNickname(), this.currentPlayer)).findFirst().get();
             opponent.addCard(placeCard.getPlacedSlot(), new CardIds(placeCard.getCardId(), placeCard.getFace()));
@@ -460,6 +472,10 @@ public class ViewModelState extends ModelObservable {
 
     public boolean isClientTurn() {
         return Objects.equals(this.clientNickname, this.currentPlayer);
+    }
+
+    public List<BoardSlot> getAvailableSlots() {
+        return availableSlots;
     }
 
     //endregion

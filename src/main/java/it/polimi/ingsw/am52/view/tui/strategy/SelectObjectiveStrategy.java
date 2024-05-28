@@ -31,6 +31,7 @@ public class SelectObjectiveStrategy extends Strategy {
 
         System.out.println(    "          ┌──────────────────────────────────────────────────────────────────────┐");
 
+        //TODO : Delete all the while loops
         while (true) {
             System.out.println("          │ - Enter the ID of the objective you want to use: ");
             int cardId = scanner.nextInt();

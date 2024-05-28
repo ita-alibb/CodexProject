@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am52.view.tui.state;
 
+import it.polimi.ingsw.am52.view.viewModel.CardIds;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.util.ArrayList;
@@ -26,9 +27,20 @@ public class TuiSetupView extends TuiView {
     protected void printView() {
         var starterCardId = ViewModelState.getInstance().getStarterCard();
         var objectiveIds = ViewModelState.getInstance().getPlayerObjectives();
+        var card = new CardIds(starterCardId, 0);
+        var card1 = new CardIds(starterCardId, 1);
+        card.getStarterCard();
+        card1.getStarterCard();
+
+        var cardList = card.getCardAsArrayString(false, false, false, false);
+        var cardList1 = card1.getCardAsArrayString(false, false, false, false);
+
 
         System.out.println("          ┌────────────────────────────────────────────────────────────────────────────┐");
         System.out.printf( "          │ %-74s │%n", "Starter Card: " + starterCardId);
+        for (int i = 0; i < 7; i++) {
+            System.out.println(cardList[i] + "   " + cardList1[i]);
+        }
         System.out.printf( "          │ %-74s │%n", "Your secret objectives: " + objectiveIds.getFirst() + " " + objectiveIds.getLast());
         System.out.println("          └────────────────────────────────────────────────────────────────────────────┘");
     }
