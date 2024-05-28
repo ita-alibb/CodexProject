@@ -5,6 +5,7 @@ import it.polimi.ingsw.am52.json.request.JoinLobbyData;
 import it.polimi.ingsw.am52.json.response.JoinLobbyResponseData;
 import it.polimi.ingsw.am52.json.response.ListLobbyResponseData;
 import it.polimi.ingsw.am52.model.game.GameLobby;
+import it.polimi.ingsw.am52.model.game.GamePhase;
 import it.polimi.ingsw.am52.network.server.ClientHandler;
 import it.polimi.ingsw.am52.json.response.ResponseStatus;
 
@@ -62,7 +63,7 @@ public class ServerController {
         try{
             return new ListLobbyResponseData(new ResponseStatus(), this.getLobbies());
         } catch (Exception e) {
-            return new ListLobbyResponseData(new ResponseStatus(503, "Error on createLobby: " + e.getMessage()));
+            return new ListLobbyResponseData(new ResponseStatus(GamePhase.LOBBY, 503, "Error on createLobby: " + e.getMessage()));
         }
     }
 
@@ -77,7 +78,7 @@ public class ServerController {
             var handler = this.getHandler(clientId);
 
             if (handler.isEmpty()) {
-                return new JoinLobbyResponseData(new ResponseStatus(404, "Client not found"));
+                return new JoinLobbyResponseData(new ResponseStatus(GamePhase.LOBBY, 404, "Client not found"));
             }
 
             var id = this.getUniqueId();
@@ -90,7 +91,7 @@ public class ServerController {
 
             return gameController.joinLobby(user);
         } catch (Exception e) {
-            return new JoinLobbyResponseData(new ResponseStatus(503, "Error on createLobby: " + e.getMessage()));
+            return new JoinLobbyResponseData(new ResponseStatus(GamePhase.LOBBY, 503, "Error on createLobby: " + e.getMessage()));
         }
     }
 
@@ -106,14 +107,14 @@ public class ServerController {
 
             if (gameController.isEmpty())
             {
-                return new JoinLobbyResponseData(new ResponseStatus(404, "Game not found"));
+                return new JoinLobbyResponseData(new ResponseStatus(GamePhase.LOBBY, 404, "Game not found"));
             }
 
             var handler = this.getHandler(clientId);
 
             if (handler.isEmpty())
             {
-                return new JoinLobbyResponseData(new ResponseStatus(404, "Client not found"));
+                return new JoinLobbyResponseData(new ResponseStatus(GamePhase.LOBBY, 404, "Client not found"));
             }
 
 
@@ -121,7 +122,7 @@ public class ServerController {
 
             return gameController.get().joinLobby(user);
         } catch (Exception e) {
-            return new JoinLobbyResponseData(new ResponseStatus(503, "Error on createLobby: " + e.getMessage()));
+            return new JoinLobbyResponseData(new ResponseStatus(GamePhase.LOBBY, 503, "Error on createLobby: " + e.getMessage()));
         }
     }
 

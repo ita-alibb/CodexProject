@@ -1,7 +1,7 @@
 package it.polimi.ingsw.am52.view.tui.strategy;
 
 import it.polimi.ingsw.am52.json.response.ResponseStatus;
-import it.polimi.ingsw.am52.view.tui.TuiController;
+import it.polimi.ingsw.am52.network.client.ClientConnection;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.util.Scanner;
@@ -36,7 +36,7 @@ public class SelectObjectiveStrategy extends Strategy {
             System.out.println("          │ - Enter the ID of the objective you want to use: ");
             int cardId = scanner.nextInt();
             if (ViewModelState.getInstance().getPlayerObjectives().contains(cardId)) {
-                networkResponse = TuiController.selectObjective(cardId);
+                networkResponse = ClientConnection.selectObjective(cardId);
                 break;
             }
             System.out.println("          │ The given id is not available!");

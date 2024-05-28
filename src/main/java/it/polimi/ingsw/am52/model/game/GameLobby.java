@@ -133,21 +133,6 @@ public class GameLobby {
     }
 
     /**
-     * Method to check if the player is in lobby and is connected
-     * @return A boolean indicating whether the user is connected (to know that the turn must be skipped)
-     *
-     * @throws GameException if the requested user is not in the game
-     */
-    public boolean isPlayerLoggedInLobby() throws GameException {
-        //TODO: To do this some refactoring is needed: make players a
-        // list of User (so refactor all other methods, eg add player takes a User) .
-        // Then remove the list of connected user from the ServerController (if needed one can query every GameLobby and get the players),
-        // then this class can be used to check the connection of a player to the game
-        // forse non serve perche' il client manda un "heartbeat" mentre e' il suo turno ogni tot secondi controlli che sia ancora connesso, se lo trovi non connesso allora si e' disconnesso e skippi il turno
-        return true;
-    }
-
-    /**
      * Method to get the user with nickname
      * @param nickName the user nickname to search
      * @return the optional of the user

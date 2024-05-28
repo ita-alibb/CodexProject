@@ -11,13 +11,19 @@ public class TuiCommonBoardView extends TuiView {
         super(ViewType.COMMON_BOARD);
     }
     public static List<Character> getAvailableCommands() {
-        var available = new ArrayList<Character>(){{
+        ArrayList<Character> available = new ArrayList<>(){{
             add('B');
             add('P');
         }};
         if (ViewModelState.getInstance().getPhase() == GamePhase.DRAWING) {
             available.add('D');
             available.add('T');
+        }
+
+        if (ViewModelState.getInstance().getPhase() == GamePhase.END) {
+            available = new ArrayList<>(){{
+                add('L');
+            }};
         }
 
         return available;
@@ -44,8 +50,13 @@ public class TuiCommonBoardView extends TuiView {
             System.out.println("          │ - (D) draw_card -> draw a card from a chosen deck                    │");
             System.out.println("          │ - (T) take_card -> take a card from the one chosen                   │");
         }
-        System.out.println("          │ - (O) other_board -> show the game board of another player           │");
-        System.out.println("          │ - (B) board -> show your game board                                  │");
+
+        if (ViewModelState.getInstance().getPhase() != GamePhase.END) {
+            System.out.println("          │ - (O) other_board -> show the game board of another player           │");
+            System.out.println("          │ - (B) board -> show your game board                                  │");
+        } else {
+            System.out.println("          │ - (L) leave_lobby -> leave lobby                                     │");
+        }
         System.out.println("          └──────────────────────────────────────────────────────────────────────┘");
     }
 }

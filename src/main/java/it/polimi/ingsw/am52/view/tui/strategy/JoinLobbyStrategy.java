@@ -1,7 +1,7 @@
 package it.polimi.ingsw.am52.view.tui.strategy;
 
 import it.polimi.ingsw.am52.json.response.ResponseStatus;
-import it.polimi.ingsw.am52.view.tui.TuiController;
+import it.polimi.ingsw.am52.network.client.ClientConnection;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.util.Scanner;
@@ -38,7 +38,7 @@ public class JoinLobbyStrategy extends Strategy {
             System.out.print(  "          │ - Enter the ID of the lobby you want to join: ");
             id = scanner.nextInt();
             if (ViewModelState.getInstance().getLobbies().containsKey(id)) {
-                networkResponse = TuiController.joinLobby(username, id);
+                networkResponse = ClientConnection.joinLobby(username, id);
                 break;
             }
             System.out.println("         │ The given lobby doesn't exist");

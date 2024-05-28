@@ -2,7 +2,7 @@ package it.polimi.ingsw.am52.view.tui.strategy;
 
 import it.polimi.ingsw.am52.json.dto.DrawType;
 import it.polimi.ingsw.am52.json.response.ResponseStatus;
-import it.polimi.ingsw.am52.view.tui.TuiController;
+import it.polimi.ingsw.am52.network.client.ClientConnection;
 
 import java.util.Scanner;
 
@@ -43,7 +43,7 @@ public class DrawCardStrategy extends Strategy {
             System.out.println("          │ The given deck is not available!");
         }
 
-        networkResponse = TuiController.drawCard(DrawType.fromInteger(deck));
+        networkResponse = ClientConnection.drawCard(DrawType.fromInteger(deck));
 
         //handle only good cases, bad case is automatically handled by Strategy abstract class
         if (networkResponse != null && networkResponse.errorCode == 0) {

@@ -3,7 +3,7 @@ package it.polimi.ingsw.am52.view.tui.strategy;
 import it.polimi.ingsw.am52.json.response.ResponseStatus;
 import it.polimi.ingsw.am52.model.cards.CardSide;
 import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
-import it.polimi.ingsw.am52.view.tui.TuiController;
+import it.polimi.ingsw.am52.network.client.ClientConnection;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.util.Scanner;
@@ -56,7 +56,7 @@ public class PlaceCardStrategy extends Strategy {
         System.out.println("          │ - Enter the vertical position where you want to place the card: ");
         v = scanner.nextInt();
 
-        networkResponse = TuiController.placeCard(cardId, CardSide.fromInteger(face), new BoardSlot(h, v));
+        networkResponse = ClientConnection.placeCard(cardId, CardSide.fromInteger(face), new BoardSlot(h, v));
 
         //handle only good cases, bad case is automatically handled by Strategy abstract class
         if (networkResponse != null && networkResponse.errorCode == 0) {

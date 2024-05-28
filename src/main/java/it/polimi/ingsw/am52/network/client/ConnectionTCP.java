@@ -108,8 +108,8 @@ public class ConnectionTCP implements Connection, Runnable{
         try {
             this.out.println(message.toJson());
 
-            // Wait the response to be received, 20 seconds timeout
-            return this.responseQueue.poll(20, TimeUnit.SECONDS).getData();
+            // Wait the response to be received, 1 minute timeout
+            return this.responseQueue.poll(1, TimeUnit.MINUTES).getData();
         } catch (NullPointerException e){
             System.out.println("Request Timeout");
         } catch (Exception e) {

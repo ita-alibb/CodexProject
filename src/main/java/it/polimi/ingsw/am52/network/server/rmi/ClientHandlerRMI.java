@@ -7,6 +7,7 @@ import it.polimi.ingsw.am52.network.server.ClientHandler;
 import it.polimi.ingsw.am52.network.client.RemoteConnection;
 
 import java.rmi.RemoteException;
+import java.util.concurrent.*;
 
 /**
  * Implementation of {@link ClientHandler} for RMI connections
@@ -26,6 +27,10 @@ public class ClientHandlerRMI implements ClientHandler,Runnable {
      * The virtual view assigned to the client, it is called directly by the Client because it is exposed in the network
      */
     private final VirtualView view;
+
+    private final ExecutorService sendingThread = Executors.newSingleThreadExecutor();
+
+    private final LinkedBlockingQueue<BaseResponseData> responseQueue = new LinkedBlockingQueue<BaseResponseData>();
 
     /**
      * Class constructor
@@ -53,6 +58,9 @@ public class ClientHandlerRMI implements ClientHandler,Runnable {
      */
     @Override
     public void run() {
+        // Start thread to send broadcast messages
+        this.sendingThread.execute(this::sendAsync);
+
         while (true) {
             try {
                 this.client.heartBeat();
@@ -65,6 +73,7 @@ public class ClientHandlerRMI implements ClientHandler,Runnable {
         }
 
         this.view.disconnect(this);
+        this.sendingThread.shutdown();
     }
 
     /**
@@ -73,12 +82,24 @@ public class ClientHandlerRMI implements ClientHandler,Runnable {
      * @param response the message to send
      */
     @Override
-    public void sendMessage(JsonMessage<BaseResponseData> response) {
+    public synchronized void sendMessage(JsonMessage<BaseResponseData> response) {
         try {
-            this.client.sendMessage(response.getData());
-        } catch (RemoteException e) {
+            this.responseQueue.put(response.getData());
+        } catch (Exception e) {
             // TODO: better logging
-            System.out.println("Error on sending for client " + this.clientId + "exception: " + e.getMessage());
+            System.out.println("Error on adding response in queue for client " + this.clientId + "exception: " + e.getMessage());
+        }
+    }
+
+    private void sendAsync() {
+        while (true) {
+            try {
+                var response = this.responseQueue.take();
+
+                this.client.sendMessage(response);
+            } catch (InterruptedException | RemoteException e) {
+                System.out.println("Error on sending for client " + this.clientId + "exception: " + e.getMessage());
+            }
         }
     }
 }

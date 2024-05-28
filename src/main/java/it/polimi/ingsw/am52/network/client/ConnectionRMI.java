@@ -69,12 +69,8 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
     @Override
     public void sendMessage(BaseResponseData response) throws RemoteException {
         System.out.println("response received BROADCAST RMI");
-        // add the response to the queue and ends method, so the server can resume.
-        new Thread(() -> {
-            // TODO: use the response to update the game
-            ViewModelState.getInstance().broadcastUpdate(response);
-            // end test
-        }).start();
+
+        ViewModelState.getInstance().broadcastUpdate(response);
     }
 
     // region Implementation of the rmi method

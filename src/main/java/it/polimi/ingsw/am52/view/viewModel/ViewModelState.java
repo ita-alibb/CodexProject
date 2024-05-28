@@ -5,7 +5,7 @@ import it.polimi.ingsw.am52.json.dto.DrawType;
 import it.polimi.ingsw.am52.json.response.*;
 import it.polimi.ingsw.am52.model.game.GamePhase;
 import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
-import it.polimi.ingsw.am52.view.tui.TuiController;
+import it.polimi.ingsw.am52.network.client.ClientConnection;
 import it.polimi.ingsw.am52.json.response.JoinLobbyResponseData;
 import it.polimi.ingsw.am52.json.response.LeaveGameResponseData;
 import it.polimi.ingsw.am52.json.response.ListLobbyResponseData;
@@ -41,6 +41,11 @@ public class ViewModelState extends ModelObservable {
      * The nicknames in the lobby
      */
     private List<String> nicknames;
+
+    /**
+     * The nicknames of the winners
+     */
+    private List<String> winners;
 
     /**
      * My nickname in the lobby
@@ -180,12 +185,15 @@ public class ViewModelState extends ModelObservable {
         else if (response instanceof TakeCardResponseData) {
             this.updateTakeCard((TakeCardResponseData) response);
         }
+        else if (response instanceof EndGameResponseData) {
+            this.updateEndGame((EndGameResponseData) response);
+        }
     }
 
     // region Setters used by controller to edit the Model, REMEMBER TO CALL this.notifyObservers(); at end of method
     public void updateLobbyList(ListLobbyResponseData listLobby){
         this.lobbies = listLobby.getLobbies();
-        this.notifyObservers();
+        this.notifyObservers(EventType.LIST_LOBBY);
     }
 
     public void updateJoinLobby(JoinLobbyResponseData joinLobby){
@@ -195,11 +203,11 @@ public class ViewModelState extends ModelObservable {
 
         // Change automatically the view displayed
         this.type = ViewType.LOBBY;
-        this.notifyObservers();
+        this.notifyObservers(EventType.JOIN_LOBBY);
 
         if (this.phase == GamePhase.INIT) {
             // TODO: Handle errors
-            TuiController.initGame();
+            ClientConnection.initGame();
         }
     }
 
@@ -218,7 +226,7 @@ public class ViewModelState extends ModelObservable {
         }
         this.lobbies = leaveGame.getLobbies();
 
-        this.notifyObservers();
+        this.notifyObservers(EventType.LEAVE_GAME);
     }
 
     public void updateInitGame(InitGameResponseData initGame) {
@@ -248,7 +256,7 @@ public class ViewModelState extends ModelObservable {
 
         //Change automatically the view displayed
         this.type = ViewType.SETUP;
-        this.notifyObservers();
+        this.notifyObservers(EventType.INIT_GAME);
     }
 
     public void updateSelectObjective(SelectObjectiveResponseData selectObjective) {
@@ -265,7 +273,7 @@ public class ViewModelState extends ModelObservable {
         }
 
         if (!selectObjective.isBroadcast || this.phase == GamePhase.PLACING) {
-            this.notifyObservers();
+            this.notifyObservers(EventType.SELECT_OBJECTIVE);
         }
     }
 
@@ -285,7 +293,7 @@ public class ViewModelState extends ModelObservable {
         }
 
         if (!placeStarterCard.isBroadcast || this.phase == GamePhase.PLACING) {
-            this.notifyObservers();
+            this.notifyObservers(EventType.PLACE_STARTER_CARD);
         }
     }
 
@@ -300,7 +308,7 @@ public class ViewModelState extends ModelObservable {
 
         this.phase = placeCard.getStatus().gamePhase;
 
-        this.notifyObservers();
+        this.notifyObservers(EventType.PLACE_CARD);
     }
 
     public void updateDrawCard(DrawCardResponseData drawCard) {
@@ -317,7 +325,12 @@ public class ViewModelState extends ModelObservable {
         this.phase = drawCard.getStatus().gamePhase;
         this.currentPlayer = drawCard.getStatus().currPlayer;
 
-        this.notifyObservers();
+        this.notifyObservers(EventType.DRAW_CARD);
+
+        if (this.phase == GamePhase.END) {
+            // TODO: Handle errors
+            ClientConnection.endGame();
+        }
     }
 
     public void updateTakeCard(TakeCardResponseData takeCard) {
@@ -344,11 +357,23 @@ public class ViewModelState extends ModelObservable {
         this.phase = takeCard.getStatus().gamePhase;
         this.currentPlayer = takeCard.getStatus().currPlayer;
 
-        this.notifyObservers();
+        this.notifyObservers(EventType.TAKE_CARD);
+
+        if (this.phase == GamePhase.END) {
+            // TODO: Handle errors
+            ClientConnection.endGame();
+        }
+
     }
 
     public void updateEndGame(EndGameResponseData endGame) {
-        //TODO: how to call?
+        this.winners = endGame.getWinners();
+        this.phase = GamePhase.END;
+
+        // Put the view in the common board
+        this.type = ViewType.COMMON_BOARD;
+
+        this.notifyObservers(EventType.END_GAME);
     }
     // endregion
 
@@ -476,6 +501,10 @@ public class ViewModelState extends ModelObservable {
 
     public List<BoardSlot> getAvailableSlots() {
         return availableSlots;
+    }
+
+    public List<String> getWinners() {
+        return winners;
     }
 
     //endregion

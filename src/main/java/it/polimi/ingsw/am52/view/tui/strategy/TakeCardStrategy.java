@@ -2,7 +2,7 @@ package it.polimi.ingsw.am52.view.tui.strategy;
 
 import it.polimi.ingsw.am52.json.dto.DrawType;
 import it.polimi.ingsw.am52.json.response.ResponseStatus;
-import it.polimi.ingsw.am52.view.tui.TuiController;
+import it.polimi.ingsw.am52.network.client.ClientConnection;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.util.Scanner;
@@ -67,7 +67,7 @@ public class TakeCardStrategy extends Strategy {
             }
         }
 
-        networkResponse = TuiController.takeCard(cardId, deck);
+        networkResponse = ClientConnection.takeCard(cardId, deck);
 
         //handle only good cases, bad case is automatically handled by Strategy abstract class
         if (networkResponse != null && networkResponse.errorCode == 0) {

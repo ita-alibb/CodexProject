@@ -37,18 +37,6 @@ public class ResponseStatus implements Serializable {
     }
 
     /**
-     * The constructor for Error response in the LOBBY phase
-     * @param errorCode the error code of the call
-     * @param errorMessage the error message
-     */
-    public ResponseStatus(int errorCode, String errorMessage) {
-        this.gamePhase = GamePhase.LOBBY;
-        this.currPlayer = "";
-        this.errorCode = errorCode;
-        this.errorMessage = errorMessage;
-    }
-
-    /**
      * The constructor for Error response during game phase
      * @param phase the phase of the Game
      * @param errorCode the error code of the call
@@ -57,6 +45,19 @@ public class ResponseStatus implements Serializable {
     public ResponseStatus(Phase phase, int errorCode, String errorMessage) {
         this.gamePhase = phase.getPhase();
         this.currPlayer = phase.getCurrPlayer();
+        this.errorCode = errorCode;
+        this.errorMessage = errorMessage;
+    }
+
+    /**
+     * The constructor for Error response
+     * @param gamePhase the Game Phase
+     * @param errorCode the error code of the call
+     * @param errorMessage the error message
+     */
+    public ResponseStatus(GamePhase gamePhase, int errorCode, String errorMessage) {
+        this.gamePhase = gamePhase;
+        this.currPlayer = "";
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
     }

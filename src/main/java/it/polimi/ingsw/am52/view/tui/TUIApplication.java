@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am52.view.tui;
 
 import it.polimi.ingsw.am52.network.client.Connection;
+import it.polimi.ingsw.am52.network.client.ClientConnection;
 
 import java.util.Objects;
 
@@ -11,14 +12,14 @@ public class TUIApplication {
         Connection connection;
         try {
             if (Objects.equals(args[0], "RMI")) {
-               TuiController.setConnection(false);
+               ClientConnection.setConnection(false);
 
             } else {
-                TuiController.setConnection(true);
+                ClientConnection.setConnection(true);
             }
 
             // First call to init model
-            TuiController.getLobbyList();
+            ClientConnection.getLobbyList();
 
             // Print View
             TuiPrinter.getInstance().update();

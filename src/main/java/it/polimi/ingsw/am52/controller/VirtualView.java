@@ -3,6 +3,7 @@ package it.polimi.ingsw.am52.controller;
 import it.polimi.ingsw.am52.json.*;
 import it.polimi.ingsw.am52.json.request.*;
 import it.polimi.ingsw.am52.json.response.*;
+import it.polimi.ingsw.am52.model.game.GamePhase;
 import it.polimi.ingsw.am52.network.server.ClientHandler;
 import it.polimi.ingsw.am52.network.server.Sender;
 import it.polimi.ingsw.am52.network.server.ServerConnection;
@@ -11,6 +12,7 @@ import it.polimi.ingsw.am52.network.server.tcp.ClientHandlerTCP;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -84,7 +86,12 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
      */
     public void disconnect(ClientHandler handler){
         if (this.gameController != null){
-            this.gameController.disconnect(handler);
+
+            if (this.gameController.disconnect(handler)) {
+                // Game crashed due to single disconnection
+                // Broadcast end of game
+                this.broadcast(new EndGameResponse(new EndGameResponseData(new ResponseStatus(GamePhase.END, 112, "Client " + this.clientId + "disconnected, Game ends"), new ArrayList<String>())));
+            }
         } else {
             ServerController.getInstance().disconnect(handler);
         }
@@ -107,7 +114,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
             try{
                 this.gameController = ServerController.getInstance().getGameController(response.getLobbyId()).get();
             } catch (Exception e){
-                return new JoinLobbyResponseData(new ResponseStatus(404, "Game not found"));
+                return new JoinLobbyResponseData(new ResponseStatus(GamePhase.LOBBY, 404, "Game not found"));
             }
         }
 
@@ -127,7 +134,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
             try{
                 this.gameController = ServerController.getInstance().getGameController(response.getLobbyId()).get();
             } catch (Exception e){
-                return new JoinLobbyResponseData(new ResponseStatus(404, "Game not found"));
+                return new JoinLobbyResponseData(new ResponseStatus(GamePhase.LOBBY, 404, "Game not found"));
             }
         }
 
@@ -142,7 +149,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
     @Override
     public ListLobbyResponseData listLobby() throws RemoteException {
         if (this.gameController != null){
-            return new ListLobbyResponseData(new ResponseStatus(403, "Already in lobby"));
+            return new ListLobbyResponseData(new ResponseStatus(GamePhase.LOBBY, 403, "Already in lobby"));
         }
 
         return ServerController.getInstance().getLobbyList();

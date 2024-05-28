@@ -1,32 +1,23 @@
-package it.polimi.ingsw.am52.view.tui;
+package it.polimi.ingsw.am52.network.client;
 
 import it.polimi.ingsw.am52.json.dto.DrawType;
 import it.polimi.ingsw.am52.json.request.*;
 import it.polimi.ingsw.am52.json.response.*;
-import it.polimi.ingsw.am52.model.cards.CardFace;
 import it.polimi.ingsw.am52.model.cards.CardSide;
 import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
-import it.polimi.ingsw.am52.model.game.GamePhase;
-import it.polimi.ingsw.am52.network.client.Connection;
-import it.polimi.ingsw.am52.network.client.ConnectionRMI;
-import it.polimi.ingsw.am52.network.client.ConnectionTCP;
-import it.polimi.ingsw.am52.network.server.rmi.ActionsRMI;
-import it.polimi.ingsw.am52.view.tui.state.ViewType;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
-import java.util.List;
 
 /**
  * To the client the connection is now a Singleton.
  * One can access the connection from everywhere in Client and be sure that the connection is always the same
  * The INSTANCE is initialized (with  {@link #setConnection(boolean isTcp) Set the client Connection to be TCP or RMI}) only on startup of Client and can be called only once per Application
  */
-public class TuiController {
+public class ClientConnection {
     private static Connection INSTANCE;
 
-    public TuiController() {
+    public ClientConnection() {
     }
 
     public static void setConnection(boolean isTcp) throws IOException {
@@ -55,7 +46,9 @@ public class TuiController {
             //if the call is not correct the viewModelState is not edited and the caller will handle the bad response
             return result.getStatus();
         } catch (Exception e) {
-            return new ResponseStatus(999, "Fatal exception");
+            System.out.println("Error: " + e);
+            System.exit(0);
+            return null;
         }
     }
 
@@ -70,7 +63,9 @@ public class TuiController {
             //if the call is not correct the viewModelState is not edited and the caller will handle the bad response
             return result.getStatus();
         } catch (Exception e) {
-            return new ResponseStatus(999, "Fatal exception");
+            System.out.println("Error: " + e);
+            System.exit(0);
+            return null;
         }
     }
 
@@ -85,7 +80,9 @@ public class TuiController {
             //if the call is not correct the viewModelState is not edited and the caller will handle the bad response
             return result.getStatus();
         } catch (Exception e) {
-            return new ResponseStatus(999, "Fatal exception");
+            System.out.println("Error: " + e);
+            System.exit(0);
+            return null;
         }
     }
 
@@ -99,7 +96,9 @@ public class TuiController {
             //if the call is not correct the viewModelState is not edited and the caller will handle the bad response
             return result.getStatus();
         } catch (Exception e) {
-            return new ResponseStatus(999, "Fatal exception");
+            System.out.println("Error: " + e);
+            System.exit(0);
+            return null;
         }
     }
 
@@ -113,7 +112,9 @@ public class TuiController {
             //if the call is not correct the viewModelState is not edited and the caller will handle the bad response
             return result.getStatus();
         } catch (Exception e) {
-            return new ResponseStatus(999, "Fatal exception");
+            System.out.println("Error: " + e);
+            System.exit(0);
+            return null;
         }
     }
 
@@ -127,7 +128,9 @@ public class TuiController {
             //if the call is not correct the viewModelState is not edited and the caller will handle the bad response
             return result.getStatus();
         } catch (Exception e) {
-            return new ResponseStatus(999, "Fatal exception");
+            System.out.println("Error: " + e);
+            System.exit(0);
+            return null;
         }
     }
 
@@ -141,7 +144,9 @@ public class TuiController {
             //if the call is not correct the viewModelState is not edited and the caller will handle the bad response
             return result.getStatus();
         } catch (Exception e) {
-            return new ResponseStatus(999, "Fatal exception");
+            System.out.println("Error: " + e);
+            System.exit(0);
+            return null;
         }
     }
 
@@ -155,7 +160,9 @@ public class TuiController {
             //if the call is not correct the viewModelState is not edited and the caller will handle the bad response
             return result.getStatus();
         } catch (Exception e) {
-            return new ResponseStatus(999, "Fatal exception");
+            System.out.println("Error: " + e);
+            System.exit(0);
+            return null;
         }
     }
 
@@ -169,7 +176,9 @@ public class TuiController {
             //if the call is not correct the viewModelState is not edited and the caller will handle the bad response
             return result.getStatus();
         } catch (Exception e) {
-            return new ResponseStatus(999, "Fatal exception");
+            System.out.println("Error: " + e);
+            System.exit(0);
+            return null;
         }
     }
 
@@ -183,7 +192,9 @@ public class TuiController {
             //if the call is not correct the viewModelState is not edited and the caller will handle the bad response
             return result.getStatus();
         } catch (Exception e) {
-            return new ResponseStatus(999, "Fatal exception");
+            System.out.println("Error: " + e);
+            System.exit(0);
+            return null;
         }
     }
 
@@ -197,7 +208,9 @@ public class TuiController {
             //if the call is not correct the viewModelState is not edited and the caller will handle the bad response
             return result.getStatus();
         } catch (Exception e) {
-            return new ResponseStatus(999, "Fatal exception");
+            System.out.println("Error: " + e);
+            System.exit(0);
+            return null;
         }
     }
     // endregion

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.am52.view.tui.strategy;
 
 import it.polimi.ingsw.am52.json.response.ResponseStatus;
-import it.polimi.ingsw.am52.view.tui.TuiController;
+import it.polimi.ingsw.am52.network.client.ClientConnection;
 
 public class LeaveLobbyStrategy extends Strategy {
 
@@ -23,7 +23,7 @@ public class LeaveLobbyStrategy extends Strategy {
      */
     @Override
     public ResponseStatus executeWithNetworkCall() {
-        return TuiController.leaveLobby();
+        return ClientConnection.leaveLobby();
     }
 
     //endregion

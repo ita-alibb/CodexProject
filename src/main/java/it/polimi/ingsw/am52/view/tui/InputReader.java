@@ -101,6 +101,7 @@ public class InputReader implements Runnable {
                     case 'T': this.setStrategy(new TakeCardStrategy()); break;
                     case 'O': this.setStrategy(new ShowBoardStrategy(true)); break;
                     case 'B': this.setStrategy(new ShowBoardStrategy(false)); break;
+                    case 'L': this.setStrategy(new LeaveLobbyStrategy()); break;
                 }
                 break;
             }

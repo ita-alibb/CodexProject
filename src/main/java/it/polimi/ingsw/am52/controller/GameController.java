@@ -6,6 +6,7 @@ import it.polimi.ingsw.am52.json.response.*;
 import it.polimi.ingsw.am52.model.cards.Card;
 import it.polimi.ingsw.am52.model.game.GameLobby;
 import it.polimi.ingsw.am52.model.game.GameManager;
+import it.polimi.ingsw.am52.model.game.GamePhase;
 import it.polimi.ingsw.am52.model.objectives.Objective;
 import it.polimi.ingsw.am52.model.player.PlayerInfo;
 import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
@@ -43,14 +44,14 @@ public class GameController {
      * The method to join the lobby
      * @param user the user that joined
      */
-    public JoinLobbyResponseData joinLobby(User user) {
+    public synchronized JoinLobbyResponseData joinLobby(User user) {
         try {
             if (this.game != null) {
-                return new JoinLobbyResponseData(new ResponseStatus(403, "Game already started"));
+                return new JoinLobbyResponseData(new ResponseStatus(GamePhase.LOBBY, 403, "Game already started"));
             }
 
             if (!this.lobby.addPlayer(user)) {
-                return new JoinLobbyResponseData(new ResponseStatus(403, "Nickname not available"));
+                return new JoinLobbyResponseData(new ResponseStatus(GamePhase.LOBBY, 403, "Nickname not available"));
             }
 
             JoinLobbyResponseData res;
@@ -59,7 +60,7 @@ public class GameController {
                 if(this.startGame()){
                     res = new JoinLobbyResponseData(new ResponseStatus(this.game.getStatusResponse()), this.getId(), this.lobby.getPlayersNickname());
                 } else {
-                    res = new JoinLobbyResponseData(new ResponseStatus(503, "Cannot start Game"), this.getId(), this.lobby.getPlayersNickname());
+                    res = new JoinLobbyResponseData(new ResponseStatus(GamePhase.LOBBY, 503, "Cannot start Game"), this.getId(), this.lobby.getPlayersNickname());
                 }
             } else {
                 res = new JoinLobbyResponseData(new ResponseStatus(), this.getId(), this.lobby.getPlayersNickname());
@@ -68,7 +69,7 @@ public class GameController {
             // Notify the clients and Response
             return res;
         } catch (Exception ex) {
-            return new JoinLobbyResponseData(new ResponseStatus(503, "Cannot add player"));
+            return new JoinLobbyResponseData(new ResponseStatus(GamePhase.LOBBY, 503, "Cannot add player"));
         }
     }
 
@@ -80,7 +81,7 @@ public class GameController {
         var user = this.lobby.getPlayer(clientId);
 
         if (user.isEmpty()) {
-            return new LeaveGameResponseData(new ResponseStatus(404, "User not found"));
+            return new LeaveGameResponseData(new ResponseStatus(GamePhase.LOBBY, 404, "User not found"));
         }
 
         var nick = user.get().getUsername();
@@ -88,7 +89,7 @@ public class GameController {
         try {
             this.lobby.removePlayer(nick);
         } catch (Exception ex) {
-            return new LeaveGameResponseData(new ResponseStatus(405, "Player cannot be removed"));
+            return new LeaveGameResponseData(new ResponseStatus(GamePhase.LOBBY, 405, "Player cannot be removed"));
         }
 
         if (this.lobby.isEmpty()) {
@@ -357,10 +358,11 @@ public class GameController {
     /**
      * Method called to disconnect a player in a game
      * @param handler the clientHandler that disconnects
+     *
+     * @return a boolean indicating whether the game must be shut down due to a disconnection during game
      */
-    public void disconnect(ClientHandler handler) {
+    public synchronized boolean disconnect(ClientHandler handler) {
         try {
-            // TODO: How to handle disconnection? Set on User isConnected to false and enable reconnection or trigger the end phase of the game and shut down the game?
             this.lobby.removePlayer(handler.getClientId());
 
             ServerController.getInstance().disconnect(handler);
@@ -368,9 +370,11 @@ public class GameController {
             if (this.lobby.isEmpty()) {
                 ServerController.getInstance().deleteGame(this);
             }
+
+            return this.game != null;
         } catch (Exception e) {
-            // TODO: Improve logging
             System.out.println("Exception on disconnect: " + e.getMessage());
+            return true;
         }
     }
 
