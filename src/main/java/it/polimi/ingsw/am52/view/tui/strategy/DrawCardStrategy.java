@@ -46,7 +46,7 @@ public class DrawCardStrategy extends Strategy {
         networkResponse = ClientConnection.drawCard(DrawType.fromInteger(deck));
 
         //handle only good cases, bad case is automatically handled by Strategy abstract class
-        if (networkResponse != null && networkResponse.errorCode == 0) {
+        if (networkResponse != null && networkResponse.getErrorCode() == 0) {
             System.out.println("          ├──────────────────────────────────────────────────────────────────────┐");
             System.out.println("          │                        Card drawn successfully!                      │");
             System.out.println("          └──────────────────────────────────────────────────────────────────────┘");

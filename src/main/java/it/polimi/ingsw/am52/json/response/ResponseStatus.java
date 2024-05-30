@@ -9,22 +9,22 @@ public class ResponseStatus implements Serializable {
     /**
      * The phase using the enum GamePhase
      */
-    public GamePhase gamePhase;
+    private final GamePhase gamePhase;
 
     /**
      * The current player
      */
-    public String currPlayer;
+    private final String currPlayer;
 
     /**
      * The error code
      */
-    public int errorCode;
+    private final int errorCode;
 
     /**
      * The error message
      */
-    public String errorMessage;
+    private final String errorMessage;
 
     /**
      * The constructor for Success response in the LOBBY phase
@@ -85,5 +85,21 @@ public class ResponseStatus implements Serializable {
         this.currPlayer = currPlayer;
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
+    }
+
+    public GamePhase getGamePhase() {
+        return gamePhase;
+    }
+
+    public String getCurrPlayer() {
+        return currPlayer;
+    }
+
+    public int getErrorCode() {
+        return errorCode;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
     }
 }

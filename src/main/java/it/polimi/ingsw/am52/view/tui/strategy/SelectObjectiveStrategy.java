@@ -42,13 +42,6 @@ public class SelectObjectiveStrategy extends Strategy {
             System.out.println("          │ The given id is not available!");
         }
 
-        //handle only good cases, bad case is automatically handled by Strategy abstract class
-        if (networkResponse != null && networkResponse.errorCode == 0) {
-            System.out.println("          ├──────────────────────────────────────────────────────────────────────┐");
-            System.out.println("          │                        Objective card chosen!                        │");
-            System.out.println("          └──────────────────────────────────────────────────────────────────────┘");
-        }
-
         return networkResponse;
     }
 

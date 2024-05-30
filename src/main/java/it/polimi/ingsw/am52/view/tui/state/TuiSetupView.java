@@ -29,8 +29,8 @@ public class TuiSetupView extends TuiView {
         var objectiveIds = ViewModelState.getInstance().getPlayerObjectives();
         var card = new CardIds(starterCardId, 0);
         var card1 = new CardIds(starterCardId, 1);
-        card.getStarterCard();
-        card1.getStarterCard();
+        card.loadStarterFace();
+        card1.loadStarterFace();
 
         var cardList = card.getCardAsArrayString(false, false, false, false);
         var cardList1 = card1.getCardAsArrayString(false, false, false, false);
@@ -41,7 +41,11 @@ public class TuiSetupView extends TuiView {
         for (int i = 0; i < 7; i++) {
             System.out.println(cardList[i] + "   " + cardList1[i]);
         }
-        System.out.printf( "          │ %-74s │%n", "Your secret objectives: " + objectiveIds.getFirst() + " " + objectiveIds.getLast());
+        if (ViewModelState.getInstance().getSecretObjective() == -1) {
+            System.out.printf( "          │ %-74s │%n", "Your secret objectives: " + objectiveIds.getFirst() + " " + objectiveIds.getLast());
+        } else {
+            System.out.printf( "          │ %-74s │%n", "Your secret objective: " + ViewModelState.getInstance().getSecretObjective());
+        }
         System.out.println("          └────────────────────────────────────────────────────────────────────────────┘");
     }
 

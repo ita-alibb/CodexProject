@@ -58,13 +58,6 @@ public class PlaceCardStrategy extends Strategy {
 
         networkResponse = ClientConnection.placeCard(cardId, CardSide.fromInteger(face), new BoardSlot(h, v));
 
-        //handle only good cases, bad case is automatically handled by Strategy abstract class
-        if (networkResponse != null && networkResponse.errorCode == 0) {
-            System.out.println("          ├──────────────────────────────────────────────────────────────────────┐");
-            System.out.println("          │                              Card placed!                            │");
-            System.out.println("          └──────────────────────────────────────────────────────────────────────┘");
-        }
-
         return networkResponse;
     }
 

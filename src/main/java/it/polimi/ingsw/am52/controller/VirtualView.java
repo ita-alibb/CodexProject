@@ -110,7 +110,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
 
         // the client has joined a lobby, set the GameController, in this way we remove the bottleneck on ServerController by using directly the related GameController
         //The LobbyId is in the response of the controller TODO: the response must be implemented as the requests
-        if (response.getStatus().errorCode == 0) {
+        if (response.getStatus().getErrorCode() == 0) {
             try{
                 this.gameController = ServerController.getInstance().getGameController(response.getLobbyId()).get();
             } catch (Exception e){
@@ -130,7 +130,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
         var response = ServerController.getInstance().joinLobby(this.clientId, data);
 
         // the client has joined a lobby, set the GameController, in this way we remove the bottleneck on ServerController by using directly the related GameController
-        if (response.getStatus().errorCode == 0) {
+        if (response.getStatus().getErrorCode() == 0) {
             try{
                 this.gameController = ServerController.getInstance().getGameController(response.getLobbyId()).get();
             } catch (Exception e){
@@ -166,7 +166,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
         this.broadcast(new LeaveGameResponse(response));
 
         // Particular case, when you leave then you have to set the reference to null
-        if (response.getStatus().errorCode == 0) {
+        if (response.getStatus().getErrorCode() == 0) {
             this.gameController = null;
         }
 
@@ -279,7 +279,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
      * @param response the Response to send to the client's.
      */
     private void broadcast(JsonMessage<BaseResponseData> response) {
-        if (this.gameController != null && response.getData().getStatus().errorCode == 0) {
+        if (this.gameController != null && response.getData().getStatus().getErrorCode() == 0) {
             // Get the handlers of the Game
             List<Sender> handlers = this.gameController.handlerToBroadcast(this.clientId);
 
@@ -294,9 +294,6 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
                 // TODO: Better logging
                 System.out.println("Exception:" + e.getMessage());
             }
-
-            // Un-mark the response as broadcast to send it to the caller
-            response.getData().setIsBroadcast(false);
         }
     }
 }

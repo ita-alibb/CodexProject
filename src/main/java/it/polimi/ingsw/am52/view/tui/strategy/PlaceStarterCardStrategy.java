@@ -41,13 +41,6 @@ public class PlaceStarterCardStrategy extends Strategy {
             System.out.println("          │ The given face is not available!");
         }
 
-        //handle only good cases, bad case is automatically handled by Strategy abstract class
-        if (networkResponse != null && networkResponse.errorCode == 0) {
-            System.out.println("          ├──────────────────────────────────────────────────────────────────────┐");
-            System.out.println("          │                          Starter card placed!                        │");
-            System.out.println("          └──────────────────────────────────────────────────────────────────────┘");
-        }
-
         return networkResponse;
     }
 

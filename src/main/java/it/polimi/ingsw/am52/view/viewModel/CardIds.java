@@ -41,7 +41,7 @@ public class CardIds {
     public int cardId;
     public int cardFace;
 
-    private CardFace card;
+    private CardFace face;
 
     public CardIds(int cardId, int cardFace) {
         this.cardFace = cardFace;
@@ -64,40 +64,38 @@ public class CardIds {
         return card;
     }
 
-    public CardFace getCard() {
-        if (card == null) {
+    public void loadFace() {
+        if (face == null) {
             var card = KingdomCard.getCardWithId(cardId);
             if (cardFace == 0) {
-                this.card = card.getFrontFace();
+                this.face = card.getFrontFace();
             } else if (cardFace == 1) {
-                this.card = card.getBackFace();
+                this.face = card.getBackFace();
             }
         }
 
-        return card;
     }
 
-    public CardFace getStarterCard() {
-        if (card == null) {
+    public void loadStarterFace() {
+        if (face == null) {
             var card = StarterCard.getCardWithId(cardId);
             if (cardFace == 0) {
-                this.card = card.getFrontFace();
+                this.face = card.getFrontFace();
             } else if (cardFace == 1) {
-                this.card = card.getBackFace();
+                this.face = card.getBackFace();
             }
         }
 
-        return card;
     }
 
     public String[] getCardAsArrayString(boolean coveredTL, boolean coveredTR, boolean coveredBR, boolean coveredBL){
         String[] result = TEMPLATE.clone();
 
-        result[1] = result[1].formatted(getSymbol(this.card.getTopLeftCorner(), coveredTL), getSymbol(this.card.getTopRightCorner(), coveredTR));
+        result[1] = result[1].formatted(getSymbol(this.face.getTopLeftCorner(), coveredTL), getSymbol(this.face.getTopRightCorner(), coveredTR));
 
-        result[3] = result[3].formatted(this.getSymbol(this.card.getPermanentResources()));
+        result[3] = result[3].formatted(this.getSymbol(this.face.getPermanentResources()));
 
-        result[5] = result[5].formatted(getSymbol(this.card.getBottomLeftCorner(), coveredBL), getSymbol(this.card.getBottomRightCorner(), coveredBR));
+        result[5] = result[5].formatted(getSymbol(this.face.getBottomLeftCorner(), coveredBL), getSymbol(this.face.getBottomRightCorner(), coveredBR));
 
         return result;
 

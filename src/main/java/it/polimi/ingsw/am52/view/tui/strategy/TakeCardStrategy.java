@@ -69,13 +69,6 @@ public class TakeCardStrategy extends Strategy {
 
         networkResponse = ClientConnection.takeCard(cardId, deck);
 
-        //handle only good cases, bad case is automatically handled by Strategy abstract class
-        if (networkResponse != null && networkResponse.errorCode == 0) {
-            System.out.println("          ├──────────────────────────────────────────────────────────────────────┐");
-            System.out.println("          │                              Card taken!                             │");
-            System.out.println("          └──────────────────────────────────────────────────────────────────────┘");
-        }
-
         return networkResponse;
     }
 

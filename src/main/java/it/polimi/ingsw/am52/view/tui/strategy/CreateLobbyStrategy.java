@@ -42,13 +42,6 @@ public class CreateLobbyStrategy extends Strategy {
             System.out.println("          │ There are too many players in the lobby!");
         }
 
-        //handle only good case, bad case is automatically handled by Strategy abstract class
-        if (networkResponse != null && networkResponse.errorCode == 0) {
-            System.out.println("          ┌──────────────────────────────────────────────────────────────────────┐");
-            System.out.println("          │                     Lobby created successfully!                      │");
-            System.out.println("          └──────────────────────────────────────────────────────────────────────┘");
-        }
-
         return networkResponse;
     }
 

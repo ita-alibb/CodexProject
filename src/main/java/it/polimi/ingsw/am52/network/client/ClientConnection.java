@@ -39,7 +39,7 @@ public class ClientConnection {
     public static ResponseStatus getLobbyList() {
         try {
             var result = INSTANCE.listLobby();
-            if (result.getStatus().errorCode == 0) {
+            if (result.getStatus().getErrorCode() == 0) {
                 ViewModelState.getInstance().updateLobbyList(result);
             }
 
@@ -55,7 +55,7 @@ public class ClientConnection {
     public static ResponseStatus createLobby(String nickname, int maxPlayers) {
         try {
             var result = INSTANCE.createLobby(new CreateLobbyData(nickname, maxPlayers));
-            if (result.getStatus().errorCode == 0) {
+            if (result.getStatus().getErrorCode() == 0) {
                 ViewModelState.getInstance().setClientNickname(nickname);
                 ViewModelState.getInstance().updateJoinLobby(result);
             }
@@ -72,7 +72,7 @@ public class ClientConnection {
     public static ResponseStatus joinLobby(String nickname, int lobbyId) {
         try {
             var result = INSTANCE.joinLobby(new JoinLobbyData(nickname, lobbyId));
-            if (result.getStatus().errorCode == 0) {
+            if (result.getStatus().getErrorCode() == 0) {
                 ViewModelState.getInstance().setClientNickname(nickname);
                 ViewModelState.getInstance().updateJoinLobby(result);
             }
@@ -89,7 +89,7 @@ public class ClientConnection {
     public static ResponseStatus leaveLobby() {
         try  {
             var result = INSTANCE.leaveGame();
-            if (result.getStatus().errorCode == 0) {
+            if (result.getStatus().getErrorCode() == 0) {
                 ViewModelState.getInstance().updateLeaveGame(result);
             }
 
@@ -105,7 +105,7 @@ public class ClientConnection {
     public static ResponseStatus initGame() {
         try  {
             var result = INSTANCE.initGame();
-            if (result.getStatus().errorCode == 0) {
+            if (result.getStatus().getErrorCode() == 0) {
                 ViewModelState.getInstance().updateInitGame(result);
             }
 
@@ -121,7 +121,7 @@ public class ClientConnection {
     public static ResponseStatus endGame() {
         try  {
             var result = INSTANCE.endGame();
-            if (result.getStatus().errorCode == 0) {
+            if (result.getStatus().getErrorCode() == 0) {
                 ViewModelState.getInstance().updateEndGame(result);
             }
 
@@ -137,7 +137,7 @@ public class ClientConnection {
     public static ResponseStatus selectObjective(int objectiveId) {
         try  {
             var result = INSTANCE.selectObjective(new SelectObjectiveData(objectiveId));
-            if (result.getStatus().errorCode == 0) {
+            if (result.getStatus().getErrorCode() == 0) {
                 ViewModelState.getInstance().updateSelectObjective(result);
             }
 
@@ -153,7 +153,7 @@ public class ClientConnection {
     public static ResponseStatus placeStarterCard(int cardId, CardSide visibleFace) {
         try  {
             var result = INSTANCE.placeStarterCard(new PlaceStarterCardData(cardId, visibleFace.toInteger()));
-            if (result.getStatus().errorCode == 0) {
+            if (result.getStatus().getErrorCode() == 0) {
                 ViewModelState.getInstance().updatePlaceStarterCard(result);
             }
 
@@ -169,7 +169,7 @@ public class ClientConnection {
     public static ResponseStatus placeCard(int cardId, CardSide visibleFace, BoardSlot position) {
         try  {
             var result = INSTANCE.placeCard(new PlaceCardData(cardId, visibleFace.toInteger(), position));
-            if (result.getStatus().errorCode == 0) {
+            if (result.getStatus().getErrorCode() == 0) {
                 ViewModelState.getInstance().updatePlaceCard(result);
             }
 
@@ -185,7 +185,7 @@ public class ClientConnection {
     public static ResponseStatus drawCard(DrawType drawType) {
         try  {
             var result = INSTANCE.drawCard(new DrawCardData(drawType.toInteger()));
-            if (result.getStatus().errorCode == 0) {
+            if (result.getStatus().getErrorCode() == 0) {
                 ViewModelState.getInstance().updateDrawCard(result);
             }
 
@@ -201,7 +201,7 @@ public class ClientConnection {
     public static ResponseStatus takeCard(int cardId, DrawType drawType) {
         try  {
             var result = INSTANCE.takeCard(new TakeCardData(cardId, drawType.toInteger()));
-            if (result.getStatus().errorCode == 0) {
+            if (result.getStatus().getErrorCode() == 0) {
                 ViewModelState.getInstance().updateTakeCard(result);
             }
 

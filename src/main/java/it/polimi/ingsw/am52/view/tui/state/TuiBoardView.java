@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am52.view.tui.state;
 
+import it.polimi.ingsw.am52.model.cards.Card;
 import it.polimi.ingsw.am52.model.game.GamePhase;
 import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
 import it.polimi.ingsw.am52.view.viewModel.BoardMap;
@@ -7,6 +8,7 @@ import it.polimi.ingsw.am52.view.viewModel.CardIds;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TuiBoardView extends TuiView {
@@ -33,6 +35,8 @@ public class TuiBoardView extends TuiView {
         var playerHand = ViewModelState.getInstance().getPlayerHand();
         var secretObjectiveId = ViewModelState.getInstance().getSecretObjective();
 
+        System.out.println("          ┌────────────────────────────────────────────────────────────────────────────┐");
+        System.out.println("          ┐");
         System.out.println("          ┌────────────────────────────────────────────────────────────────────────────┐");
         printBoard();
         if (ViewModelState.getInstance().isClientView()) {
@@ -66,17 +70,23 @@ public class TuiBoardView extends TuiView {
         int minY = board.keySet().stream().map(BoardSlot::getVert).min(Integer::compareTo).orElse(0);
 
         // for most high to most low card //rows
-        for (int y = maxY; y > minY ; y--) {
-            String[] row = new String[3];
-
+        for (int y = maxY; y >= minY ; y--) {
+            String[] row = new String[CardIds.TEMPLATE.length];
+            Arrays.fill(row, "");
             // for most left to most right card //columns
-            for (int h = minH; h < maxH; h++) {
+            for (int h = minH; h <= maxH; h++) {
                 //square loop
                 var currentSlot = new BoardSlot(h, y);
                 var cardIds = board.get(currentSlot);
 
-                String[] column = new String[3];
+                String[] column;
                 if (cardIds != null) {
+                    if (h == 0 && y == 0){
+                        cardIds.loadStarterFace();
+                    } else {
+                        cardIds.loadFace();
+                    }
+
                     column = cardIds.getCardAsArrayString(isCornerCovered(-1,1, currentSlot, board), isCornerCovered(1,1, currentSlot, board), isCornerCovered(1,-1, currentSlot, board), isCornerCovered(-1,-1, currentSlot, board));
                 } else if (availableSlots.contains(currentSlot)) {
                     column = CardIds.getEmptyTemplate(currentSlot.getHoriz(), currentSlot.getVert());
@@ -84,14 +94,14 @@ public class TuiBoardView extends TuiView {
                     column = CardIds.getEmptyTemplate();
                 }
 
-                row[0] += column[0];
-                row[1] += column[1];
-                row[2] += column[2];
+                for (int i = 0; i < row.length; i++) {
+                    row[i] += column[i];
+                }
             }
 
-            System.out.println(row[0]);
-            System.out.println(row[1]);
-            System.out.println(row[2]);
+            for (String r : row) {
+                System.out.println(r);
+            }
         }
     }
 

@@ -14,8 +14,8 @@ public abstract class Strategy {
 
         if (networkResult == null){
             System.out.println("Connection Error");
-        } else if (networkResult.errorCode != 0) {
-            System.out.println("Error: " + networkResult.errorMessage);
+        } else if (networkResult.getErrorCode() != 0) {
+            System.out.println("Error: " + networkResult.getErrorMessage());
         }
         //if the call goes right the ViewModelState handles it
     }

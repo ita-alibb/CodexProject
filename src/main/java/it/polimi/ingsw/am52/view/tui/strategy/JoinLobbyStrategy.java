@@ -44,13 +44,6 @@ public class JoinLobbyStrategy extends Strategy {
             System.out.println("         │ The given lobby doesn't exist");
         }
 
-        //handle only good case, bad case is automatically handled by Strategy abstract class
-        if (networkResponse != null && networkResponse.errorCode == 0) {
-            System.out.println("          ┌──────────────────────────────────────────────────────────────────────┐");
-            System.out.println("          │                           Lobby joined!                              │");
-            System.out.println("          └──────────────────────────────────────────────────────────────────────┘");
-        }
-
         return networkResponse;
     }
 

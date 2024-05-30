@@ -199,7 +199,7 @@ public class ViewModelState extends ModelObservable {
     public void updateJoinLobby(JoinLobbyResponseData joinLobby){
         this.currentLobbyId = joinLobby.getLobbyId();
         this.nicknames = joinLobby.getNicknames();
-        this.phase = joinLobby.getStatus().gamePhase;
+        this.phase = joinLobby.getStatus().getGamePhase();
 
         // Change automatically the view displayed
         this.type = ViewType.LOBBY;
@@ -216,7 +216,7 @@ public class ViewModelState extends ModelObservable {
             this.currentLobbyId = -1;
             this.clientNickname = "";
             this.nicknames = new ArrayList<>();
-            this.phase = leaveGame.getStatus().gamePhase;
+            this.phase = leaveGame.getStatus().getGamePhase();
 
             // Change automatically the view displayed
             this.type = ViewType.MENU;
@@ -248,7 +248,7 @@ public class ViewModelState extends ModelObservable {
         this.playerObjectives = initGame.getPlayerObjectiveCardIds();
         this.starterCard = initGame.getStarterCardId();
         // TODO : Check on possible incoming errors
-        this.phase = initGame.getStatus().gamePhase;
+        this.phase = initGame.getStatus().getGamePhase();
         this.scoreboard = new HashMap<>();
         for (String nick : this.nicknames) {
             this.scoreboard.put(nick,0);
@@ -265,10 +265,10 @@ public class ViewModelState extends ModelObservable {
             this.playerObjectives.remove((Integer) selectObjective.getObjective());
         }
 
-        this.phase = selectObjective.getStatus().gamePhase;
+        this.phase = selectObjective.getStatus().getGamePhase();
 
         if (this.phase == GamePhase.PLACING) {
-            this.currentPlayer = selectObjective.getStatus().currPlayer;
+            this.currentPlayer = selectObjective.getStatus().getCurrPlayer();
             this.type = ViewType.BOARD;
         }
 
@@ -285,10 +285,10 @@ public class ViewModelState extends ModelObservable {
             this.opponents.stream().filter(o -> Objects.equals(o.getNickname(), placeStarterCard.getNickname())).findFirst().get().addCard(new BoardSlot(0,0), new CardIds(placeStarterCard.getCardId(), placeStarterCard.getFace()));
         }
 
-        this.phase = placeStarterCard.getStatus().gamePhase;
+        this.phase = placeStarterCard.getStatus().getGamePhase();
 
         if (this.phase == GamePhase.PLACING) {
-            this.currentPlayer = placeStarterCard.getStatus().currPlayer;
+            this.currentPlayer = placeStarterCard.getStatus().getCurrPlayer();
             this.type = ViewType.BOARD;
         }
 
@@ -306,7 +306,7 @@ public class ViewModelState extends ModelObservable {
             opponent.addCard(placeCard.getPlacedSlot(), new CardIds(placeCard.getCardId(), placeCard.getFace()));
         }
 
-        this.phase = placeCard.getStatus().gamePhase;
+        this.phase = placeCard.getStatus().getGamePhase();
 
         this.notifyObservers(EventType.PLACE_CARD);
     }
@@ -322,8 +322,8 @@ public class ViewModelState extends ModelObservable {
             }
         }
 
-        this.phase = drawCard.getStatus().gamePhase;
-        this.currentPlayer = drawCard.getStatus().currPlayer;
+        this.phase = drawCard.getStatus().getGamePhase();
+        this.currentPlayer = drawCard.getStatus().getCurrPlayer();
 
         this.notifyObservers(EventType.DRAW_CARD);
 
@@ -354,8 +354,8 @@ public class ViewModelState extends ModelObservable {
             case null : break;
         }
 
-        this.phase = takeCard.getStatus().gamePhase;
-        this.currentPlayer = takeCard.getStatus().currPlayer;
+        this.phase = takeCard.getStatus().getGamePhase();
+        this.currentPlayer = takeCard.getStatus().getCurrPlayer();
 
         this.notifyObservers(EventType.TAKE_CARD);
 

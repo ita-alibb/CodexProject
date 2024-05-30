@@ -47,7 +47,10 @@ public abstract class BaseResponseData implements Serializable {
      * @return the status of the request
      */
     public ResponseStatus getStatus() {
-        return this.status;
+        if (this.status == null) {
+            return null;
+        }
+        return new ResponseStatus(this.status.getGamePhase(), this.status.getCurrPlayer(), this.status.getErrorCode(), this.status.getErrorMessage());
     }
 
     /**

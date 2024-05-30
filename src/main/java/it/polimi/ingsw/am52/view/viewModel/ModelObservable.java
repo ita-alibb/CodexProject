@@ -22,7 +22,7 @@ public abstract class ModelObservable {
      * @param types list of events to register to, if nothing is passed then it will be registered for every event
      */
     public synchronized void registerObserver(ModelObserver observer, EventType... types) {
-        if (types == null) {
+        if (types.length == 0) {
             for (EventType type : EventType.values()) {
                 observers.get(type).add(observer);
             }
