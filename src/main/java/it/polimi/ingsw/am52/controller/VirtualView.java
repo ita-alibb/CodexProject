@@ -99,8 +99,6 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
 
     // region Actions
 
-    //TODO: All this actions are implementation of the actual execution, and they must return the data needed in RMI, those are the actions exposed in the network for RMI
-
     /**
      * Method to perform the createLobby Request
      */
@@ -109,7 +107,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
         var response = ServerController.getInstance().createLobby(this.clientId, data);
 
         // the client has joined a lobby, set the GameController, in this way we remove the bottleneck on ServerController by using directly the related GameController
-        //The LobbyId is in the response of the controller TODO: the response must be implemented as the requests
+        //The LobbyId is in the response of the controller
         if (response.getStatus().getErrorCode() == 0) {
             try{
                 this.gameController = ServerController.getInstance().getGameController(response.getLobbyId()).get();

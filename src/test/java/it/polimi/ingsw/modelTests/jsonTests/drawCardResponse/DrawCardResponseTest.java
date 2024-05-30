@@ -133,7 +133,7 @@ public class DrawCardResponseTest {
             assertEquals(26, dataNode.getCardId());
             assertEquals(0, dataNode.getDeck());
             assertFalse(dataNode.isEmpty());
-            assertFalse(dataNode.isBroadcast);
+            assertFalse(dataNode.getIsBroadcast());
         } catch (IOException e) {
             System.out.println(e.getMessage());
             assert false;

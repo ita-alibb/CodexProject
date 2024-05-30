@@ -25,7 +25,7 @@ public class ShowCommonBoardStrategy extends Strategy {
     @Override
     public ResponseStatus executeWithNetworkCall() {
         ViewModelState.getInstance().setViewTypeShown(ViewType.COMMON_BOARD);
-        TuiPrinter.getInstance().update();
+        TuiPrinter.getInstance().reprint();
         return new ResponseStatus();
     }
     //endregion

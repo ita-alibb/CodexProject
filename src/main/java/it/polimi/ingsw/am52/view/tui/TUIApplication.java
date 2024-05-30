@@ -2,6 +2,7 @@ package it.polimi.ingsw.am52.view.tui;
 
 import it.polimi.ingsw.am52.network.client.Connection;
 import it.polimi.ingsw.am52.network.client.ClientConnection;
+import it.polimi.ingsw.am52.view.viewModel.EventType;
 
 import java.util.Objects;
 
@@ -22,7 +23,7 @@ public class TUIApplication {
             ClientConnection.getLobbyList();
 
             // Print View
-            TuiPrinter.getInstance().update();
+            TuiPrinter.getInstance().update(EventType.LIST_LOBBY);
 
             // Start Listening thread
             readLine();

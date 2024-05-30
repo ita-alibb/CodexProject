@@ -11,8 +11,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.rmi.RemoteException;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class ConnectionTCP implements Connection, Runnable{
 
@@ -31,6 +30,10 @@ public class ConnectionTCP implements Connection, Runnable{
      * The socket in stream
      */
     private final BufferedReader in;
+
+    private final ExecutorService broadcastThread = Executors.newSingleThreadExecutor();
+
+    private final LinkedBlockingQueue<BaseResponseData> broadcastQueue = new LinkedBlockingQueue<BaseResponseData>();
 
     /**
      * The object needed to pass the response between two threads
@@ -61,6 +64,8 @@ public class ConnectionTCP implements Connection, Runnable{
         // TODO: debug log
         System.out.println("Listening Thread started");
 
+        // Start thread to send broadcast messages
+        this.broadcastThread.execute(this::executeBroadcastAsync);
         // Initialize Listening thread
         String jsonResponse;
 
@@ -72,7 +77,7 @@ public class ConnectionTCP implements Connection, Runnable{
                     var res = JsonDeserializer.deserializeResponse(jsonResponse);
 
                     if (res.getData().getIsBroadcast()) {
-                        ViewModelState.getInstance().broadcastUpdate(res.getData());
+                        this.broadcastQueue.put(res.getData());
                         //TODO: here we receive the broadcast response, as in ConnectionRMI we need to process it to update the game
                         System.out.println("response received BROADCAST TCP");
                     } else {
@@ -116,6 +121,18 @@ public class ConnectionTCP implements Connection, Runnable{
             System.out.println("Exception on sending request to server; exception: " + e.getMessage());
         }
         return null;
+    }
+
+    private void executeBroadcastAsync() {
+        while (true) {
+            try {
+                var broadcast = this.broadcastQueue.take();
+
+                ViewModelState.getInstance().broadcastUpdate(broadcast);
+            } catch (InterruptedException e) {
+                System.out.println("Error on executing broadcast");
+            }
+        }
     }
 
     /**

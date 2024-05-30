@@ -44,7 +44,7 @@ public class ShowBoardStrategy extends Strategy {
             }
         }
 
-        TuiPrinter.getInstance().update();
+        TuiPrinter.getInstance().reprint();
         return new ResponseStatus();
     }
 

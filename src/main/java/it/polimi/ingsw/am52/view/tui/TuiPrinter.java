@@ -5,7 +5,7 @@ import it.polimi.ingsw.am52.view.viewModel.ModelObserver;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 //Context of the StatePattern
-public class TuiPrinter implements ModelObserver {
+public class TuiPrinter extends ModelObserver {
     private static TuiPrinter INSTANCE;
 
     private TuiPrinter() {
@@ -38,9 +38,9 @@ public class TuiPrinter implements ModelObserver {
     }
 
     /**
-     * Method called to update the viewModel
+     * Method called to update the viewModel, every event for TUI has to reprint the whole view
      */
-    public synchronized void update(){
+    public synchronized void reprint(){
         switch (ViewModelState.getInstance().getViewTypeShown()) {
             case MENU: new TuiMenuView().print(); break;
             case LOBBY: new TuiLobbyView().print(); break;
@@ -48,5 +48,93 @@ public class TuiPrinter implements ModelObserver {
             case COMMON_BOARD: new TuiCommonBoardView().print(); break;
             case BOARD: new TuiBoardView().print(); break;
         }
+    }
+
+    /**
+     * Update that is triggered for event END_GAME
+     */
+    @Override
+    protected void updateEndGame() {
+        this.reprint();
+    }
+
+    /**
+     * Update that is triggered for event INIT_GAME
+     */
+    @Override
+    protected void updateInitGame() {
+        this.reprint();
+    }
+
+    /**
+     * Update that is triggered for event TAKE_CARD
+     */
+    @Override
+    protected void updateTakeCard() {
+        this.reprint();
+    }
+
+    /**
+     * Update that is triggered for event DRAW_CARD
+     */
+    @Override
+    protected void updateDrawCard() {
+        this.reprint();
+    }
+
+    /**
+     * Update that is triggered for event PLACE_CARD
+     */
+    @Override
+    protected void updatePlaceCard() {
+        this.reprint();
+    }
+
+    /**
+     * Update that is triggered for event PLACE_STARTER_CARD
+     */
+    @Override
+    protected void updatePlaceStarterCard() {
+        this.reprint();
+    }
+
+    /**
+     * Update that is triggered for event SELECT_OBJECTIVE
+     */
+    @Override
+    protected void updateSelectObjective() {
+        this.reprint();
+    }
+
+    /**
+     * Update that is triggered for event LEAVE_GAME
+     */
+    @Override
+    protected void updateLeaveGame() {
+        this.reprint();
+    }
+
+    /**
+     * Update that is triggered for event LIST_LOBBY
+     */
+    @Override
+    protected void updateListLobby() {
+        this.reprint();
+    }
+
+    /**
+     * Update that is triggered for event CREATE_LOBBY
+     */
+    @Override
+    protected void updateCreateLobby() {
+        this.reprint();
+    }
+
+    /**
+     * Update that is triggered for event JOIN_LOBBY
+     */
+    @Override
+    protected void updateJoinLobby() {
+        this.reprint();
     }
 }

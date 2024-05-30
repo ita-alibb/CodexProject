@@ -212,7 +212,7 @@ public class ViewModelState extends ModelObservable {
     }
 
     public void updateLeaveGame(LeaveGameResponseData leaveGame){
-        if (!leaveGame.isBroadcast) {
+        if (!leaveGame.getIsBroadcast()) {
             this.currentLobbyId = -1;
             this.clientNickname = "";
             this.nicknames = new ArrayList<>();
@@ -260,7 +260,7 @@ public class ViewModelState extends ModelObservable {
     }
 
     public void updateSelectObjective(SelectObjectiveResponseData selectObjective) {
-        if (!selectObjective.isBroadcast) {
+        if (!selectObjective.getIsBroadcast()) {
             this.secretObjective = selectObjective.getObjective();
             this.playerObjectives.remove((Integer) selectObjective.getObjective());
         }
@@ -272,7 +272,7 @@ public class ViewModelState extends ModelObservable {
             this.type = ViewType.BOARD;
         }
 
-        if (!selectObjective.isBroadcast || this.phase == GamePhase.PLACING) {
+        if (!selectObjective.getIsBroadcast() || this.phase == GamePhase.PLACING) {
             this.notifyObservers(EventType.SELECT_OBJECTIVE);
         }
     }
@@ -292,7 +292,7 @@ public class ViewModelState extends ModelObservable {
             this.type = ViewType.BOARD;
         }
 
-        if (!placeStarterCard.isBroadcast || this.phase == GamePhase.PLACING) {
+        if (!placeStarterCard.getIsBroadcast() || this.phase == GamePhase.PLACING) {
             this.notifyObservers(EventType.PLACE_STARTER_CARD);
         }
     }
@@ -312,7 +312,7 @@ public class ViewModelState extends ModelObservable {
     }
 
     public void updateDrawCard(DrawCardResponseData drawCard) {
-        if (!drawCard.isBroadcast) {
+        if (!drawCard.getIsBroadcast()) {
             this.playerHand.add(drawCard.getCardId());
 
             switch (DrawType.fromInteger(drawCard.getDeck())) {
@@ -334,7 +334,7 @@ public class ViewModelState extends ModelObservable {
     }
 
     public void updateTakeCard(TakeCardResponseData takeCard) {
-        if (!takeCard.isBroadcast) {
+        if (!takeCard.getIsBroadcast()) {
             this.playerHand.add(takeCard.getTakenCardId());
         }
 

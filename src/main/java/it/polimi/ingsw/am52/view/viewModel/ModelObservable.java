@@ -57,6 +57,6 @@ public abstract class ModelObservable {
      * Notifies the observers
      */
     protected void notifyObservers(EventType type) {
-        observers.get(type).forEach(ModelObserver::update);
+        observers.get(type).forEach(observer -> observer.update(type));
     }
 }

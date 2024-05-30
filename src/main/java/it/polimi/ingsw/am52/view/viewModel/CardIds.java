@@ -73,7 +73,6 @@ public class CardIds {
                 this.face = card.getBackFace();
             }
         }
-
     }
 
     public void loadStarterFace() {
@@ -85,7 +84,6 @@ public class CardIds {
                 this.face = card.getBackFace();
             }
         }
-
     }
 
     public String[] getCardAsArrayString(boolean coveredTL, boolean coveredTR, boolean coveredBR, boolean coveredBL){

@@ -96,7 +96,9 @@ public class ClientHandlerTCP implements ClientHandler {
             }
         } catch (IOException e) {
             // break the loop and finally call the disconnection
+            System.out.println("Client disconnected: " + this.clientId);
         }
+
         this.view.disconnect(this);
     }
 

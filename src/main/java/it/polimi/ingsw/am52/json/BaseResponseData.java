@@ -13,7 +13,7 @@ public abstract class BaseResponseData implements Serializable {
     /**
      * Indicates if the response is a broadcast of the response
      */
-    public boolean isBroadcast;
+    private boolean isBroadcast;
 
     /**
      * The Empty constructor

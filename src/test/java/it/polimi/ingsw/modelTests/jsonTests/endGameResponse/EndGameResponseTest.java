@@ -142,7 +142,7 @@ public class EndGameResponseTest {
             var dataNode = response.getData();
 
             //Check all data
-            assertFalse(dataNode.isBroadcast);
+            assertFalse(dataNode.getIsBroadcast());
             final List<String> winners = dataNode.getWinners();
             int i = 0;
             for (String winner : winners) {
