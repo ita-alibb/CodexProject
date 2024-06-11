@@ -28,21 +28,15 @@ public class JoinLobbyStrategy extends Strategy {
         ResponseStatus networkResponse;
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("          ┌──────────────────────────────────────────────────────────────────────┐");
-        System.out.println("          │                             JOINLOBBY                                │");
-        System.out.println("          ├──────────────────────────────────────────────────────────────────────┘");
-        System.out.print(  "          │ - Enter your username: ");
+        System.out.println("┌──────────────────────────────────────────────────────────────────────┐");
+        System.out.println("│                             JOINLOBBY                                │");
+        System.out.println("├──────────────────────────────────────────────────────────────────────┘");
+        System.out.print(  "│ - Enter your username: ");
         String username = scanner.nextLine();
-        int id = 0;
-        while (true) {
-            System.out.print(  "          │ - Enter the ID of the lobby you want to join: ");
-            id = scanner.nextInt();
-            if (ViewModelState.getInstance().getLobbies().containsKey(id)) {
-                networkResponse = ClientConnection.joinLobby(username, id);
-                break;
-            }
-            System.out.println("         │ The given lobby doesn't exist");
-        }
+        System.out.print(  "│ - Enter the ID of the lobby you want to join: ");
+        int id = scanner.nextInt();
+
+        networkResponse = ClientConnection.joinLobby(username, id);
 
         return networkResponse;
     }

@@ -27,20 +27,16 @@ public class CreateLobbyStrategy extends Strategy {
         ResponseStatus networkResponse;
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("          ┌──────────────────────────────────────────────────────────────────────┐");
-        System.out.println("          │                             CREATELOBBY                              │");
-        System.out.println("          ├──────────────────────────────────────────────────────────────────────┘");
-        System.out.print("          │ - Enter your username: ");
+        System.out.println("┌──────────────────────────────────────────────────────────────────────┐");
+        System.out.println("│                             CREATELOBBY                              │");
+        System.out.println("├──────────────────────────────────────────────────────────────────────┘");
+        System.out.print("│ - Enter your username: ");
         String username = scanner.nextLine();
-        while (true) {
-            System.out.printf("          │ - Enter the number of players in the lobby (MAX %d): ", GameManager.MAX_PLAYERS);
-            int maxPlayers = scanner.nextInt();
-            if (maxPlayers <= GameManager.MAX_PLAYERS) {
-                networkResponse = ClientConnection.createLobby(username, maxPlayers);
-                break;
-            }
-            System.out.println("          │ There are too many players in the lobby!");
-        }
+
+        System.out.printf("│ - Enter the number of players in the lobby (MAX %d): ", GameManager.MAX_PLAYERS);
+        int maxPlayers = scanner.nextInt();
+
+        networkResponse = ClientConnection.createLobby(username, maxPlayers);
 
         return networkResponse;
     }

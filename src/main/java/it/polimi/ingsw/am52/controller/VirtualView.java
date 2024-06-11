@@ -136,7 +136,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
             }
         }
 
-        this.broadcast(new JoinLobbyResponse(response));
+        this.broadcast(new JoinLobbyResponse(new JoinLobbyResponseData(response.getStatus(), response.getLobbyId(), response.getNicknames())));
 
         return response;
     }
@@ -161,7 +161,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
         // The request here is useless, the only thing needed is the clientId, the body is empty
         var response = this.gameController.leaveLobby(this.clientId);
 
-        this.broadcast(new LeaveGameResponse(response));
+        this.broadcast(new LeaveGameResponse(new LeaveGameResponseData(response.getStatus(), response.getUsername(), response.getLobbies())));
 
         // Particular case, when you leave then you have to set the reference to null
         if (response.getStatus().getErrorCode() == 0) {
@@ -187,7 +187,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
     public EndGameResponseData endGame() throws RemoteException {
         var response = this.gameController.endGame();
 
-        this.broadcast(new EndGameResponse(response));
+        this.broadcast(new EndGameResponse(new EndGameResponseData(response.getStatus(), response.getWinners())));
 
         return response;
     }
@@ -263,7 +263,13 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
     public TakeCardResponseData takeCard(TakeCardData data) throws RemoteException {
         var response = this.gameController.takeCard(this.clientId, data.getCardId(), data.getType());
 
-        this.broadcast(new TakeCardResponse(response));
+        this.broadcast(new TakeCardResponse(new TakeCardResponseData(
+                response.getStatus(),
+                response.getTakenCardId(),
+                response.getShownCardId(),
+                response.getType(),
+                response.isEmpty()
+        )));
 
         return response;
     }

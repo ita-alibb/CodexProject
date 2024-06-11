@@ -31,6 +31,7 @@ public class InputReader implements Runnable {
         try {
             //TODO: verify ON INPUT
             String input;
+            System.out.print("> ");
             // mark the current position in the stream
             br.mark(1);
             // wait until there is data to complete a readLine()

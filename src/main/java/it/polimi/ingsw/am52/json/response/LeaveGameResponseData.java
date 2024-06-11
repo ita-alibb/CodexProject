@@ -36,7 +36,7 @@ public class LeaveGameResponseData extends BaseResponseData implements Serializa
     }
 
     /**
-     * Create a login data object.
+     * Create a logout data object.
      * @param status    The status of the response
      * @param username  The nickname of the player.
      * @param lobbies The updated status of lobbies.
@@ -49,7 +49,7 @@ public class LeaveGameResponseData extends BaseResponseData implements Serializa
     }
 
     /**
-     * Create a login data object for Error case.
+     * Create a logout data object for Error case.
      * @param status The status of the response
      */
     public LeaveGameResponseData(ResponseStatus status) {

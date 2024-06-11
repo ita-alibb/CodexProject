@@ -33,19 +33,19 @@ public class TakeCardStrategy extends Strategy {
         DrawType deck;
         int cardId = -1;
 
-        System.out.println(    "          ┌──────────────────────────────────────────────────────────────────────┐");
+        System.out.println(    "┌──────────────────────────────────────────────────────────────────────┐");
 
         while (true) {
-            System.out.println("          │ - Enter the deck you want to take from (0 = Resource, 1 = Gold): ");
+            System.out.println("│ - Enter the deck you want to take from (0 = Resource, 1 = Gold): ");
             deck = DrawType.fromInteger(scanner.nextInt());
             if (deck != null) {
                 break;
             }
-            System.out.println("          │ The given deck is not available!");
+            System.out.println("│ The given deck is not available!");
         }
 
         while (!cardExists) {
-            System.out.println("          │ - Enter the ID of the card you want to take: ");
+            System.out.println("│ - Enter the ID of the card you want to take: ");
             cardId = scanner.nextInt();
             switch (deck) {
                 case RESOURCE -> {
@@ -53,7 +53,7 @@ public class TakeCardStrategy extends Strategy {
                         cardExists = true;
                     }
                     else {
-                        System.out.println("          │ The given id is not available!");
+                        System.out.println("│ The given id is not available!");
                     }
                 }
                 case GOLD -> {
@@ -61,7 +61,7 @@ public class TakeCardStrategy extends Strategy {
                         cardExists = true;
                     }
                     else {
-                        System.out.println("          │ The given id is not available!");
+                        System.out.println("│ The given id is not available!");
                     }
                 }
             }

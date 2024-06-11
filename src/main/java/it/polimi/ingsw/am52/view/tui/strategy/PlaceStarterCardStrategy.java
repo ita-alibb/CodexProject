@@ -30,16 +30,10 @@ public class PlaceStarterCardStrategy extends Strategy {
         ResponseStatus networkResponse;
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println(    "          ┌──────────────────────────────────────────────────────────────────────┐");
-        while (true) {
-            System.out.println("          │ - Enter the face of the starter card (0 = front, 1 = back): ");
-            int face = scanner.nextInt();
-            if (face == 0 || face == 1) {
-                networkResponse = ClientConnection.placeStarterCard(ViewModelState.getInstance().getStarterCard(), CardSide.fromInteger(face));
-                break;
-            }
-            System.out.println("          │ The given face is not available!");
-        }
+        System.out.print("> Enter the face of the starter card (0 = front, 1 = back): ");
+        int face = scanner.nextInt();
+
+        networkResponse = ClientConnection.placeStarterCard(ViewModelState.getInstance().getStarterCard(), CardSide.fromInteger(face));
 
         return networkResponse;
     }

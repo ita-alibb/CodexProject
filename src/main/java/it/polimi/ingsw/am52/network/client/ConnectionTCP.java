@@ -78,7 +78,6 @@ public class ConnectionTCP implements Connection, Runnable{
 
                     if (res.getData().getIsBroadcast()) {
                         this.broadcastQueue.put(res.getData());
-                        System.out.println("response received BROADCAST TCP");
                     } else {
                         // If the response is not a broadcast then one of the ActionRMI method is waiting for the response to be added in the queue
                         // the offer methods inserts the element in the queue only if a thread is waiting for it, timeout handled

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am52.view.tui.state;
 
+import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
 import it.polimi.ingsw.am52.view.viewModel.CardIds;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
@@ -27,39 +28,47 @@ public class TuiSetupView extends TuiView {
     protected void printView() {
         var starterCardId = ViewModelState.getInstance().getStarterCard();
         var objectiveIds = ViewModelState.getInstance().getPlayerObjectives();
-        var card = new CardIds(starterCardId, 0);
-        var card1 = new CardIds(starterCardId, 1);
-        card.loadStarterFace();
-        card1.loadStarterFace();
 
-        var cardList = card.getCardAsArrayString(false, false, false, false);
-        var cardList1 = card1.getCardAsArrayString(false, false, false, false);
-
-
-        System.out.println("          ┌────────────────────────────────────────────────────────────────────────────┐");
-        System.out.printf( "          │ %-74s │%n", "Starter Card: " + starterCardId);
-        for (int i = 0; i < 7; i++) {
-            System.out.println(cardList[i] + "   " + cardList1[i]);
+        System.out.println("┌──────────────────────────────────────────────────────────────────────┐");
+        System.out.printf( "│ %-68s │%n", "Starter Card: " + starterCardId);
+        if (ViewModelState.getInstance().getBoard().isEmpty()) {
+            System.out.printf( "│ %-23s   %-43s│%n", "Front face:", "Back face:");
+            CardIds.printTwoStarterCards(
+                    new CardIds(starterCardId, 0),
+                    new CardIds(starterCardId, 1)
+            );
+        } else {
+            CardIds.printSingleStarterCard(
+                    ViewModelState.getInstance().getBoard().get(new BoardSlot(0,0))
+            );
         }
         if (ViewModelState.getInstance().getSecretObjective() == -1) {
-            System.out.printf( "          │ %-74s │%n", "Your secret objectives: " + objectiveIds.getFirst() + " " + objectiveIds.getLast());
+            System.out.printf( "│ %-68s │%n", "Your secret objectives: ");
+            System.out.printf( "│ %-23d   %-43d│%n", objectiveIds.getFirst(), objectiveIds.getLast());
+
+            CardIds.printTwoObjectives(
+                    new CardIds(objectiveIds.getFirst()),
+                    new CardIds(objectiveIds.getLast())
+            );
         } else {
-            System.out.printf( "          │ %-74s │%n", "Your secret objective: " + ViewModelState.getInstance().getSecretObjective());
+            System.out.printf( "│ %-68s │%n", "Your secret objective: " + ViewModelState.getInstance().getSecretObjective());
+
+            CardIds.printSingleObjective(new CardIds(ViewModelState.getInstance().getSecretObjective()));
         }
-        System.out.println("          └────────────────────────────────────────────────────────────────────────────┘");
+        System.out.println("└──────────────────────────────────────────────────────────────────────┘");
     }
 
     @Override
     protected void printCommands() {
-        System.out.println("          ┌──────────────────────────────────────────────────────────────────────┐");
-        System.out.println("          │                             COMMANDS                                 │");
-        System.out.println("          ├──────────────────────────────────────────────────────────────────────┤");
+        System.out.println("┌──────────────────────────────────────────────────────────────────────┐");
+        System.out.println("│                             COMMANDS                                 │");
+        System.out.println("├──────────────────────────────────────────────────────────────────────┤");
         if (ViewModelState.getInstance().getBoard().isEmpty()) { // if the card is not already in the board
-            System.out.println("          │ - (S) placeStarterCardFace -> place the selected face in the board   │");
+            System.out.println("│ - (S) placeStarterCardFace -> place the selected face in the board   │");
         }
         if (ViewModelState.getInstance().getSecretObjective() == -1) { //if the objective is not chosen yet
-            System.out.println("          │ - (O) selectObjective -> select one of the two secretObjective       │");
+            System.out.println("│ - (O) selectObjective -> select one of the two secretObjective       │");
         }
-        System.out.println("          └──────────────────────────────────────────────────────────────────────┘");
+        System.out.println("└──────────────────────────────────────────────────────────────────────┘");
     }
 }

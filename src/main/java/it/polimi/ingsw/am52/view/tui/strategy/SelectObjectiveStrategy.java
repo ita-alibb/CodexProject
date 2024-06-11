@@ -29,18 +29,10 @@ public class SelectObjectiveStrategy extends Strategy {
         ResponseStatus networkResponse;
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println(    "          ┌──────────────────────────────────────────────────────────────────────┐");
+        System.out.print("> Enter the ID of the objective you want to use: ");
+        int cardId = scanner.nextInt();
 
-        //TODO : Delete all the while loops
-        while (true) {
-            System.out.println("          │ - Enter the ID of the objective you want to use: ");
-            int cardId = scanner.nextInt();
-            if (ViewModelState.getInstance().getPlayerObjectives().contains(cardId)) {
-                networkResponse = ClientConnection.selectObjective(cardId);
-                break;
-            }
-            System.out.println("          │ The given id is not available!");
-        }
+        networkResponse = ClientConnection.selectObjective(cardId);
 
         return networkResponse;
     }

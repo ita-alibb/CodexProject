@@ -1,6 +1,5 @@
 package it.polimi.ingsw.am52.view.tui.state;
 
-import it.polimi.ingsw.am52.model.cards.Card;
 import it.polimi.ingsw.am52.model.game.GamePhase;
 import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
 import it.polimi.ingsw.am52.view.viewModel.BoardMap;
@@ -31,65 +30,79 @@ public class TuiBoardView extends TuiView {
 
     @Override
     protected void printView() {
-        var board = ViewModelState.getInstance().getBoard();
         var playerHand = ViewModelState.getInstance().getPlayerHand();
         var secretObjectiveId = ViewModelState.getInstance().getSecretObjective();
 
-        System.out.println("          ┌────────────────────────────────────────────────────────────────────────────┐");
-        System.out.println("          ┐");
-        System.out.println("          ┌────────────────────────────────────────────────────────────────────────────┐");
+        System.out.println("┌────────────────────────────────────────────────────────────────────────────┐");
         printBoard();
         if (ViewModelState.getInstance().isClientView()) {
-            System.out.printf( "          │ %-74s │%n", "Your hand: " + playerHand.getFirst() + " " + playerHand.get(1) + " " + playerHand.getLast());
-            System.out.printf( "          │ %-74s │%n", "Your secret objective: " + secretObjectiveId);
+            System.out.printf("│ %-74s │%n", "Your hand: " + playerHand.getFirst() + " " + playerHand.get(1) + " " + playerHand.getLast());
+            System.out.printf("│ %-74s │%n", "Your secret objective: " + secretObjectiveId);
         }
-        System.out.println("          └────────────────────────────────────────────────────────────────────────────┘");
+        System.out.println("└────────────────────────────────────────────────────────────────────────────┘");
     }
 
     @Override
     protected void printCommands() {
-        System.out.println("          ┌──────────────────────────────────────────────────────────────────────┐");
-        System.out.println("          │                             COMMANDS                                 │");
-        System.out.println("          ├──────────────────────────────────────────────────────────────────────┤");
+        System.out.println("┌──────────────────────────────────────────────────────────────────────┐");
+        System.out.println("│                             COMMANDS                                 │");
+        System.out.println("├──────────────────────────────────────────────────────────────────────┤");
         if (ViewModelState.getInstance().getPhase() == GamePhase.PLACING && ViewModelState.getInstance().isClientView() && ViewModelState.getInstance().isClientTurn()){
-            System.out.println("          │ - (P) place-card -> place a card from your hand in an available space│");
+            System.out.println("│ - (P) place-card -> place a card from your hand in an available space│");
         }
-        System.out.println("          │ - (O) see opponent board -> see the board of a specific opponent     │");
-        System.out.println("          │ - (C) common board -> switch to the common board view                │");
-        System.out.println("          └──────────────────────────────────────────────────────────────────────┘");
+        System.out.println("│ - (O) see opponent board -> see the board of a specific opponent     │");
+        System.out.println("│ - (C) common board -> switch to the common board view                │");
+        System.out.println("└──────────────────────────────────────────────────────────────────────┘");
     }
 
     private void printBoard(){
         var board = ViewModelState.getInstance().getBoard();
         var availableSlots = ViewModelState.getInstance().getAvailableSlots();
 
-        // get corners
-        int maxH = board.keySet().stream().map(BoardSlot::getHoriz).max(Integer::compareTo).orElse(0);
-        int maxY = board.keySet().stream().map(BoardSlot::getVert).max(Integer::compareTo).orElse(0);
-        int minH = board.keySet().stream().map(BoardSlot::getHoriz).min(Integer::compareTo).orElse(0);
-        int minY = board.keySet().stream().map(BoardSlot::getVert).min(Integer::compareTo).orElse(0);
+        //get corners
+        int maxH = Math.max(
+                board.keySet().stream().map(BoardSlot::getHoriz).max(Integer::compareTo).orElse(0),
+                availableSlots.stream().map(BoardSlot::getHoriz).max(Integer::compareTo).orElse(0)
+        );
+        int maxV = Math.max(
+                board.keySet().stream().map(BoardSlot::getVert).max(Integer::compareTo).orElse(0),
+                availableSlots.stream().map(BoardSlot::getVert).max(Integer::compareTo).orElse(0)
+        );
+        int minH = Math.min(
+                board.keySet().stream().map(BoardSlot::getHoriz).min(Integer::compareTo).orElse(0),
+                availableSlots.stream().map(BoardSlot::getHoriz).min(Integer::compareTo).orElse(0)
+        );
+        int minV = Math.min(
+                board.keySet().stream().map(BoardSlot::getVert).min(Integer::compareTo).orElse(0),
+                availableSlots.stream().map(BoardSlot::getVert).min(Integer::compareTo).orElse(0)
+        );
 
         // for most high to most low card //rows
-        for (int y = maxY; y >= minY ; y--) {
+        for (int y = maxV; y >= minV ; y--) {
             String[] row = new String[CardIds.TEMPLATE.length];
             Arrays.fill(row, "");
             // for most left to most right card //columns
             for (int h = minH; h <= maxH; h++) {
-                //square loop
-                var currentSlot = new BoardSlot(h, y);
-                var cardIds = board.get(currentSlot);
+                String[] column = new String[CardIds.TEMPLATE.length];
+                Arrays.fill(column, "");
+                if ((Math.floorMod(h, 2) == Math.floorMod(y, 2))) {
+                    //square loop
+                    var currentSlot = new BoardSlot(h, y);
+                    var cardIds = board.get(currentSlot);
 
-                String[] column;
-                if (cardIds != null) {
-                    if (h == 0 && y == 0){
-                        cardIds.loadStarterFace();
+                    if (cardIds != null) {
+                        if (h == 0 && y == 0){
+                            cardIds.loadStarterFace();
+                        } else {
+                            cardIds.loadFace();
+                        }
+
+                        column = cardIds.getCardAsArrayString(isCornerCovered(-1,1, currentSlot, board), isCornerCovered(1,1, currentSlot, board), isCornerCovered(1,-1, currentSlot, board), isCornerCovered(-1,-1, currentSlot, board));
+                    } else if (availableSlots.contains(currentSlot)) {
+                        column = CardIds.getEmptyTemplate(currentSlot.getHoriz(), currentSlot.getVert());
                     } else {
-                        cardIds.loadFace();
+                        column = CardIds.getEmptyTemplate();
                     }
-
-                    column = cardIds.getCardAsArrayString(isCornerCovered(-1,1, currentSlot, board), isCornerCovered(1,1, currentSlot, board), isCornerCovered(1,-1, currentSlot, board), isCornerCovered(-1,-1, currentSlot, board));
-                } else if (availableSlots.contains(currentSlot)) {
-                    column = CardIds.getEmptyTemplate(currentSlot.getHoriz(), currentSlot.getVert());
                 } else {
                     column = CardIds.getEmptyTemplate();
                 }

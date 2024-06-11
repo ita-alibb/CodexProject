@@ -53,14 +53,14 @@ public class ViewModelState extends ModelObservable {
     private String clientNickname;
 
     /**
-     * The order in the game
+     * The current turn in the game
      */
-    private int turnOrder;
+    private int turn;
 
     /**
      * The list of opponents
      */
-    private List<OpponentModel> opponents;
+    private final List<OpponentModel> opponents;
 
     /**
      * The common objectives of the game
@@ -153,6 +153,7 @@ public class ViewModelState extends ModelObservable {
         currentPlayer = "";
         opponents = new ArrayList<>();
         availableSlots = new ArrayList<>();
+        turn = 1;
     }
 
     public synchronized static ViewModelState getInstance() {
@@ -198,7 +199,7 @@ public class ViewModelState extends ModelObservable {
 
     public void updateJoinLobby(JoinLobbyResponseData joinLobby){
         this.currentLobbyId = joinLobby.getLobbyId();
-        this.nicknames = joinLobby.getNicknames();
+        this.nicknames = new ArrayList<>(joinLobby.getNicknames());
         this.phase = joinLobby.getStatus().getGamePhase();
 
         // Change automatically the view displayed
@@ -236,8 +237,6 @@ public class ViewModelState extends ModelObservable {
         for (String nickname : this.nicknames){
             if (!Objects.equals(nickname, this.clientNickname)) {
                 this.opponents.add(new OpponentModel(nickname, i++));
-            } else {
-                this.turnOrder = i++;
             }
         }
 
@@ -324,6 +323,9 @@ public class ViewModelState extends ModelObservable {
 
         this.phase = drawCard.getStatus().getGamePhase();
         this.currentPlayer = drawCard.getStatus().getCurrPlayer();
+        if (Objects.equals(this.currentPlayer, this.nicknames.getFirst())) {
+            this.turn++;
+        }
 
         this.notifyObservers(EventType.DRAW_CARD);
 
@@ -356,6 +358,9 @@ public class ViewModelState extends ModelObservable {
 
         this.phase = takeCard.getStatus().getGamePhase();
         this.currentPlayer = takeCard.getStatus().getCurrPlayer();
+        if (Objects.equals(this.currentPlayer, this.nicknames.getFirst())) {
+            this.turn++;
+        }
 
         this.notifyObservers(EventType.TAKE_CARD);
 
@@ -505,6 +510,10 @@ public class ViewModelState extends ModelObservable {
 
     public List<String> getWinners() {
         return winners;
+    }
+
+    public int getTurn() {
+        return turn;
     }
 
     //endregion

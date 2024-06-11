@@ -68,8 +68,6 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
      */
     @Override
     public void sendMessage(BaseResponseData response) throws RemoteException {
-        System.out.println("response received BROADCAST RMI");
-
         ViewModelState.getInstance().broadcastUpdate(response);
     }
 
