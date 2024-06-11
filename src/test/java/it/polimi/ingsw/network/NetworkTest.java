@@ -47,8 +47,8 @@ public class NetworkTest {
         // First Client init
         ActionsRMI firstClient;
         try {
-            firstClient = new ConnectionTCP();
-            new Thread((ConnectionTCP)firstClient).start();
+            firstClient = new TestConnectionTCP();
+            new Thread((TestConnectionTCP)firstClient).start();
         } catch (Exception ex){
             assert false;
             return;
@@ -57,7 +57,7 @@ public class NetworkTest {
         // Second Client
         ActionsRMI secondClient;
         try {
-            secondClient = new ConnectionRMI();
+            secondClient = new TestConnectionRMI();
         } catch (Exception ex){
             assert false;
             return;
@@ -66,8 +66,8 @@ public class NetworkTest {
         // Third Client
         ActionsRMI thirdClient;
         try {
-            thirdClient = new ConnectionTCP();
-            new Thread((ConnectionTCP)thirdClient).start();
+            thirdClient = new TestConnectionTCP();
+            new Thread((TestConnectionTCP)thirdClient).start();
         } catch (Exception ex){
             assert false;
             return;
@@ -92,7 +92,7 @@ public class NetworkTest {
         );
 
         // CHECK THAT THE RESPONSE AFTER SECOND JOIN (lobby full) THE STATUS IS INIT
-        var firstPlayer = initRes.getData().getStatus().currPlayer;
+        var firstPlayer = initRes.getData().getStatus().getCurrPlayer();
         var secondPlayer = Objects.equals(firstPlayer, "Andrea") ? "Lorenzo" : "Andrea";
         this.match(new JoinLobbyResponse(new JoinLobbyResponseData(new ResponseStatus(GamePhase.INIT, firstPlayer, 0, ""), 1, players)), initRes);
         //endregion
@@ -135,11 +135,11 @@ public class NetworkTest {
                 .collect(Collectors.toSet());
         assertEquals(0, commonObjectives.size());
 
-        assertEquals(0,init1.getStatus().errorCode);
-        assertEquals(0,init2.getStatus().errorCode);
+        assertEquals(0, init1.getStatus().getErrorCode());
+        assertEquals(0, init2.getStatus().getErrorCode());
 
-        assertEquals(GamePhase.INIT,init1.getStatus().gamePhase);
-        assertEquals(GamePhase.INIT,init1.getStatus().gamePhase);
+        assertEquals(GamePhase.INIT, init1.getStatus().getGamePhase());
+        assertEquals(GamePhase.INIT, init1.getStatus().getGamePhase());
         // endregion
 
         // region PlaceStarterCardResponses
@@ -161,11 +161,11 @@ public class NetworkTest {
         assertEquals(0,starterPlace1.getFace());
         assertEquals(1,starterPlace2.getFace());
 
-        assertEquals(0,starterPlace1.getStatus().errorCode);
-        assertEquals(0,starterPlace2.getStatus().errorCode);
+        assertEquals(0, starterPlace1.getStatus().getErrorCode());
+        assertEquals(0, starterPlace2.getStatus().getErrorCode());
 
-        assertEquals(GamePhase.INIT,init1.getStatus().gamePhase);
-        assertEquals(GamePhase.INIT,init1.getStatus().gamePhase);
+        assertEquals(GamePhase.INIT, init1.getStatus().getGamePhase());
+        assertEquals(GamePhase.INIT, init1.getStatus().getGamePhase());
         // endregion
 
         // region SelectObjectivesResponses
@@ -185,12 +185,12 @@ public class NetworkTest {
         assertEquals(init1.getPlayerObjectiveCardIds().getLast(),selectObjective1.getObjective());
         assertEquals(init2.getPlayerObjectiveCardIds().getFirst(),selectObjective2.getObjective());
 
-        assertEquals(0,selectObjective1.getStatus().errorCode);
-        assertEquals(0,selectObjective2.getStatus().errorCode);
+        assertEquals(0, selectObjective1.getStatus().getErrorCode());
+        assertEquals(0, selectObjective2.getStatus().getErrorCode());
 
-        assertEquals(GamePhase.INIT,selectObjective1.getStatus().gamePhase);
+        assertEquals(GamePhase.INIT, selectObjective1.getStatus().getGamePhase());
         //After second the init is complete, phase placing
-        assertEquals(GamePhase.PLACING,selectObjective2.getStatus().gamePhase);
+        assertEquals(GamePhase.PLACING, selectObjective2.getStatus().getGamePhase());
         // endregion
 
         // Leave lobby created by third client
@@ -223,10 +223,10 @@ public class NetworkTest {
         assertNotNull(place1.getAvailableSlots());
         assertNotNull(place1.getPlacedSlot());
 
-        assertEquals(0,place1.getStatus().errorCode);
+        assertEquals(0, place1.getStatus().getErrorCode());
 
-        assertEquals(GamePhase.DRAWING,place1.getStatus().gamePhase);
-        assertEquals(firstPlayer,place1.getStatus().currPlayer);
+        assertEquals(GamePhase.DRAWING, place1.getStatus().getGamePhase());
+        assertEquals(firstPlayer, place1.getStatus().getCurrPlayer());
         // endregion
 
         // region DrawCardResponse first
@@ -242,10 +242,10 @@ public class NetworkTest {
         assertEquals(0,draw1.getDeck());
         assertNotEquals(0,draw1.getCardId());
 
-        assertEquals(0,draw1.getStatus().errorCode);
+        assertEquals(0, draw1.getStatus().getErrorCode());
 
-        assertEquals(GamePhase.PLACING,draw1.getStatus().gamePhase);
-        assertEquals(secondPlayer,draw1.getStatus().currPlayer);
+        assertEquals(GamePhase.PLACING, draw1.getStatus().getGamePhase());
+        assertEquals(secondPlayer, draw1.getStatus().getCurrPlayer());
         // endregion
 
         // region PlaceCardResponse second
@@ -266,10 +266,10 @@ public class NetworkTest {
         assertNotNull(place2.getAvailableSlots());
         assertNotNull(place2.getPlacedSlot());
 
-        assertEquals(0,place2.getStatus().errorCode);
+        assertEquals(0, place2.getStatus().getErrorCode());
 
-        assertEquals(GamePhase.DRAWING,place2.getStatus().gamePhase);
-        assertEquals(secondPlayer,place2.getStatus().currPlayer);
+        assertEquals(GamePhase.DRAWING, place2.getStatus().getGamePhase());
+        assertEquals(secondPlayer, place2.getStatus().getCurrPlayer());
         // endregion
 
         // region TakeCardResponse second
@@ -289,10 +289,10 @@ public class NetworkTest {
         assertNotEquals(-1,take2.getShownCardId());
         assertEquals(1,take2.getType());
 
-        assertEquals(0,take2.getStatus().errorCode);
+        assertEquals(0, take2.getStatus().getErrorCode());
 
-        assertEquals(GamePhase.PLACING,take2.getStatus().gamePhase);
-        assertEquals(firstPlayer,take2.getStatus().currPlayer);
+        assertEquals(GamePhase.PLACING, take2.getStatus().getGamePhase());
+        assertEquals(firstPlayer, take2.getStatus().getCurrPlayer());
         // endregion
     }
 

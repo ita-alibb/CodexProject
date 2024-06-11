@@ -1,8 +1,11 @@
-package it.polimi.ingsw.am52.network.client;
+package it.polimi.ingsw.network;
 
-import it.polimi.ingsw.am52.json.*;
+import it.polimi.ingsw.am52.json.BaseResponseData;
+import it.polimi.ingsw.am52.json.JsonDeserializer;
+import it.polimi.ingsw.am52.json.JsonMessage;
 import it.polimi.ingsw.am52.json.request.*;
 import it.polimi.ingsw.am52.json.response.*;
+import it.polimi.ingsw.am52.network.client.Connection;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.io.BufferedReader;
@@ -13,9 +16,12 @@ import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.concurrent.*;
 
-public class ConnectionTCP implements Connection, Runnable{
+/**
+ * TestConnectionTCP, used for test, does not forward the broadcast message
+ */
+public class TestConnectionTCP implements Connection, Runnable{
 
-    private static ConnectionTCP INSTANCE;
+    private static TestConnectionTCP INSTANCE;
     /**
      * The client socket
      */
@@ -43,7 +49,7 @@ public class ConnectionTCP implements Connection, Runnable{
      */
     private final SynchronousQueue<JsonMessage<BaseResponseData>> responseQueue;
 
-    public ConnectionTCP() throws IOException {
+    public TestConnectionTCP() throws IOException {
         // establish connection to server
         this.socket = new Socket("127.0.0.1",5555);
 
@@ -64,8 +70,8 @@ public class ConnectionTCP implements Connection, Runnable{
         // TODO: debug log
         System.out.println("Listening Thread started");
 
-        // Start thread to send broadcast messages
-        this.broadcastThread.execute(this::executeBroadcastAsync);
+        /* Thread not start to use it in test
+        this.broadcastThread.execute(this::executeBroadcastAsync);*/
         // Initialize Listening thread
         String jsonResponse;
 
@@ -77,7 +83,7 @@ public class ConnectionTCP implements Connection, Runnable{
                     var res = JsonDeserializer.deserializeResponse(jsonResponse);
 
                     if (res.getData().getIsBroadcast()) {
-                        this.broadcastQueue.put(res.getData());
+                        // this.broadcastQueue.put(res.getData());
                         System.out.println("response received BROADCAST TCP");
                     } else {
                         // If the response is not a broadcast then one of the ActionRMI method is waiting for the response to be added in the queue

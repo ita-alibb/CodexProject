@@ -156,10 +156,10 @@ public class PlaceStarterCardResponseTest {
             assertEquals(2, availableSlots.get(1).getVert());
 
             final ResponseStatus status = dataNode.getStatus();
-            assertEquals(GamePhase.LOBBY, status.gamePhase);
-            assertEquals("", status.currPlayer);
-            assertEquals("", status.errorMessage);
-            assertEquals(0, status.errorCode);
+            assertEquals(GamePhase.LOBBY, status.getGamePhase());
+            assertEquals("", status.getCurrPlayer());
+            assertEquals("", status.getErrorMessage());
+            assertEquals(0, status.getErrorCode());
         } catch (IOException e) {
             System.out.println(e.getMessage());
             assert false;
