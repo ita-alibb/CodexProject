@@ -10,6 +10,7 @@ module it.polimi.ingsw.am52 {
     exports it.polimi.ingsw.am52;
     exports it.polimi.ingsw.am52.exceptions;
     exports it.polimi.ingsw.am52.model.cards;
+    exports it.polimi.ingsw.am52.model.objectives;
     exports it.polimi.ingsw.am52.model.player;
     exports it.polimi.ingsw.am52.model.playingBoards;
 

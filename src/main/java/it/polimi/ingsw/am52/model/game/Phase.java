@@ -2,6 +2,7 @@ package it.polimi.ingsw.am52.model.game;
 
 import it.polimi.ingsw.am52.exceptions.PhaseException;
 import it.polimi.ingsw.am52.model.cards.*;
+import it.polimi.ingsw.am52.model.objectives.Objective;
 import it.polimi.ingsw.am52.model.player.*;
 import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
 
@@ -203,11 +204,12 @@ public abstract class Phase {
     //region EndPhase methods
 
     /**
-     * @param players The list of the players in the lobby
-     * @return  The list with one or more winners, in case of a tie.
+     * @param players          The list of the players in the lobby
+     * @param commonObjectives The common objective of the game
+     * @return The list with one or more winners, in case of a tie.
      * @implNote This method can only be executed during the EndPhase; in the other phases, this will throw a new exception.
      */
-    public synchronized List<PlayerInfo> getWinners(GameManager manager, List<PlayerInfo> players) {
+    public synchronized List<String> getWinners(GameManager manager, List<PlayerInfo> players, List<Objective> commonObjectives) {
         throw new PhaseException("Incorrect phase");
     }
 

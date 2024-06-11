@@ -19,7 +19,7 @@ import java.util.Set;
 /**
  * The Player Object. The player implements PlayerInfo to expose its properties and PlayerDrawable
  */
-public class Player implements PlayerSetup, PlayerBoardSetup, PlayerInfo, PlayerDrawing{
+public class Player implements PlayerSetup, PlayerBoardSetup, PlayerInfo, PlayerDrawing {
     /**
      * The Nickname chosen by the Player
      */
@@ -181,6 +181,16 @@ public class Player implements PlayerSetup, PlayerBoardSetup, PlayerInfo, Player
      */
     public int getObjScore() {
         return this.score.getObjectiveScore();
+    }
+
+    /**
+     * Add the objective points to the score of the player
+     *
+     * @param scoreToAdd the points to add
+     */
+    @Override
+    public void setObjScore(int scoreToAdd) {
+        this.score.updateObjectiveScore(scoreToAdd);
     }
 
     /**

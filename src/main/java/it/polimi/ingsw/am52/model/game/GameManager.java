@@ -147,8 +147,8 @@ public class GameManager {
     /**
      * After each move, updates the values in the scoreboard
      */
-    private void updateScoreBoard() {
-        this.scoreBoard.put(this.phase.getCurrPlayer(), this.getPlayer(this.phase.getCurrPlayer()).getScore());
+    protected void updateScoreBoard(String currentPlayerNickname) {
+        this.scoreBoard.put(currentPlayerNickname, this.getPlayer(currentPlayerNickname).getScore());
     }
 
     /**
@@ -348,10 +348,10 @@ public class GameManager {
      * @return The winner or the list of the winners. Could be one or more, in case of a tie.
      * @throws GameException    The phase is not correct
      */
-    public List<PlayerInfo> getWinners() {
+    public List<String> getWinners() {
         try {
-            List<PlayerInfo> playersInfo = new ArrayList<>(this.players);
-            return this.phase.getWinners(this, playersInfo);
+            List<PlayerInfo> playersScore = new ArrayList<>(this.players);
+            return this.phase.getWinners(this, playersScore, this.commonObjectives);
         } catch (PhaseException e) {
             throw new GameException(e.getMessage());
         }
@@ -437,8 +437,6 @@ public class GameManager {
                     card,
                     CardSide.fromInteger(face)
             );
-            //Update the value in the ScoreBoard
-            this.updateScoreBoard();
         } catch (PhaseException e) {
             throw new GameException(e.getMessage());
         }

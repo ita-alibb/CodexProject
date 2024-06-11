@@ -50,7 +50,7 @@ public class Score {
      *
      * @param pointsToAdd The points to be added to the objectives Score
      */
-    public void updateTotalScore(int pointsToAdd) {
+    public void updateObjectiveScore(int pointsToAdd) {
         this.objectiveScore += pointsToAdd;
     }
 }

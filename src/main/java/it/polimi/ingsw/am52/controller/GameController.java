@@ -268,9 +268,7 @@ public class GameController {
      */
     public EndGameResponseData endGame() {
         try {
-            List<String> winners = this.game.getWinners().stream().map(PlayerInfo::getNickname).toList();
-
-            return new EndGameResponseData(new ResponseStatus(this.game.getStatusResponse()), winners);
+            return new EndGameResponseData(new ResponseStatus(this.game.getStatusResponse()), this.game.getWinners());
         } catch (GameException e) {
             return new EndGameResponseData(new ResponseStatus(this.game.getStatusResponse(), 3, e.getMessage()));
         }

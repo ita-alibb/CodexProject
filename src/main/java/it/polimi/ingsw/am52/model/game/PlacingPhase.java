@@ -40,6 +40,10 @@ public class PlacingPhase extends Phase {
     @Override
     synchronized public void placeCard(GameManager manager, PlayerDrawing player, BoardSlot slot, KingdomCard card, CardSide side) {
         player.placeCard(slot, card, side);
+
+        //Update the value in the ScoreBoard
+        manager.updateScoreBoard(this.getCurrPlayer());
+
         this.next(manager);
     }
 

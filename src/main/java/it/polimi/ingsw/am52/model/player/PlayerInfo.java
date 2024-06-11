@@ -60,4 +60,9 @@ public interface PlayerInfo {
      * @return The object Score of the player
      */
     int getObjScore();
+
+    /**
+     * The object Score to add
+     */
+    void setObjScore(int scoreToAdd);
 }
