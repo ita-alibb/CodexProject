@@ -2,6 +2,7 @@ package it.polimi.ingsw.am52.settings;
 
 /**
  * Represent the rmi option fo the client, enable the RMI mode of the client.
+ * @author Livio B.
  */
 public class RmiOption extends Option {
 

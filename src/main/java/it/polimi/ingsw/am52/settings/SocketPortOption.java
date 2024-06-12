@@ -2,6 +2,7 @@ package it.polimi.ingsw.am52.settings;
 
 /**
  * Represent the socket port option for server.
+ * @author Livio B.
  */
 public class SocketPortOption extends Option {
 

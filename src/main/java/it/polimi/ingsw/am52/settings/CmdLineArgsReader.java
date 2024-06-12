@@ -8,6 +8,8 @@ public class CmdLineArgsReader {
 
     //region Private Static Fields
 
+    private static final HelpOption helpOption = new HelpOption();
+
     /**
      * The list of the options available for the server mode.
      */
@@ -22,6 +24,8 @@ public class CmdLineArgsReader {
 
     //region Public Static Methods
 
+    public static HelpOption getHelpOption() { return helpOption; }
+
     /**
      *
      * @return The list of available options for the server mode.
@@ -31,6 +35,8 @@ public class CmdLineArgsReader {
         if (serverOptions == null) {
 
             List<Option> options = new ArrayList<>();
+            options.add(new SocketPortOption());
+            options.add(new RmiPortOption());
             options.add(new FixedPortOption());
             options.add(new LimitOption());
             options.add(new VerbosityOption());
@@ -51,7 +57,7 @@ public class CmdLineArgsReader {
 
             List<Option> options = new ArrayList<>();
             options.add(new TuiOption());
-            options.add(new RmiPortOption());
+            options.add(new RmiOption());
 
             clientOptions = new ImmutableList<>(options);
         }
@@ -65,6 +71,9 @@ public class CmdLineArgsReader {
      * To ask for help without running the application, the user must
      * enter only the help flag (-h/--help), without any parameter or
      * additional options.
+     * <ul> Show help/usage:
+     *     <li>-h/--help</li>
+     * </ul>
      * <ul>Server args:
      *     <li>port: optional argument, the port number.</li>
      *     <li>-a/--auto: automatic selection of the port number. If the port number
@@ -92,8 +101,7 @@ public class CmdLineArgsReader {
         // Check if the user required to show the help, without running the
         // application. The -h/--help flags shall be the only flag in
         // the command line args.
-        if (args.length == 1 &&
-                (args[0].equals("-h") || args[0].equals("--help"))) {
+        if (args.length == 1 && helpOption.validateOptionFlag(args[0])) {
             return CmdLineArgs.getShowHelpSettings();
         }
 
@@ -378,10 +386,12 @@ public class CmdLineArgsReader {
     }
 
     private static boolean validateServerFlag(String flag) {
-        return switch (flag) {
-            case "-r", "--rmi", "-l", "--limit", "-a", "--auto", "-v", "--verbosity" -> true;
-            default -> false;
-        };
+        for (Option option : getServerOptions()) {
+            if (flag.equals(option.getShortFlag()) || flag.equals(option.getLongFlag())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -390,10 +400,12 @@ public class CmdLineArgsReader {
      * @return True if the flag is a valid flag, false otherwise.
      */
     private static boolean validateClientFlag(String flag) {
-        return switch (flag) {
-            case "-r", "--rmi", "-t", "--tui" -> true;
-            default -> false;
-        };
+        for (Option option : getClientOptions()) {
+            if (flag.equals(option.getShortFlag()) || flag.equals(option.getLongFlag())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //endregion

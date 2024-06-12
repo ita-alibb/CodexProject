@@ -342,4 +342,28 @@ public class ClientSettings {
             return DEFAULT_NETWORK_MODE;
         }
     }
+
+    //region Overrides
+
+    /**
+     *
+     * @return The text representation of this server settings instance, formatted as:
+     * <ul>
+     *         [setting1:value1;setting2:value2;...]
+     * </ul>
+     * @author Livio B.
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("Client settings:%n"));
+        sb.append(String.format("  Server ip: %s%n", getServerIp()));
+        sb.append(String.format("  Port: %s%n", getPort()));
+        sb.append(String.format("  Network mode: %s%n", getNetworkMode()));
+        sb.append(String.format("  Client mode: %s%n", getMode()));
+
+        return sb.toString();
+    }
+
+    //endregion
 }

@@ -10,7 +10,7 @@ import java.nio.file.Path;
 import java.util.Iterator;
 
 /**
- * The settings of the server.
+ * The settings of the server application.
  * @author Livio B.
  */
 public class ServerSettings {
