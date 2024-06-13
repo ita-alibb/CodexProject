@@ -1,10 +1,10 @@
 package it.polimi.ingsw.settingsTests.serverSettingsTests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import it.polimi.ingsw.am52.settings.NetworkMode;
 import it.polimi.ingsw.am52.settings.PortMode;
 import it.polimi.ingsw.am52.settings.ServerSettings;
 import it.polimi.ingsw.am52.settings.VerbosityLevel;
+import static it.polimi.ingsw.am52.settings.ServerSettings.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -32,8 +32,8 @@ public class ParseTest
     {
         // This file has just one setting:
         // {
-        //   "port": 1024
-        // }
+        //  "socketPort": 5663
+        //}
 
         // Path and filename of the json settings file.
         final String jsonFileName = "settings01.json";
@@ -41,22 +41,15 @@ public class ParseTest
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
-        // Parse the server settings.
-        ServerSettings settings = null;
-        try {
-            settings = ServerSettings.loadJsonFile(jsonFilePath);
-        } catch (IOException ioEx) {
-            assert(false);
-        }
+        ServerSettings settings = assertDoesNotThrow(() -> ServerSettings.loadJsonFile(jsonFilePath));
 
-        // The port number is equal to the port number in the json file.
-        assertEquals(1024, settings.getPort().getAsInt());
-        // The max lobbies is equal to the default value.
-        assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
-        // The verbosity is equal to the default value.
-        assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The port mode.
-        assertEquals(PortMode.FIXED, settings.getPortMode());
+        checkSettings(settings,
+                DEF_MAX_LOBBIES,
+                5663,
+                DEF_RMI_PORT,
+                DEF_PORT_MODE,
+                DEF_VERBOSITY
+                );
     }
 
     /**
@@ -70,7 +63,7 @@ public class ParseTest
         // This file has just one setting, the port number with an
         // invalid value:
         // {
-        //   "port": 1023
+        //   "socketPort": 1023
         // }
 
         // Path and filename of the json settings file.
@@ -79,22 +72,15 @@ public class ParseTest
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
-        // Parse the server settings.
-        ServerSettings settings = null;
-        try {
-            settings = ServerSettings.loadJsonFile(jsonFilePath);
-        } catch (IOException ioEx) {
-            assert(false);
-        }
+        ServerSettings settings = assertDoesNotThrow(() -> ServerSettings.loadJsonFile(jsonFilePath));
 
-        // The port number is equal to the default port number.
-        assertEquals(ServerSettings.DEF_PORT, settings.getPort().getAsInt());
-        // The max lobbies is equal to the default value.
-        assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
-        // The verbosity is equal to the default value.
-        assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The port mode.
-        assertEquals(PortMode.FIXED, settings.getPortMode());
+        checkSettings(settings,
+                DEF_MAX_LOBBIES,
+                DEF_SOCKET_PORT,
+                DEF_RMI_PORT,
+                DEF_PORT_MODE,
+                DEF_VERBOSITY
+        );
     }
 
     /**
@@ -107,7 +93,7 @@ public class ParseTest
     {
         // This file has just one setting:
         // {
-        //   "port": 65535
+        //   "socketPort": 65535
         // }
 
         // Path and filename of the json settings file.
@@ -116,22 +102,15 @@ public class ParseTest
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
-        // Parse the server settings.
-        ServerSettings settings = null;
-        try {
-            settings = ServerSettings.loadJsonFile(jsonFilePath);
-        } catch (IOException ioEx) {
-            assert(false);
-        }
+        ServerSettings settings = assertDoesNotThrow(() -> ServerSettings.loadJsonFile(jsonFilePath));
 
-        // The port number is equal to the port number in the json file.
-        assertEquals(65535, settings.getPort().getAsInt());
-        // The max lobbies is equal to the default value.
-        assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
-        // The verbosity is equal to the default value.
-        assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The port mode.
-        assertEquals(PortMode.FIXED, settings.getPortMode());
+        checkSettings(settings,
+                DEF_MAX_LOBBIES,
+                65535,
+                DEF_RMI_PORT,
+                DEF_PORT_MODE,
+                DEF_VERBOSITY
+        );
     }
 
     /**
@@ -154,22 +133,15 @@ public class ParseTest
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
-        // Parse the server settings.
-        ServerSettings settings = null;
-        try {
-            settings = ServerSettings.loadJsonFile(jsonFilePath);
-        } catch (IOException ioEx) {
-            assert(false);
-        }
+        ServerSettings settings = assertDoesNotThrow(() -> ServerSettings.loadJsonFile(jsonFilePath));
 
-        // The port number is equal to the default port number.
-        assertEquals(ServerSettings.DEF_PORT, settings.getPort().getAsInt());
-        // The max lobbies is equal to the default value.
-        assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
-        // The verbosity is equal to the default value.
-        assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The port mode.
-        assertEquals(PortMode.FIXED, settings.getPortMode());
+        checkSettings(settings,
+                DEF_MAX_LOBBIES,
+                DEF_SOCKET_PORT,
+                DEF_RMI_PORT,
+                DEF_PORT_MODE,
+                DEF_VERBOSITY
+        );
     }
 
     /**
@@ -191,22 +163,15 @@ public class ParseTest
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
-        // Parse the server settings.
-        ServerSettings settings = null;
-        try {
-            settings = ServerSettings.loadJsonFile(jsonFilePath);
-        } catch (IOException ioEx) {
-            assert(false);
-        }
+        ServerSettings settings = assertDoesNotThrow(() -> ServerSettings.loadJsonFile(jsonFilePath));
 
-        // The port number is equal to the default port number.
-        assertEquals(OptionalInt.empty(), settings.getPort());
-        // The max lobbies is equal to the value read from settings file.
-        assertEquals(1, settings.getMaxLobbies());
-        // The verbosity is equal to the default value.
-        assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The port mode.
-        assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
+        checkSettings(settings,
+                1,
+                DEF_SOCKET_PORT,
+                DEF_RMI_PORT,
+                DEF_PORT_MODE,
+                DEF_VERBOSITY
+        );
     }
 
     /**
@@ -229,22 +194,15 @@ public class ParseTest
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
-        // Parse the server settings.
-        ServerSettings settings = null;
-        try {
-            settings = ServerSettings.loadJsonFile(jsonFilePath);
-        } catch (IOException ioEx) {
-            assert(false);
-        }
+        ServerSettings settings = assertDoesNotThrow(() -> ServerSettings.loadJsonFile(jsonFilePath));
 
-        // The port number is equal to the default port number.
-        assertEquals(OptionalInt.empty(), settings.getPort());
-        // The max lobbies is equal to the default max lobbies value.
-        assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
-        // The verbosity is equal to the default value.
-        assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The port mode.
-        assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
+        checkSettings(settings,
+                DEF_MAX_LOBBIES,
+                DEF_SOCKET_PORT,
+                DEF_RMI_PORT,
+                DEF_PORT_MODE,
+                DEF_VERBOSITY
+        );
     }
 
     /**
@@ -266,22 +224,15 @@ public class ParseTest
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
-        // Parse the server settings.
-        ServerSettings settings = null;
-        try {
-            settings = ServerSettings.loadJsonFile(jsonFilePath);
-        } catch (IOException ioEx) {
-            assert(false);
-        }
+        ServerSettings settings = assertDoesNotThrow(() -> ServerSettings.loadJsonFile(jsonFilePath));
 
-        // The port number is equal to the default port number.
-        assertEquals(OptionalInt.empty(), settings.getPort());
-        // The max lobbies is equal to the default max lobbies value.
-        assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
-        // The verbosity is equal to the value read from the settings file.
-        assertEquals(VerbosityLevel.VERBOSE, settings.getVerbosity());
-        // The port mode.
-        assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
+        checkSettings(settings,
+                DEF_MAX_LOBBIES,
+                DEF_SOCKET_PORT,
+                DEF_RMI_PORT,
+                DEF_PORT_MODE,
+                VerbosityLevel.VERBOSE
+        );
     }
 
     /**
@@ -303,22 +254,15 @@ public class ParseTest
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
-        // Parse the server settings.
-        ServerSettings settings = null;
-        try {
-            settings = ServerSettings.loadJsonFile(jsonFilePath);
-        } catch (IOException ioEx) {
-            assert(false);
-        }
+        ServerSettings settings = assertDoesNotThrow(() -> ServerSettings.loadJsonFile(jsonFilePath));
 
-        // The port number is equal to the default port number.
-        assertEquals(OptionalInt.empty(), settings.getPort());
-        // The max lobbies is equal to the default max lobbies value.
-        assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
-        // The verbosity is equal to the value read from the settings file.
-        assertEquals(VerbosityLevel.INFO, settings.getVerbosity());
-        // The port mode.
-        assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
+        checkSettings(settings,
+                DEF_MAX_LOBBIES,
+                DEF_SOCKET_PORT,
+                DEF_RMI_PORT,
+                DEF_PORT_MODE,
+                VerbosityLevel.INFO
+        );
     }
 
     /**
@@ -340,22 +284,15 @@ public class ParseTest
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
-        // Parse the server settings.
-        ServerSettings settings = null;
-        try {
-            settings = ServerSettings.loadJsonFile(jsonFilePath);
-        } catch (IOException ioEx) {
-            assert(false);
-        }
+        ServerSettings settings = assertDoesNotThrow(() -> ServerSettings.loadJsonFile(jsonFilePath));
 
-        // The port number is equal to the default port number.
-        assertEquals(OptionalInt.empty(), settings.getPort());
-        // The max lobbies is equal to the default max lobbies value.
-        assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
-        // The verbosity is equal to the value read from the settings file.
-        assertEquals(VerbosityLevel.WARNING, settings.getVerbosity());
-        // The port mode.
-        assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
+        checkSettings(settings,
+                DEF_MAX_LOBBIES,
+                DEF_SOCKET_PORT,
+                DEF_RMI_PORT,
+                DEF_PORT_MODE,
+                VerbosityLevel.WARNING
+        );
     }
 
     /**
@@ -377,22 +314,15 @@ public class ParseTest
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
-        // Parse the server settings.
-        ServerSettings settings = null;
-        try {
-            settings = ServerSettings.loadJsonFile(jsonFilePath);
-        } catch (IOException ioEx) {
-            assert(false);
-        }
+        ServerSettings settings = assertDoesNotThrow(() -> ServerSettings.loadJsonFile(jsonFilePath));
 
-        // The port number is equal to the default port number.
-        assertEquals(OptionalInt.empty(), settings.getPort());
-        // The max lobbies is equal to the default max lobbies value.
-        assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
-        // The verbosity is equal to the value read from the settings file.
-        assertEquals(VerbosityLevel.ERROR, settings.getVerbosity());
-        // The port mode.
-        assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
+        checkSettings(settings,
+                DEF_MAX_LOBBIES,
+                DEF_SOCKET_PORT,
+                DEF_RMI_PORT,
+                DEF_PORT_MODE,
+                VerbosityLevel.ERROR
+        );
     }
 
     /**
@@ -414,22 +344,15 @@ public class ParseTest
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
-        // Parse the server settings.
-        ServerSettings settings = null;
-        try {
-            settings = ServerSettings.loadJsonFile(jsonFilePath);
-        } catch (IOException ioEx) {
-            assert(false);
-        }
+        ServerSettings settings = assertDoesNotThrow(() -> ServerSettings.loadJsonFile(jsonFilePath));
 
-        // The port number is equal to the default port number.
-        assertEquals(OptionalInt.empty(), settings.getPort());
-        // The max lobbies is equal to the default max lobbies value.
-        assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
-        // The verbosity is equal to the default value.
-        assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The port mode.
-        assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
+        checkSettings(settings,
+                DEF_MAX_LOBBIES,
+                DEF_SOCKET_PORT,
+                DEF_RMI_PORT,
+                DEF_PORT_MODE,
+                DEF_VERBOSITY
+        );
     }
 
     /**
@@ -450,22 +373,15 @@ public class ParseTest
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
-        // Parse the server settings.
-        ServerSettings settings = null;
-        try {
-            settings = ServerSettings.loadJsonFile(jsonFilePath);
-        } catch (IOException ioEx) {
-            assert(false);
-        }
+        ServerSettings settings = assertDoesNotThrow(() -> ServerSettings.loadJsonFile(jsonFilePath));
 
-        // The port number is equal to the default port number.
-        assertEquals(OptionalInt.empty(), settings.getPort());
-        // The max lobbies is equal to the default max lobbies value.
-        assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
-        // The verbosity is equal to the default value.
-        assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The port mode.
-        assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
+        checkSettings(settings,
+                DEF_MAX_LOBBIES,
+                DEF_SOCKET_PORT,
+                DEF_RMI_PORT,
+                DEF_PORT_MODE,
+                DEF_VERBOSITY
+        );
     }
 
     /**
@@ -488,16 +404,7 @@ public class ParseTest
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
-        // Parse the server settings.
-        ServerSettings settings = null;
-        try {
-            settings = ServerSettings.loadJsonFile(jsonFilePath);
-            assert (false);
-        } catch (JsonProcessingException ioEx) {
-            assert(true);
-        } catch (IOException ioEx) {
-            assert (false);
-        }
+        assertThrows(JsonProcessingException.class, () -> ServerSettings.loadJsonFile(jsonFilePath));
     }
 
     /**
@@ -509,7 +416,7 @@ public class ParseTest
     {
         // This file has three settings' values:
         // {
-        //   "port": 3325,
+        //   "socketPort": 3325,
         //   "maxLobbies": 99,
         //   "verbosity": "warning"
         // }
@@ -520,22 +427,15 @@ public class ParseTest
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
-        // Parse the server settings.
-        ServerSettings settings = null;
-        try {
-            settings = ServerSettings.loadJsonFile(jsonFilePath);
-        } catch (IOException ioEx) {
-            assert(false);
-        }
+        ServerSettings settings = assertDoesNotThrow(() -> ServerSettings.loadJsonFile(jsonFilePath));
 
-        // The port number is equal to the value read from file.
-        assertEquals(3325, settings.getPort().getAsInt());
-        // The max lobbies is equal to the value read from file.
-        assertEquals(99, settings.getMaxLobbies());
-        // The verbosity is equal to the value read from file.
-        assertEquals(VerbosityLevel.WARNING, settings.getVerbosity());
-        // The port mode.
-        assertEquals(PortMode.FIXED, settings.getPortMode());
+        checkSettings(settings,
+                99,
+                3325,
+                DEF_RMI_PORT,
+                DEF_PORT_MODE,
+                VerbosityLevel.WARNING
+        );
     }
 
     /**
@@ -548,7 +448,7 @@ public class ParseTest
     {
         // This file has four settings' values:
         // {
-        //   "port": 3325,
+        //   "socketPort": 3325,
         //   "maxLobbies": 99,
         //   "verbosity": "warning",
         //   "key": "xx12"
@@ -560,22 +460,15 @@ public class ParseTest
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
-        // Parse the server settings.
-        ServerSettings settings = null;
-        try {
-            settings = ServerSettings.loadJsonFile(jsonFilePath);
-        } catch (IOException ioEx) {
-            assert(false);
-        }
+        ServerSettings settings = assertDoesNotThrow(() -> ServerSettings.loadJsonFile(jsonFilePath));
 
-        // The port number is equal to the value read from file.
-        assertEquals(3325, settings.getPort().getAsInt());
-        // The max lobbies is equal to the value read from file.
-        assertEquals(99, settings.getMaxLobbies());
-        // The verbosity is equal to the value read from file.
-        assertEquals(VerbosityLevel.WARNING, settings.getVerbosity());
-        // The port mode.
-        assertEquals(PortMode.FIXED, settings.getPortMode());
+        checkSettings(settings,
+                99,
+                3325,
+                DEF_RMI_PORT,
+                DEF_PORT_MODE,
+                VerbosityLevel.WARNING
+        );
     }
 
     /**
@@ -589,7 +482,7 @@ public class ParseTest
     {
         // This file has three settings' values:
         // {
-        //   "port": 3325,
+        //   "socketPort": 3325,
         //   "maxLobbies": "99",
         //   "verbosity": "warning"
         // }
@@ -600,27 +493,20 @@ public class ParseTest
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
-        // Parse the server settings.
-        ServerSettings settings = null;
-        try {
-            settings = ServerSettings.loadJsonFile(jsonFilePath);
-        } catch (IOException ioEx) {
-            assert(false);
-        }
+        ServerSettings settings = assertDoesNotThrow(() -> ServerSettings.loadJsonFile(jsonFilePath));
 
-        // The port number is equal to the value read from file.
-        assertEquals(3325, settings.getPort().getAsInt());
-        // The max lobbies is equal to the value read from file.
-        assertEquals(99, settings.getMaxLobbies());
-        // The verbosity is equal to the value read from file.
-        assertEquals(VerbosityLevel.WARNING, settings.getVerbosity());
-        // The port mode.
-        assertEquals(PortMode.FIXED, settings.getPortMode());
+        checkSettings(settings,
+                99,
+                3325,
+                DEF_RMI_PORT,
+                DEF_PORT_MODE,
+                VerbosityLevel.WARNING
+        );
     }
 
     /**
      * Test the parseFromJson() method in case the json file has only
-     * the network field set to "socket".
+     * the rmi port option set to 5633.
      */
     @Test
     @DisplayName("Test file settings17.json")
@@ -628,8 +514,8 @@ public class ParseTest
     {
         // This file has one setting value:
         // {
-        //  "network": "socket"
-        // }
+        //  "rmiPort": 5633
+        //}
 
         // Path and filename of the json settings file.
         final String jsonFileName = "settings17.json";
@@ -637,27 +523,20 @@ public class ParseTest
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
-        // Parse the server settings.
-        ServerSettings settings = null;
-        try {
-            settings = ServerSettings.loadJsonFile(jsonFilePath);
-        } catch (IOException ioEx) {
-            assert(false);
-        }
+        ServerSettings settings = assertDoesNotThrow(() -> ServerSettings.loadJsonFile(jsonFilePath));
 
-        // The port number is equal to the value read from file.
-        assertEquals(OptionalInt.empty(), settings.getPort());
-        // The max lobbies is equal to the value read from file.
-        assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
-        // The verbosity is equal to the value read from file.
-        assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The port mode.
-        assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
+        checkSettings(settings,
+                DEF_MAX_LOBBIES,
+                DEF_SOCKET_PORT,
+                5633,
+                DEF_PORT_MODE,
+                DEF_VERBOSITY
+        );
     }
 
     /**
      * Test the parseFromJson() method in case the json file has only
-     * the network field set to "socket".
+     * the rmi port option set to 1023, invalid value.
      */
     @Test
     @DisplayName("Test file settings18.json")
@@ -665,8 +544,8 @@ public class ParseTest
     {
         // This file has one setting value:
         // {
-        //  "network": "rmi"
-        // }
+        //  "rmiPort": 1023
+        //}
 
         // Path and filename of the json settings file.
         final String jsonFileName = "settings18.json";
@@ -674,22 +553,15 @@ public class ParseTest
         // Check if the file exists.
         assertTrue(Files.exists(jsonFilePath));
 
-        // Parse the server settings.
-        ServerSettings settings = null;
-        try {
-            settings = ServerSettings.loadJsonFile(jsonFilePath);
-        } catch (IOException ioEx) {
-            assert(false);
-        }
+        ServerSettings settings = assertDoesNotThrow(() -> ServerSettings.loadJsonFile(jsonFilePath));
 
-        // The port number is equal to the value read from file.
-        assertEquals(OptionalInt.empty(), settings.getPort());
-        // The max lobbies is equal to the value read from file.
-        assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
-        // The verbosity is equal to the value read from file.
-        assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
-        // The port mode.
-        assertEquals(ServerSettings.DEF_PORT_MODE, settings.getPortMode());
+        checkSettings(settings,
+                DEF_MAX_LOBBIES,
+                DEF_SOCKET_PORT,
+                DEF_RMI_PORT,
+                DEF_PORT_MODE,
+                DEF_VERBOSITY
+        );
     }
 
     /**
@@ -702,7 +574,7 @@ public class ParseTest
     {
         // This file has four settings' values:
         // {
-        //  "port": 3365,
+        //  "socketPort": 3365,
         //  "verbosity": "verbose",
         //  "network": "rmi",
         //  "maxLobbies": 9999
@@ -723,13 +595,13 @@ public class ParseTest
         }
 
         // The port number is equal to the value read from file.
-        assertEquals(3365, settings.getPort().getAsInt());
+        assertEquals(3365, settings.getSocketPort());
         // The max lobbies is equal to the value read from file.
         assertEquals(9999, settings.getMaxLobbies());
         // The verbosity is equal to the value read from file.
         assertEquals(VerbosityLevel.VERBOSE, settings.getVerbosity());
         // The port mode.
-        assertEquals(PortMode.FIXED, settings.getPortMode());
+        assertEquals(PortMode.AUTO, settings.getPortMode());
     }
 
     /**
@@ -760,7 +632,7 @@ public class ParseTest
         }
 
         // The port number is equal to the value read from file.
-        assertEquals(OptionalInt.empty(), settings.getPort());
+        assertEquals(DEF_SOCKET_PORT, settings.getSocketPort());
         // The max lobbies is equal to the value read from file.
         assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
         // The verbosity is equal to the value read from file.
@@ -796,8 +668,6 @@ public class ParseTest
             assert(false);
         }
 
-        // The port number is equal to the value read from file.
-        assertEquals(ServerSettings.DEF_PORT, settings.getPort().getAsInt());
         // The max lobbies is equal to the value read from file.
         assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
         // The verbosity is equal to the value read from file.
@@ -835,7 +705,7 @@ public class ParseTest
         }
 
         // The port number is equal to the value read from file.
-        assertEquals(2366, settings.getPort().getAsInt());
+        assertEquals(2366, settings.getSocketPort());
         // The max lobbies is equal to the value read from file.
         assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
         // The verbosity is equal to the value read from file.
@@ -854,7 +724,7 @@ public class ParseTest
     {
         // This file has one setting value:
         // {
-        //  "port": 2366,
+        //  "socketPort": 2366,
         //  "portMode": "auto"
         // }
 
@@ -873,13 +743,35 @@ public class ParseTest
         }
 
         // The port number is equal to the value read from file.
-        assertEquals(2366, settings.getPort().getAsInt());
+        assertEquals(2366, settings.getSocketPort());
         // The max lobbies is equal to the value read from file.
         assertEquals(ServerSettings.DEF_MAX_LOBBIES, settings.getMaxLobbies());
         // The verbosity is equal to the value read from file.
         assertEquals(ServerSettings.DEF_VERBOSITY, settings.getVerbosity());
         // The port mode.
         assertEquals(PortMode.AUTO, settings.getPortMode());
+    }
+
+    /**
+     * Check that the server settings have the expected values.
+     * @param settings The server settings to check.
+     * @param expectedMaxLobbies Expected max lobbies.
+     * @param expectedSocketPort Expected socket port number.
+     * @param expectedRmiPort Expected rmi port number.
+     * @param expectedPortMode Expected port mode.
+     * @param expectedVerbosity Expected log verbosity.
+     */
+    private static void checkSettings(ServerSettings settings,
+                                      int expectedMaxLobbies,
+                                      int expectedSocketPort,
+                                      int expectedRmiPort,
+                                      PortMode expectedPortMode,
+                                      VerbosityLevel expectedVerbosity) {
+        assertEquals(expectedMaxLobbies, settings.getMaxLobbies());
+        assertEquals(expectedSocketPort, settings.getSocketPort());
+        assertEquals(expectedRmiPort, settings.getRmiPort());
+        assertEquals(expectedPortMode, settings.getPortMode());
+        assertEquals(expectedVerbosity, settings.getVerbosity());
     }
 
 }

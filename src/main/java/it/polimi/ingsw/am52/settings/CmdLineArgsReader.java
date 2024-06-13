@@ -8,6 +8,8 @@ public class CmdLineArgsReader {
 
     //region Private Static Fields
 
+    private static final HelpOption helpOption = new HelpOption();
+
     /**
      * The list of the options available for the server mode.
      */
@@ -22,6 +24,8 @@ public class CmdLineArgsReader {
 
     //region Public Static Methods
 
+    public static HelpOption getHelpOption() { return helpOption; }
+
     /**
      *
      * @return The list of available options for the server mode.
@@ -31,7 +35,9 @@ public class CmdLineArgsReader {
         if (serverOptions == null) {
 
             List<Option> options = new ArrayList<>();
-            options.add(new AutoOption());
+            options.add(new SocketPortOption());
+            options.add(new RmiPortOption());
+            options.add(new FixedPortOption());
             options.add(new LimitOption());
             options.add(new VerbosityOption());
 
@@ -65,6 +71,9 @@ public class CmdLineArgsReader {
      * To ask for help without running the application, the user must
      * enter only the help flag (-h/--help), without any parameter or
      * additional options.
+     * <ul> Show help/usage:
+     *     <li>-h/--help</li>
+     * </ul>
      * <ul>Server args:
      *     <li>port: optional argument, the port number.</li>
      *     <li>-a/--auto: automatic selection of the port number. If the port number
@@ -92,8 +101,7 @@ public class CmdLineArgsReader {
         // Check if the user required to show the help, without running the
         // application. The -h/--help flags shall be the only flag in
         // the command line args.
-        if (args.length == 1 &&
-                (args[0].equals("-h") || args[0].equals("--help"))) {
+        if (args.length == 1 && helpOption.validateOptionFlag(args[0])) {
             return CmdLineArgs.getShowHelpSettings();
         }
 
@@ -125,12 +133,16 @@ public class CmdLineArgsReader {
         }
 
         // Check number of params:
-        // 0,1 = Server Mode
+        // 0 = Server Mode
         // 2 = Client Mode
-        // > 2 = error
+        // == 1, or > 2 = error
         return switch (params.size()) {
-            case 0, 1 -> readServerSettings(params, options);
+            case 0 -> readServerSettings(options);
             case 2 -> readClientSettings(params, options);
+            case 1 -> throw new IllegalArgumentException(
+                        String.format("No usage with one argument \"%s\". Use zero arguments for Sever mode, two arguments for Client mode.",
+                            params.getFirst())
+                        );
             default -> throw new IllegalArgumentException(
                     String.format("Too many input arguments (%d).", params.size()));
         };
@@ -138,28 +150,17 @@ public class CmdLineArgsReader {
 
     /**
      *
-     * @param params The arguments entered for the application.
      * @param options The options entered at the command line, after the initial params.
      * @return The application startup settings.
      * @throws IllegalArgumentException If there are invalid format or options.
      */
-    private static ApplicationSettings readServerSettings(List<String> params, List<String> options) {
-
-        // Note: I don't check the length of the params list, because this is a private method
-        //       and I assume it is always called with params.size() == (0 or 1).
-
-        // In server mode, there is an optional parameter, that is the desired port number
-        // for the connection.
-        OptionalInt portNumber =
-                (params.size() == 1) ? // Is there an argument?
-                OptionalInt.of(parsePortNumber(params.getFirst())) : // Yes, parse it for the port value
-                OptionalInt.empty(); // No, assign empty value
-        // If the port number is specified, assume port mode = "fixed", otherwise it is "auto".
-        PortMode portMode =
-                portNumber.isEmpty() ? PortMode.AUTO : PortMode.FIXED;
+    private static ApplicationSettings readServerSettings(List<String> options) {
 
         // Default settings, these are the app settings if no options
         // are entered at the command line.
+        OptionalInt socketPort = OptionalInt.empty();
+        OptionalInt rmiPort = OptionalInt.empty();
+        PortMode portMode = PortMode.AUTO;
         int maxLobbies = ServerSettings.DEF_MAX_LOBBIES;
         VerbosityLevel verbosity = ServerSettings.DEF_VERBOSITY;
 
@@ -178,10 +179,10 @@ public class CmdLineArgsReader {
             // Switch option flag.
             switch (option) {
 
-                // -a/--auto: enable auto port selection.
-                case AutoOption.SHORT_FLAG:
-                case AutoOption.LONG_FLAG:
-                    portMode = PortMode.AUTO;
+                // -f/--fixed: fixed port selection.
+                case FixedPortOption.SHORT_FLAG:
+                case FixedPortOption.LONG_FLAG:
+                    portMode = PortMode.FIXED;
                     break;
 
                 // -l/--limit: the maximum number of concurrent lobbies.
@@ -191,6 +192,28 @@ public class CmdLineArgsReader {
                     // This option requires a parameter.
                     String maxLobbiesText = getOptionArgument(i, options, limitOpt);
                     maxLobbies = limitOpt.parseValueText(maxLobbiesText);
+                    // Skip next option in the for loop (it was the argument).
+                    i++;
+                    break;
+
+                // -m/rmiPort: set the port number for the rmi connection.
+                case RmiPortOption.SHORT_FLAG:
+                case RmiPortOption.LONG_FLAG:
+                    RmiPortOption rmiPortOption = new RmiPortOption();
+                    // This option requires a parameter.
+                    String rmiPortText = getOptionArgument(i, options, rmiPortOption);
+                    rmiPort = OptionalInt.of(rmiPortOption.parseValueText(rmiPortText));
+                    // Skip next option in the for loop (it was the argument).
+                    i++;
+                    break;
+
+                // -s/socketPort: set the port number for the socket connection.
+                case SocketPortOption.SHORT_FLAG:
+                case SocketPortOption.LONG_FLAG:
+                    SocketPortOption socketPortOption = new SocketPortOption();
+                    // This option requires a parameter.
+                    String socketPortText = getOptionArgument(i, options, socketPortOption);
+                    socketPort = OptionalInt.of(socketPortOption.parseValueText(socketPortText));
                     // Skip next option in the for loop (it was the argument).
                     i++;
                     break;
@@ -209,9 +232,11 @@ public class CmdLineArgsReader {
         }
 
         ServerSettings serverSettings =
-                portNumber.isEmpty() ?
-                        new ServerSettings(maxLobbies, verbosity) :
-                        new ServerSettings(maxLobbies, portNumber.getAsInt(), verbosity, portMode);
+                new ServerSettings(maxLobbies,
+                        socketPort.orElse(ServerSettings.DEF_SOCKET_PORT),
+                        rmiPort.orElse(ServerSettings.DEF_RMI_PORT),
+                        verbosity,
+                        portMode);
 
         return new ApplicationSettings(serverSettings);
     }
@@ -361,10 +386,12 @@ public class CmdLineArgsReader {
     }
 
     private static boolean validateServerFlag(String flag) {
-        return switch (flag) {
-            case "-r", "--rmi", "-l", "--limit", "-a", "--auto", "-v", "--verbosity" -> true;
-            default -> false;
-        };
+        for (Option option : getServerOptions()) {
+            if (flag.equals(option.getShortFlag()) || flag.equals(option.getLongFlag())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -373,10 +400,12 @@ public class CmdLineArgsReader {
      * @return True if the flag is a valid flag, false otherwise.
      */
     private static boolean validateClientFlag(String flag) {
-        return switch (flag) {
-            case "-r", "--rmi", "-t", "--tui" -> true;
-            default -> false;
-        };
+        for (Option option : getClientOptions()) {
+            if (flag.equals(option.getShortFlag()) || flag.equals(option.getLongFlag())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //endregion

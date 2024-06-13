@@ -2,6 +2,7 @@ package it.polimi.ingsw.am52.settings;
 
 /**
  * Represent the tui option for client application.
+ * @author Livio B.
  */
 public class TuiOption extends Option {
 

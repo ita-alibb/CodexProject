@@ -1,8 +1,6 @@
 package it.polimi.ingsw.settingsTests.optionsTests;
 
-import it.polimi.ingsw.am52.settings.LimitOption;
 import it.polimi.ingsw.am52.settings.RmiOption;
-import it.polimi.ingsw.am52.settings.ServerSettings;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
 {
-  "port": 2366,
+  "socketPort": 2366,
   "portMode": "auto"
 }

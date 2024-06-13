@@ -1,7 +1,8 @@
 package it.polimi.ingsw.am52.settings;
 
 /**
- * Represent the verbosity option of the server
+ * Represent the verbosity option of the server.
+ * @author Livio B.
  */
 public class LimitOption extends Option<Integer> {
 
