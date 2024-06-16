@@ -3,7 +3,9 @@ package it.polimi.ingsw.am52.view.viewModel;
 import it.polimi.ingsw.am52.model.cards.*;
 import it.polimi.ingsw.am52.model.objectives.Objective;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class CardIds {
     /**
@@ -173,6 +175,39 @@ public class CardIds {
         }
     }
 
+    /**
+     * The method to print the hand of the player
+     */
+    public static void printHand() {
+        var hand = ViewModelState.getInstance().getPlayerHand();
+
+        var frontHand = hand.stream()
+                .map(c -> new CardIds(c, 0))
+                .toList();
+        frontHand.forEach(CardIds::loadFace);
+        var frontHandList = frontHand.stream()
+                .map(c -> c.getCardAsArrayString(false, false, false, false))
+                .toList();
+
+        var backHand = hand.stream()
+                .map(c -> new CardIds(c, 1))
+                .toList();
+        backHand.forEach(CardIds::loadFace);
+        var backHandList = backHand.stream()
+                .map(c -> c.getCardAsArrayString(false, false, false, false))
+                        .toList();
+
+        System.out.printf("│ %-74s │%n", "Front:");
+        for (int i = 0; i < TEMPLATE.length; i++) {
+            System.out.printf("│ " + frontHandList.getFirst()[i] + "  " + frontHandList.get(1)[i] + "  " + frontHandList.getLast()[i]);
+        }
+
+        System.out.printf("│ %-74s │%n", "Back:");
+        for (int i = 0; i < TEMPLATE.length; i++) {
+            System.out.printf("│ " + backHandList.getFirst()[i] + "  " + backHandList.get(1)[i] + "  " + backHandList.getLast()[i]);
+        }
+    }
+
     public int cardId;
     public int cardFace;
 
@@ -268,36 +303,15 @@ public class CardIds {
         result[3] = result[3].formatted(this.getSymbol(this.face.getPermanentResources()));
 
         if (this.cardFace == 0) {
-            switch (this.cardId) {
-                case 8:
-                case 9:
-                case 10:
-                case 18:
-                case 19:
-                case 20:
-                case 28:
-                case 29:
-                case 30:
-                case 38:
-                case 39:
-                case 40:
-                    result[1] = result[1].formatted(
-                            getSymbol(this.face.getTopLeftCorner(), coveredTL),
-                            "  1  ",
-                            getSymbol(this.face.getTopRightCorner(), coveredTR)
-                    );
-                    break;
-                default:
-                    result[1] = result[1].formatted(
-                            getSymbol(this.face.getTopLeftCorner(), coveredTL),
-                            "",
-                            getSymbol(this.face.getTopRightCorner(), coveredTR)
-                    );
-            }
+            result[1] = result[1].formatted(
+                    getSymbol(this.face.getTopLeftCorner(), coveredTL),
+                    KingdomCard.getCardWithId(this.cardId).getFrontFace().getPoints(),
+                    getSymbol(this.face.getTopRightCorner(), coveredTR)
+            );
         } else {
             result[1] = result[1].formatted(
                     getSymbol(this.face.getTopLeftCorner(), coveredTL),
-                    "",
+                    KingdomCard.getCardWithId(this.cardId).getBackFace().getPoints(),
                     getSymbol(this.face.getTopRightCorner(), coveredTR)
             );
         }
@@ -315,84 +329,13 @@ public class CardIds {
 
         if (this.cardFace == 0) {
             StringBuilder totalRequiredResources = getTotalRequiredResources(GoldCard.getCardWithId(this.cardId).getFrontFace().getRequiredResources());
-            switch (this.cardId) {
-                case 41:
-                case 51:
-                case 63:
-                case 71:
-                    result[1] = result[1].formatted(
-                            getSymbol(this.face.getTopLeftCorner(), coveredTL),
-                            "FT: 1",
-                            getSymbol(this.face.getTopRightCorner(), coveredTR)
-                    );
-                    break;
-                case 42:
-                case 53:
-                case 61:
-                case 73:
-                    result[1] = result[1].formatted(
-                            getSymbol(this.face.getTopLeftCorner(), coveredTL),
-                            "IK: 1",
-                            getSymbol(this.face.getTopRightCorner(), coveredTR)
-                    );
-                    break;
-                case 43:
-                case 52:
-                case 62:
-                case 72:
-                    result[1] = result[1].formatted(
-                            getSymbol(this.face.getTopLeftCorner(), coveredTL),
-                            "VL: 1",
-                            getSymbol(this.face.getTopRightCorner(), coveredTR)
-                    );
-                    break;
-                case 44:
-                case 45:
-                case 46:
-                case 54:
-                case 55:
-                case 56:
-                case 64:
-                case 65:
-                case 66:
-                case 74:
-                case 75:
-                case 76:
-                    result[1] = result[1].formatted(
-                            getSymbol(this.face.getTopLeftCorner(), coveredTL),
-                            "CR: 2",
-                            getSymbol(this.face.getTopRightCorner(), coveredTR)
-                    );
-                    break;
-                case 47:
-                case 48:
-                case 49:
-                case 57:
-                case 58:
-                case 59:
-                case 67:
-                case 68:
-                case 69:
-                case 77:
-                case 78:
-                case 79:
-                    result[1] = result[1].formatted(
-                            getSymbol(this.face.getTopLeftCorner(), coveredTL),
-                            "  3  ",
-                            getSymbol(this.face.getTopRightCorner(), coveredTR)
-                    );
-                    break;
-                case 50:
-                case 60:
-                case 70:
-                case 80:
-                    result[1] = result[1].formatted(
-                            getSymbol(this.face.getTopLeftCorner(), coveredTL),
-                            "  5  ",
-                            getSymbol(this.face.getTopRightCorner(), coveredTR)
-                    );
-                    break;
-            }
+
+            result[1] = result[1].formatted(
+                    getSymbol(this.face.getTopLeftCorner(), coveredTL),
+                    KingdomCard.getCardWithId(this.cardId).getFrontFace().getPoints(),
+                    getSymbol(this.face.getTopRightCorner(), coveredTR)
+            );
+
             result[5] = result[5].formatted(
                     getSymbol(this.face.getBottomLeftCorner(), coveredBL),
                     totalRequiredResources,
@@ -400,7 +343,7 @@ public class CardIds {
         } else {
             result[1] = result[1].formatted(
                     getSymbol(this.face.getTopLeftCorner(), coveredTL),
-                    "",
+                    KingdomCard.getCardWithId(this.cardId).getBackFace().getPoints(),
                     getSymbol(this.face.getTopRightCorner(), coveredTR));
 
             result[5] = result[5].formatted(

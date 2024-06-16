@@ -70,5 +70,16 @@ public class ItemPoints extends CardPoints {
         // of visible points to the bonus points.
         return ITEM_BONUS * nItems;
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return switch (this.item) {
+            case FEATHER -> "FT: ";
+            case INK -> "IK: ";
+            case VELLUM -> "VL: ";
+        } + ITEM_BONUS;
+    }
 }

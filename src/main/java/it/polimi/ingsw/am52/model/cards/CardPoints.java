@@ -20,4 +20,9 @@ public abstract class CardPoints {
      */
     public abstract int calculatePoints(ItemsProvider items, int linkedCorners);
 
+    /**
+     * Override of toString method, to print a string representing the points gained by the placement of this card
+     */
+    @Override
+    public abstract String toString();
 }

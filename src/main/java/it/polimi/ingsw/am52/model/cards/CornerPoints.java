@@ -34,4 +34,12 @@ public class CornerPoints extends CardPoints {
         // linked corners to the bonus points.
         return CORNER_BONUS * linkedCorners;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return "CR: " + CORNER_BONUS;
+    }
 }

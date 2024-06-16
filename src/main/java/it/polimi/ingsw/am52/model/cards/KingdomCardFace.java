@@ -97,6 +97,15 @@ public abstract class KingdomCardFace extends CardFace implements ItemsProvider 
         return true;
     }
 
+    /**
+     * Method used by the User Interface to print the useful information about the points gained
+     * by the placement of the card.
+     * @return The string with the necessary information about the points of the face of the card.
+     */
+    public String getPoints() {
+        return this.points.map(CardPoints::toString).orElse("");
+    }
+
     //endregion
     
     //region ItemsProvider Interface

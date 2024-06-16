@@ -34,12 +34,21 @@ public class TuiBoardView extends TuiView {
         var secretObjectiveId = ViewModelState.getInstance().getSecretObjective();
 
         System.out.println("┌────────────────────────────────────────────────────────────────────────────┐");
-        printBoard();
-        if (ViewModelState.getInstance().isClientView()) {
-            System.out.printf("│ %-74s │%n", "Your hand: " + playerHand.getFirst() + " " + playerHand.get(1) + " " + playerHand.getLast());
-            System.out.printf("│ %-74s │%n", "Your secret objective: " + secretObjectiveId);
+        if (ViewModelState.getInstance().getViewTypeNickname().equals(ViewModelState.getInstance().getClientNickname())) {
+            System.out.println("│                                 Your Board                                 │");
+        } else {
+            System.out.printf("│                     %16s's board                             │%n", ViewModelState.getInstance().getViewTypeNickname());
         }
         System.out.println("└────────────────────────────────────────────────────────────────────────────┘");
+
+        printBoard();
+        if (ViewModelState.getInstance().isClientView()) {
+            System.out.printf("│ %-24s  %-24s  %-24s │%n", "Your hand: " + playerHand.getFirst(), playerHand.get(1), playerHand.getLast());
+            CardIds.printHand();
+            System.out.printf("│ %-74s │%n", "Your secret objective: " + secretObjectiveId);
+            CardIds.printSingleObjective(new CardIds(ViewModelState.getInstance().getSecretObjective()));
+        }
+        System.out.println();
     }
 
     @Override

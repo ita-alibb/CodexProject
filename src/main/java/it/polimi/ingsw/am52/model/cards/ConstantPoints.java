@@ -32,4 +32,12 @@ public class ConstantPoints extends CardPoints {
     public int calculatePoints(ItemsProvider items, int linkedCorners) {
         return this.points;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return "  " + this.points + "  ";
+    }
 }
