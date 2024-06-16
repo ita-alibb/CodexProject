@@ -13,6 +13,8 @@ import it.polimi.ingsw.am52.view.tui.state.ViewType;
 
 import java.util.*;
 
+import static it.polimi.ingsw.am52.view.tui.InputReader.updateInputReaderOnBroadcast;
+
 public class ViewModelState extends ModelObservable {
 
     private static ViewModelState INSTANCE;
@@ -189,6 +191,9 @@ public class ViewModelState extends ModelObservable {
         else if (response instanceof EndGameResponseData) {
             this.updateEndGame((EndGameResponseData) response);
         }
+
+        //TODO: At the moment, it doesn't work
+        updateInputReaderOnBroadcast();
     }
 
     // region Setters used by controller to edit the Model, REMEMBER TO CALL this.notifyObservers(); at end of method
@@ -246,7 +251,6 @@ public class ViewModelState extends ModelObservable {
         this.playerHand = initGame.getPlayerHandCardIds();
         this.playerObjectives = initGame.getPlayerObjectiveCardIds();
         this.starterCard = initGame.getStarterCardId();
-        // TODO : Check on possible incoming errors
         this.phase = initGame.getStatus().getGamePhase();
         this.scoreboard = new HashMap<>();
         for (String nick : this.nicknames) {

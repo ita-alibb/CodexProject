@@ -11,7 +11,7 @@ import java.util.concurrent.*;
  * This class is used to read the input stream.
  */
 public class InputReader implements Runnable {
-    private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private static ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final BufferedReader br;
 
     /**
@@ -29,16 +29,19 @@ public class InputReader implements Runnable {
     @Override
     public void run() {
         try {
-            //TODO: verify ON INPUT
             String input;
             System.out.print("> ");
             // mark the current position in the stream
             br.mark(1);
             // wait until there is data to complete a readLine()
-            while (!br.ready()) {
-                Thread.sleep(200);
+            while (!(br.ready() || Thread.currentThread().isInterrupted())) {
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
             }
-
             input = br.readLine();
 
             // reset the stream to the marked position
@@ -51,9 +54,16 @@ public class InputReader implements Runnable {
     }
 
     /**
-     * The method used to handle only one thread in Stream.in
+     * The method used to handle only one thread in Stream.in.
      */
     public static void readLine() {
+        executorService.execute(new InputReader());
+    }
+
+    public static void updateInputReaderOnBroadcast() {
+        executorService.shutdownNow();
+        executorService = Executors.newSingleThreadExecutor();
+
         executorService.execute(new InputReader());
     }
 
@@ -65,7 +75,6 @@ public class InputReader implements Runnable {
             return;
         }
 
-        // TODO: COMMANDS can be registered with multiple reads (one read for J, one for nickname asking for it, one for id asking for it) here can be useful a strategy pattern in this case
         switch (ViewModelState.getInstance().getViewTypeShown()) {
             case MENU : {
                 switch (input.toUpperCase().charAt(0)) {
