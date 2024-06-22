@@ -226,5 +226,20 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
             return null;
         }
     }
+
+    /**
+     * @param data the request data
+     * @return the response data
+     * @throws RemoteException if exemptions happens in RMI
+     */
+    @Override
+    public ChatResponseData chat(ChatData data) throws RemoteException {
+        try {
+            return this.view.chat(data);
+        } catch (RemoteException e) {
+            //TODO: handle remote exception
+            return null;
+        }
+    }
     //end region
 }

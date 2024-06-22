@@ -12,7 +12,8 @@
       "Lorenzo",
       "Andrea",
       "William"
-    ]
+    ],
+    "disconnectedPlayerNickname" : "Livio"
   },
   "method" : "endGame"
 }

@@ -6,7 +6,6 @@ import java.io.Serializable;
  * The object representing the data for the selectObjective method.
  * The player shall choose on of the two secret objective cards, at
  * the start of the game.
- * @author Livio B.
  */
 public class SelectObjectiveData implements Serializable {
 

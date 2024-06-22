@@ -6,4 +6,6 @@ public enum ViewType {
     SETUP,
     BOARD,
     COMMON_BOARD,
+    CHAT,
+    END,
 }

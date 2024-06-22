@@ -134,6 +134,10 @@ public class ViewModelState extends ModelObservable {
      */
     private String currentPlayer;
 
+    private List<String> chatRecords;
+
+    private String disconnectedPlayer;
+
     //Singleton, every calls edit this class here. Then every View displays what they need starting from here Ex: Menu
     private ViewModelState(){
         super();
@@ -156,6 +160,8 @@ public class ViewModelState extends ModelObservable {
         opponents = new ArrayList<>();
         availableSlots = new ArrayList<>();
         turn = 1;
+        chatRecords = new ArrayList<>();
+        disconnectedPlayer = "";
     }
 
     public synchronized static ViewModelState getInstance() {
@@ -166,7 +172,6 @@ public class ViewModelState extends ModelObservable {
     }
 
     public synchronized void broadcastUpdate(BaseResponseData response) {
-        //TODO: needs to think a better handling
         if (response instanceof JoinLobbyResponseData) {
             this.updateJoinLobby((JoinLobbyResponseData) response);
         }
@@ -190,6 +195,9 @@ public class ViewModelState extends ModelObservable {
         }
         else if (response instanceof EndGameResponseData) {
             this.updateEndGame((EndGameResponseData) response);
+        }
+        else if (response instanceof ChatResponseData) {
+            this.updateChat((ChatResponseData) response);
         }
 
         //TODO: At the moment, it doesn't work
@@ -223,6 +231,7 @@ public class ViewModelState extends ModelObservable {
             this.clientNickname = "";
             this.nicknames = new ArrayList<>();
             this.phase = leaveGame.getStatus().getGamePhase();
+            this.chatRecords.clear();
 
             // Change automatically the view displayed
             this.type = ViewType.MENU;
@@ -256,6 +265,8 @@ public class ViewModelState extends ModelObservable {
         for (String nick : this.nicknames) {
             this.scoreboard.put(nick,0);
         }
+
+        this.disconnectedPlayer = "";
 
         //Change automatically the view displayed
         this.type = ViewType.SETUP;
@@ -304,10 +315,13 @@ public class ViewModelState extends ModelObservable {
         if (Objects.equals(this.currentPlayer, this.clientNickname)) {
             this.board.put(placeCard.getPlacedSlot(), new CardIds(placeCard.getCardId(), placeCard.getFace()));
             this.availableSlots = placeCard.getAvailableSlots();
+            this.playerHand.remove((Integer) placeCard.getCardId());
         } else {
             var opponent = this.opponents.stream().filter(o -> Objects.equals(o.getNickname(), this.currentPlayer)).findFirst().get();
             opponent.addCard(placeCard.getPlacedSlot(), new CardIds(placeCard.getCardId(), placeCard.getFace()));
         }
+
+        this.scoreboard.put(placeCard.getPlayer(), this.scoreboard.get(placeCard.getPlayer()) + placeCard.getScore());
 
         this.phase = placeCard.getStatus().getGamePhase();
 
@@ -334,7 +348,6 @@ public class ViewModelState extends ModelObservable {
         this.notifyObservers(EventType.DRAW_CARD);
 
         if (this.phase == GamePhase.END) {
-            // TODO: Handle errors
             ClientConnection.endGame();
         }
     }
@@ -347,13 +360,13 @@ public class ViewModelState extends ModelObservable {
         switch (DrawType.fromInteger(takeCard.getType())) {
             case DrawType.GOLD : {
                 this.goldDeck = !takeCard.isEmpty();
-                this.visibleGoldCards.remove(takeCard.getTakenCardId());
+                this.visibleGoldCards.remove((Integer) takeCard.getTakenCardId());
                 this.visibleGoldCards.add(takeCard.getShownCardId());
                 break;
             }
             case DrawType.RESOURCE: {
                 this.resourceDeck = !takeCard.isEmpty();
-                this.visibleResourceCards.remove(takeCard.getTakenCardId());
+                this.visibleResourceCards.remove((Integer) takeCard.getTakenCardId());
                 this.visibleResourceCards.add(takeCard.getShownCardId());
                 break;
             }
@@ -369,7 +382,6 @@ public class ViewModelState extends ModelObservable {
         this.notifyObservers(EventType.TAKE_CARD);
 
         if (this.phase == GamePhase.END) {
-            // TODO: Handle errors
             ClientConnection.endGame();
         }
 
@@ -377,12 +389,25 @@ public class ViewModelState extends ModelObservable {
 
     public void updateEndGame(EndGameResponseData endGame) {
         this.winners = endGame.getWinners();
-        this.phase = GamePhase.END;
+        this.disconnectedPlayer = endGame.getDisconnectedPlayerNickname();
 
+        this.phase = GamePhase.END;
         // Put the view in the common board
-        this.type = ViewType.COMMON_BOARD;
+        this.type = ViewType.END;
 
         this.notifyObservers(EventType.END_GAME);
+    }
+
+    /**
+     * The method to update the registered chat
+     * @param chat the ChatResponseData from the network
+     */
+    public void updateChat(ChatResponseData chat) {
+        if (chat.getMessage() != null && !chat.getMessage().trim().isEmpty()) {
+            this.chatRecords.add(chat.getMessage());
+
+            this.notifyObservers(EventType.CHAT);
+        }
     }
     // endregion
 
@@ -396,7 +421,7 @@ public class ViewModelState extends ModelObservable {
     }
 
     public List<String> getNicknames() {
-        return nicknames;
+        return Collections.unmodifiableList(this.nicknames);
     }
 
     public List<Integer> getCommonObjectives() {
@@ -451,6 +476,10 @@ public class ViewModelState extends ModelObservable {
         return currentPlayer;
     }
 
+    public String getDisconnectedPlayer() {
+        return disconnectedPlayer;
+    }
+
     public BoardMap<BoardSlot, CardIds> getBoard() {
         //Maybe call here to transform id into cards
         if (Objects.equals(this.clientNickname, this.viewTypeNickname)){
@@ -458,6 +487,14 @@ public class ViewModelState extends ModelObservable {
         } else {
             return this.opponents.stream().filter(o -> Objects.equals(o.getNickname(), this.viewTypeNickname)).findFirst().get().getBoard();
         }
+    }
+
+    /**
+     * Method to get the chat records
+     * @return the chat records as immutable list
+     */
+    public List<String> getChatRecords() {
+        return Collections.unmodifiableList(this.chatRecords);
     }
     // endregion
 
@@ -513,7 +550,7 @@ public class ViewModelState extends ModelObservable {
     }
 
     public List<String> getWinners() {
-        return winners;
+        return Collections.unmodifiableList(this.winners);
     }
 
     public int getTurn() {

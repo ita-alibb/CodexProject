@@ -5,7 +5,6 @@ import it.polimi.ingsw.am52.json.JsonMessage;
 /**
  * The object representing the data for the drawCard method.
  * The method requires the deck from which the card has been drawn.
- * @author Livio B.
  */
 public class DrawCardRequest extends JsonMessage<DrawCardData> {
 

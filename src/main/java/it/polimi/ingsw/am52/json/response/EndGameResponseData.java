@@ -15,6 +15,10 @@ public class EndGameResponseData extends BaseResponseData implements Serializabl
      */
     private final List<String> winners;
 
+    /**
+     * The nickname of the first player to disconnect that caused the crash of the game
+     */
+    private final String disconnectedPlayerNickname;
     //endregion
 
     //region Constructor
@@ -25,6 +29,19 @@ public class EndGameResponseData extends BaseResponseData implements Serializabl
     public EndGameResponseData() {
         super();
         this.winners = new ArrayList<>();
+        this.disconnectedPlayerNickname = "";
+    }
+
+    /**
+     * Create an EndGame data object, used for disconnection
+     * @param status    The status of the game
+     * @param winners   The winner/s of the game
+     * @param disconnectedPlayerNickname The Nickname of the player that disconnected
+     */
+    public EndGameResponseData(ResponseStatus status, List<String> winners, String disconnectedPlayerNickname) {
+        super(status);
+        this.winners = winners;
+        this.disconnectedPlayerNickname = disconnectedPlayerNickname;
     }
 
     /**
@@ -35,6 +52,7 @@ public class EndGameResponseData extends BaseResponseData implements Serializabl
     public EndGameResponseData(ResponseStatus status, List<String> winners) {
         super(status);
         this.winners = winners;
+        this.disconnectedPlayerNickname = "";
     }
 
     /**
@@ -44,6 +62,7 @@ public class EndGameResponseData extends BaseResponseData implements Serializabl
     public EndGameResponseData(ResponseStatus status) {
         super(status);
         this.winners = new ArrayList<>();
+        this.disconnectedPlayerNickname = "";
     }
 
     //endregion
@@ -52,6 +71,10 @@ public class EndGameResponseData extends BaseResponseData implements Serializabl
 
     public List<String> getWinners() {
         return this.winners;
+    }
+
+    public String getDisconnectedPlayerNickname() {
+        return this.disconnectedPlayerNickname;
     }
 
     //endregion

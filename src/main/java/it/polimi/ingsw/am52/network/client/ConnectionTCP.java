@@ -231,4 +231,14 @@ public class ConnectionTCP implements Connection, Runnable{
     public synchronized EndGameResponseData endGame() throws RemoteException {
         return (EndGameResponseData) this.send(new EndGameRequest(null));
     }
+
+    /**
+     * @param data the request data
+     * @return the response data
+     * @throws RemoteException if exemptions happens in RMI
+     */
+    @Override
+    public ChatResponseData chat(ChatData data) throws RemoteException {
+        return (ChatResponseData) this.send(new ChatRequest(data));
+    }
 }

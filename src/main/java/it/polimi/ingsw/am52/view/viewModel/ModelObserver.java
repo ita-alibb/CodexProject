@@ -18,6 +18,7 @@ public abstract class ModelObserver {
             case TAKE_CARD : this.updateTakeCard(); break;
             case INIT_GAME : this.updateInitGame(); break;
             case END_GAME : this.updateEndGame(); break;
+            case CHAT: this.updateChat(); break;
         }
     }
 
@@ -75,4 +76,10 @@ public abstract class ModelObserver {
      * Update that is triggered for event JOIN_LOBBY
      */
     protected abstract void updateJoinLobby();
+
+    /**
+     * Update that is triggered for event CHAT
+     */
+    protected void updateChat(){
+    }
 }

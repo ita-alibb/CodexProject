@@ -68,7 +68,7 @@ public class EndGameResponseTest {
         JsonNode dataNode = jsonNode.get(JsonDeserializer.DATA_FIELD);
 
         //Check if there are 3 fields, named "status", "idBroadcast" and "winners"
-        checkNodeFieldNames(dataNode, "status", "isBroadcast", "winners");
+        checkNodeFieldNames(dataNode, "status", "isBroadcast", "winners", "disconnectedPlayerNickname");
 
         //Check the filed values
         JsonNode winnersNode = dataNode.get("winners");
@@ -85,7 +85,7 @@ public class EndGameResponseTest {
         checkNodeFiledStringValue(statusNode, "currPlayer", "");
         checkNodeFiledIntValue(statusNode, "errorCode", 0);
         checkNodeFiledStringValue(statusNode, "errorMessage", "");
-        assertEquals("LOBBY", statusNode.get("gamePhase").asText());
+        assertEquals("NULL", statusNode.get("gamePhase").asText());
     }
 
     /**

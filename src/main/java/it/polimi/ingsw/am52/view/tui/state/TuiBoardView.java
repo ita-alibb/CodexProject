@@ -20,9 +20,14 @@ public class TuiBoardView extends TuiView {
         var available = new ArrayList<Character>(){{
             add('O');
             add('C');
+            add('M');
         }};
         if (ViewModelState.getInstance().getPhase() == GamePhase.PLACING) {
             available.add('P');
+        }
+
+        if (!ViewModelState.getInstance().getViewTypeNickname().equals(ViewModelState.getInstance().getClientNickname())) {
+            available.add('B');
         }
 
         return available;
@@ -30,7 +35,6 @@ public class TuiBoardView extends TuiView {
 
     @Override
     protected void printView() {
-        var playerHand = ViewModelState.getInstance().getPlayerHand();
         var secretObjectiveId = ViewModelState.getInstance().getSecretObjective();
 
         System.out.println("┌────────────────────────────────────────────────────────────────────────────┐");
@@ -43,12 +47,10 @@ public class TuiBoardView extends TuiView {
 
         printBoard();
         if (ViewModelState.getInstance().isClientView()) {
-            System.out.printf("│ %-24s  %-24s  %-24s │%n", "Your hand: " + playerHand.getFirst(), playerHand.get(1), playerHand.getLast());
-            CardIds.printHand();
+            printHand();
             System.out.printf("│ %-74s │%n", "Your secret objective: " + secretObjectiveId);
             CardIds.printSingleObjective(new CardIds(ViewModelState.getInstance().getSecretObjective()));
         }
-        System.out.println();
     }
 
     @Override
@@ -59,14 +61,22 @@ public class TuiBoardView extends TuiView {
         if (ViewModelState.getInstance().getPhase() == GamePhase.PLACING && ViewModelState.getInstance().isClientView() && ViewModelState.getInstance().isClientTurn()){
             System.out.println("│ - (P) place-card -> place a card from your hand in an available space│");
         }
+        if (!ViewModelState.getInstance().getViewTypeNickname().equals(ViewModelState.getInstance().getClientNickname())) {
+            System.out.println("│ - (B) board -> show your game board                                  │");
+        }
         System.out.println("│ - (O) see opponent board -> see the board of a specific opponent     │");
         System.out.println("│ - (C) common board -> switch to the common board view                │");
+        System.out.println("│ - (M) message view -> switch to the chat view                        │");
         System.out.println("└──────────────────────────────────────────────────────────────────────┘");
     }
 
     private void printBoard(){
         var board = ViewModelState.getInstance().getBoard();
-        var availableSlots = ViewModelState.getInstance().getAvailableSlots();
+        List<BoardSlot> availableSlots = new ArrayList<>();
+
+        if (ViewModelState.getInstance().getViewTypeNickname().equals(ViewModelState.getInstance().getClientNickname())) {
+            availableSlots = ViewModelState.getInstance().getAvailableSlots();
+        }
 
         //get corners
         int maxH = Math.max(
@@ -127,6 +137,59 @@ public class TuiBoardView extends TuiView {
         }
     }
 
+
+    /**
+     * The method to print the hand of the player
+     */
+    private void printHand() {
+        var hand = ViewModelState.getInstance().getPlayerHand();
+
+        System.out.print("│Your hand: ");
+        for (int index : hand ){
+            System.out.printf("%-20s ", index);
+        }
+        System.out.printf("│%n");
+
+        var frontHand = hand.stream()
+                .map(c -> new CardIds(c, 0))
+                .toList();
+        frontHand.forEach(CardIds::loadFace);
+        var frontHandList = frontHand.stream()
+                .map(c -> c.getCardAsArrayString(false, false, false, false))
+                .toList();
+
+        var backHand = hand.stream()
+                .map(c -> new CardIds(c, 1))
+                .toList();
+        backHand.forEach(CardIds::loadFace);
+        var backHandList = backHand.stream()
+                .map(c -> c.getCardAsArrayString(false, false, false, false))
+                .toList();
+
+        System.out.printf("│ %-74s │%n", "Front:");
+        for (int i = 0; i < CardIds.TEMPLATE.length; i++) {
+            StringBuilder row = new StringBuilder();
+
+            for (String[] card : frontHandList) {
+                row.append(" ");
+                row.append(card[i]);
+                row.append(" ");
+            }
+            System.out.printf("│%s %n", row);
+        }
+
+        System.out.printf("│ %-74s │%n", "Back:");
+        for (int i = 0; i < CardIds.TEMPLATE.length; i++) {
+            StringBuilder row = new StringBuilder();
+
+            for (String[] card : backHandList) {
+                row.append(" ");
+                row.append(card[i]);
+                row.append(" ");
+            }
+            System.out.printf("│%s %n", row);
+        }
+    }
     private boolean isCornerCovered(int plusH, int plusV, BoardSlot currentSlot, BoardMap<BoardSlot, CardIds> board){
         return board.isFirst(currentSlot, new BoardSlot(currentSlot.getHoriz() + plusH, currentSlot.getVert() + plusV));
     }

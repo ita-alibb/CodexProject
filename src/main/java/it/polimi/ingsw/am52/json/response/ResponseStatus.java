@@ -30,7 +30,7 @@ public class ResponseStatus implements Serializable {
      * The constructor for Success response in the LOBBY phase
      */
     public ResponseStatus() {
-        this.gamePhase = GamePhase.LOBBY;
+        this.gamePhase = GamePhase.NULL;
         this.currPlayer = "";
         this.errorCode = 0;
         this.errorMessage = "";

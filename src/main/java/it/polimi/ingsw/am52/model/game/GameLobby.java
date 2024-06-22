@@ -159,6 +159,14 @@ public class GameLobby {
     }
 
     /**
+     * Return the Handler to broadcast
+     * @param clientId the clientToBroadcast
+     */
+    public Sender getSpecificHandlerToBroadcast(int clientId) {
+        return this.players.stream().filter(u -> u.getClientId() == clientId).map(User::getHandler).findFirst().orElse(null);
+    }
+
+    /**
      * Get free spaces
      * @return the free spaces
      */

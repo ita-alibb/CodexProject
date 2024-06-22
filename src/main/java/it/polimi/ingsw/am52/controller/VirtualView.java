@@ -12,7 +12,6 @@ import it.polimi.ingsw.am52.network.server.tcp.ClientHandlerTCP;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -69,6 +68,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
                 case JsonDeserializer.TAKE_CARD_METHOD -> new TakeCardResponse(this.takeCard((TakeCardData) request.getData()));
                 case JsonDeserializer.DRAW_CARD_METHOD -> new DrawCardResponse(this.drawCard((DrawCardData) request.getData()));
                 case JsonDeserializer.END_GAME_METHOD -> new EndGameResponse(this.endGame());
+                case JsonDeserializer.CHAT_METHOD -> new ChatResponse(this.chat((ChatData) request.getData()));
                 default -> throw new NoSuchMethodException("no method " + request.getMethod());
             };
         } catch (RemoteException e) {
@@ -87,11 +87,10 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
     public void disconnect(ClientHandler handler){
         if (this.gameController != null){
 
-            if (this.gameController.disconnect(handler)) {
-                // Game crashed due to single disconnection
-                // Broadcast end of game
-                this.broadcast(new EndGameResponse(new EndGameResponseData(new ResponseStatus(GamePhase.END, 112, "Client " + this.clientId + "disconnected, Game ends"), new ArrayList<String>())));
-            }
+            var response = this.gameController.disconnect(handler, this.clientId);
+            // Game crashed due to single disconnection
+            // Broadcast end of game
+            this.broadcast(new EndGameResponse(response));
         } else {
             ServerController.getInstance().disconnect(handler);
         }
@@ -274,6 +273,35 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
         return response;
     }
 
+    /**
+     * @param data the request data
+     * @return the response data
+     * @throws RemoteException if exemptions happens in RMI
+     */
+    @Override
+    public ChatResponseData chat(ChatData data) throws RemoteException {
+        if (this.gameController != null){
+            String responseMessage;
+            if (data.getRecipient() != null && !data.getRecipient().trim().isEmpty()) {
+                responseMessage = String.format("%s [Whisper to: %s]: %s", data.getSender(), data.getRecipient(), data.getMessage());
+            } else {
+                responseMessage = String.format("%s : %s", data.getSender(), data.getMessage());
+            }
+
+            var clientIdToBroadcast = this.gameController.getClientId(data.getRecipient());
+
+            if (clientIdToBroadcast == -1) {
+                this.broadcast(new ChatResponse(new ChatResponseData(new ResponseStatus(GamePhase.NULL, 0, ""), responseMessage)));
+            } else {
+                this.specificBroadcast(new ChatResponse(new ChatResponseData(new ResponseStatus(GamePhase.NULL, 0, ""), responseMessage)), clientIdToBroadcast);
+            }
+
+            return new ChatResponseData(new ResponseStatus(GamePhase.NULL, 0, ""), responseMessage);
+        } else {
+            return new ChatResponseData(new ResponseStatus(GamePhase.NULL, 403, "Player not in a lobby"));
+        }
+    }
+
     //endregion
 
     /**
@@ -290,10 +318,31 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
             // Mark the response as a broadcast
             response.getData().setIsBroadcast(true);
 
-            try {
-                for (var handler : handlers) {
+            for (var handler : handlers) {
+                try {
                     handler.sendMessage(response);
+                } catch (Exception e) {
+                    // TODO: Better logging
+                    System.out.println("Exception:" + e.getMessage());
                 }
+            }
+        }
+    }
+
+    /**
+     * Method to broadcast to specific client
+     * @param response the Response to send to the client.
+     */
+    private void specificBroadcast(JsonMessage<BaseResponseData> response, int clientIdToBroadcast) {
+        if (this.gameController != null && response.getData().getStatus().getErrorCode() == 0) {
+            // Get the handlers of the Game
+            Sender handler = this.gameController.specificHandlerToBroadcast(clientIdToBroadcast);
+
+            // Mark the response as a broadcast
+            response.getData().setIsBroadcast(true);
+
+            try {
+                handler.sendMessage(response);
             } catch (Exception e) {
                 // TODO: Better logging
                 System.out.println("Exception:" + e.getMessage());

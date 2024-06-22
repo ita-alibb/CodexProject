@@ -3,9 +3,7 @@ package it.polimi.ingsw.am52.view.viewModel;
 import it.polimi.ingsw.am52.model.cards.*;
 import it.polimi.ingsw.am52.model.objectives.Objective;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class CardIds {
     /**
@@ -172,39 +170,6 @@ public class CardIds {
 
         for (int i = 0; i < goldListFront1.length; i++) {
             System.out.printf("│ " + goldListFront2[i] + "   " + goldListBack2[i] + "%20s│%n", "");
-        }
-    }
-
-    /**
-     * The method to print the hand of the player
-     */
-    public static void printHand() {
-        var hand = ViewModelState.getInstance().getPlayerHand();
-
-        var frontHand = hand.stream()
-                .map(c -> new CardIds(c, 0))
-                .toList();
-        frontHand.forEach(CardIds::loadFace);
-        var frontHandList = frontHand.stream()
-                .map(c -> c.getCardAsArrayString(false, false, false, false))
-                .toList();
-
-        var backHand = hand.stream()
-                .map(c -> new CardIds(c, 1))
-                .toList();
-        backHand.forEach(CardIds::loadFace);
-        var backHandList = backHand.stream()
-                .map(c -> c.getCardAsArrayString(false, false, false, false))
-                        .toList();
-
-        System.out.printf("│ %-74s │%n", "Front:");
-        for (int i = 0; i < TEMPLATE.length; i++) {
-            System.out.printf("│ " + frontHandList.getFirst()[i] + "  " + frontHandList.get(1)[i] + "  " + frontHandList.getLast()[i]);
-        }
-
-        System.out.printf("│ %-74s │%n", "Back:");
-        for (int i = 0; i < TEMPLATE.length; i++) {
-            System.out.printf("│ " + backHandList.getFirst()[i] + "  " + backHandList.get(1)[i] + "  " + backHandList.getLast()[i]);
         }
     }
 

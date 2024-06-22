@@ -6,7 +6,6 @@ import it.polimi.ingsw.am52.json.JsonMessage;
  * The object representing the data for the takeCard method.
  * The method takeCard requires the card id and the type of the card
  * (resource or gold).
- * @author Livio B.
  */
 public class TakeCardRequest extends JsonMessage<TakeCardData> {
 

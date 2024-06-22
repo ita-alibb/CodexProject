@@ -6,6 +6,10 @@ package it.polimi.ingsw.am52.model.game;
 
 public enum GamePhase {
     /**
+     * Used if game phase is not important in the response
+     */
+    NULL,
+    /**
      * The game is not started yet, only Lobby is created
      */
     LOBBY,

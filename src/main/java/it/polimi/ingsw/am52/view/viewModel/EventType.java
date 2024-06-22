@@ -22,4 +22,6 @@ public enum EventType {
     INIT_GAME ,
 
     END_GAME,
+
+    CHAT,
 }

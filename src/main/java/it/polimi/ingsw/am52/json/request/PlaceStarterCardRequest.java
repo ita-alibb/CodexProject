@@ -6,7 +6,6 @@ import it.polimi.ingsw.am52.json.JsonMessage;
  * The object representing the data for the placeStarterCard method.
  * The player shall choose which side of its starter card should be
  * visible on its playing board.
- * @author Livio B.
  */
 public class PlaceStarterCardRequest extends JsonMessage<PlaceStarterCardData> {
 

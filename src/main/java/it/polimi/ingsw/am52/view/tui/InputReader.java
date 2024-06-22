@@ -14,11 +14,6 @@ public class InputReader implements Runnable {
     private static ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final BufferedReader br;
 
-    /**
-     * The Strategy adopted
-     */
-    private Strategy strategy;
-
     private InputReader() {
         br = new BufferedReader(new InputStreamReader(System.in));
     }
@@ -68,6 +63,7 @@ public class InputReader implements Runnable {
     }
 
     private void executeCommand(String input) {
+        Strategy strategy = null;
 
         if (!TuiPrinter.checkValidCommand(input.toUpperCase().charAt(0))){
             // Command not valid, run new scanner thread and end current thread
@@ -77,63 +73,75 @@ public class InputReader implements Runnable {
 
         switch (ViewModelState.getInstance().getViewTypeShown()) {
             case MENU : {
-                switch (input.toUpperCase().charAt(0)) {
-                    case 'J': this.setStrategy(new JoinLobbyStrategy()); break;
-                    case 'C': this.setStrategy(new CreateLobbyStrategy()); break;
-                    case 'R': this.setStrategy(new ReloadLobbyStrategy()); break;
-                }
+                strategy = switch (input.toUpperCase().charAt(0)) {
+                    case 'J' -> new JoinLobbyStrategy();
+                    case 'C' -> new CreateLobbyStrategy();
+                    case 'R' -> new ReloadLobbyStrategy();
+                    default -> strategy;
+                };
                 break;
             }
             case LOBBY: {
                 if (input.toUpperCase().charAt(0) == 'L') {
-                    this.setStrategy(new LeaveLobbyStrategy());
+                    strategy = new LeaveLobbyStrategy();
                 }
                 break;
             }
             case SETUP: {
-                switch (input.toUpperCase().charAt(0)) {
-                    case 'S': this.setStrategy(new PlaceStarterCardStrategy()); break;
-                    case 'O': this.setStrategy(new SelectObjectiveStrategy()); break;
-                }
+                strategy = switch (input.toUpperCase().charAt(0)) {
+                    case 'S' -> new PlaceStarterCardStrategy();
+                    case 'O' -> new SelectObjectiveStrategy();
+                    default -> strategy;
+                };
                 break;
             }
             case BOARD: {
-                switch (input.toUpperCase().charAt(0)) {
-                    case 'P': this.setStrategy(new PlaceCardStrategy()); break;
-                    case 'O': this.setStrategy(new ShowBoardStrategy(true)); break;
-                    case 'C': this.setStrategy(new ShowCommonBoardStrategy()); break;
-                }
+                strategy = switch (input.toUpperCase().charAt(0)) {
+                    case 'P' -> new PlaceCardStrategy();
+                    case 'O' -> new ShowBoardStrategy(true);
+                    case 'C' -> new ShowCommonBoardStrategy();
+                    case 'M' -> new ShowChatStrategy();
+                    case 'B' -> new ShowBoardStrategy(false);
+                    default -> strategy;
+                };
                 break;
             }
             case COMMON_BOARD: {
-                switch (input.toUpperCase().charAt(0)) {
-                    case 'D': this.setStrategy(new DrawCardStrategy()); break;
-                    case 'T': this.setStrategy(new TakeCardStrategy()); break;
-                    case 'O': this.setStrategy(new ShowBoardStrategy(true)); break;
-                    case 'B': this.setStrategy(new ShowBoardStrategy(false)); break;
-                    case 'L': this.setStrategy(new LeaveLobbyStrategy()); break;
+                strategy = switch (input.toUpperCase().charAt(0)) {
+                    case 'D' -> new DrawCardStrategy();
+                    case 'T' -> new TakeCardStrategy();
+                    case 'O' -> new ShowBoardStrategy(true);
+                    case 'B' -> new ShowBoardStrategy(false);
+                    case 'L' -> new LeaveLobbyStrategy();
+                    case 'M' -> new ShowChatStrategy();
+                    default -> strategy;
+                };
+                break;
+            }
+            case CHAT: {
+                strategy = switch (input.toUpperCase().charAt(0)) {
+                    case 'O' -> new ShowBoardStrategy(true);
+                    case 'C' -> new ShowCommonBoardStrategy();
+                    case 'B' -> new ShowBoardStrategy(false);
+                    case 'M' -> new ChatStrategy(false);
+                    case 'W' -> new ChatStrategy(true);
+                    default -> strategy;
+                };
+            }
+            case END: {
+                if (input.toUpperCase().charAt(0) == 'L') {
+                    strategy = new LeaveLobbyStrategy();
                 }
                 break;
             }
         }
 
-        this.execute();
+        if (strategy != null) {
+            strategy.execute();
+        } else {
+            System.out.println("Unknown command: " + input + " retry:");
+        }
 
         readLine();
-    }
-
-    /**
-     * The method to set the new strategy to execute the right command
-     * @param strategy  The new strategy
-     */
-    private void setStrategy(Strategy strategy) {
-        this.strategy = strategy;
-    }
-
-    /**
-     * Execute the right method, using the Strategy Pattern
-     */
-    private void execute() {
-        this.strategy.execute();
     }
 }

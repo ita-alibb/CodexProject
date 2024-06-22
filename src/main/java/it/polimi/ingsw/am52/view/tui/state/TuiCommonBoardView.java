@@ -14,8 +14,9 @@ public class TuiCommonBoardView extends TuiView {
 
     public static List<Character> getAvailableCommands() {
         ArrayList<Character> available = new ArrayList<>(){{
+            add('O');
             add('B');
-            add('P');
+            add('M');
         }};
         if (ViewModelState.getInstance().getPhase() == GamePhase.DRAWING) {
             available.add('D');
@@ -64,6 +65,7 @@ public class TuiCommonBoardView extends TuiView {
         if (ViewModelState.getInstance().getPhase() != GamePhase.END) {
             System.out.println("│ - (O) other_board -> show the game board of another player           │");
             System.out.println("│ - (B) board -> show your game board                                  │");
+            System.out.println("│ - (M) message view -> switch to the chat view                        │");
         } else {
             System.out.println("│ - (L) leave_lobby -> leave lobby                                     │");
         }

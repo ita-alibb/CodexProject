@@ -71,6 +71,10 @@ public class JsonDeserializer {
      * The label of the endGame method
      */
     public static final String END_GAME_METHOD = "endGame";
+    /**
+     * The label of the chat method
+     */
+    public static final String CHAT_METHOD = "chat";
 
     //endregion
 
@@ -186,6 +190,10 @@ public class JsonDeserializer {
                 EndGameData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), EndGameData.class);
                 yield new EndGameRequest(data);
             }
+            case CHAT_METHOD -> {
+                ChatData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), ChatData.class);
+                yield new ChatRequest(data);
+            }
             // Unknown method.
             default -> throw new IOException(String.format("Unknown method \"%s\".", method));
         };
@@ -248,7 +256,10 @@ public class JsonDeserializer {
                 EndGameResponseData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), EndGameResponseData.class);
                 yield new EndGameResponse(data);
             }
-            //TODO: add new responses;
+            case CHAT_METHOD -> {
+                ChatResponseData data = objectMapper.readValue(jsonNode.get(DATA_FIELD).toString(), ChatResponseData.class);
+                yield new ChatResponse(data);
+            }
 
             // Unknown method.
             default -> throw new IOException(String.format("Unknown method \"%s\".", method));

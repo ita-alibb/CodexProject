@@ -346,14 +346,15 @@ public class GameManager {
 
     /**
      * @return The winner or the list of the winners. Could be one or more, in case of a tie.
-     * @throws GameException    The phase is not correct
+     * @throws GameException    The phase is not correct, disconnection happened
      */
     public List<String> getWinners() {
         try {
             List<PlayerInfo> playersScore = new ArrayList<>(this.players);
             return this.phase.getWinners(this, playersScore, this.commonObjectives);
         } catch (PhaseException e) {
-            throw new GameException(e.getMessage());
+            // Phase is incorrect, this implementation is to get the winners if a game crashes
+            return new ArrayList<>();
         }
     }
 

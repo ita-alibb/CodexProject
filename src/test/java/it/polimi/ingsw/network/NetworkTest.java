@@ -166,6 +166,9 @@ public class NetworkTest {
 
         assertEquals(GamePhase.INIT, init1.getStatus().getGamePhase());
         assertEquals(GamePhase.INIT, init1.getStatus().getGamePhase());
+        assertFalse(init1.getIsBroadcast());
+        assertFalse(init2.getIsBroadcast());
+
         // endregion
 
         // region SelectObjectivesResponses
@@ -191,6 +194,9 @@ public class NetworkTest {
         assertEquals(GamePhase.INIT, selectObjective1.getStatus().getGamePhase());
         //After second the init is complete, phase placing
         assertEquals(GamePhase.PLACING, selectObjective2.getStatus().getGamePhase());
+
+        assertFalse(selectObjective1.getIsBroadcast());
+        assertFalse(selectObjective2.getIsBroadcast());
         // endregion
 
         // Leave lobby created by third client
@@ -226,6 +232,7 @@ public class NetworkTest {
         assertEquals(0, place1.getStatus().getErrorCode());
 
         assertEquals(GamePhase.DRAWING, place1.getStatus().getGamePhase());
+        assertFalse(place1.getIsBroadcast());
         assertEquals(firstPlayer, place1.getStatus().getCurrPlayer());
         // endregion
 
@@ -245,6 +252,7 @@ public class NetworkTest {
         assertEquals(0, draw1.getStatus().getErrorCode());
 
         assertEquals(GamePhase.PLACING, draw1.getStatus().getGamePhase());
+        assertFalse(draw1.getIsBroadcast());
         assertEquals(secondPlayer, draw1.getStatus().getCurrPlayer());
         // endregion
 
@@ -269,6 +277,7 @@ public class NetworkTest {
         assertEquals(0, place2.getStatus().getErrorCode());
 
         assertEquals(GamePhase.DRAWING, place2.getStatus().getGamePhase());
+        assertFalse(place2.getIsBroadcast());
         assertEquals(secondPlayer, place2.getStatus().getCurrPlayer());
         // endregion
 
@@ -292,6 +301,7 @@ public class NetworkTest {
         assertEquals(0, take2.getStatus().getErrorCode());
 
         assertEquals(GamePhase.PLACING, take2.getStatus().getGamePhase());
+        assertFalse(take2.getIsBroadcast());
         assertEquals(firstPlayer, take2.getStatus().getCurrPlayer());
         // endregion
     }

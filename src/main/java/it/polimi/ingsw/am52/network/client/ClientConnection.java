@@ -199,7 +199,7 @@ public class ClientConnection {
     }
 
     public static ResponseStatus takeCard(int cardId, DrawType drawType) {
-        try  {
+        try {
             var result = INSTANCE.takeCard(new TakeCardData(cardId, drawType.toInteger()));
             if (result.getStatus().getErrorCode() == 0) {
                 ViewModelState.getInstance().updateTakeCard(result);
@@ -213,11 +213,21 @@ public class ClientConnection {
             return null;
         }
     }
+
+    public static ResponseStatus chat(String message, String recipient) {
+        try {
+            var result = INSTANCE.chat(new ChatData(ViewModelState.getInstance().getClientNickname(), message, recipient));
+            if (result.getStatus().getErrorCode() == 0) {
+                ViewModelState.getInstance().updateChat(result);
+            }
+
+            //if the call is not correct the viewModelState is not edited and the caller will handle the bad response
+            return result.getStatus();
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            System.exit(0);
+            return null;
+        }
+    }
     // endregion
-
-    //INVECE DI GETCONNECTION QUESTO SINGLETON IMPLEMENTA TUTTI I METODI DELLA CONNECTION (cosi' da qualsiasi parte possiamo chiamare ogni metodo) lui internamente
-    //fa la chiamata con la sua INSTANCE di connection, prende il risultato della chiamata e la elabora (sappiamo gia' di che metodo si tratta) aggiornando la ViewModelState (singleton)
-    // dopo averla aggiornata triggera il print del TuiPrinter (singleton) ed abbiamo aggiornato il terminale con i nuovi dati.
-
-    // per i messaggi broadcast dentro questo singleton metodo update (che prende in input una baseResponse) ed a seconda del tipo aggiorna il view model. (questo stesso metodo si puo' usare anche con la risposta delle chiamate
 }

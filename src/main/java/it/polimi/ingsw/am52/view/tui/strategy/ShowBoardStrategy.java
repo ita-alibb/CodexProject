@@ -34,7 +34,7 @@ public class ShowBoardStrategy extends Strategy {
             Scanner scanner = new Scanner(System.in);
 
             ViewModelState.getInstance().getNicknames().stream()
-                    .filter(n -> Objects.equals(n, ViewModelState.getInstance().getClientNickname()))
+                    .filter(n -> !Objects.equals(n, ViewModelState.getInstance().getClientNickname()))
                     .forEach(n -> System.out.println("│ - " + n));
 
             System.out.print("│ - Enter nickname of the user to look: ");
@@ -46,7 +46,7 @@ public class ShowBoardStrategy extends Strategy {
             }
         }
 
-        TuiPrinter.getInstance().reprint();
+        TuiPrinter.getInstance().reprint(ViewModelState.getInstance().getViewTypeShown());
         return new ResponseStatus();
     }
 

@@ -6,7 +6,6 @@ import it.polimi.ingsw.am52.json.JsonMessage;
  * The object representing the data for the placeCard method.
  * The player shall choose which side of the card should be
  * visible on its playing board.
- * @author Livio B.
  */
 public class PlaceCardRequest extends JsonMessage<PlaceCardData> {
 

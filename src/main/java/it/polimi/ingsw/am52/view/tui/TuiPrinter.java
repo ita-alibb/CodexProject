@@ -34,19 +34,25 @@ public class TuiPrinter extends ModelObserver {
             case SETUP -> TuiSetupView.getAvailableCommands().contains(c);
             case COMMON_BOARD -> TuiCommonBoardView.getAvailableCommands().contains(c);
             case BOARD -> TuiBoardView.getAvailableCommands().contains(c);
+            case CHAT -> TuiChatView.getAvailableCommands().contains(c);
+            case END -> TuiEndView.getAvailableCommands().contains(c);
         };
     }
 
     /**
      * Method called to update the viewModel, every event for TUI has to reprint the whole view
+     *
+     * @param type the view Type to reprint
      */
-    public synchronized void reprint(){
-        switch (ViewModelState.getInstance().getViewTypeShown()) {
+    public synchronized void reprint(ViewType type){
+        switch (type) {
             case MENU: new TuiMenuView().print(); break;
             case LOBBY: new TuiLobbyView().print(); break;
             case SETUP: new TuiSetupView().print(); break;
             case COMMON_BOARD: new TuiCommonBoardView().print(); break;
             case BOARD: new TuiBoardView().print(); break;
+            case CHAT: new TuiChatView().print(); break;
+            case END: new TuiEndView().print(); break;
         }
     }
 
@@ -55,7 +61,7 @@ public class TuiPrinter extends ModelObserver {
      */
     @Override
     protected void updateEndGame() {
-        this.reprint();
+        this.reprint(ViewModelState.getInstance().getViewTypeShown());
     }
 
     /**
@@ -63,7 +69,7 @@ public class TuiPrinter extends ModelObserver {
      */
     @Override
     protected void updateInitGame() {
-        this.reprint();
+        this.reprint(ViewModelState.getInstance().getViewTypeShown());
     }
 
     /**
@@ -71,7 +77,7 @@ public class TuiPrinter extends ModelObserver {
      */
     @Override
     protected void updateTakeCard() {
-        this.reprint();
+        this.reprint(ViewModelState.getInstance().getViewTypeShown());
     }
 
     /**
@@ -79,7 +85,7 @@ public class TuiPrinter extends ModelObserver {
      */
     @Override
     protected void updateDrawCard() {
-        this.reprint();
+        this.reprint(ViewModelState.getInstance().getViewTypeShown());
     }
 
     /**
@@ -87,7 +93,7 @@ public class TuiPrinter extends ModelObserver {
      */
     @Override
     protected void updatePlaceCard() {
-        this.reprint();
+        this.reprint(ViewModelState.getInstance().getViewTypeShown());
     }
 
     /**
@@ -95,7 +101,7 @@ public class TuiPrinter extends ModelObserver {
      */
     @Override
     protected void updatePlaceStarterCard() {
-        this.reprint();
+        this.reprint(ViewModelState.getInstance().getViewTypeShown());
     }
 
     /**
@@ -103,7 +109,7 @@ public class TuiPrinter extends ModelObserver {
      */
     @Override
     protected void updateSelectObjective() {
-        this.reprint();
+        this.reprint(ViewModelState.getInstance().getViewTypeShown());
     }
 
     /**
@@ -111,7 +117,7 @@ public class TuiPrinter extends ModelObserver {
      */
     @Override
     protected void updateLeaveGame() {
-        this.reprint();
+        this.reprint(ViewModelState.getInstance().getViewTypeShown());
     }
 
     /**
@@ -119,7 +125,7 @@ public class TuiPrinter extends ModelObserver {
      */
     @Override
     protected void updateListLobby() {
-        this.reprint();
+        this.reprint(ViewModelState.getInstance().getViewTypeShown());
     }
 
     /**
@@ -127,7 +133,7 @@ public class TuiPrinter extends ModelObserver {
      */
     @Override
     protected void updateCreateLobby() {
-        this.reprint();
+        this.reprint(ViewModelState.getInstance().getViewTypeShown());
     }
 
     /**
@@ -135,6 +141,14 @@ public class TuiPrinter extends ModelObserver {
      */
     @Override
     protected void updateJoinLobby() {
-        this.reprint();
+        this.reprint(ViewModelState.getInstance().getViewTypeShown());
+    }
+
+    @Override
+    protected void updateChat() {
+        var type = ViewModelState.getInstance().getViewTypeShown();
+        if (type == ViewType.CHAT){
+            this.reprint(type);
+        }
     }
 }

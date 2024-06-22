@@ -81,7 +81,7 @@ public class DrawCardResponseTest {
         checkNodeFiledStringValue(statusNode, "currPlayer", "");
         checkNodeFiledIntValue(statusNode, "errorCode", 0);
         checkNodeFiledStringValue(statusNode, "errorMessage", "");
-        assertEquals("LOBBY", statusNode.get("gamePhase").asText());
+        assertEquals("NULL", statusNode.get("gamePhase").asText());
     }
 
     /**

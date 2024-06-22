@@ -8,7 +8,6 @@ import it.polimi.ingsw.am52.model.game.GameLobby;
 import it.polimi.ingsw.am52.model.game.GameManager;
 import it.polimi.ingsw.am52.model.game.GamePhase;
 import it.polimi.ingsw.am52.model.objectives.Objective;
-import it.polimi.ingsw.am52.model.player.PlayerInfo;
 import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
 import it.polimi.ingsw.am52.network.server.ClientHandler;
 import it.polimi.ingsw.am52.network.server.Sender;
@@ -63,7 +62,7 @@ public class GameController {
                     res = new JoinLobbyResponseData(new ResponseStatus(GamePhase.LOBBY, 503, "Cannot start Game"), this.getId(), this.lobby.getPlayersNickname());
                 }
             } else {
-                res = new JoinLobbyResponseData(new ResponseStatus(), this.getId(), this.lobby.getPlayersNickname());
+                res = new JoinLobbyResponseData(new ResponseStatus(GamePhase.LOBBY,0,""), this.getId(), this.lobby.getPlayersNickname());
             }
 
             // Notify the clients and Response
@@ -97,7 +96,7 @@ public class GameController {
         }
 
         // Notify the clients and Response
-        return new LeaveGameResponseData(new ResponseStatus(), nick, ServerController.getInstance().getLobbies());
+        return new LeaveGameResponseData(new ResponseStatus(GamePhase.LOBBY,0,""), nick, ServerController.getInstance().getLobbies());
     }
 
     /**
@@ -346,6 +345,13 @@ public class GameController {
     }
 
     /**
+     * @return The id of the player
+     */
+    protected int getClientId(String nickname) {
+        return this.lobby.getPlayer(nickname).map(User::getClientId).orElse(-1);
+    }
+
+    /**
      * Get the id of the Game which is the same as the Lobby
      * @return the id
      */
@@ -357,10 +363,12 @@ public class GameController {
      * Method called to disconnect a player in a game
      * @param handler the clientHandler that disconnects
      *
-     * @return a boolean indicating whether the game must be shut down due to a disconnection during game
+     * @return the EndGameResponseData due to disconnection
      */
-    public synchronized boolean disconnect(ClientHandler handler) {
+    public synchronized EndGameResponseData disconnect(ClientHandler handler, int disconnectedClientId) {
+        var disconnectedNickname = "";
         try {
+            disconnectedNickname = this.getNickname(disconnectedClientId);
             this.lobby.removePlayer(handler.getClientId());
 
             ServerController.getInstance().disconnect(handler);
@@ -368,12 +376,16 @@ public class GameController {
             if (this.lobby.isEmpty()) {
                 ServerController.getInstance().deleteGame(this);
             }
-
-            return this.game != null;
         } catch (Exception e) {
             System.out.println("Exception on disconnect: " + e.getMessage());
-            return true;
         }
+        List<String> winners = new ArrayList<>();
+
+        if (this.game != null) {
+            winners = this.game.getWinners();
+        }
+
+        return new EndGameResponseData(new ResponseStatus(GamePhase.END, 0, ""), winners, disconnectedNickname);
     }
 
     /**
@@ -382,6 +394,14 @@ public class GameController {
      */
     public List<Sender> handlerToBroadcast(int clientToExclude){
         return this.lobby.handlerToBroadcast(clientToExclude);
+    }
+
+    /**
+     * Private method to broadcast the responses
+     * @param client the client to which forward the response
+     */
+    public Sender specificHandlerToBroadcast(int client){
+        return this.lobby.getSpecificHandlerToBroadcast(client);
     }
 
     /**
