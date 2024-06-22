@@ -33,8 +33,9 @@ The follwing activities have been completed:
 - Implementation of complete workflow for TUI
 
 Partially completed:
-- Beautify TUI (80%)
-- Check error handling (80%)
+- Beautify TUI (99%)
+- Artifact
 
 Early stage:
 - GUI
+- Complete Testing with artifact on multiple devices
