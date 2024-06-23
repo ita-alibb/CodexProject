@@ -13,8 +13,6 @@ import it.polimi.ingsw.am52.view.tui.state.ViewType;
 
 import java.util.*;
 
-import static it.polimi.ingsw.am52.view.tui.InputReader.updateInputReaderOnBroadcast;
-
 /**
  * The object ViewModelState represents an image of the current situation of the model for the client.
  * This class is a singleton, and the constructor is private because it is used only to instantiate the object one single time, and then only modify that instance.
@@ -230,8 +228,6 @@ public class ViewModelState extends ModelObservable {
         else if (response instanceof ChatResponseData) {
             this.updateChat((ChatResponseData) response);
         }
-
-        updateInputReaderOnBroadcast();
     }
 
     /**

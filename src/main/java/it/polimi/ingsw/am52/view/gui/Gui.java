@@ -16,13 +16,12 @@ public class Gui extends Application {
     private Pane playingBoard;
     @Override
     public void start(Stage stage) throws IOException {
-       ClientConnection.setConnection("127.0.0.1",5556, NetworkMode.RMI );
        FXMLLoader fxmlLoader = new FXMLLoader(Gui.class.getResource("fxml/menu-view.fxml"));
-       Scene scene = new Scene(fxmlLoader.load(), 1980, 1080);
+       Scene scene = new Scene(fxmlLoader.load(), 1920, 1080);
        scene.getStylesheets().add(getClass().getResource("css/menu-view.css").toExternalForm());
 
-
        stage.setTitle("Codex Naturalis");
+       stage.setFullScreen(true);
        stage.setScene(scene);
        stage.show();
     }
@@ -30,6 +29,12 @@ public class Gui extends Application {
 
 
     public static void main(String[] args) {
+        try {
+            ClientConnection.setConnection("127.0.0.1",5556, NetworkMode.RMI );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         launch();
     }
 }

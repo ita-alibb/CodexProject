@@ -334,7 +334,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
      * @param response the Response to send to the client.
      */
     private void specificBroadcast(JsonMessage<BaseResponseData> response, int clientIdToBroadcast) {
-        if (this.gameController != null && response.getData().getStatus().getErrorCode() == 0) {
+        if (this.gameController != null && (response.getData().getStatus().getErrorCode() == 0 || response.getData().getStatus().getGamePhase() == GamePhase.END)) {
             // Get the handlers of the Game
             Sender handler = this.gameController.specificHandlerToBroadcast(clientIdToBroadcast);
 

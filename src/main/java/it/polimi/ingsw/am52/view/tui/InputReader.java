@@ -5,6 +5,7 @@ import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 import java.util.concurrent.*;
 
 /**
@@ -12,10 +13,10 @@ import java.util.concurrent.*;
  */
 public class InputReader implements Runnable {
     private static ExecutorService executorService = Executors.newSingleThreadExecutor();
-    private final BufferedReader br;
+    private final Scanner scanner;
 
     private InputReader() {
-        br = new BufferedReader(new InputStreamReader(System.in));
+        this.scanner = new Scanner(System.in);
     }
 
     /**
@@ -24,23 +25,11 @@ public class InputReader implements Runnable {
     @Override
     public void run() {
         try {
+            //Choose Strategy
             String input;
-            System.out.print("> ");
-            // mark the current position in the stream
-            br.mark(1);
-            // wait until there is data to complete a readLine()
-            while (!(br.ready() || Thread.currentThread().isInterrupted())) {
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    return;
-                }
-            }
-            input = br.readLine();
-
-            // reset the stream to the marked position
-            br.reset();
+            do {
+                input = scanner.nextLine();
+            } while (input == null);
 
             this.executeCommand(input);
         } catch (Exception e) {
@@ -52,13 +41,6 @@ public class InputReader implements Runnable {
      * The method used to handle only one thread in Stream.in.
      */
     public static void readLine() {
-        executorService.execute(new InputReader());
-    }
-
-    public static void updateInputReaderOnBroadcast() {
-        executorService.shutdownNow();
-        executorService = Executors.newSingleThreadExecutor();
-
         executorService.execute(new InputReader());
     }
 
@@ -144,6 +126,7 @@ public class InputReader implements Runnable {
             strategy.execute();
         } else {
             System.out.println("Unknown command: " + input + " retry:");
+            System.out.print("> ");
         }
 
         readLine();

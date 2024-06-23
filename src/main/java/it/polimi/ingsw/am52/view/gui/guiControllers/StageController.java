@@ -24,11 +24,12 @@ public class StageController {
             activeScene = new Scene(root);
 
         } catch (IOException ignored) {
-
+            System.out.println(ignored.getMessage() + "not found resource");
         }
         currentStage = (Stage)((Node)event.getSource()).getScene().getWindow();
         currentStage.setScene(activeScene);
         currentStage.setTitle(title);
+        currentStage.setFullScreen(true);
         currentStage.show();
     }
     public static void changeScene(String FXMLScene, String title, Node node) {
@@ -44,11 +45,12 @@ public class StageController {
 
 
         } catch (IOException ignored) {
-
+            System.out.println(ignored.getMessage() + "not found resource");
         }
-        currentStage = (Stage)node.getScene().getWindow();;
+        currentStage = (Stage)node.getScene().getWindow();
         currentStage.setScene(activeScene);
         currentStage.setTitle(title);
+        currentStage.setFullScreen(true);
         currentStage.show();
     }
 

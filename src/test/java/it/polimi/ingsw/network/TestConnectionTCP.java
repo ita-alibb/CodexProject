@@ -19,13 +19,13 @@ import java.util.concurrent.*;
 /**
  * TestConnectionTCP, used for test, does not forward the broadcast message
  */
-public class TestConnectionTCP implements Connection, Runnable{
+public class TestConnectionTCP implements Connection, Runnable {
 
     private static TestConnectionTCP INSTANCE;
     /**
      * The client socket
      */
-    private final Socket socket;
+    public final Socket socket;
 
     /**
      * The socket out stream
@@ -100,6 +100,8 @@ public class TestConnectionTCP implements Connection, Runnable{
             // break the loop and finally call the disconnection
         } finally {
             try {
+                this.socket.shutdownInput();
+                this.socket.shutdownOutput();
                 this.socket.close();
             } catch (IOException e) {
                 System.out.println("Exception closing socket: exception: " + e.getMessage());

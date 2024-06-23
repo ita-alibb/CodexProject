@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -53,7 +54,7 @@ public class NetworkTest {
     public void simulate(){
 
         // First Client init
-        ActionsRMI firstClient;
+        TestConnectionTCP firstClient;
         try {
             firstClient = new TestConnectionTCP();
             new Thread((TestConnectionTCP)firstClient).start();
@@ -312,6 +313,24 @@ public class NetworkTest {
         assertFalse(take2.getIsBroadcast());
         assertEquals(firstPlayer, take2.getStatus().getCurrPlayer());
         // endregion
+
+        // close client 1
+        System.out.println("-----DISCONNECTION PHASE-----");
+
+        try {
+            firstClient.socket.shutdownInput();
+            firstClient.socket.shutdownOutput();
+            firstClient.socket.close();
+        } catch (IOException e) {
+            assert false;
+        }
+
+        //the game ends
+        // Leave lobby created by third client
+        this.testCallExactMatch(
+                secondClient,
+                new LeaveGameRequest(new LeaveGameData()),
+                new LeaveGameResponse(new LeaveGameResponseData(new ResponseStatus(GamePhase.LOBBY, "", 0, ""), "Lorenzo", Map.ofEntries())));
     }
 
     /**

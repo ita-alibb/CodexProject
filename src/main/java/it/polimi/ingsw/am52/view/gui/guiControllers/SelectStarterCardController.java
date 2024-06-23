@@ -42,14 +42,7 @@ public class SelectStarterCardController implements Initializable {
             PlayingBoardController.setStartercardside(CardSide.BACK);
             StageController.changeScene("fxml/playing-board.fxml", "Game",event);
         }
-
-
-
     }
-
-
-
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -59,7 +52,4 @@ public class SelectStarterCardController implements Initializable {
         backStarterCard.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/backs/%s.png".formatted(starterCard+1)))));
 
     }
-
-
-
 }

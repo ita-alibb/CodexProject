@@ -19,7 +19,7 @@ public class TuiEndView extends TuiView {
      * The constructor of the class
      */
     public TuiEndView() {
-        super(ViewType.BOARD);
+        super(ViewType.END);
     }
 
     //endregion

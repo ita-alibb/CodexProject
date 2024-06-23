@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am52.view.tui;
 
+import it.polimi.ingsw.am52.model.game.GamePhase;
 import it.polimi.ingsw.am52.view.tui.state.*;
 import it.polimi.ingsw.am52.view.viewModel.ModelObserver;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
@@ -105,7 +106,10 @@ public class TuiPrinter extends ModelObserver {
      */
     @Override
     protected void updateTakeCard() {
-        this.reprint(ViewModelState.getInstance().getViewTypeShown());
+        var type = ViewModelState.getInstance().getViewTypeShown();
+        if (type == ViewType.COMMON_BOARD) {
+            this.reprint(type);
+        }
     }
 
     /**
@@ -113,7 +117,10 @@ public class TuiPrinter extends ModelObserver {
      */
     @Override
     protected void updateDrawCard() {
-        this.reprint(ViewModelState.getInstance().getViewTypeShown());
+        var type = ViewModelState.getInstance().getViewTypeShown();
+        if (type == ViewType.COMMON_BOARD) {
+            this.reprint(type);
+        }
     }
 
     /**
@@ -121,7 +128,10 @@ public class TuiPrinter extends ModelObserver {
      */
     @Override
     protected void updatePlaceCard() {
-        this.reprint(ViewModelState.getInstance().getViewTypeShown());
+        var type = ViewModelState.getInstance().getViewTypeShown();
+        if (type == ViewType.BOARD) {
+            this.reprint(type);
+        }
     }
 
     /**
@@ -129,7 +139,10 @@ public class TuiPrinter extends ModelObserver {
      */
     @Override
     protected void updatePlaceStarterCard() {
-        this.reprint(ViewModelState.getInstance().getViewTypeShown());
+        var type = ViewModelState.getInstance().getViewTypeShown();
+        if (type == ViewType.SETUP || ViewModelState.getInstance().getPhase() == GamePhase.PLACING) {
+            this.reprint(type);
+        }
     }
 
     /**
@@ -137,7 +150,10 @@ public class TuiPrinter extends ModelObserver {
      */
     @Override
     protected void updateSelectObjective() {
-        this.reprint(ViewModelState.getInstance().getViewTypeShown());
+        var type = ViewModelState.getInstance().getViewTypeShown();
+        if (type == ViewType.SETUP || ViewModelState.getInstance().getPhase() == GamePhase.PLACING) {
+            this.reprint(type);
+        }
     }
 
     /**
@@ -145,6 +161,7 @@ public class TuiPrinter extends ModelObserver {
      */
     @Override
     protected void updateLeaveGame() {
+        var type = ViewModelState.getInstance().getViewTypeShown();
         this.reprint(ViewModelState.getInstance().getViewTypeShown());
     }
 
@@ -153,6 +170,7 @@ public class TuiPrinter extends ModelObserver {
      */
     @Override
     protected void updateListLobby() {
+        var type = ViewModelState.getInstance().getViewTypeShown();
         this.reprint(ViewModelState.getInstance().getViewTypeShown());
     }
 
@@ -161,6 +179,7 @@ public class TuiPrinter extends ModelObserver {
      */
     @Override
     protected void updateCreateLobby() {
+        var type = ViewModelState.getInstance().getViewTypeShown();
         this.reprint(ViewModelState.getInstance().getViewTypeShown());
     }
 
@@ -169,6 +188,7 @@ public class TuiPrinter extends ModelObserver {
      */
     @Override
     protected void updateJoinLobby() {
+        var type = ViewModelState.getInstance().getViewTypeShown();
         this.reprint(ViewModelState.getInstance().getViewTypeShown());
     }
 

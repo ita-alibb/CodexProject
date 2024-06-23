@@ -73,6 +73,7 @@ public abstract class TuiView {
 
         printView();
         printCommands();
+        System.out.print("> ");
     }
 
     //endregion

@@ -41,11 +41,11 @@ public class TuiBoardView extends TuiView {
             add('C');
             add('M');
         }};
-        if (ViewModelState.getInstance().getPhase() == GamePhase.PLACING) {
+        if (ViewModelState.getInstance().getPhase() == GamePhase.PLACING && ViewModelState.getInstance().isClientView() && ViewModelState.getInstance().isClientTurn()) {
             available.add('P');
         }
 
-        if (!ViewModelState.getInstance().getViewTypeNickname().equals(ViewModelState.getInstance().getClientNickname())) {
+        if (!ViewModelState.getInstance().isClientView()) {
             available.add('B');
         }
 
@@ -90,7 +90,7 @@ public class TuiBoardView extends TuiView {
         if (ViewModelState.getInstance().getPhase() == GamePhase.PLACING && ViewModelState.getInstance().isClientView() && ViewModelState.getInstance().isClientTurn()){
             System.out.println("│ - (P) place-card -> place a card from your hand in an available space│");
         }
-        if (!ViewModelState.getInstance().getViewTypeNickname().equals(ViewModelState.getInstance().getClientNickname())) {
+        if (!ViewModelState.getInstance().isClientView()) {
             System.out.println("│ - (B) board -> show your game board                                  │");
         }
         System.out.println("│ - (O) see opponent board -> see the board of a specific opponent     │");

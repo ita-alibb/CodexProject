@@ -1,6 +1,5 @@
 package it.polimi.ingsw.am52.view.gui.guiControllers;
 
-import it.polimi.ingsw.am52.model.game.GamePhase;
 import it.polimi.ingsw.am52.view.viewModel.EventType;
 import it.polimi.ingsw.am52.view.viewModel.ModelObserver;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
@@ -21,36 +20,31 @@ public class WaitingRoomController extends ModelObserver implements Initializabl
 
     public WaitingRoomController() {
         // register the printer to
-        ViewModelState.getInstance().registerObserver(this, EventType.JOIN_LOBBY, EventType.LEAVE_GAME);
+        ViewModelState.getInstance().registerObserver(this, EventType.JOIN_LOBBY, EventType.LEAVE_GAME, EventType.INIT_GAME);
     }
 
     public void setNumberOfPlayers(){
         Platform.runLater(() -> {
-            numberOfPlayers.setText(Integer.toString(ViewModelState.getInstance().getNicknames().size()));
-            if(ViewModelState.getInstance().getPhase() == GamePhase.INIT){
-                StageController.changeScene("fxml/select-objective.fxml","Select secret objective" , numberOfPlayers);
-            }
-        });
-
-
+                numberOfPlayers.setText(Integer.toString(ViewModelState.getInstance().getNicknames().size()));
+            });
     }
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        ViewModelState.getInstance().registerObserver(this, EventType.JOIN_LOBBY, EventType.LEAVE_GAME);
+        ViewModelState.getInstance().registerObserver(this, EventType.JOIN_LOBBY, EventType.LEAVE_GAME, EventType.INIT_GAME);
         setNumberOfPlayers();
-
-
     }
 
-
-
+    @Override
+    protected void updateInitGame() {
+        Platform.runLater(() -> {
+                StageController.changeScene("fxml/select-objective.fxml","Select secret objective" , numberOfPlayers);
+        });
+    }
 
     @Override
     protected void updateLeaveGame() {
         setNumberOfPlayers();
-
     }
 
 

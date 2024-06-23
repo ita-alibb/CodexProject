@@ -73,7 +73,7 @@ public class GameController {
     }
 
     /**
-     * Method to join a lobby.
+     * Method to leave a lobby.
      *
      */
     public LeaveGameResponseData leaveLobby(int clientId) {
