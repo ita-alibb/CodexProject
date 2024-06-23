@@ -1,6 +1,9 @@
 package it.polimi.ingsw.am52;
 
+import it.polimi.ingsw.am52.network.server.ServerConnection;
 import it.polimi.ingsw.am52.settings.*;
+
+import java.rmi.RemoteException;
 
 /**
  * The main class of the application.
@@ -58,10 +61,12 @@ public class Codex {
      * Run in server mode, with specified settings.
      * @param settings The server settings.
      */
-    private static void runServer(ServerSettings settings) {
-        System.out.println(
-                String.format("Run server with following settings:%n%s%n", settings.toString())
-        );
+    private static void runServer(ServerSettings settings) throws RemoteException {
+
+        System.setProperty("java.rmi.server.hostname","127.0.0.1");
+        ServerConnection connection = new ServerConnection(settings);
+
+        connection.run();
     }
 
     /**

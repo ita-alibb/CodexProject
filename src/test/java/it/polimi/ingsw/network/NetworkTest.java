@@ -11,6 +11,7 @@ import it.polimi.ingsw.am52.network.server.ServerConnection;
 import it.polimi.ingsw.am52.network.server.rmi.ActionsRMI;
 import it.polimi.ingsw.am52.network.client.ConnectionRMI;
 import it.polimi.ingsw.am52.network.client.ConnectionTCP;
+import it.polimi.ingsw.am52.settings.ServerSettings;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,14 @@ public class NetworkTest {
         System.setProperty("java.rmi.server.hostname","127.0.0.1");
 
         try {
-            server = new ServerConnection(5555,5556, 10);
+            ServerSettings settings = new ServerSettings(
+                    10,
+                    5555,
+                    5556,
+                    ServerSettings.DEF_VERBOSITY,
+                    ServerSettings.DEF_PORT_MODE
+            );
+            server = new ServerConnection(settings);
         } catch (RemoteException e) {
             assert false;
         }
