@@ -15,7 +15,13 @@ import java.util.*;
 
 import static it.polimi.ingsw.am52.view.tui.InputReader.updateInputReaderOnBroadcast;
 
+/**
+ * The object ViewModelState represents an image of the current situation of the model for the client.
+ * This class is a singleton, and the constructor is private because it is used only to instantiate the object one single time, and then only modify that instance.
+ */
 public class ViewModelState extends ModelObservable {
+
+    //region Private Fields
 
     private static ViewModelState INSTANCE;
 
@@ -134,11 +140,24 @@ public class ViewModelState extends ModelObservable {
      */
     private String currentPlayer;
 
-    private List<String> chatRecords;
+    /**
+     * The record of the previous messages of this client
+     */
+    private final List<String> chatRecords;
 
+    /**
+     * The nickname of the disconnected player, who caused the crash of the current game
+     */
     private String disconnectedPlayer;
 
-    //Singleton, every calls edit this class here. Then every View displays what they need starting from here Ex: Menu
+    //endregion
+
+    //region Constructor
+
+    /**
+     * The constructor of the class ViewModelState.
+     * The variables are instantiated but not updated, because when it is created, the client is in the menu, so this data doesn't exist.
+     */
     private ViewModelState(){
         super();
         type = ViewType.MENU;
@@ -164,6 +183,10 @@ public class ViewModelState extends ModelObservable {
         disconnectedPlayer = "";
     }
 
+    /**
+     * The method to access the singleton.
+     * @return The ViewModelState which already exists; if there isn't, a new ViewModelState object
+     */
     public synchronized static ViewModelState getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new ViewModelState();
@@ -171,6 +194,14 @@ public class ViewModelState extends ModelObservable {
         return INSTANCE;
     }
 
+    //endregion
+
+    //region Update Setters
+
+    /**
+     * Method to handle each case of broadcast from the network.
+     * @param response  The response from the network, which can be of different types depending on the method which it comes from.
+     */
     public synchronized void broadcastUpdate(BaseResponseData response) {
         if (response instanceof JoinLobbyResponseData) {
             this.updateJoinLobby((JoinLobbyResponseData) response);
@@ -200,16 +231,22 @@ public class ViewModelState extends ModelObservable {
             this.updateChat((ChatResponseData) response);
         }
 
-        //TODO: At the moment, it doesn't work
         updateInputReaderOnBroadcast();
     }
 
-    // region Setters used by controller to edit the Model, REMEMBER TO CALL this.notifyObservers(); at end of method
+    /**
+     * The method to show the list of the lobbies in the Server.
+     * @param listLobby     The response from the Server.
+     */
     public void updateLobbyList(ListLobbyResponseData listLobby){
         this.lobbies = listLobby.getLobbies();
         this.notifyObservers(EventType.LIST_LOBBY);
     }
 
+    /**
+     * The method to join a lobby and update the necessary fields.
+     * @param joinLobby     The response from the Server.
+     */
     public void updateJoinLobby(JoinLobbyResponseData joinLobby){
         this.currentLobbyId = joinLobby.getLobbyId();
         this.nicknames = new ArrayList<>(joinLobby.getNicknames());
@@ -225,6 +262,10 @@ public class ViewModelState extends ModelObservable {
         }
     }
 
+    /**
+     * The method to leave a lobby and overwrite the fields previously updated.
+     * @param leaveGame     The response from the Server
+     */
     public void updateLeaveGame(LeaveGameResponseData leaveGame){
         if (!leaveGame.getIsBroadcast()) {
             this.currentLobbyId = -1;
@@ -244,6 +285,10 @@ public class ViewModelState extends ModelObservable {
         this.notifyObservers(EventType.LEAVE_GAME);
     }
 
+    /**
+     * The method to initialize a game, when all the players are connected to a lobby.
+     * @param initGame      The response from the Server.
+     */
     public void updateInitGame(InitGameResponseData initGame) {
         this.nicknames = initGame.getPlayersNickname();
         //init opponent representation
@@ -273,6 +318,10 @@ public class ViewModelState extends ModelObservable {
         this.notifyObservers(EventType.INIT_GAME);
     }
 
+    /**
+     * The method to update the secret objective, only if the response is not a broadcast.
+     * @param selectObjective       The response from the Server
+     */
     public void updateSelectObjective(SelectObjectiveResponseData selectObjective) {
         if (!selectObjective.getIsBroadcast()) {
             this.secretObjective = selectObjective.getObjective();
@@ -291,6 +340,11 @@ public class ViewModelState extends ModelObservable {
         }
     }
 
+    /**
+     * The method to place a starter card and initialize the board field, only if the response is not broadcast.
+     * If it is, it is added to the opponent information.
+     * @param placeStarterCard      The response from the Server
+     */
     public void updatePlaceStarterCard(PlaceStarterCardResponseData placeStarterCard) {
         if (Objects.equals(placeStarterCard.getNickname(), this.clientNickname)) {
             this.board.put(new BoardSlot(0,0), new CardIds(placeStarterCard.getCardId(), placeStarterCard.getFace()));
@@ -311,11 +365,15 @@ public class ViewModelState extends ModelObservable {
         }
     }
 
+    /**
+     * The method to place a card, on your board if the response is not broadcast, if it is on the opponent board.
+     * @param placeCard     The response from the Server.
+     */
     public void updatePlaceCard(PlaceCardResponseData placeCard) {
         if (Objects.equals(this.currentPlayer, this.clientNickname)) {
             this.board.put(placeCard.getPlacedSlot(), new CardIds(placeCard.getCardId(), placeCard.getFace()));
-            this.availableSlots = placeCard.getAvailableSlots();
             this.playerHand.remove((Integer) placeCard.getCardId());
+            this.availableSlots = placeCard.getAvailableSlots();
         } else {
             var opponent = this.opponents.stream().filter(o -> Objects.equals(o.getNickname(), this.currentPlayer)).findFirst().get();
             opponent.addCard(placeCard.getPlacedSlot(), new CardIds(placeCard.getCardId(), placeCard.getFace()));
@@ -328,6 +386,10 @@ public class ViewModelState extends ModelObservable {
         this.notifyObservers(EventType.PLACE_CARD);
     }
 
+    /**
+     * The method to update the hand of the player, only if the response is not broadcast.
+     * @param drawCard      The response from the Server.
+     */
     public void updateDrawCard(DrawCardResponseData drawCard) {
         if (!drawCard.getIsBroadcast()) {
             this.playerHand.add(drawCard.getCardId());
@@ -352,6 +414,10 @@ public class ViewModelState extends ModelObservable {
         }
     }
 
+    /**
+     * The method to take one of the visible cards and update them, only if the response is not broadcast.
+     * @param takeCard      The response from the Server.
+     */
     public void updateTakeCard(TakeCardResponseData takeCard) {
         if (!takeCard.getIsBroadcast()) {
             this.playerHand.add(takeCard.getTakenCardId());
@@ -387,6 +453,10 @@ public class ViewModelState extends ModelObservable {
 
     }
 
+    /**
+     * The method to declare the end of the game and the winner.
+     * @param endGame       The response from the Server.
+     */
     public void updateEndGame(EndGameResponseData endGame) {
         this.winners = endGame.getWinners();
         this.disconnectedPlayer = endGame.getDisconnectedPlayerNickname();
@@ -409,77 +479,126 @@ public class ViewModelState extends ModelObservable {
             this.notifyObservers(EventType.CHAT);
         }
     }
+
     // endregion
 
-    // region Getters used in views
+    //region Getters
+
+    /**
+     * @return  The lobbies contained in the Server
+     */
     public Map<Integer, Integer> getLobbies() {
         return lobbies;
     }
 
+    /**
+     * @return  The ID of the lobby the player entered
+     */
     public int getCurrentLobbyId() {
         return currentLobbyId;
     }
 
+    /**
+     * @return  The players' nickname
+     */
     public List<String> getNicknames() {
         return Collections.unmodifiableList(this.nicknames);
     }
 
+    /**
+     * @return  The common objectives of the game
+     */
     public List<Integer> getCommonObjectives() {
         return commonObjectives;
     }
 
+    /**
+     * @return  The visible resource cards
+     */
     public List<Integer> getVisibleResourceCards() {
         return visibleResourceCards;
     }
 
+    /**
+     * @return  The visible gold cards
+     */
     public List<Integer> getVisibleGoldCards() {
         return visibleGoldCards;
     }
 
+    /**
+     * @return  This player's hand
+     */
     public List<Integer> getPlayerHand() {
         return playerHand;
     }
 
+    /**
+     * @return  The player's secret objective
+     */
     public List<Integer> getPlayerObjectives() {
         return playerObjectives;
     }
 
+    /**
+     * @return  The player's starter card
+     */
     public int getStarterCard() {
         return starterCard;
     }
 
+    /**
+     * @return  True if the resource deck has available cards, otherwise False
+     */
     public boolean getResourceDeck() {
         return resourceDeck;
     }
 
+    /**
+     * @return  True if the gold deck has available cards, otherwise False
+     */
     public boolean getGoldDeck() {
         return goldDeck;
     }
 
+    /**
+     * @return  The current phase
+     */
     public GamePhase getPhase() {
         return phase;
     }
 
-    public ViewType getType() {
-        return type;
-    }
-
+    /**
+     * @return  The scores of all the players
+     */
     public Map<String, Integer> getScoreboard() {
         return scoreboard;
     }
 
+    /**
+     * @return  The player's secret objective
+     */
     public int getSecretObjective() {
         return secretObjective;
     }
 
+    /**
+     * @return  The current player
+     */
     public String getCurrentPlayer() {
         return currentPlayer;
     }
 
+    /**
+     * @return  The nickname of the disconnected player
+     */
     public String getDisconnectedPlayer() {
         return disconnectedPlayer;
     }
 
+    /**
+     * @return  The board of the player which is visualized
+     */
     public BoardMap<BoardSlot, CardIds> getBoard() {
         //Maybe call here to transform id into cards
         if (Objects.equals(this.clientNickname, this.viewTypeNickname)){
@@ -496,7 +615,8 @@ public class ViewModelState extends ModelObservable {
     public List<String> getChatRecords() {
         return Collections.unmodifiableList(this.chatRecords);
     }
-    // endregion
+
+    //endregion
 
     //region Utils
 
@@ -508,6 +628,9 @@ public class ViewModelState extends ModelObservable {
         return type;
     }
 
+    /**
+     * @return  The player we are watching the setup
+     */
     public String getViewTypeNickname() {
         return viewTypeNickname;
     }
@@ -520,6 +643,11 @@ public class ViewModelState extends ModelObservable {
         this.type = type;
     }
 
+    /**
+     * Set the player we want to watch
+     * @param viewTypeNickname  The nickname of the player
+     * @return  True if the view has been update, otherwise False
+     */
     public boolean setViewTypeNickname(String viewTypeNickname) {
         if (this.nicknames.contains(viewTypeNickname)) {
             this.viewTypeNickname = viewTypeNickname;
@@ -528,31 +656,53 @@ public class ViewModelState extends ModelObservable {
         return false;
     }
 
+    /**
+     * @return  True if the current view is the one of this client, otherwise False
+     */
     public boolean isClientView() {
         return Objects.equals(this.clientNickname, this.viewTypeNickname);
     }
 
+    /**
+     * @return  The nickname of this client
+     */
     public String getClientNickname() {
         return clientNickname;
     }
 
+    /**
+     * Sets the nickname of this client
+     * @param clientNickname    The new nickname of the client
+     */
     public void setClientNickname(String clientNickname) {
         this.clientNickname = clientNickname;
         this.viewTypeNickname = clientNickname;
     }
 
+    /**
+     * @return  True if it's the turn of this client, otherwise False
+     */
     public boolean isClientTurn() {
         return Objects.equals(this.clientNickname, this.currentPlayer);
     }
 
+    /**
+     * @return  The list of available slots on the board
+     */
     public List<BoardSlot> getAvailableSlots() {
         return availableSlots;
     }
 
+    /**
+     * @return  The winner/s of this game
+     */
     public List<String> getWinners() {
         return Collections.unmodifiableList(this.winners);
     }
 
+    /**
+     * @return  The current turn
+     */
     public int getTurn() {
         return turn;
     }

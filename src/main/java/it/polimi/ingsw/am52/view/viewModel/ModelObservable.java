@@ -5,9 +5,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class to create an Observer-Observable Pattern. This triggers an update in the observers which are subscribed to
+ * the object which inherits from this class.
+ */
 public abstract class ModelObservable {
+    /**
+     * The map between the type of event and the list of the observers subscribed to an observable.
+     * The map is organized in this way to know which update must be triggered in the view.
+     */
     protected final Map<EventType,List<ModelObserver>> observers;
 
+    /**
+     * The constructor of the class. This creates the map of observers.
+     */
     public ModelObservable() {
         this.observers = new HashMap<>();
         for (EventType eventType : EventType.values()) {

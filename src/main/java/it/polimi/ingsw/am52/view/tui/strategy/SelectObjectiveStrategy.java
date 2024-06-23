@@ -2,10 +2,12 @@ package it.polimi.ingsw.am52.view.tui.strategy;
 
 import it.polimi.ingsw.am52.json.response.ResponseStatus;
 import it.polimi.ingsw.am52.network.client.ClientConnection;
-import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.util.Scanner;
 
+/**
+ * The class from Strategy to implement the behaviour to select your secret objective
+ */
 public class SelectObjectiveStrategy extends Strategy {
 
     //region Constructor
@@ -29,7 +31,7 @@ public class SelectObjectiveStrategy extends Strategy {
         ResponseStatus networkResponse;
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("> Enter the ID of the objective you want to use: ");
+        System.out.print("- Enter the ID of the objective you want to use: ");
         int cardId = scanner.nextInt();
 
         networkResponse = ClientConnection.selectObjective(cardId);

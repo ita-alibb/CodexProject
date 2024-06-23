@@ -1,33 +1,57 @@
 package it.polimi.ingsw.am52.view.tui.state;
 
-import it.polimi.ingsw.am52.model.game.GamePhase;
-import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
-import it.polimi.ingsw.am52.view.viewModel.BoardMap;
-import it.polimi.ingsw.am52.view.viewModel.CardIds;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The class to visualize the TUI representing the chat of the game.
+ * <P>
+ *      In the chat, we can have the following paths:
+ *      <ul>
+ *          <li>Sending a message to everyone in the lobby</li>
+ *          <li>Sending a private message (whisper) to a single player</li>
+ *          <li>Going back to other views</li>
+ *      </ul>
+ * </P>
+ */
 public class TuiChatView extends TuiView {
 
+    //region Constructor
+
+    /**
+     * The constructor of the class
+     */
     public TuiChatView() {
         super(ViewType.BOARD);
     }
 
+    //endregion
+
+    //region Public Method
+
+    /**
+     * Method to create a list of all possible commands the player can perform
+     * @return      The list of possible commands
+     */
     public static List<Character> getAvailableCommands() {
-        var available = new ArrayList<Character>(){{
+        return new ArrayList<>(){{
             add('O');
             add('C');
             add('B');
             add('M');
             add('W');
         }};
-
-        return available;
     }
 
+    //endregion
+
+    //region Inherited Methods
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void printView() {
         var chatRecords = ViewModelState.getInstance().getChatRecords();
@@ -45,6 +69,9 @@ public class TuiChatView extends TuiView {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void printCommands() {
         System.out.println("┌──────────────────────────────────────────────────────────────────────┐");
@@ -57,4 +84,6 @@ public class TuiChatView extends TuiView {
         System.out.println("│ - (W) whisper -> send message to specific player                     │");
         System.out.println("└──────────────────────────────────────────────────────────────────────┘");
     }
+
+    //endregion
 }

@@ -6,6 +6,9 @@ import it.polimi.ingsw.am52.network.client.ClientConnection;
 
 import java.util.Scanner;
 
+/**
+ * The class from Strategy to implement the behaviour to draw a card
+ */
 public class DrawCardStrategy extends Strategy {
 
     //region Constructor
@@ -28,29 +31,11 @@ public class DrawCardStrategy extends Strategy {
     public ResponseStatus executeWithNetworkCall() {
         ResponseStatus networkResponse;
         Scanner scanner = new Scanner(System.in);
-        int deck;
 
-        System.out.println(    "┌──────────────────────────────────────────────────────────────────────┐");
+        System.out.print("- Enter the deck you want to draw from (0 = Resource, 1 = Gold): ");
+        DrawType deck = DrawType.fromInteger(scanner.nextInt());
 
-        while (true) {
-            System.out.println("│ - Enter the deck you want to draw from (0 = Resource, 1 = Gold): ");
-            deck = scanner.nextInt();
-
-            if (DrawType.fromInteger(deck) != null) {
-                break;
-            }
-
-            System.out.println("│ The given deck is not available!");
-        }
-
-        networkResponse = ClientConnection.drawCard(DrawType.fromInteger(deck));
-
-        //handle only good cases, bad case is automatically handled by Strategy abstract class
-        if (networkResponse != null && networkResponse.getErrorCode() == 0) {
-            System.out.println("├──────────────────────────────────────────────────────────────────────┐");
-            System.out.println("│                        Card drawn successfully!                      │");
-            System.out.println("└──────────────────────────────────────────────────────────────────────┘");
-        }
+        networkResponse = ClientConnection.drawCard(deck);
 
         return networkResponse;
     }

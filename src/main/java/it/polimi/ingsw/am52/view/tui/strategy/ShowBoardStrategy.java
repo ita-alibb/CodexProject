@@ -8,9 +8,22 @@ import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 import java.util.Objects;
 import java.util.Scanner;
 
+/**
+ * The class from Strategy to implement the behaviour to visualize a board, yours or related to one of the opponents
+ */
 public class ShowBoardStrategy extends Strategy {
-    //region Constructor
+
+    //region Private Fields
+
+    /**
+     * True if the visualized board is not yours, otherwise False
+     */
     private final boolean isOther;
+
+    //endregion
+
+    //region Constructor
+
     /**
      * The Constructor of the class, which is empty because there are no private fields
      */

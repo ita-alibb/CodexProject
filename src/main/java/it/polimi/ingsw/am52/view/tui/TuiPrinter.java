@@ -4,16 +4,40 @@ import it.polimi.ingsw.am52.view.tui.state.*;
 import it.polimi.ingsw.am52.view.viewModel.ModelObserver;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
-//Context of the StatePattern
+/**
+ * Class to print the correct View. This represents the context of the Strategy Pattern.
+ * It is a singleton, so only one instance of this class can exists; if it is invoked after the first instance, it is called
+ * a method on the same object.
+ */
 public class TuiPrinter extends ModelObserver {
+
+    //region Static Fields
+
+    /**
+     * The Instance of the singleton
+     */
     private static TuiPrinter INSTANCE;
 
+    //endregion
+
+    //region Private Methods
+
+    /**
+     * The private constructor, which subscribe to the list of observers
+     */
     private TuiPrinter() {
-        // register the printer to
+        // register the printer to the existent observers
         ViewModelState.getInstance().registerObserver(this);
     }
 
-    //SINGLETON,
+    //endregion
+
+    //region Public Methods
+
+    /**
+     * Method to invoke another method of the same object. If this object doesn't exist, it instantiates a new one.
+     * @return      The singleton class
+     */
     public static TuiPrinter getInstance(){
         if (INSTANCE == null) {
             INSTANCE = new TuiPrinter();
@@ -55,6 +79,10 @@ public class TuiPrinter extends ModelObserver {
             case END: new TuiEndView().print(); break;
         }
     }
+
+    //endregion
+
+    //region Protected Methods
 
     /**
      * Update that is triggered for event END_GAME
@@ -151,4 +179,6 @@ public class TuiPrinter extends ModelObserver {
             this.reprint(type);
         }
     }
+
+    //endregion
 }

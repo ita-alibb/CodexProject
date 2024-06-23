@@ -1,5 +1,8 @@
 package it.polimi.ingsw.am52.view.tui.state;
 
+/**
+ * The existing types of views
+ */
 public enum ViewType {
     MENU,
     LOBBY,
@@ -7,5 +10,5 @@ public enum ViewType {
     BOARD,
     COMMON_BOARD,
     CHAT,
-    END,
+    END
 }

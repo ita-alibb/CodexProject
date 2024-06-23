@@ -7,11 +7,35 @@ import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The class to visualize the TUI view representing the common board of the current game.
+ * In the common board, there are the following elements:
+ * <lu>
+ *     <li>Resource and Gold card decks</li>
+ *     <li>Visible Resource and Gold cards</li>
+ *     <li>Common objectives</li>
+ *     <li>Scoreboard</li>
+ * </lu>
+ */
 public class TuiCommonBoardView extends TuiView {
+
+    //region Constructor
+
+    /**
+     * The constructor of the class
+     */
     public TuiCommonBoardView() {
         super(ViewType.COMMON_BOARD);
     }
 
+    //endregion
+
+    //region Public Method
+
+    /**
+     * Method to create a list of all possible commands the player can perform
+     * @return      The list of possible commands
+     */
     public static List<Character> getAvailableCommands() {
         ArrayList<Character> available = new ArrayList<>(){{
             add('O');
@@ -32,6 +56,13 @@ public class TuiCommonBoardView extends TuiView {
         return available;
     }
 
+    //endregion
+
+    //region Inherited Methods
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void printView() {
         System.out.println("┌────────────────────────────────────────────────────────────────────────────┐");
@@ -52,6 +83,9 @@ public class TuiCommonBoardView extends TuiView {
         System.out.println("└────────────────────────────────────────────────────────────────────────────┘");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void printCommands() {
         System.out.println("┌──────────────────────────────────────────────────────────────────────┐");

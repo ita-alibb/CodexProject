@@ -10,12 +10,31 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The class to visualize the TUI view representing the personal board of a player of the current game.
+ * The board contains all the cards placed by a player and also all the available slots where a card can be placed,
+ * with the coordinates of that slot in it. If the visualized board is the one of this client, also the player's hand and
+ * the secret objective are visualized.
+ */
 public class TuiBoardView extends TuiView {
 
+    //region Constructor
+
+    /**
+     * The constructor of the class
+     */
     public TuiBoardView() {
         super(ViewType.BOARD);
     }
 
+    //endregion
+
+    //region Public Method
+
+    /**
+     * Method to create a list of all possible commands the player can perform
+     * @return      The list of possible commands
+     */
     public static List<Character> getAvailableCommands() {
         var available = new ArrayList<Character>(){{
             add('O');
@@ -33,6 +52,13 @@ public class TuiBoardView extends TuiView {
         return available;
     }
 
+    //endregion
+
+    //region Inherited Methods
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void printView() {
         var secretObjectiveId = ViewModelState.getInstance().getSecretObjective();
@@ -53,6 +79,9 @@ public class TuiBoardView extends TuiView {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void printCommands() {
         System.out.println("┌──────────────────────────────────────────────────────────────────────┐");
@@ -70,6 +99,21 @@ public class TuiBoardView extends TuiView {
         System.out.println("└──────────────────────────────────────────────────────────────────────┘");
     }
 
+    //endregion
+
+    //region Private Method
+
+    /**
+     * Method to create and visualize the cards and the available slots of the board of the player we are currently inspecting.
+     * <p>
+     *      The board in the view is organized like a matrix n*m, where:
+     *      <ul>
+     *          <li>n is the length of the matrix</li>
+     *          <li>m is the height of the matrix</li>
+     *      </ul>
+     * <p>
+     *     The cards are formatted and printed thanks to a template, which can be found in the class {@link it.polimi.ingsw.am52.view.viewModel.CardIds}.
+     */
     private void printBoard(){
         var board = ViewModelState.getInstance().getBoard();
         List<BoardSlot> availableSlots = new ArrayList<>();
@@ -137,7 +181,6 @@ public class TuiBoardView extends TuiView {
         }
     }
 
-
     /**
      * The method to print the hand of the player
      */
@@ -190,7 +233,18 @@ public class TuiBoardView extends TuiView {
             System.out.printf("│%s %n", row);
         }
     }
+
+    /**
+     * Method to check if a corner is covered or not
+     * @param plusH             The number to add to the horizontal coordinate to check the correct corner of the card
+     * @param plusV             The number to add to the vertical coordinate to check the correct corner of the card
+     * @param currentSlot       The slot we are checking
+     * @param board             The board of the player
+     * @return                  True if the corner is covered, otherwise False
+     */
     private boolean isCornerCovered(int plusH, int plusV, BoardSlot currentSlot, BoardMap<BoardSlot, CardIds> board){
         return board.isFirst(currentSlot, new BoardSlot(currentSlot.getHoriz() + plusH, currentSlot.getVert() + plusV));
     }
+
+    //endregion
 }

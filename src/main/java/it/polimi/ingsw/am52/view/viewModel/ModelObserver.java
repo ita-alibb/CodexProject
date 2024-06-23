@@ -1,5 +1,9 @@
 package it.polimi.ingsw.am52.view.viewModel;
 
+/**
+ * Class to create an Observer-Observable Pattern. This is triggered the update in the view depending on the method called in
+ * the model.
+ */
 public abstract class ModelObserver {
     /**
      * The public method to update, it triggers the right update based on eventType

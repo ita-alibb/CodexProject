@@ -1,5 +1,8 @@
 package it.polimi.ingsw.am52.view.viewModel;
 
+/**
+ * The enumeration of all the types of possible events in the game
+ */
 public enum EventType {
     CREATE_LOBBY,
 

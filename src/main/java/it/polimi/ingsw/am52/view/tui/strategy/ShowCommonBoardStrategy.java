@@ -5,7 +5,11 @@ import it.polimi.ingsw.am52.view.tui.TuiPrinter;
 import it.polimi.ingsw.am52.view.tui.state.ViewType;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
+/**
+ * The class from Strategy to implement the behaviour to visualize the common board, with the common information of the game (decks, common objectives, scores, visible cards)
+ */
 public class ShowCommonBoardStrategy extends Strategy {
+
     //region Constructor
 
     /**

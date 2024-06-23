@@ -2,11 +2,14 @@ package it.polimi.ingsw.am52.view.tui.strategy;
 
 import it.polimi.ingsw.am52.json.response.ResponseStatus;
 import it.polimi.ingsw.am52.network.client.ClientConnection;
-import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.util.Scanner;
 
+/**
+ * The class from Strategy to implement the behaviour to join an existing lobby
+ */
 public class JoinLobbyStrategy extends Strategy {
+
     //region Constructor
 
     /**

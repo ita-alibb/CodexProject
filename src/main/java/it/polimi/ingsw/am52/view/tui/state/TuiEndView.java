@@ -5,20 +5,44 @@ import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The class to visualize the TUI representing the end of the game.
+ * After a player has reached 20 points and the last turn is played, the game will automatically end and the winner, or the winners,
+ * are displayed, with some basic information about the number of turns played and the disconnected player, only if the game
+ * ended because a player left.
+ */
 public class TuiEndView extends TuiView {
 
+    //region Constructor
+
+    /**
+     * The constructor of the class
+     */
     public TuiEndView() {
         super(ViewType.BOARD);
     }
 
+    //endregion
+
+    //region Public Method
+
+    /**
+     * Method to create a list of all possible commands the player can perform
+     * @return      The list of possible commands
+     */
     public static List<Character> getAvailableCommands() {
-        var available = new ArrayList<Character>(){{
+        return new ArrayList<>() {{
             add('L');
         }};
-
-        return available;
     }
 
+    //endregion
+
+    //region Inherited Methods
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void printView() {
         var players = String.join(" ", ViewModelState.getInstance().getNicknames());
@@ -42,6 +66,9 @@ public class TuiEndView extends TuiView {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void printCommands() {
         System.out.println("┌──────────────────────────────────────────────────────────────────────┐");
@@ -50,4 +77,6 @@ public class TuiEndView extends TuiView {
         System.out.println("│ - (L) leave_lobby -> leave lobby                                     │");
         System.out.println("└──────────────────────────────────────────────────────────────────────┘");
     }
+
+    //endregion
 }

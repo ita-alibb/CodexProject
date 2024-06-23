@@ -62,6 +62,10 @@ public class InputReader implements Runnable {
         executorService.execute(new InputReader());
     }
 
+    /**
+     * The method to set the Strategy and execute it.
+     * @param input     The command given by the player
+     */
     private void executeCommand(String input) {
         Strategy strategy = null;
 

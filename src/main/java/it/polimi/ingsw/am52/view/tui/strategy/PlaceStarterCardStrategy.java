@@ -7,6 +7,9 @@ import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.util.Scanner;
 
+/**
+ * The class from Strategy to implement the behaviour to place the starter card
+ */
 public class PlaceStarterCardStrategy extends Strategy {
 
     //region Constructor
@@ -30,7 +33,7 @@ public class PlaceStarterCardStrategy extends Strategy {
         ResponseStatus networkResponse;
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("> Enter the face of the starter card (0 = front, 1 = back): ");
+        System.out.print("- Enter the face of the starter card (0 = front, 1 = back): ");
         int face = scanner.nextInt();
 
         networkResponse = ClientConnection.placeStarterCard(ViewModelState.getInstance().getStarterCard(), CardSide.fromInteger(face));

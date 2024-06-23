@@ -7,11 +7,31 @@ import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The class to visualize the TUI view representing the setup phase of the game.
+ * The setup phase is the phase before the start of the game, when we have to set up the table and our starting cards,
+ * the starter card and the secret objective. Once all the players have chosen these elements, the game can start and the
+ * view is automatically updated.
+ */
 public class TuiSetupView extends TuiView {
+
+    //region Constructor
+
+    /**
+     * The constructor of the class
+     */
     public TuiSetupView() {
         super(ViewType.SETUP);
     }
 
+    //endregion
+
+    //region Public Method
+
+    /**
+     * Method to create a list of all possible commands the player can perform
+     * @return      The list of possible commands
+     */
     public static List<Character> getAvailableCommands() {
         var available = new ArrayList<Character>();
 
@@ -24,6 +44,13 @@ public class TuiSetupView extends TuiView {
         return available;
     }
 
+    //endregion
+
+    //region Inherited Methods
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void printView() {
         var starterCardId = ViewModelState.getInstance().getStarterCard();
@@ -58,6 +85,9 @@ public class TuiSetupView extends TuiView {
         System.out.println("└──────────────────────────────────────────────────────────────────────┘");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void printCommands() {
         System.out.println("┌──────────────────────────────────────────────────────────────────────┐");
@@ -71,4 +101,6 @@ public class TuiSetupView extends TuiView {
         }
         System.out.println("└──────────────────────────────────────────────────────────────────────┘");
     }
+
+    //endregion
 }

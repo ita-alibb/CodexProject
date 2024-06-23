@@ -3,10 +3,12 @@ package it.polimi.ingsw.am52.view.tui.strategy;
 import it.polimi.ingsw.am52.json.dto.DrawType;
 import it.polimi.ingsw.am52.json.response.ResponseStatus;
 import it.polimi.ingsw.am52.network.client.ClientConnection;
-import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.util.Scanner;
 
+/**
+ * The class from Strategy to implement the behaviour to take one of the visible cards
+ */
 public class TakeCardStrategy extends Strategy {
 
     //region Constructor
@@ -29,43 +31,12 @@ public class TakeCardStrategy extends Strategy {
     public ResponseStatus executeWithNetworkCall() {
         ResponseStatus networkResponse;
         Scanner scanner = new Scanner(System.in);
-        boolean cardExists = false;
-        DrawType deck;
-        int cardId = -1;
 
-        System.out.println(    "┌──────────────────────────────────────────────────────────────────────┐");
+        System.out.print("- Enter the deck you want to take from (0 = Resource, 1 = Gold): ");
+        DrawType deck = DrawType.fromInteger(scanner.nextInt());
 
-        while (true) {
-            System.out.println("│ - Enter the deck you want to take from (0 = Resource, 1 = Gold): ");
-            deck = DrawType.fromInteger(scanner.nextInt());
-            if (deck != null) {
-                break;
-            }
-            System.out.println("│ The given deck is not available!");
-        }
-
-        while (!cardExists) {
-            System.out.println("│ - Enter the ID of the card you want to take: ");
-            cardId = scanner.nextInt();
-            switch (deck) {
-                case RESOURCE -> {
-                    if (ViewModelState.getInstance().getVisibleResourceCards().contains(cardId)) {
-                        cardExists = true;
-                    }
-                    else {
-                        System.out.println("│ The given id is not available!");
-                    }
-                }
-                case GOLD -> {
-                    if (ViewModelState.getInstance().getVisibleGoldCards().contains(cardId)) {
-                        cardExists = true;
-                    }
-                    else {
-                        System.out.println("│ The given id is not available!");
-                    }
-                }
-            }
-        }
+        System.out.print("- Enter the ID of the card you want to take: ");
+        int cardId = scanner.nextInt();
 
         networkResponse = ClientConnection.takeCard(cardId, deck);
 

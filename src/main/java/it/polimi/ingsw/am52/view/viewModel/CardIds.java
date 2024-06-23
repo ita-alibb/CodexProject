@@ -5,6 +5,9 @@ import it.polimi.ingsw.am52.model.objectives.Objective;
 
 import java.util.Optional;
 
+/**
+ * The class to represents an image of a card, with all the related information and the methods to print a face of the card.
+ */
 public class CardIds {
     /**
      * The template used to create a card.
@@ -173,9 +176,15 @@ public class CardIds {
         }
     }
 
+    /**
+     * The basic information of a card
+     */
     public int cardId;
     public int cardFace;
 
+    /**
+     * The face of the card, useful to know the intrinsic information of the card, such as the bonus points or the requirements.
+     */
     private CardFace face;
 
     /**
@@ -197,6 +206,12 @@ public class CardIds {
         this.cardFace = 0;
     }
 
+    /**
+     * Method to create an available slot, with its coordinates, to be printed on the viewing board.
+     * @param h     Horizontal coordinate
+     * @param v     Vertical coordinate
+     * @return      The template filled with the formatted coordinates
+     */
     public static String[] getEmptyTemplate(int h, int v) {
         var card =  EMPTY_TEMPLATE.clone();
 
@@ -205,6 +220,10 @@ public class CardIds {
         return card;
     }
 
+    /**
+     * Method to create an empty template, to be printed on the viewing board
+     * @return      The empty template
+     */
     public static String[] getEmptyTemplate() {
         var card =  EMPTY_TEMPLATE.clone();
 
@@ -213,6 +232,9 @@ public class CardIds {
         return card;
     }
 
+    /**
+     * Method to load the face of a card, using the basic data initialized in the constructor of the class.
+     */
     public void loadFace() {
         if (face == null) {
             var card = KingdomCard.getCardWithId(cardId);
@@ -224,6 +246,9 @@ public class CardIds {
         }
     }
 
+    /**
+     * Method to load the face of a starter card, using the basic data initialized in the constructor of the class.
+     */
     public void loadStarterFace() {
         if (face == null) {
             var card = StarterCard.getCardWithId(cardId);
@@ -235,6 +260,15 @@ public class CardIds {
         }
     }
 
+    /**
+     * This method uses the template of a generic card and creates an array of String formatted with the correct information
+     * to be visualized by the player, i.e. the bonus points, the requirements, the resources/items and the permanent resource of the card.
+     * @param coveredTL     True is the Top-Left Corner is covered, otherwise False
+     * @param coveredTR     True is the Top-Right Corner is covered, otherwise False
+     * @param coveredBR     True is the Bottom-Left Corner is covered, otherwise False
+     * @param coveredBL     True is the Bottom-Right Corner is covered, otherwise False
+     * @return              The array of formatted String
+     */
     public String[] getCardAsArrayString(boolean coveredTL, boolean coveredTR, boolean coveredBR, boolean coveredBL){
         String[] result = TEMPLATE.clone();
 
@@ -247,7 +281,16 @@ public class CardIds {
         }
     }
 
-    public String[] getStarterCardAsArrayString(boolean coveredTL, boolean coveredTR, boolean coveredBR, boolean coveredBL, String[] result){
+    /**
+     * Private method to format the String array with the correct information of a starter card.
+     * @param coveredTL     True is the Top-Left Corner is covered, otherwise False
+     * @param coveredTR     True is the Top-Right Corner is covered, otherwise False
+     * @param coveredBR     True is the Bottom-Left Corner is covered, otherwise False
+     * @param coveredBL     True is the Bottom-Right Corner is covered, otherwise False
+     * @param result        The String array partially formatted in the generic method
+     * @return              The array completely formatted
+     */
+    private String[] getStarterCardAsArrayString(boolean coveredTL, boolean coveredTR, boolean coveredBR, boolean coveredBL, String[] result){
         result[1] = result[1].formatted(
                 getSymbol(this.face.getTopLeftCorner(), coveredTL),
                 "",
@@ -264,7 +307,16 @@ public class CardIds {
         return result;
     }
 
-    public String[] getResourceCardAsArrayString(boolean coveredTL, boolean coveredTR, boolean coveredBR, boolean coveredBL, String[] result){
+    /**
+     * Private method to format the String array with the correct information of a resource card.
+     * @param coveredTL     True is the Top-Left Corner is covered, otherwise False
+     * @param coveredTR     True is the Top-Right Corner is covered, otherwise False
+     * @param coveredBR     True is the Bottom-Left Corner is covered, otherwise False
+     * @param coveredBL     True is the Bottom-Right Corner is covered, otherwise False
+     * @param result        The String array partially formatted in the generic method
+     * @return              The array completely formatted
+     */
+    private String[] getResourceCardAsArrayString(boolean coveredTL, boolean coveredTR, boolean coveredBR, boolean coveredBL, String[] result){
         result[3] = result[3].formatted(this.getSymbol(this.face.getPermanentResources()));
 
         if (this.cardFace == 0) {
@@ -289,11 +341,20 @@ public class CardIds {
         return result;
     }
 
-    public String[] getGoldCardAsArrayString(boolean coveredTL, boolean coveredTR, boolean coveredBR, boolean coveredBL, String[] result){
+    /**
+     * Private method to format the String array with the correct information of a gold card.
+     * @param coveredTL     True is the Top-Left Corner is covered, otherwise False
+     * @param coveredTR     True is the Top-Right Corner is covered, otherwise False
+     * @param coveredBR     True is the Bottom-Left Corner is covered, otherwise False
+     * @param coveredBL     True is the Bottom-Right Corner is covered, otherwise False
+     * @param result        The String array partially formatted in the generic method
+     * @return              The array completely formatted
+     */
+    private String[] getGoldCardAsArrayString(boolean coveredTL, boolean coveredTR, boolean coveredBR, boolean coveredBL, String[] result){
         result[3] = result[3].formatted(this.getSymbol(this.face.getPermanentResources()));
 
         if (this.cardFace == 0) {
-            StringBuilder totalRequiredResources = getTotalRequiredResources(GoldCard.getCardWithId(this.cardId).getFrontFace().getRequiredResources());
+            String totalRequiredResources = getTotalRequiredResources(GoldCard.getCardWithId(this.cardId).getFrontFace().getRequiredResources());
 
             result[1] = result[1].formatted(
                     getSymbol(this.face.getTopLeftCorner(), coveredTL),
@@ -320,6 +381,10 @@ public class CardIds {
         return result;
     }
 
+    /**
+     * Private method to format the String array with the correct information of an objective card.
+     * @return      The array completely formatted
+     */
     public String[] getObjectiveAsArrayString() {
         String[] result = OBJECTIVE_TEMPLATE.clone();
         var obj = Objective.getObjectiveWithId(cardId);
@@ -348,6 +413,12 @@ public class CardIds {
         return result;
     }
 
+    /**
+     * Private method to return the correct character which represents the correct resource/item on the given corner
+     * @param corner        The corner considered on the card, which is Optional because it can be missing
+     * @param isCovered     True if the corner is covered, otherwise False
+     * @return              The char representing the resource/item
+     */
     private char getSymbol(Optional<CardCorner> corner, boolean isCovered) {
         var res = ' '; // default blank placeable corner
 
@@ -363,6 +434,11 @@ public class CardIds {
         return res;
     }
 
+    /**
+     * Private method to insert on the card the resource
+     * @param counter   The resource counter of the card
+     * @return          The character associated to the resource
+     */
     private char getSymbol(ResourcesCounter counter) {
         if (counter.getAnimalCount() != 0) {
             return 'A';
@@ -376,7 +452,11 @@ public class CardIds {
             return ' ';
         }
     }
-
+    /**
+     * Private method to insert on the card the item
+     * @param counter   The item counter of the card
+     * @return          The character associated to the item
+     */
     private char getSymbol(ItemsCounter counter) {
         if (counter.getFeatherCount() != 0) {
             return 'F';
@@ -389,17 +469,27 @@ public class CardIds {
         }
     }
 
-    private static StringBuilder getTotalRequiredResources(ResourcesCounter requiredResources) {
+    /**
+     * Private method to build a String with the correct number of required resources to place a card
+     * @param requiredResources     The required resources associated to the card
+     * @return                      The String formatted
+     */
+    private static String getTotalRequiredResources(ResourcesCounter requiredResources) {
         int plantRequired = requiredResources.getPlantCount();
         int animalRequired = requiredResources.getAnimalCount();
         int insectRequired = requiredResources.getInsectCount();
         int fungiRequired = requiredResources.getFungiCount();
 
-        StringBuilder totalRequiredResources = new StringBuilder();
-        totalRequiredResources.append("P".repeat(Math.max(0, plantRequired)));
-        totalRequiredResources.append("A".repeat(Math.max(0, animalRequired)));
-        totalRequiredResources.append("I".repeat(Math.max(0, insectRequired)));
-        totalRequiredResources.append("F".repeat(Math.max(0, fungiRequired)));
-        return totalRequiredResources;
+        int width = 5;
+        int padding = (width - (plantRequired + animalRequired + insectRequired + fungiRequired)) / 2;
+
+        String totalRequiredResources = "P".repeat(Math.max(0, plantRequired)) +
+                "A".repeat(Math.max(0, animalRequired)) +
+                "I".repeat(Math.max(0, insectRequired)) +
+                "F".repeat(Math.max(0, fungiRequired));
+
+        return " ".repeat(Math.max(0, padding)) +
+                totalRequiredResources +
+                " ".repeat(Math.max(0, padding));
     }
 }

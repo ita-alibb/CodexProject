@@ -6,6 +6,9 @@ import it.polimi.ingsw.am52.network.client.ClientConnection;
 
 import java.util.Scanner;
 
+/**
+ * The class from Strategy to implement the behaviour to create a lobby in the game
+ */
 public class CreateLobbyStrategy extends Strategy {
 
     //region Constructor
