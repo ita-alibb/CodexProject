@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="900.0" prefWidth="1500.0" styleClass="background" stylesheets="@../css/menu-view.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.am52.view.gui.guiControllers.SelectStarterCardController">
+   <children>
+      <ImageView fx:id="frontStarterCard" fitHeight="230.0" fitWidth="427.0" layoutX="284.0" layoutY="350.0" onMouseClicked="#setSelected" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/cards/Backs/102.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="backStarterCard" fitHeight="230.0" fitWidth="427.0" layoutX="888.0" layoutY="346.0" onMouseClicked="#setSelected" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/cards/Backs/102.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="525.0" layoutY="221.0" prefHeight="94.0" prefWidth="548.0" text="Select starter card side ">
+         <font>
+            <Font size="48.0" />
+         </font>
+      </Label>
+      <Button layoutX="1217.0" layoutY="712.0" mnemonicParsing="false" onAction="#confirm" prefHeight="103.0" prefWidth="208.0" text="Continue">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

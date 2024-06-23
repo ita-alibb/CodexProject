@@ -38,7 +38,7 @@ public class DummyClientApplication {
             var res = this.connectionRMI.createLobby(new CreateLobbyData("Paoletto",2));
             System.out.println(res);
 
-            Thread.sleep(10 * 1000);
+            /*Thread.sleep(10 * 1000);
 
             System.out.println("Uscito dallo sleep");
 
@@ -47,7 +47,7 @@ public class DummyClientApplication {
 
             var res2 = this.connectionRMI.joinLobby(new JoinLobbyData("Paoletto",2));
             System.out.println(res2);
-
+*/
             // endregion
         } catch (Exception e) {
             System.err.println("Client exception: " + e.toString());

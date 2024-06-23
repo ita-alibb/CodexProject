@@ -1,0 +1,10 @@
+.background-pane {
+    -fx-background-image: url("../images/background/table.jpeg");
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+}
+.playing-board {
+    -fx-background-image: url("../images/background/image.png");
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+}

@@ -5,9 +5,13 @@ module it.polimi.ingsw.am52 {
     requires org.controlsfx.controls;
     requires com.fasterxml.jackson.databind;
     requires java.rmi;
+    requires java.desktop;
 
     opens it.polimi.ingsw.am52 to javafx.fxml;
+    opens it.polimi.ingsw.am52.view.gui.guiControllers to javafx.fxml;
     exports it.polimi.ingsw.am52;
+    exports it.polimi.ingsw.am52.view.gui;
+    exports it.polimi.ingsw.am52.view.gui.guiControllers;
     exports it.polimi.ingsw.am52.exceptions;
     exports it.polimi.ingsw.am52.model.cards;
     exports it.polimi.ingsw.am52.model.objectives;

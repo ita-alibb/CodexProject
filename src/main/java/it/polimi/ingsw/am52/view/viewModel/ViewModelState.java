@@ -43,7 +43,7 @@ public class ViewModelState extends ModelObservable {
     /**
      * The lobby I am currently in
      */
-    private int currentLobbyId = -1;
+    private int  currentLobbyId = -1;
 
     /**
      * The nicknames in the lobby
@@ -617,6 +617,15 @@ public class ViewModelState extends ModelObservable {
     }
 
     //endregion
+    public BoardMap<BoardSlot, CardIds> getBoard(String nickname) {
+        //Maybe call here to transform id into cards
+        if (Objects.equals(this.clientNickname,nickname)){
+            return this.board;
+        } else {
+            return this.opponents.stream().filter(o -> Objects.equals(o.getNickname(), nickname)).findFirst().get().getBoard();
+        }
+    }
+    // endregion
 
     //region Utils
 

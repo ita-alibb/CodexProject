@@ -86,6 +86,7 @@ public class ClientConnection {
         }
     }
 
+
     public static ResponseStatus leaveLobby() {
         try  {
             var result = INSTANCE.leaveGame();

@@ -1,0 +1,7 @@
+.background{
+    -fx-background-color: rgba(224, 161, 45, 0.6);
+    -fx-background-image: url("../images/background/table.jpeg");
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+
+}

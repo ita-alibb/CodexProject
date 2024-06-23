@@ -29,57 +29,57 @@ public abstract class ModelObserver {
     /**
      * Update that is triggered for event END_GAME
      */
-    protected abstract void updateEndGame();
+    protected void updateEndGame(){};
 
     /**
      * Update that is triggered for event INIT_GAME
      */
-    protected abstract void updateInitGame();
+    protected void updateInitGame(){};
 
     /**
      * Update that is triggered for event TAKE_CARD
      */
-    protected abstract void updateTakeCard();
+    protected void updateTakeCard(){};
 
     /**
      * Update that is triggered for event DRAW_CARD
      */
-    protected abstract void updateDrawCard();
+    protected void updateDrawCard(){};
 
     /**
      * Update that is triggered for event PLACE_CARD
      */
-    protected abstract void updatePlaceCard();
+    protected void updatePlaceCard(){};
 
     /**
      * Update that is triggered for event PLACE_STARTER_CARD
      */
-    protected abstract void updatePlaceStarterCard();
+    protected void updatePlaceStarterCard(){};
 
     /**
      * Update that is triggered for event SELECT_OBJECTIVE
      */
-    protected abstract void updateSelectObjective();
+    protected void updateSelectObjective(){};
 
     /**
      * Update that is triggered for event LEAVE_GAME
      */
-    protected abstract void updateLeaveGame();
+    protected void updateLeaveGame(){};
 
     /**
      * Update that is triggered for event LIST_LOBBY
      */
-    protected abstract void updateListLobby();
+    protected void updateListLobby(){};
 
     /**
      * Update that is triggered for event CREATE_LOBBY
      */
-    protected abstract void updateCreateLobby();
+    protected void updateCreateLobby(){};
 
     /**
      * Update that is triggered for event JOIN_LOBBY
      */
-    protected abstract void updateJoinLobby();
+    protected void updateJoinLobby(){};
 
     /**
      * Update that is triggered for event CHAT

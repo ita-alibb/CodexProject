@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="950.0" prefWidth="1561.0" styleClass="background" stylesheets="@../css/menu-view.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.am52.view.gui.guiControllers.WaitingRoomController">
+   <children>
+      <Label layoutX="626.0" layoutY="178.0" prefHeight="100.0" prefWidth="426.0" text="Number of players">
+         <font>
+            <Font size="48.0" />
+         </font>
+      </Label>
+      <Label fx:id="numberOfPlayers" layoutX="762.0" layoutY="290.0" prefHeight="39.0" prefWidth="64.0">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
