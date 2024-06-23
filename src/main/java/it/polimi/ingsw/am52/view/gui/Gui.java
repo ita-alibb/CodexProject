@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am52.view.gui;
 
 import it.polimi.ingsw.am52.network.client.ClientConnection;
+import it.polimi.ingsw.am52.settings.NetworkMode;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +16,7 @@ public class Gui extends Application {
     private Pane playingBoard;
     @Override
     public void start(Stage stage) throws IOException {
-       ClientConnection.setConnection(false);
+       ClientConnection.setConnection("127.0.0.1",5556, NetworkMode.RMI );
        FXMLLoader fxmlLoader = new FXMLLoader(Gui.class.getResource("fxml/menu-view.fxml"));
        Scene scene = new Scene(fxmlLoader.load(), 1980, 1080);
        scene.getStylesheets().add(getClass().getResource("css/menu-view.css").toExternalForm());

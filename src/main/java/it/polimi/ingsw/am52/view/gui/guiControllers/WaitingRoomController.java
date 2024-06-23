@@ -25,13 +25,10 @@ public class WaitingRoomController extends ModelObserver implements Initializabl
     }
 
     public void setNumberOfPlayers(){
-        Platform.runLater(new Runnable(){
-            @Override
-            public void run() {
-                numberOfPlayers.setText(Integer.toString(ViewModelState.getInstance().getNicknames().size()));
-                if(ViewModelState.getInstance().getPhase() == GamePhase.INIT){
-                    StageController.changeScene("fxml/select-objective.fxml","Select secret objective" , numberOfPlayers);
-                }
+        Platform.runLater(() -> {
+            numberOfPlayers.setText(Integer.toString(ViewModelState.getInstance().getNicknames().size()));
+            if(ViewModelState.getInstance().getPhase() == GamePhase.INIT){
+                StageController.changeScene("fxml/select-objective.fxml","Select secret objective" , numberOfPlayers);
             }
         });
 
