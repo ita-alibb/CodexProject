@@ -1,7 +1,9 @@
 package it.polimi.ingsw.am52;
 
+import it.polimi.ingsw.am52.network.client.ConnectionRMI;
 import it.polimi.ingsw.am52.network.server.ServerConnection;
 import it.polimi.ingsw.am52.settings.*;
+import it.polimi.ingsw.am52.view.tui.TUIApplication;
 
 import java.rmi.RemoteException;
 
@@ -74,9 +76,29 @@ public class Codex {
      * @param settings The server settings.
      */
     private static void runClient(ClientSettings settings) {
-        System.out.println(
-                String.format("Run client with following settings:%n%s%n", settings.toString())
-        );
+        switch (settings.getMode()) {
+            case ClientMode.TEXTUAL:
+                runTuiClient(settings.getServerIp(), settings.getPort(),settings.getNetworkMode());
+                break;
+            case ClientMode.GRAPHICAL:
+                runGuiClient(settings.getServerIp(), settings.getPort(),settings.getNetworkMode());
+                break;
+        }
+    }
+
+    private static void runGuiClient(String serverIp, int port, NetworkMode connection) {
+        //TODO: avvio in modalità grafica (GUI)
+        System.out.println("Graphical User Interface (GUI) not supported.");
+    }
+
+    /**
+     * Start client application with specified settings.
+     * @param serverIp The server Ip.
+     * @param port The port number.
+     * @param connection The type of connection (TCP or RMI)
+     */
+    private static void runTuiClient(String serverIp, int port, NetworkMode connection) {
+        TUIApplication.run(serverIp, port, connection);
     }
 
     /**

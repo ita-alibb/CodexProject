@@ -43,9 +43,9 @@ public class ConnectionTCP implements Connection, Runnable{
      */
     private final SynchronousQueue<JsonMessage<BaseResponseData>> responseQueue;
 
-    public ConnectionTCP() throws IOException {
+    public ConnectionTCP(String serverIp, int tcpPort) throws IOException {
         // establish connection to server
-        this.socket = new Socket("127.0.0.1",5555);
+        this.socket = new Socket(serverIp,tcpPort);
 
         this.out = new PrintWriter(this.socket.getOutputStream(), true);
         this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));

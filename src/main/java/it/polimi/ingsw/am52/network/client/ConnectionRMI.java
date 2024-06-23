@@ -3,6 +3,7 @@ package it.polimi.ingsw.am52.network.client;
 import it.polimi.ingsw.am52.json.BaseResponseData;
 import it.polimi.ingsw.am52.json.request.*;
 import it.polimi.ingsw.am52.json.response.*;
+import it.polimi.ingsw.am52.network.server.ServerConnection;
 import it.polimi.ingsw.am52.network.server.rmi.Accepter;
 import it.polimi.ingsw.am52.network.server.rmi.ActionsRMI;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
@@ -28,27 +29,62 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
     public final ActionsRMI view;
 
     /**
+     * The IP address of the server.
+     */
+    private final String serverIp;
+
+    /**
+     * The RMI port number of the server.
+     */
+    private final int rmiPort;
+
+    /**
      * Generic constructor
      * @throws RemoteException to implement the Remote interface
      */
-    public ConnectionRMI() throws RemoteException {
+    public ConnectionRMI(String serverIp, int rmiPort) throws RemoteException {
         try {
+            // Store server ip and port.
+            this.serverIp = serverIp;
+            this.rmiPort = rmiPort;
+
             // establish connection to server
-            Registry registry = LocateRegistry.getRegistry("127.0.0.1",5556);
-            Accepter stub = (Accepter) registry.lookup("SERVER_CONNECTION");
+            Registry registry = LocateRegistry.getRegistry(getServerIp(),getRmiPort());
+            Accepter stub = (Accepter) registry.lookup(ServerConnection.STUB_NAME);
 
             // register myself in server
             int id = stub.accept(this);
 
-            //get the server's virtual view so client can call it directly
+            // Get the server's virtual view so client can call it directly
             // set the Proxy virtualView in client side connection (so client can call it)
-            this.view = (ActionsRMI) registry.lookup("VirtualView:"+id);
+            this.view = (ActionsRMI) registry.lookup(ServerConnection.REGISTRY_ROOT+id);
 
+            //TODO: Evitare di crivere a scermo messaggi di "log" nell'applicazione client.
             System.out.println("initialized");
         } catch (NotBoundException e) {
             throw new RuntimeException(e);
         }
     }
+
+    //region Getters
+
+    /**
+     *
+     * @return The server Ip.
+     */
+    public String getServerIp() {
+        return this.serverIp;
+    }
+
+    /**
+     *
+     * @return The port number, used for RMI connection.
+     */
+    public int getRmiPort() {
+        return this.rmiPort;
+    }
+
+    //endregion
 
     /**
      * This method is called by the server every X seconds, to let the server know that this client is still connected.

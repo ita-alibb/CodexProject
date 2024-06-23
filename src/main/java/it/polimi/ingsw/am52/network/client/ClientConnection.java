@@ -5,6 +5,7 @@ import it.polimi.ingsw.am52.json.request.*;
 import it.polimi.ingsw.am52.json.response.*;
 import it.polimi.ingsw.am52.model.cards.CardSide;
 import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
+import it.polimi.ingsw.am52.settings.NetworkMode;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.io.IOException;
 /**
  * To the client the connection is now a Singleton.
  * One can access the connection from everywhere in Client and be sure that the connection is always the same
- * The INSTANCE is initialized (with  {@link #setConnection(boolean isTcp) Set the client Connection to be TCP or RMI}) only on startup of Client and can be called only once per Application
+ * The INSTANCE is initialized only on startup of Client and can be called only once per Application
  */
 public class ClientConnection {
     private static Connection INSTANCE;
@@ -20,18 +21,19 @@ public class ClientConnection {
     public ClientConnection() {
     }
 
-    public static void setConnection(boolean isTcp) throws IOException {
+    public static void setConnection(String serverIp, int port, NetworkMode type) throws IOException {
         if (INSTANCE != null) {
             throw new IllegalArgumentException ("The connection has already been initialized");
         }
 
-        if (isTcp) {
-            INSTANCE = new ConnectionTCP();
+        INSTANCE = switch (type) {
+            case RMI -> new ConnectionRMI(serverIp, port);
+            case SOCKET -> new ConnectionTCP(serverIp, port);
+        };
 
-            // Start connection thread
+        // If the connection is of type TCP, start listening on a new thread.
+        if (type == NetworkMode.SOCKET) {
             new Thread((ConnectionTCP)INSTANCE).start();
-        } else {
-            INSTANCE = new ConnectionRMI();
         }
     }
 

@@ -14,7 +14,7 @@ public class DummyClientApplication {
         try {
             // region Initialization of RMI connection
             // set client connection
-            this.connectionRMI = new ConnectionRMI();
+            this.connectionRMI = new ConnectionRMI("localhost", 5556);
 
             /*// establish connection to server
             Registry registry = LocateRegistry.getRegistry("127.0.0.1",5556);

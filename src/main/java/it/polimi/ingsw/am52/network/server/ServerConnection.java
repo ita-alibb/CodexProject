@@ -28,7 +28,15 @@ import java.util.concurrent.Executors;
  */
 public class ServerConnection extends UnicastRemoteObject implements Accepter, Runnable{
 
+    /**
+     * The stub name.
+     */
     public static final String STUB_NAME = "SERVER_CONNECTION";
+
+    /**
+     * The root label for the registry.
+     */
+    public static final String REGISTRY_ROOT = "VirtualView:";
 
     /**
      * The unique ID counter
@@ -63,7 +71,7 @@ public class ServerConnection extends UnicastRemoteObject implements Accepter, R
      * Initialize the ServerConnection,
      * Creates the ServerSocket and exports the ServerConnection to the network.
      * @param settings The server startup settings
-     * @throws RemoteException
+     * @throws RemoteException If the socket creation fails.
      * @throws IllegalArgumentException If any settings' value is not valid (detail in the exception message)
      */
     public ServerConnection(ServerSettings settings) throws RemoteException, IllegalArgumentException {
@@ -182,14 +190,18 @@ public class ServerConnection extends UnicastRemoteObject implements Accepter, R
                     // add Handler to the Server, if fails close connection
                     ServerController.getInstance().addHandler(clientHandler);
                     this.clientConnections.execute(clientHandler);
-                    System.out.println("Client " + newId + " connected via TCP");
+
+                    // Log Info message
+                    printInfoMessage(String.format("Client %d connected via TCP", newId));
                 }
                 catch (Exception e) {
                     socket.close();
                     throw e;
                 }
             } catch (Exception ex) {
-                //TODO: Log message
+                String errMessage = String.format("Error creating new Client Handler. Exception: %s, Exception msg: %s",
+                        ex.getClass().getName(), ex.getMessage());
+                printErrorMessage(errMessage);
             }
         }
     }
@@ -211,7 +223,7 @@ public class ServerConnection extends UnicastRemoteObject implements Accepter, R
         ClientHandler clientHandler = new ClientHandlerRMI(newId, client, virtualView);
 
         // Export the VirtualView to the client, it will call the Virtual view directly
-        this.registry.rebind("VirtualView:"+newId, virtualView);
+        this.registry.rebind(REGISTRY_ROOT+newId, virtualView);
 
         // add Handler to the Server, if fails close connection
         ServerController.getInstance().addHandler(clientHandler);
