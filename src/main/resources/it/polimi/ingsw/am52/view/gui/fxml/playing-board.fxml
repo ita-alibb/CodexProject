@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Point3D?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1500.0" styleClass="background-pane" stylesheets="@../css/playing-board.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.am52.view.gui.guiControllers.PlayingBoardController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1500.0" styleClass="background-pane" stylesheets="@../css/playing-board.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.am52.view.gui.guiControllers.PlayingBoardController">
    <children>
       <ImageView fitHeight="629.0" fitWidth="782.0" layoutX="426.0" layoutY="44.0" pickOnBounds="true" AnchorPane.topAnchor="44.0">
          <image>
@@ -48,11 +44,11 @@
       </GridPane>
       <ImageView fx:id="resourceCardsDeck" fitHeight="98.0" fitWidth="165.0" layoutX="23.0" layoutY="157.0" onMouseClicked="#pickupCard" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/cards/Backs/001.png" />
+            <Image url="@../guiControllers/cards/backs/1.png" />
          </image></ImageView>
       <ImageView fx:id="playerCard1" fitHeight="98.0" fitWidth="165.0" layoutX="553.0" layoutY="739.0" onMouseClicked="#cardSelection" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/cards/Backs/001.png" />
+            <Image url="@../guiControllers/cards/backs/1.png" />
          </image>
          <rotationAxis>
             <Point3D />
@@ -60,17 +56,17 @@
       </ImageView>
       <ImageView fx:id="playerCard2" fitHeight="98.0" fitWidth="165.0" layoutX="756.0" layoutY="742.0" onMouseClicked="#cardSelection" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/cards/Backs/011.png" />
+            <Image url="@../guiControllers/cards/backs/11.png" />
          </image>
       </ImageView>
       <ImageView fx:id="playerCard3" fitHeight="98.0" fitWidth="165.0" layoutX="935.0" layoutY="737.0" onMouseClicked="#cardSelection" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/cards/Backs/021.png" />
+            <Image url="@../guiControllers/cards/backs/21.png" />
          </image>
       </ImageView>
       <ImageView fx:id="visibleResourceCard1" fitHeight="98.0" fitWidth="165.0" layoutX="189.0" layoutY="98.0" onMouseClicked="#pickupCard" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/cards/fronts/002.png" />
+            <Image url="@../guiControllers/cards/fronts/2.png" />
          </image>
          <rotationAxis>
             <Point3D />
@@ -78,7 +74,7 @@
       </ImageView>
       <ImageView fx:id="visibleResourceCard2" fitHeight="98.0" fitWidth="165.0" layoutX="183.0" layoutY="221.0" onMouseClicked="#pickupCard" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/cards/fronts/016.png" />
+            <Image url="@../guiControllers/cards/fronts/16.png" />
          </image>
          <rotationAxis>
             <Point3D />
@@ -86,35 +82,36 @@
       </ImageView>
       <ImageView fx:id="goldCardsDeck" fitHeight="98.0" fitWidth="165.0" layoutX="14.0" layoutY="516.0" onMouseClicked="#pickupCard" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/cards/Backs/041.png" />
+            <Image url="@../guiControllers/cards/backs/41.png" />
          </image>
       </ImageView>
       <ImageView fx:id="visibleGoldCard2" fitHeight="98.0" fitWidth="165.0" layoutX="178.0" layoutY="569.0" onMouseClicked="#pickupCard" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/cards/Backs/102.png" />
+            <Image url="@../guiControllers/cards/backs/102.png" />
          </image>
       </ImageView>
       <ImageView fx:id="visibleGoldCard1" fitHeight="98.0" fitWidth="165.0" layoutX="181.0" layoutY="444.0" onMouseClicked="#pickupCard" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/cards/Backs/102.png" />
+            <Image url="@../guiControllers/cards/backs/102.png" />
          </image>
       </ImageView>
       <ImageView fx:id="commonObjective2" fitHeight="98.0" fitWidth="165.0" layoutX="1272.0" layoutY="273.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/cards/Backs/102.png" />
+            <Image url="@../guiControllers/cards/backs/102.png" />
          </image>
       </ImageView>
       <ImageView fx:id="commonObjective1" fitHeight="98.0" fitWidth="165.0" layoutX="1261.0" layoutY="115.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/cards/Backs/102.png" />
+            <Image url="@../guiControllers/cards/backs/102.png" />
          </image>
       </ImageView>
       <VBox fx:id="scoringBoard" layoutX="1285.0" layoutY="424.0" prefHeight="318.0" prefWidth="184.0" />
-      <ImageView fx:id="secretObjective" fitHeight="98.0" fitWidth="165.0" layoutX="1310.0" layoutY="774.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="secretObjective" fitHeight="98.0" fitWidth="165.0" layoutX="181.0" layoutY="742.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/cards/Backs/102.png" />
+            <Image url="@../guiControllers/cards/backs/102.png" />
          </image>
       </ImageView>
+      <Button fx:id="chatButton" layoutX="1252.0" layoutY="778.0" mnemonicParsing="false" onMouseClicked="#toggleChat" text="Chat" />
    </children>
    <rotationAxis>
       <Point3D />

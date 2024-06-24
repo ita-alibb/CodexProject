@@ -8,10 +8,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 
 import java.net.URL;
@@ -25,16 +22,6 @@ public class CreateLobbyController extends GuiController implements Initializabl
    @FXML
    Button createLobbyButton;
 
-   public void createLobby(ActionEvent event){
-      if (playerNumberSpinner.getValue() <= GameManager.MAX_PLAYERS) {
-         ResponseStatus responseStatus = ClientConnection.createLobby(nicknameTextField.getText(), playerNumberSpinner.getValue());
-         StageController.changeScene("fxml/waiting-room.fxml", "Waiting room",event);
-      }
-
-
-   }
-
-
    @Override
    public void initialize(URL url, ResourceBundle resourceBundle) {
       SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 4, 2);
@@ -45,15 +32,21 @@ public class CreateLobbyController extends GuiController implements Initializabl
          public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
             // Show the button if the TextField is not empty, otherwise hide it
             createLobbyButton.setVisible(!newValue.trim().isEmpty());
-
-
          }
       });
       StackPane.setAlignment(createLobbyButton, javafx.geometry.Pos.BOTTOM_RIGHT);
-
-
    }
 
-
-
+   public void createLobby(ActionEvent event){
+      if (playerNumberSpinner.getValue() <= GameManager.MAX_PLAYERS) {
+         ResponseStatus res = ClientConnection.createLobby(nicknameTextField.getText(), playerNumberSpinner.getValue());
+         if (res.getErrorCode() != 0) {
+            Alert alertBox = new Alert(Alert.AlertType.ERROR);
+            alertBox.setContentText("Cant load the game due to error " + res.getErrorMessage());
+            StageController.changeScene("fxml/menu-view.fxml", "Codex Naturalis",event);
+            return;
+         }
+         StageController.changeScene("fxml/waiting-room.fxml", "Waiting room",event);
+      }
+   }
 }

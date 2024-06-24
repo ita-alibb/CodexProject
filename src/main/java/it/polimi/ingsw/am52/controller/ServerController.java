@@ -117,7 +117,6 @@ public class ServerController {
                 return new JoinLobbyResponseData(new ResponseStatus(GamePhase.LOBBY, 404, "Client not found"));
             }
 
-
             var user = new User(joinLobbyData.getNickname(), handler.get());
 
             return gameController.get().joinLobby(user);

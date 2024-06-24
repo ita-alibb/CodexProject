@@ -103,7 +103,13 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
      */
     @Override
     public JoinLobbyResponseData createLobby(CreateLobbyData data) throws RemoteException  {
-        var response = ServerController.getInstance().createLobby(this.clientId, data);
+        JoinLobbyResponseData response;
+
+        if (this.gameController == null) {
+            response = ServerController.getInstance().createLobby(this.clientId, data);
+        } else {
+            return new JoinLobbyResponseData(new ResponseStatus(GamePhase.LOBBY, 404, "Already in lobby"));
+        }
 
         // the client has joined a lobby, set the GameController, in this way we remove the bottleneck on ServerController by using directly the related GameController
         //The LobbyId is in the response of the controller
@@ -124,7 +130,13 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
      */
     @Override
     public JoinLobbyResponseData joinLobby(JoinLobbyData data) throws RemoteException {
-        var response = ServerController.getInstance().joinLobby(this.clientId, data);
+        JoinLobbyResponseData response;
+
+        if (this.gameController == null) {
+            response = ServerController.getInstance().joinLobby(this.clientId, data);
+        } else {
+            return new JoinLobbyResponseData(new ResponseStatus(GamePhase.LOBBY, 404, "Already in lobby"));
+        }
 
         // the client has joined a lobby, set the GameController, in this way we remove the bottleneck on ServerController by using directly the related GameController
         if (response.getStatus().getErrorCode() == 0) {
@@ -283,17 +295,16 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
         if (this.gameController != null){
             String responseMessage;
             if (data.getRecipient() != null && !data.getRecipient().trim().isEmpty()) {
+                var clientIdToBroadcast = this.gameController.getClientId(data.getRecipient());
+
+                if (clientIdToBroadcast == -1) {
+                    return new ChatResponseData(new ResponseStatus(GamePhase.NULL, 404, String.format("Player %s to whisper not in lobby", data.getRecipient())));
+                }
                 responseMessage = String.format("%s [Whisper to: %s]: %s", data.getSender(), data.getRecipient(), data.getMessage());
+                this.specificBroadcast(new ChatResponse(new ChatResponseData(new ResponseStatus(GamePhase.NULL, 0, ""), responseMessage)), clientIdToBroadcast);
             } else {
                 responseMessage = String.format("%s : %s", data.getSender(), data.getMessage());
-            }
-
-            var clientIdToBroadcast = this.gameController.getClientId(data.getRecipient());
-
-            if (clientIdToBroadcast == -1) {
                 this.broadcast(new ChatResponse(new ChatResponseData(new ResponseStatus(GamePhase.NULL, 0, ""), responseMessage)));
-            } else {
-                this.specificBroadcast(new ChatResponse(new ChatResponseData(new ResponseStatus(GamePhase.NULL, 0, ""), responseMessage)), clientIdToBroadcast);
             }
 
             return new ChatResponseData(new ResponseStatus(GamePhase.NULL, 0, ""), responseMessage);

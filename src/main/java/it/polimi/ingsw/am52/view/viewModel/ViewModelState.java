@@ -66,7 +66,7 @@ public class ViewModelState extends ModelObservable {
     /**
      * The list of opponents
      */
-    private final List<OpponentModel> opponents;
+    private List<OpponentModel> opponents;
 
     /**
      * The common objectives of the game
@@ -106,7 +106,7 @@ public class ViewModelState extends ModelObservable {
     /**
      * This player's board
      */
-    private final BoardMap<BoardSlot,CardIds> board;
+    private BoardMap<BoardSlot,CardIds> board;
 
     /**
      * The available slots for placing
@@ -270,6 +270,16 @@ public class ViewModelState extends ModelObservable {
             this.phase = leaveGame.getStatus().getGamePhase();
             this.chatRecords.clear();
 
+            //reset
+            this.board = new BoardMap<>();
+            this.resourceDeck = true;
+            this.goldDeck = true;
+            this.currentPlayer = "";
+            this.availableSlots = new ArrayList<>();
+            this.turn = 1;
+            this.secretObjective = -1;
+            this.disconnectedPlayer = "";
+
             // Change automatically the view displayed
             this.type = ViewType.MENU;
         }
@@ -306,8 +316,6 @@ public class ViewModelState extends ModelObservable {
         for (String nick : this.nicknames) {
             this.scoreboard.put(nick,0);
         }
-
-        this.disconnectedPlayer = "";
 
         //Change automatically the view displayed
         this.type = ViewType.SETUP;

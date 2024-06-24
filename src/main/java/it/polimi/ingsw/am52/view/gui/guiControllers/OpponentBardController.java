@@ -18,7 +18,7 @@ public class OpponentBardController {
 
     @FXML
     private GridPane playingBoardGrid;
-    public void placeCard(BoardSlot slot, CardIds card){
+    private void placeCard(BoardSlot slot, CardIds card){
         String side = card.cardFace == 0? "fronts" : "backs";
         ImageView image = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/%s/%s.png".formatted(side,card.cardId+1)))));
         image.setFitHeight(64);
@@ -32,7 +32,5 @@ public class OpponentBardController {
     public void setOpponentBoard(String nickname){
         BoardMap<BoardSlot, CardIds> board = ViewModelState.getInstance().getBoard(nickname);
         board.forEach(this::placeCard);
-
-
     }
 }

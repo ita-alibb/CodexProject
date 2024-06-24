@@ -30,13 +30,13 @@ public class ChatStrategy extends Strategy {
         String message;
         String recipient = "";
 
-        System.out.print("> Message: ");
-        message = scanner.nextLine();
-
         if (isWhisper) {
             System.out.print("> Whisper to (enter nickname): ");
             recipient = scanner.nextLine();
         }
+
+        System.out.print("> Message: ");
+        message = scanner.nextLine();
 
         networkResponse = ClientConnection.chat(message, recipient);
 

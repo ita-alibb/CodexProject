@@ -6,33 +6,18 @@ import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
-
-import java.net.URL;
-import java.util.ResourceBundle;
-
-public class WaitingRoomController extends ModelObserver implements Initializable {
+public class WaitingRoomController extends ModelObserver {
     @FXML
     private Label numberOfPlayers;
 
-
-    public WaitingRoomController() {
-        // register the printer to
+    @FXML
+    public void initialize() {
         ViewModelState.getInstance().registerObserver(this, EventType.JOIN_LOBBY, EventType.LEAVE_GAME, EventType.INIT_GAME);
-    }
-
-    public void setNumberOfPlayers(){
         Platform.runLater(() -> {
-                numberOfPlayers.setText(Integer.toString(ViewModelState.getInstance().getNicknames().size()));
-            });
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        ViewModelState.getInstance().registerObserver(this, EventType.JOIN_LOBBY, EventType.LEAVE_GAME, EventType.INIT_GAME);
-        setNumberOfPlayers();
+            numberOfPlayers.setText(Integer.toString(ViewModelState.getInstance().getNicknames().size()));
+        });
     }
 
     @Override
@@ -44,12 +29,15 @@ public class WaitingRoomController extends ModelObserver implements Initializabl
 
     @Override
     protected void updateLeaveGame() {
-        setNumberOfPlayers();
+        Platform.runLater(() -> {
+            numberOfPlayers.setText(Integer.toString(ViewModelState.getInstance().getNicknames().size()));
+        });
     }
-
 
     @Override
     protected void updateJoinLobby() {
-        setNumberOfPlayers();
+        Platform.runLater(() -> {
+            numberOfPlayers.setText(Integer.toString(ViewModelState.getInstance().getNicknames().size()));
+        });
     }
 }

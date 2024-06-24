@@ -1,8 +1,8 @@
 package it.polimi.ingsw.am52.view.viewModel;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.stream.IntStream;
 
 /**
  * Generic class, in our case used to represent the board of a player. It is a subclass of LinkedHashMap, which has the property of storing the order

@@ -13,6 +13,7 @@ import it.polimi.ingsw.am52.view.gui.Gui;
 import it.polimi.ingsw.am52.view.viewModel.EventType;
 import it.polimi.ingsw.am52.view.viewModel.ModelObserver;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -22,10 +23,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.*;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -40,7 +38,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
-public class PlayingBoardController extends ModelObserver implements Initializable {
+public class PlayingBoardController extends ModelObserver {
+    public Button chatButton;
     @FXML
     private ImageView resourceCardsDeck;
     @FXML
@@ -74,11 +73,24 @@ public class PlayingBoardController extends ModelObserver implements Initializab
 
     private static CardSide startercardside ;
     private CardSide selectedCardSide = CardSide.FRONT;
-    public PlayingBoardController(){
-        ViewModelState.getInstance().registerObserver(this, EventType.PLACE_CARD,EventType.TAKE_CARD);
+
+    @FXML
+    public void initialize() {
+        ViewModelState.getInstance().registerObserver(this, EventType.PLACE_CARD,EventType.TAKE_CARD,EventType.DRAW_CARD);
+
+        ClientConnection.placeStarterCard(ViewModelState.getInstance().getStarterCard(), startercardside);
+        String side= startercardside == CardSide.FRONT ? "fronts" : "backs";
+        selected = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/%s/%s.png".formatted(side,ViewModelState.getInstance().getStarterCard()+1)))));
+        placeCard(5,5);
+        setVisibleGoldCards();
+        setVisibleResourceCards();
+        setCommonObjectives();
+        setSecretObjective();
+        setPlayerCards();
+        System.out.println(ViewModelState.getInstance().getVisibleResourceCards());
+        System.out.println(ViewModelState. getInstance().getVisibleGoldCards());
+        setScoringBoard();
     }
-
-
 
     public static void setStartercardside(CardSide startercardside) {
         PlayingBoardController.startercardside = startercardside;
@@ -92,9 +104,7 @@ public class PlayingBoardController extends ModelObserver implements Initializab
             setSelected(event);
             getCorner(event);
             System.out.println(ViewModelState.getInstance().getPhase());
-
     }
-
 
     public CornerLocation getCorner(MouseEvent event){
         ImageView selectedBoardCard = (ImageView) event.getSource();
@@ -114,9 +124,7 @@ public class PlayingBoardController extends ModelObserver implements Initializab
         } else {
             return CornerLocation.BOTTOM_RIGHT;
         }
-
     }
-
 
     public void setSelectedCardSide(MouseEvent event){
         ImageView selectedCard = (ImageView) event.getSource();
@@ -132,18 +140,16 @@ public class PlayingBoardController extends ModelObserver implements Initializab
             } else if (selectedCard == playerCard3) {
                 playerCard3.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/%s/%s.png".formatted(cardSide, playerHand.get(2)+1)))));
             }
-
-
         }else{
             setPlayerCards();
         }
     }
+
     public void pickupCard(MouseEvent event){
         if (ViewModelState.getInstance().isClientTurn() && ViewModelState.getInstance().getPhase() == GamePhase.DRAWING) {
             pickUpCardServer(event);
             setPickedCard(event);
             System.out.println(ViewModelState.getInstance().getPhase());
-
         }
     }
 
@@ -156,6 +162,7 @@ public class PlayingBoardController extends ModelObserver implements Initializab
             System.out.println(pickedCard.getId());
         }
     }
+
     public void pickUpCardServer(MouseEvent event){
         if (pickedCard == event.getSource()) {
             List<Integer> resourceCards = ViewModelState.getInstance().getVisibleResourceCards();
@@ -183,8 +190,6 @@ public class PlayingBoardController extends ModelObserver implements Initializab
         }
     }
 
-
-
     public void placeCardServer(MouseEvent event){
         if(ViewModelState.getInstance().isClientTurn() && ViewModelState.getInstance().getPhase() == GamePhase.PLACING && selected!=null){
             List<Integer> playerHand = ViewModelState.getInstance().getPlayerHand();
@@ -196,54 +201,56 @@ public class PlayingBoardController extends ModelObserver implements Initializab
             System.out.println(selectedBoardSlot.getVert());
             System.out.println(selectedBoardSlot.getHoriz());
             selected.setEffect(null);
+
+            ResponseStatus response;
             if (ViewModelState.getInstance().getAvailableSlots().contains(selectedBoardSlot)) {
-
-
                 if (selected == playerCard1){
-                    ResponseStatus response = ClientConnection.placeCard(playerHand.get(0), selectedCardSide, selectedBoardSlot);
-                    System.out.println(response.getErrorCode());
-                    System.out.println(response.getErrorMessage());
-                    if (response.getErrorCode() == 0) {
-                        placeCard(selectedBoardSlot.getVert()* -1 +5, selectedBoardSlot.getHoriz()+5);
-                        playerCard1.setImage(null);
-                    }
+                    response = ClientConnection.placeCard(playerHand.get(0), selectedCardSide, selectedBoardSlot);
                 } else if (selected == playerCard2) {
-                    ResponseStatus response = ClientConnection.placeCard(playerHand.get(1),selectedCardSide,selectedBoardSlot);
-                    System.out.println(response.getErrorCode());
-                    System.out.println(response.getErrorMessage());
-                    if (response.getErrorCode() == 0) {
-                        placeCard(selectedBoardSlot.getVert()* -1 +5, selectedBoardSlot.getHoriz()+5);
-                        playerCard2.setImage(null);
-                    }
+                    response = ClientConnection.placeCard(playerHand.get(1),selectedCardSide,selectedBoardSlot);
                 }else{
-                    ResponseStatus response = ClientConnection.placeCard(playerHand.get(2),selectedCardSide,selectedBoardSlot);
-                    if (response.getErrorCode() == 0) {
-                        placeCard(selectedBoardSlot.getVert()* -1 +5, selectedBoardSlot.getHoriz()+5);
-                        playerCard3.setImage(null);
-                    }
+                    response = ClientConnection.placeCard(playerHand.get(2),selectedCardSide,selectedBoardSlot);
+                }
+
+                if (response.getErrorCode() == 0) {
+                    placeCard(selectedBoardSlot.getVert()* -1 +5, selectedBoardSlot.getHoriz()+5);
+                } else {
                     System.out.println(response.getErrorCode());
                     System.out.println(response.getErrorMessage());
-
+                    Alert alertBox = new Alert(Alert.AlertType.ERROR);
+                    alertBox.setContentText("Can't place: " + response.getErrorMessage());
                 }
             }
         }
     }
 
-   public void setPlayerCards(){
+    public void setPlayerCards(){
         List<Integer> playerHand = ViewModelState.getInstance().getPlayerHand();
         System.out.println(playerHand);
-        playerCard1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(playerHand.get(0)+1)))));
-        playerCard2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(playerHand.get(1)+1)))));
-        playerCard3.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(playerHand.get(2)+1)))));
 
+        if (playerHand.size() > 0) {
+            playerCard1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(playerHand.get(0)+1)))));
+        } else {
+            playerCard1.setImage(null);
+        }
 
+        if (playerHand.size() > 1) {
+            playerCard2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(playerHand.get(1)+1)))));
+        } else {
+            playerCard2.setImage(null);
+        }
+
+        if (playerHand.size() > 2) {
+            playerCard3.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(playerHand.get(2)+1)))));
+        } else {
+            playerCard3.setImage(null);
+        }
     }
 
     public void setVisibleGoldCards(){
         List<Integer> visibleGoldCards = ViewModelState.getInstance().getVisibleGoldCards();
         visibleGoldCard1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(visibleGoldCards.get(0)+1)))));
         visibleGoldCard2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(visibleGoldCards.get(1)+1)))));
-
     }
 
     public void setVisibleResourceCards(){
@@ -252,17 +259,25 @@ public class PlayingBoardController extends ModelObserver implements Initializab
         visibleResourceCard2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(visibleResourceCards.get(1)+1)))));
     }
 
+    private void setVisibleDecks() {
+        if (!ViewModelState.getInstance().getResourceDeck()) {
+            this.resourceCardsDeck.setImage(null);
+        }
+        if (!ViewModelState.getInstance().getGoldDeck()) {
+            this.goldCardsDeck.setImage(null);
+        }
+    }
+
     public void setCommonObjectives(){
         List<Integer> commonObjectives = ViewModelState.getInstance().getCommonObjectives();
         commonObjective1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(commonObjectives.get(0)+87)))));
         commonObjective2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(commonObjectives.get(1)+87)))));
     }
+
     public void setSecretObjective(){
         int secretObjectiveCard = ViewModelState.getInstance().getSecretObjective();
         secretObjective.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(secretObjectiveCard+87)))));
     }
-
-
 
     public void placeCard(int row, int column){
         ImageView image = new ImageView(selected.getImage());
@@ -292,10 +307,10 @@ public class PlayingBoardController extends ModelObserver implements Initializab
                         throw new RuntimeException(e);
                     }
                 });
-
             }
         });
     }
+
     private void openOpponentBoard(String nickname) throws IOException {
         Stage modalStage = new Stage();
         modalStage.initModality(Modality.APPLICATION_MODAL);
@@ -313,6 +328,30 @@ public class PlayingBoardController extends ModelObserver implements Initializab
 
         modalStage.showAndWait();
     }
+
+    @FXML
+    private void toggleChat() {
+        Stage modalStage = new Stage();
+        modalStage.initModality(Modality.APPLICATION_MODAL);
+        modalStage.setTitle("Chat");
+
+        FXMLLoader fxmlLoader = new FXMLLoader(Gui.class.getResource("fxml/chat-view.fxml"));
+        Scene scene = null;
+        try {
+            scene = new Scene(fxmlLoader.load());
+        } catch (Exception e) {
+            System.out.println("Cannot load chat view" + e.getMessage());
+            return;
+        }
+        ChatViewController controller = fxmlLoader.getController();
+        modalStage.setScene(scene);
+
+        Button closeButton = new Button("Close");
+        closeButton.setOnAction(event -> modalStage.close());
+
+        modalStage.showAndWait();
+    }
+
     public void setSelected(MouseEvent event){
         if(selected != (ImageView) event.getSource()){
             Glow glow = new Glow(0.8);
@@ -326,36 +365,30 @@ public class PlayingBoardController extends ModelObserver implements Initializab
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        ClientConnection.placeStarterCard(ViewModelState.getInstance().getStarterCard(), startercardside);
-        String side= startercardside == CardSide.FRONT ? "fronts" : "backs";
-        selected = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/%s/%s.png".formatted(side,ViewModelState.getInstance().getStarterCard()+1)))));
-        placeCard(5,5);
-        setVisibleGoldCards();
-        setVisibleResourceCards();
-        setCommonObjectives();
-        setSecretObjective();
-        setPlayerCards();
-        System.out.println(ViewModelState.getInstance().getVisibleResourceCards());
-        System.out.println(ViewModelState. getInstance().getVisibleGoldCards());
-        setScoringBoard();
-
-
-
-    }
-
-
-
-    @Override
     protected void updatePlaceCard() {
-        setScoringBoard();
-        if (ViewModelState.getInstance().getPhase() != GamePhase.PLACING) if (selected!=null)selected.setEffect(null);
-
+        Platform.runLater(() -> {
+            setScoringBoard();
+            setPlayerCards();
+            if (ViewModelState.getInstance().getPhase() != GamePhase.PLACING) if (selected!=null)selected.setEffect(null);
+        });
     }
 
     @Override
     protected void updateTakeCard() {
-        setVisibleResourceCards();
-        setVisibleGoldCards();
+        Platform.runLater(() -> {
+            setVisibleResourceCards();
+            setVisibleGoldCards();
+            setPlayerCards();
+            setScoringBoard();
+        });
+    }
+
+    @Override
+    protected void updateDrawCard() {
+        Platform.runLater(() -> {
+            setVisibleDecks();
+            setPlayerCards();
+            setScoringBoard();
+        });
     }
 }
