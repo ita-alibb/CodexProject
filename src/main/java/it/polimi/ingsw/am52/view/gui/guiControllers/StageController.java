@@ -1,6 +1,6 @@
 package it.polimi.ingsw.am52.view.gui.guiControllers;
 
-import it.polimi.ingsw.am52.view.gui.Gui;
+import it.polimi.ingsw.am52.view.gui.GuiApplication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -17,7 +17,7 @@ public class StageController {
     public static void changeScene(String FXMLScene, String title, ActionEvent event) {
 
 
-        FXMLLoader fxmlLoader = new FXMLLoader(Gui.class.getResource(FXMLScene));
+        FXMLLoader fxmlLoader = new FXMLLoader(GuiApplication.class.getResource(FXMLScene));
 
         try {
             Parent root = fxmlLoader.load();
@@ -35,7 +35,7 @@ public class StageController {
     public static void changeScene(String FXMLScene, String title, Node node) {
 
 
-        FXMLLoader fxmlLoader = new FXMLLoader(Gui.class.getResource(FXMLScene));
+        FXMLLoader fxmlLoader = new FXMLLoader(GuiApplication.class.getResource(FXMLScene));
 
         try {
             Parent root = fxmlLoader.load();

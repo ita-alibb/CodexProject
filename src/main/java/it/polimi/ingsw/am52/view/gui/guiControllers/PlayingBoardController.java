@@ -8,18 +8,14 @@ import it.polimi.ingsw.am52.model.cards.CornerLocation;
 import it.polimi.ingsw.am52.model.game.GamePhase;
 import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
 import it.polimi.ingsw.am52.network.client.ClientConnection;
-import it.polimi.ingsw.am52.network.client.Connection;
-import it.polimi.ingsw.am52.view.gui.Gui;
+import it.polimi.ingsw.am52.view.gui.GuiApplication;
 import it.polimi.ingsw.am52.view.viewModel.EventType;
 import it.polimi.ingsw.am52.view.viewModel.ModelObserver;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
@@ -33,9 +29,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import javax.swing.text.View;
 import java.io.IOException;
-import java.net.URL;
 import java.util.*;
 
 public class PlayingBoardController extends ModelObserver {
@@ -335,7 +329,7 @@ public class PlayingBoardController extends ModelObserver {
         modalStage.initModality(Modality.APPLICATION_MODAL);
         modalStage.setTitle("Chat");
 
-        FXMLLoader fxmlLoader = new FXMLLoader(Gui.class.getResource("fxml/chat-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(GuiApplication.class.getResource("fxml/chat-view.fxml"));
         Scene scene = null;
         try {
             scene = new Scene(fxmlLoader.load());

@@ -12,13 +12,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class Gui extends Application {
+public class GuiApplication extends Application {
     @FXML
     private Pane playingBoard;
     @Override
     public void start(Stage stage) throws IOException {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(Gui.class.getResource("fxml/menu-view.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(GuiApplication.class.getResource("fxml/menu-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 1920, 1080);
             scene.getStylesheets().add(getClass().getResource("css/menu-view.css").toExternalForm());
 
@@ -33,9 +33,9 @@ public class Gui extends Application {
         }
     }
 
-    public static void main(String[] args) {
+    public static void run(String serverIp, int port, NetworkMode connectionMode) {
         try {
-            ClientConnection.setConnection("127.0.0.1",5556, NetworkMode.RMI );
+            ClientConnection.setConnection(serverIp, port, connectionMode );
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
