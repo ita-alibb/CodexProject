@@ -11,13 +11,13 @@ import java.util.Optional;
 public class CardIds {
     /**
      * The template used to create a card.
-     * <lu>
+     * <ul>
      *     <li>Angles : The items/resources of each card</li>
      *     <li>Top Center : The points assigned to the player, the first and second symbols are for
      *     the pattern, the last one is for the points assigned</li>
      *     <li>Bottom Center : The requirement to place the card</li>
      *     <li>Center : The permanent resource of the card</li>
-     * </lu>
+     * </ul>
      */
     public static final String[] TEMPLATE = {
             "┌─────┬─────────┬─────┐",
@@ -296,7 +296,7 @@ public class CardIds {
                 "",
                 getSymbol(this.face.getTopRightCorner(), coveredTR));
 
-        result[3] = result[3].formatted(this.getSymbol(this.face.getPermanentResources()));
+        result[3] = result[3].formatted(getTotalRequiredResources(this.face.getPermanentResources()));
 
         result[5] = result[5].formatted(
                 getSymbol(this.face.getBottomLeftCorner(), coveredBL),
