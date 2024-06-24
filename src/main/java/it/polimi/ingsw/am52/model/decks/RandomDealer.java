@@ -165,17 +165,46 @@ public class RandomDealer<TItem> {
      * Return the next item of the list and decrement the counter of available
      * items.
      * @return The next item in the list.
-     * @throws IllegalStateException There are no more items in the list.
+     * @throws DeckException If there are no more items in the list.
      */
-    public TItem getNextItem() throws IllegalStateException {
+    public TItem getNextItem() throws DeckException {
+        return getOrPeekNextItem(false);
+    }
+
+    /**
+     * Return the next item of the list, but do NOT decrement the counter of available
+     * items.
+     * @return The next item in the list.
+     * @throws DeckException If there are no more items in the list.
+     */
+    public TItem peekNextItem() throws DeckException {
+        return getOrPeekNextItem(true);
+    }
+
+    /**
+     * Get or peek the next item of the list managed by this dealer.
+     * @param peek Whether this is a peek operation.
+     * @return The next item of the list.
+     * @throws DeckException If there are no more items in the list.
+     */
+    private TItem getOrPeekNextItem(boolean peek) throws DeckException {
 
         // If there are no more items, throw an exception.
         if (!this.hasNext()) {
             throw new DeckException("There are no more items in the dealer.");
         }
 
-        // Return the item and decrement the counter.
-        return this.items.get(this.items.size() - this.itemsCount--);
+        // Get the reference to the next item.
+        TItem next = this.items.get(this.items.size() - this.itemsCount);
+
+        // If is a peek operation, does not decrement the item counter.
+        if (!peek) {
+            this.itemsCount--;
+        }
+
+        // Return the next item.
+        return next;
+
     }
 
     //endregion

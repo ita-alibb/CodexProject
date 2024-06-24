@@ -2,6 +2,7 @@ package it.polimi.ingsw.am52.model.decks;
 
 import java.util.List;
 
+import it.polimi.ingsw.am52.exceptions.DeckException;
 import it.polimi.ingsw.am52.model.cards.Card;
 import it.polimi.ingsw.am52.model.cards.GoldCard;
 import it.polimi.ingsw.am52.model.cards.StarterCard;
@@ -11,7 +12,7 @@ import it.polimi.ingsw.am52.model.cards.ResourceCard;
  * A generic class that represents a deck of Card objects, with basic operation
  * of a deck (shuffle, draw, ecc...).
  */
-public class Deck<Tcard extends Card> {
+public class Deck<TCard extends Card> {
 
     //region Private Fields
 
@@ -19,7 +20,7 @@ public class Deck<Tcard extends Card> {
      * The functionality of the deck are delegated to this private
      * instance of the random dealer.
      */
-    private final RandomDealer<Tcard> dealer;
+    private final RandomDealer<TCard> dealer;
 
     //endregion
 
@@ -99,7 +100,7 @@ public class Deck<Tcard extends Card> {
      * Create a new deck that handles the passed list of cards.
      * @param cards The cards of this deck.
      */
-    public Deck(List<Tcard> cards) {
+    public Deck(List<TCard> cards) {
 
         // Simply instantiate the private dealer.
         this.dealer = new RandomDealer<>(cards);
@@ -112,7 +113,7 @@ public class Deck<Tcard extends Card> {
      * @param cards The cards of this deck.
      * @param seed The seed of the random generator.
      */
-    public Deck(List<Tcard> cards, int seed) {
+    public Deck(List<TCard> cards, int seed) {
 
         // Simply instantiate the private dealer.
         this.dealer = new RandomDealer<>(cards, seed);
@@ -137,9 +138,20 @@ public class Deck<Tcard extends Card> {
      * @return The card drawn from the deck.
      * @throws IllegalStateException If there are no more cards in the deck.
      */
-    public Tcard draw() throws IllegalStateException {
+    public TCard draw() throws IllegalStateException {
         // Delegate the action to the private dealer.
         return this.dealer.getNextItem();
+    }
+
+    /**
+     * Return the next card of the deck (if present), but does not remove
+     * that card from the deck.
+     * @return The next card of the deck.
+     * @throws DeckException If there are no more cards in the deck.
+     */
+    public TCard peekCard() throws DeckException {
+        // Delegate the action to the private dealer.
+        return this.dealer.peekNextItem();
     }
 
     /**

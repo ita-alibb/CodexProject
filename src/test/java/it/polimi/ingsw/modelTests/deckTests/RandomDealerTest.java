@@ -25,7 +25,7 @@ public class RandomDealerTest
      */
     @Test
     @DisplayName("Dealer default constructor")
-    public void testApp()
+    public void testConstructor()
     {
         // Check constructor with an empty list.
         // Create an empty list.
@@ -120,5 +120,47 @@ public class RandomDealerTest
         }
         // Check there are all source items.
         assertTrue(numbersFromDealer.containsAll(numbers));
+    }
+
+    @Test
+    @DisplayName("Test peekNextItem()")
+    public void testPeek() {
+
+        // Create a list of integers.
+        List<Integer> ints = new ArrayList<>(Arrays.stream((new Integer[] {1,2,3,4,5})).toList());
+
+        // Create a RandomDealer object.
+        RandomDealer<Integer> dealer = new RandomDealer<Integer>(ints);
+
+        // Iterate over all items in the dealer.
+        while (dealer.hasNext()) {
+
+            // Store the items count.
+            int counter = dealer.getItemsCount();
+
+            // Peek next item. This gives a reference to the next object, but does not
+            // remove the object from the list.
+            Integer nextPeek = dealer.peekNextItem();
+
+            // The counter should NOT be changed.
+            assertEquals(counter, dealer.getItemsCount());
+
+            // Now, get the next item. This time, the counter is decremented.
+            Integer nextGet = dealer.getNextItem();
+
+            // 1) Check the peek and get methods give the same item.
+            assertEquals(nextPeek, nextGet);
+
+            // 2) Check the counter has been decremented.
+            assertEquals(counter-1, dealer.getItemsCount());
+
+        }
+
+        // Now the dealer is empty. Check for exception.
+        assertThrows(DeckException.class, dealer::peekNextItem);
+
+        // Now the dealer is empty. Check for exception.
+        assertThrows(DeckException.class, dealer::getNextItem);
+
     }
 }
