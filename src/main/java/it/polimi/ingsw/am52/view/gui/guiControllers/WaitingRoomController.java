@@ -48,7 +48,7 @@ public class WaitingRoomController extends ModelObserver {
     @Override
     protected void updateInitGame() {
         Platform.runLater(() -> {
-                StageController.changeScene("fxml/select-objective.fxml","Select secret objective" , playersNickname);
+                StageController.changeScene("fxml/select-objective.fxml","Select secret objective" , this);
         });
     }
 
@@ -58,7 +58,7 @@ public class WaitingRoomController extends ModelObserver {
             setNicknames();
         } else {
             Platform.runLater(() -> {
-                StageController.changeScene("fxml/menu-view.fxml","Codex Naturalis" , playersNickname);
+                StageController.changeScene("fxml/menu-view.fxml","Codex Naturalis" , this);
             });
         }
     }
@@ -71,7 +71,7 @@ public class WaitingRoomController extends ModelObserver {
     @Override
     protected void updateEndGame() {
         Platform.runLater(() -> {
-            StageController.changeScene("fxml/end-game.fxml","Codex Naturalis" , playersNickname);
+            StageController.changeScene("fxml/end-game.fxml","Codex Naturalis" , this);
         });
     }
 }

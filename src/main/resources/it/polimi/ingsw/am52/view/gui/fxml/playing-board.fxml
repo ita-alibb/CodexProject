@@ -5,7 +5,10 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1500.0" styleClass="background-pane" stylesheets="@../css/playing-board.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.am52.view.gui.guiControllers.PlayingBoardController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="900.0" prefWidth="1500.0" styleClass="background"
+            stylesheets="@../css/menu-view.css" xmlns="http://javafx.com/javafx/17.0.2-ea"
+            fx:controller="it.polimi.ingsw.am52.view.gui.guiControllers.PlayingBoardController">
     <rotationAxis>
         <Point3D />
     </rotationAxis>

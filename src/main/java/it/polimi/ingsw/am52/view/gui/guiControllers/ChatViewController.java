@@ -42,8 +42,8 @@ public class ChatViewController extends ModelObserver {
             msg = groups[1];
         }
 
-        if (!messageBox.getText().isEmpty()) {
-            ClientConnection.chat(msg, recipient);
+        if (!msg.trim().isEmpty()) {
+            ClientConnection.chat(msg.trim(), recipient);
             messageBox.clear();
         }
     }

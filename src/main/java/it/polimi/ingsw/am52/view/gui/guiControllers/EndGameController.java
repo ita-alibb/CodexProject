@@ -49,7 +49,7 @@ public class EndGameController extends ModelObserver {
     public void updateLeaveGame() {
         if (ViewModelState.getInstance().getCurrentLobbyId() == -1) {
             Platform.runLater(() -> {
-                StageController.changeScene("fxml/menu-view.fxml","Codex Naturalis" , winnersBox);
+                StageController.changeScene("fxml/menu-view.fxml","Codex Naturalis" , this);
             });
         }
     }

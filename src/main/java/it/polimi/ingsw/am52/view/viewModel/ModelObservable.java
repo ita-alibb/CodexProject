@@ -52,7 +52,7 @@ public abstract class ModelObservable {
      * @param types list of events to un-register to, if nothing is passed then it will be un-registered for every event
      */
     public synchronized void removeObserver(ModelObserver observer, EventType... types) {
-        if (types == null) {
+        if (types.length == 0) {
             for (EventType type : EventType.values()) {
                 observers.get(type).remove(observer);
             }

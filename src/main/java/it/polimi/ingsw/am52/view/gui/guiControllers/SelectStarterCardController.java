@@ -3,6 +3,7 @@ package it.polimi.ingsw.am52.view.gui.guiControllers;
 import it.polimi.ingsw.am52.json.response.ResponseStatus;
 import it.polimi.ingsw.am52.model.cards.CardSide;
 import it.polimi.ingsw.am52.network.client.ClientConnection;
+import it.polimi.ingsw.am52.view.gui.GuiApplication;
 import it.polimi.ingsw.am52.view.viewModel.EventType;
 import it.polimi.ingsw.am52.view.viewModel.ModelObserver;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
@@ -31,8 +32,8 @@ public class SelectStarterCardController extends ModelObserver {
         ViewModelState.getInstance().registerObserver(this, EventType.END_GAME);
 
         int starterCard = ViewModelState.getInstance().getStarterCard();
-        frontStarterCard.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(starterCard+1)))));
-        backStarterCard.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/backs/%s.png".formatted(starterCard+1)))));
+        frontStarterCard.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/fronts/%s.png".formatted(starterCard+1)))));
+        backStarterCard.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/backs/%s.png".formatted(starterCard+1)))));
     }
 
     public void setSelected(MouseEvent event){
@@ -51,13 +52,13 @@ public class SelectStarterCardController extends ModelObserver {
             ClientConnection.placeStarterCard(ViewModelState.getInstance().getStarterCard(), CardSide.BACK);
             PlayingBoardController.setStartercardside(CardSide.BACK);
         }
-        StageController.changeScene("fxml/playing-board.fxml", "Game",frontStarterCard);
+        StageController.changeScene("fxml/playing-board.fxml", "Game", this);
     }
 
     @Override
     protected void updateEndGame() {
         Platform.runLater(() -> {
-            StageController.changeScene("fxml/end-game.fxml","Codex Naturalis" , continueButton);
+            StageController.changeScene("fxml/end-game.fxml","Codex Naturalis" , this);
         });
     }
 }

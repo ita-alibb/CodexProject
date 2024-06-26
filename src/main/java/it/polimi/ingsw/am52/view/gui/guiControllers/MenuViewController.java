@@ -38,12 +38,12 @@ public class MenuViewController extends ModelObserver {
     }
 
     public void createLobby(){
-       StageController.changeScene("fxml/create-lobby.fxml", "Create Lobby", guiLobbies);
+       StageController.changeScene("fxml/create-lobby.fxml", "Create Lobby", this);
     }
 
     public void joinLobby(){
         String id = guiLobbies.getSelectionModel().getSelectedItem().split(" ")[1];
-        StageController.changeScene("fxml/join-lobby.fxml", "Join Lobby", guiLobbies);
+        StageController.changeScene("fxml/join-lobby.fxml", "Join Lobby", this);
 
         JoinLobbyController.setId(parseInt(id));
     }

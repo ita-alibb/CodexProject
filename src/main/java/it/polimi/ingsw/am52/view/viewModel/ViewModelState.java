@@ -253,7 +253,6 @@ public class ViewModelState extends ModelObservable {
         this.notifyObservers(EventType.JOIN_LOBBY);
 
         if (this.phase == GamePhase.INIT) {
-            // TODO: Handle errors
             ClientConnection.initGame();
         }
     }

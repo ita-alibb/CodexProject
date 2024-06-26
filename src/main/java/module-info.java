@@ -19,6 +19,7 @@ module it.polimi.ingsw.am52 {
     exports it.polimi.ingsw.am52.model.playingBoards;
     exports it.polimi.ingsw.am52.view.tui.state;
     exports it.polimi.ingsw.am52.settings;
+    exports it.polimi.ingsw.am52.view.viewModel;
 
     opens it.polimi.ingsw.am52.json to com.fasterxml.jackson.databind;
     exports it.polimi.ingsw.am52.model.game to java.rmi, com.fasterxml.jackson.databind;

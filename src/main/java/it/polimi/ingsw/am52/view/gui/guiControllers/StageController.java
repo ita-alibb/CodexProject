@@ -1,8 +1,9 @@
 package it.polimi.ingsw.am52.view.gui.guiControllers;
 
 import it.polimi.ingsw.am52.view.gui.GuiApplication;
+import it.polimi.ingsw.am52.view.viewModel.ModelObserver;
+import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -10,24 +11,30 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class StageController {
-    private static Stage currentStage;
+    private static Stage appStage;
     public static Scene activeScene;
 
-    public static void changeScene(String FXMLScene, String title, Node node) {
-        FXMLLoader fxmlLoader = new FXMLLoader(GuiApplication.class.getResource(FXMLScene));
+    public static void setStage(Stage initStage) {
+        if (appStage == null) {
+            appStage = initStage;
+        }
+    }
 
+    public static void changeScene(String FXMLScene, String title, ModelObserver oldSceneObserver) {
+        //unregister the oldSceneObserver
+        ViewModelState.getInstance().removeObserver(oldSceneObserver);
+
+        FXMLLoader fxmlLoader = new FXMLLoader(GuiApplication.class.getResource(FXMLScene));
         try {
             Parent root = fxmlLoader.load();
             activeScene = new Scene(root);
-        } catch (IOException ignored) {
-            System.out.println(ignored.getMessage() + "not found resource");
+        } catch (Exception e) {
+            System.out.println(e.getMessage() + "not found resource");
         }
-        currentStage = (Stage)node.getScene().getWindow();
-        currentStage.setScene(activeScene);
-        currentStage.setTitle(title);
-        currentStage.setResizable(false);
-        currentStage.setMaximized(true);
-        currentStage.show();
+
+        appStage.setScene(activeScene);
+        appStage.setTitle(title);
+        appStage.show();
     }
 }
 

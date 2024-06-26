@@ -2,6 +2,7 @@ package it.polimi.ingsw.am52.view.gui;
 
 import it.polimi.ingsw.am52.network.client.ClientConnection;
 import it.polimi.ingsw.am52.settings.NetworkMode;
+import it.polimi.ingsw.am52.view.gui.guiControllers.StageController;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,14 +14,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class GuiApplication extends Application {
-    @FXML
-    private Pane playingBoard;
     @Override
     public void start(Stage stage) throws IOException {
         try {
+            StageController.setStage(stage);
             FXMLLoader fxmlLoader = new FXMLLoader(GuiApplication.class.getResource("fxml/menu-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 1920, 1080);
-            scene.getStylesheets().add(getClass().getResource("css/menu-view.css").toExternalForm());
+            scene.getStylesheets().add(GuiApplication.class.getResource("css/menu-view.css").toExternalForm());
 
             stage.setTitle("Codex Naturalis");
             stage.setResizable(false);

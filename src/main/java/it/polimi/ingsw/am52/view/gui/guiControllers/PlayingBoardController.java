@@ -78,7 +78,7 @@ public class PlayingBoardController extends ModelObserver {
         ViewModelState.getInstance().registerObserver(this, EventType.PLACE_CARD,EventType.TAKE_CARD,EventType.DRAW_CARD, EventType.END_GAME);
 
         String side= startercardside == CardSide.FRONT ? "fronts" : "backs";
-        selected = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/cards/%s/%s.png".formatted(side,ViewModelState.getInstance().getStarterCard()+1)))));
+        selected = new ImageView(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/%s/%s.png".formatted(side,ViewModelState.getInstance().getStarterCard()+1)))));
         placeCard(5,5);
         setVisibleGoldCards();
         setVisibleResourceCards();
@@ -129,11 +129,11 @@ public class PlayingBoardController extends ModelObserver {
             System.out.println(cardSide);
             List<Integer> playerHand = ViewModelState.getInstance().getPlayerHand();
             if (selectedCard == playerCard1){
-                playerCard1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/%s/%s.png".formatted(cardSide, playerHand.get(0)+1)))));
+                playerCard1.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/%s/%s.png".formatted(cardSide, playerHand.get(0)+1)))));
             } else if (selectedCard == playerCard2) {
-                playerCard2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/%s/%s.png".formatted(cardSide, playerHand.get(1)+1)))));
+                playerCard2.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/%s/%s.png".formatted(cardSide, playerHand.get(1)+1)))));
             } else if (selectedCard == playerCard3) {
-                playerCard3.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/%s/%s.png".formatted(cardSide, playerHand.get(2)+1)))));
+                playerCard3.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/%s/%s.png".formatted(cardSide, playerHand.get(2)+1)))));
             }
         }else{
             setPlayerCards();
@@ -232,26 +232,26 @@ public class PlayingBoardController extends ModelObserver {
         playerCard3.setImage(null);
 
         if (!playerHand.isEmpty()) {
-            playerCard1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(playerHand.get(0)+1)))));
+            playerCard1.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/fronts/%s.png".formatted(playerHand.get(0)+1)))));
         }
         if (playerHand.size() > 1) {
-            playerCard2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(playerHand.get(1)+1)))));
+            playerCard2.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/fronts/%s.png".formatted(playerHand.get(1)+1)))));
         }
         if (playerHand.size() > 2) {
-            playerCard3.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(playerHand.get(2)+1)))));
+            playerCard3.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/fronts/%s.png".formatted(playerHand.get(2)+1)))));
         }
     }
 
     public void setVisibleGoldCards(){
         List<Integer> visibleGoldCards = ViewModelState.getInstance().getVisibleGoldCards();
-        visibleGoldCard1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(visibleGoldCards.get(0)+1)))));
-        visibleGoldCard2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(visibleGoldCards.get(1)+1)))));
+        visibleGoldCard1.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/fronts/%s.png".formatted(visibleGoldCards.get(0)+1)))));
+        visibleGoldCard2.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/fronts/%s.png".formatted(visibleGoldCards.get(1)+1)))));
     }
 
     public void setVisibleResourceCards(){
         List<Integer> visibleResourceCards = ViewModelState.getInstance().getVisibleResourceCards();
-        visibleResourceCard1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(visibleResourceCards.get(0)+1)))));
-        visibleResourceCard2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(visibleResourceCards.get(1)+1)))));
+        visibleResourceCard1.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/fronts/%s.png".formatted(visibleResourceCards.get(0)+1)))));
+        visibleResourceCard2.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/fronts/%s.png".formatted(visibleResourceCards.get(1)+1)))));
     }
 
     private void setVisibleDecks() {
@@ -265,13 +265,13 @@ public class PlayingBoardController extends ModelObserver {
 
     public void setCommonObjectives(){
         List<Integer> commonObjectives = ViewModelState.getInstance().getCommonObjectives();
-        commonObjective1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(commonObjectives.get(0)+87)))));
-        commonObjective2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(commonObjectives.get(1)+87)))));
+        commonObjective1.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/fronts/%s.png".formatted(commonObjectives.get(0)+87)))));
+        commonObjective2.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/fronts/%s.png".formatted(commonObjectives.get(1)+87)))));
     }
 
     public void setSecretObjective(){
         int secretObjectiveCard = ViewModelState.getInstance().getSecretObjective();
-        secretObjective.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(secretObjectiveCard+87)))));
+        secretObjective.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/fronts/%s.png".formatted(secretObjectiveCard+87)))));
     }
 
     public void placeCard(int row, int column){
@@ -391,7 +391,7 @@ public class PlayingBoardController extends ModelObserver {
     @Override
     protected void updateEndGame() {
         Platform.runLater(() -> {
-            StageController.changeScene("fxml/end-game.fxml","Winners" , secretObjective);
+            StageController.changeScene("fxml/end-game.fxml","Winners" , this);
         });
     }
 }

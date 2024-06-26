@@ -35,7 +35,7 @@ public class JoinLobbyController extends ModelObserver {
                 Alert alertBox = new Alert(Alert.AlertType.ERROR);
                 alertBox.setContentText("Cant load the game due to error " + networkResponse.getErrorMessage());
                 alertBox.show();
-                StageController.changeScene("fxml/menu-view.fxml", "Codex Naturalis", nickNameTextField);
+                StageController.changeScene("fxml/menu-view.fxml", "Codex Naturalis", this);
             }
         }
     }
@@ -43,7 +43,7 @@ public class JoinLobbyController extends ModelObserver {
     @Override
     protected void updateJoinLobby() {
         Platform.runLater(()-> {
-            StageController.changeScene("fxml/waiting-room.fxml", "Waiting room",nickNameTextField);
+            StageController.changeScene("fxml/waiting-room.fxml", "Waiting room", this);
         });
     }
 }
