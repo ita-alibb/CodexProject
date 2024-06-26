@@ -33,13 +33,13 @@ public class CardIds {
      * The template for the empty slots, with the coordinates for available slots
      */
     public static final String[] EMPTY_TEMPLATE = {
-            "┌┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┐",
-            "┆                     ┆",
-            "┆                     ┆",
-            "┆      h=%-2d,v=%-2d      ┆",
-            "┆                     ┆",
-            "┆                     ┆",
-            "└┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┘",
+            "┌·····················┐",
+            ":                     :",
+            ":                     :",
+            ":      h=%-2d,v=%-2d      :",
+            ":                     :",
+            ":                     :",
+            "└·····················┘",
     };
 
     /**
