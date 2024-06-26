@@ -232,6 +232,20 @@ public class CardIds {
         return card;
     }
 
+    public static void printBack(int deckTopId) {
+        var stringRep = getEmptyTemplate();
+
+        if (deckTopId != -1) {
+            var back = new CardIds(deckTopId, 1);
+            back.loadFace();
+            stringRep = back.getCardAsArrayString(false, false, false, false);
+        }
+
+        for (String line : stringRep) {
+            System.out.printf("│ " + line + "%n", "");
+        }
+    }
+
     /**
      * Method to load the face of a card, using the basic data initialized in the constructor of the class.
      */

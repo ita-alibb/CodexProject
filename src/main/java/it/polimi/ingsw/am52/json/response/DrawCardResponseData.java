@@ -23,10 +23,9 @@ public class DrawCardResponseData extends BaseResponseData implements Serializab
     private final int deck;
 
     /**
-     * Checks if the deck above is empty or not
+     * The id of the next card in the deck pile
      */
-    @JsonProperty("isEmpty")
-    private final boolean isEmpty;
+    private final int nextCardId;
 
     //endregion
 
@@ -39,7 +38,7 @@ public class DrawCardResponseData extends BaseResponseData implements Serializab
         super();
         this.cardId = -1;
         this.deck = -1;
-        this.isEmpty = false;
+        this.nextCardId = -1;
     }
 
     /**
@@ -47,13 +46,13 @@ public class DrawCardResponseData extends BaseResponseData implements Serializab
      * @param status    The status of the response
      * @param cardId    The ID of the drawn card
      * @param deck      The name of the deck
-     * @param isEmpty   The value that checks if there are any cards left or not
+     * @param nextCardId   The id of the next card in the pile
      */
-    public DrawCardResponseData(ResponseStatus status, int cardId, int deck, boolean isEmpty) {
+    public DrawCardResponseData(ResponseStatus status, int cardId, int deck, int nextCardId) {
         super(status);
         this.cardId = cardId;
         this.deck = deck;
-        this.isEmpty = isEmpty;
+        this.nextCardId = nextCardId;
     }
 
     /**
@@ -64,20 +63,20 @@ public class DrawCardResponseData extends BaseResponseData implements Serializab
         super(status);
         this.cardId = -1;
         this.deck = -1;
-        this.isEmpty = false;
+        this.nextCardId = -1;
     }
 
     /**
      * Create a drawCard data object
      * @param status    The status of the response
      * @param deck      The name of the deck
-     * @param isEmpty   The value that checks if there are any cards left or not
+     * @param nextCardId   The id of the next card in the pile
      */
-    public DrawCardResponseData(ResponseStatus status, int deck, boolean isEmpty) {
+    public DrawCardResponseData(ResponseStatus status, int deck, int nextCardId) {
         super(status);
         this.cardId = -1;
         this.deck = deck;
-        this.isEmpty = isEmpty;
+        this.nextCardId = nextCardId;
     }
 
     //endregion
@@ -99,11 +98,10 @@ public class DrawCardResponseData extends BaseResponseData implements Serializab
     }
 
     /**
-     * @return false if the deck is not empty, otherwise true
+     * @return the next card id, used to show the correct back on the deck pile
      */
-    @JsonProperty("isEmpty")
-    public boolean isEmpty() {
-        return this.isEmpty;
+    public int getNextCardId() {
+        return this.nextCardId;
     }
 
     //endregion

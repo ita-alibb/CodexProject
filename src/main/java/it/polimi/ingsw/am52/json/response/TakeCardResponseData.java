@@ -25,10 +25,9 @@ public class TakeCardResponseData extends BaseResponseData implements Serializab
     private final int type;
 
     /**
-     * Checks if the deck above is empty or not
+     * The id of the next card in the deck pile
      */
-    @JsonProperty("isEmpty")
-    private final boolean isEmpty;
+    private final int nextCardId;
     //endregion
 
     //region Constructor
@@ -41,7 +40,7 @@ public class TakeCardResponseData extends BaseResponseData implements Serializab
         this.takenCardId = -1;
         this.shownCardId = -1;
         this.type = -1;
-        this.isEmpty = false;
+        this.nextCardId = -1;
     }
 
     /**
@@ -50,14 +49,14 @@ public class TakeCardResponseData extends BaseResponseData implements Serializab
      * @param takenCardId the id of the card chosen to be taken
      * @param shownCardId the id of the card shown
      * @param type The type of the card, resource or gold.
-     * @param isEmpty   The value that checks if there are any cards left or not
+     * @param nextCardId   The id of the next card in the pile
      */
-    public TakeCardResponseData(ResponseStatus status, int takenCardId, int shownCardId, int type, boolean isEmpty) {
+    public TakeCardResponseData(ResponseStatus status, int takenCardId, int shownCardId, int type, int nextCardId) {
         super(status);
         this.takenCardId = takenCardId;
         this.shownCardId = shownCardId;
         this.type = type;
-        this.isEmpty = isEmpty;
+        this.nextCardId = nextCardId;
     }
 
     /**
@@ -69,7 +68,7 @@ public class TakeCardResponseData extends BaseResponseData implements Serializab
         this.takenCardId = -1;
         this.shownCardId = -1;
         this.type = -1;
-        this.isEmpty = false;
+        this.nextCardId = -1;
     }
 
     //endregion
@@ -99,11 +98,10 @@ public class TakeCardResponseData extends BaseResponseData implements Serializab
     }
 
     /**
-     * @return false if the deck is not empty, otherwise true
+     * @return the next card id, used to show the correct back on the deck pile
      */
-    @JsonProperty("isEmpty")
-    public boolean isEmpty() {
-        return this.isEmpty;
+    public int getNextCardId() {
+        return this.nextCardId;
     }
     //endregion
 }

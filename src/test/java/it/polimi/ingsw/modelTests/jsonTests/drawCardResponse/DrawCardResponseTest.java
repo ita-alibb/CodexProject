@@ -37,11 +37,11 @@ public class DrawCardResponseTest {
         //Drawn card data
         final int cardId = 52;
         final int deck = 0;
-        final boolean isEmpty = false;
+        final int nextCardId = 41;
         final ResponseStatus status = new ResponseStatus();
 
         //Create the data object of the response
-        DrawCardResponseData data = new DrawCardResponseData(status, cardId, deck, isEmpty);
+        DrawCardResponseData data = new DrawCardResponseData(status, cardId, deck, nextCardId);
 
         //Create the response object
         DrawCardResponse response = new DrawCardResponse(data);
@@ -67,12 +67,12 @@ public class DrawCardResponseTest {
         JsonNode dataNode = jsonNode.get(JsonDeserializer.DATA_FIELD);
 
         //Check if there are 5 fields, named "cardId", "deck", "isEmpty", "status", "isBroadcast"
-        checkNodeFieldNames(dataNode, "cardId", "deck", "isEmpty", "status", "isBroadcast");
+        checkNodeFieldNames(dataNode, "cardId", "deck", "nextCardId", "status", "isBroadcast");
 
         //Check the filed values
         checkNodeFiledIntValue(dataNode, "cardId", cardId);
         checkNodeFiledIntValue(dataNode, "deck", deck);
-        checkNodeFiledBooleanValue(dataNode, "isEmpty", isEmpty);
+        checkNodeFiledIntValue(dataNode, "nextCardId", nextCardId);
         checkNodeFiledBooleanValue(dataNode, "isBroadcast", false);
 
         //Inspect the status node
@@ -102,7 +102,7 @@ public class DrawCardResponseTest {
         //    "isBroadcast" : false,
         //    "cardId" : 26,
         //    "deck" : 0,
-        //    "isEmpty" : false
+        //    "nextCardId" : 41
         //  },
         //  "method" : "drawCard"
         //}
@@ -132,7 +132,7 @@ public class DrawCardResponseTest {
             //Check all the data
             assertEquals(26, dataNode.getCardId());
             assertEquals(0, dataNode.getDeck());
-            assertFalse(dataNode.isEmpty());
+            assertEquals(41, dataNode.getNextCardId());
             assertFalse(dataNode.getIsBroadcast());
         } catch (IOException e) {
             System.out.println(e.getMessage());

@@ -1,6 +1,9 @@
 package it.polimi.ingsw.am52.model.game;
 
 import it.polimi.ingsw.am52.exceptions.*;
+import it.polimi.ingsw.am52.json.dto.DrawType;
+import it.polimi.ingsw.am52.json.response.DrawCardResponseData;
+import it.polimi.ingsw.am52.json.response.ResponseStatus;
 import it.polimi.ingsw.am52.model.cards.*;
 import it.polimi.ingsw.am52.model.decks.Deck;
 import it.polimi.ingsw.am52.model.decks.RandomDealer;
@@ -555,6 +558,26 @@ public class GameManager {
         this.disconnectedPlayers.add(player.get());
         this.players.remove(player.get());
         this.scoreBoard.remove(nickname);
+    }
+
+    public int peekNextCard(DrawType drawType) {
+        switch (drawType) {
+            case DrawType.RESOURCE -> {
+                if (this.getResourceDeckCount() == 0) {
+                    return -1;
+                }
+                return this.resourceCardDeck.peekCard().getCardId();
+            }
+            case DrawType.GOLD -> {
+                if (this.getGoldDeckCount() == 0) {
+                    return -1;
+                }
+                return this.goldCardDeck.peekCard().getCardId();
+            }
+            case null -> {
+                return -1;
+            }
+        }
     }
 
     //endregion

@@ -9,7 +9,7 @@
     "isBroadcast" : false,
     "cardId" : 26,
     "deck" : 0,
-    "isEmpty" : false
+    "nextCardId" : 41
   },
   "method" : "drawCard"
 }

@@ -49,6 +49,15 @@ public class InitGameResponseData  extends BaseResponseData implements Serializa
      */
     private final Integer starterCardId;
 
+    /**
+     * The next card on the resource pile
+     */
+    private final Integer nextResourceCardId;
+
+    /**
+     * The next card on the gold pile
+     */
+    private final Integer nextGoldCardId;
 
     //endregion
 
@@ -66,6 +75,8 @@ public class InitGameResponseData  extends BaseResponseData implements Serializa
         this.playerHandCardIds = new ArrayList<>();
         this.playerObjectiveCardIds = new ArrayList<>();
         this.starterCardId = -1;
+        this.nextResourceCardId = -1;
+        this.nextGoldCardId = -1;
     }
 
     /**
@@ -78,8 +89,10 @@ public class InitGameResponseData  extends BaseResponseData implements Serializa
      * @param playerHandCardIds the id of the 3 cards in player hand
      * @param playerObjectiveCardIds the id of the objective cards
      * @param starterCardId the id of the starter card
+     * @param nextResourceCardId the id of the next resource card in the pile
+     * @param nextGoldCardId the id of the next gold card in the pile
      */
-    public InitGameResponseData( ResponseStatus status, List<String> playersNickname, List<Integer> commonObjectiveIds, List<Integer> visibleResourceCardIds, List<Integer> visibleGoldCardIds, List<Integer> playerHandCardIds, List<Integer> playerObjectiveCardIds, Integer starterCardId) {
+    public InitGameResponseData( ResponseStatus status, List<String> playersNickname, List<Integer> commonObjectiveIds, List<Integer> visibleResourceCardIds, List<Integer> visibleGoldCardIds, List<Integer> playerHandCardIds, List<Integer> playerObjectiveCardIds, Integer starterCardId, Integer nextResourceCardId, Integer nextGoldCardId ) {
         super(status);
 
         this.playersNickname = playersNickname;
@@ -89,6 +102,8 @@ public class InitGameResponseData  extends BaseResponseData implements Serializa
         this.playerHandCardIds = playerHandCardIds;
         this.playerObjectiveCardIds = playerObjectiveCardIds;
         this.starterCardId = starterCardId;
+        this.nextResourceCardId = nextResourceCardId;
+        this.nextGoldCardId = nextGoldCardId;
     }
 
     /**
@@ -106,6 +121,8 @@ public class InitGameResponseData  extends BaseResponseData implements Serializa
         this.playerHandCardIds = new ArrayList<>();
         this.playerObjectiveCardIds = new ArrayList<>();
         this.starterCardId = -1;
+        this.nextResourceCardId = -1;
+        this.nextGoldCardId = -1;
     }
 
     public List<String> getPlayersNickname() {
@@ -134,6 +151,14 @@ public class InitGameResponseData  extends BaseResponseData implements Serializa
 
     public Integer getStarterCardId() {
         return starterCardId;
+    }
+
+    public int getNextResourceCardId() {
+        return this.nextResourceCardId;
+    }
+
+    public int getNextGoldCardId() {
+        return this.nextGoldCardId;
     }
 
     //endregion

@@ -68,8 +68,10 @@ public class TuiCommonBoardView extends TuiView {
         System.out.println("┌────────────────────────────────────────────────────────────────────────────┐");
         System.out.printf( "│ Current turn:%3d                          %32s │%n", ViewModelState.getInstance().getTurn(), "Current player: " + ViewModelState.getInstance().getCurrentPlayer());
         System.out.println("├────────────────────────────────────────────────────────────────────────────┤");
-        System.out.printf( "│ %-74s │%n", "Resource card deck: " + ViewModelState.getInstance().getResourceDeck());
-        System.out.printf( "│ %-74s │%n", "Gold card deck: " + ViewModelState.getInstance().getGoldDeck());
+        System.out.printf( "│ %-74s │%n", "Resource card deck: ");
+        CardIds.printBack(ViewModelState.getInstance().getResourceDeckNextId());
+        System.out.printf( "│ %-74s │%n", "Gold card deck: ");
+        CardIds.printBack(ViewModelState.getInstance().getGoldDeckNextId());
         System.out.printf( "│ %-74s │%n", "Visible resource cards: ");
         CardIds.printVisibleResourceCards();
         System.out.printf( "│ %-74s │%n", "Visible gold cards: ");

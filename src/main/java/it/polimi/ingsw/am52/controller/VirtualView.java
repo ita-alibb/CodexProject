@@ -260,7 +260,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
         this.broadcast(new DrawCardResponse(new DrawCardResponseData(
                 response.getStatus(),
                 response.getDeck(),
-                response.isEmpty()
+                response.getNextCardId()
         )));
 
         return response;
@@ -279,7 +279,7 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
                 response.getTakenCardId(),
                 response.getShownCardId(),
                 response.getType(),
-                response.isEmpty()
+                response.getNextCardId()
         )));
 
         return response;

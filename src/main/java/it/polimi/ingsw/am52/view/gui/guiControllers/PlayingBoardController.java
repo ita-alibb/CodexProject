@@ -255,11 +255,18 @@ public class PlayingBoardController extends ModelObserver {
     }
 
     private void setVisibleDecks() {
-        if (!ViewModelState.getInstance().getResourceDeck()) {
+        var idResource = ViewModelState.getInstance().getResourceDeckNextId();
+        if (idResource == -1) {
             this.resourceCardsDeck.setImage(null);
+        } else {
+            this.resourceCardsDeck.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/backs/%s.png".formatted(idResource+1)))));
         }
-        if (!ViewModelState.getInstance().getGoldDeck()) {
+
+        var idGold = ViewModelState.getInstance().getGoldDeckNextId();
+        if (idGold == -1) {
             this.goldCardsDeck.setImage(null);
+        } else {
+            this.goldCardsDeck.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/backs/%s.png".formatted(idGold+1)))));
         }
     }
 

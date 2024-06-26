@@ -116,12 +116,12 @@ public class ViewModelState extends ModelObservable {
     /**
      * true if the resource deck is full, otherwise false
      */
-    private boolean resourceDeck;
+    private int resourceDeckNextId;
 
     /**
      * true if the gold deck is full, otherwise false
      */
-    private boolean goldDeck;
+    private int goldDeckNextId;
 
     /**
      * The score, associated to his player
@@ -168,8 +168,8 @@ public class ViewModelState extends ModelObservable {
         playerHand = new ArrayList<>();
         playerObjectives = new ArrayList<>();
         board = new BoardMap<>();
-        resourceDeck = true;
-        goldDeck = true;
+        resourceDeckNextId = 1;
+        goldDeckNextId = 1;
         scoreboard = new HashMap<>();
         secretObjective = -1;
         phase = GamePhase.LOBBY;
@@ -271,8 +271,8 @@ public class ViewModelState extends ModelObservable {
 
             //reset
             this.board = new BoardMap<>();
-            this.resourceDeck = true;
-            this.goldDeck = true;
+            this.resourceDeckNextId = 1;
+            this.goldDeckNextId = 1;
             this.currentPlayer = "";
             this.availableSlots = new ArrayList<>();
             this.turn = 0;
@@ -304,6 +304,8 @@ public class ViewModelState extends ModelObservable {
             }
         }
 
+        this.resourceDeckNextId = initGame.getNextResourceCardId();
+        this.goldDeckNextId = initGame.getNextGoldCardId();
         this.commonObjectives = initGame.getCommonObjectiveIds();
         this.visibleResourceCards = initGame.getVisibleResourceCardIds();
         this.visibleGoldCards = initGame.getVisibleGoldCardIds();
@@ -398,8 +400,8 @@ public class ViewModelState extends ModelObservable {
             this.playerHand.add(drawCard.getCardId());
 
             switch (DrawType.fromInteger(drawCard.getDeck())) {
-                case DrawType.GOLD : this.goldDeck = !drawCard.isEmpty(); break;
-                case DrawType.RESOURCE: this.resourceDeck = !drawCard.isEmpty(); break;
+                case DrawType.GOLD : this.goldDeckNextId = drawCard.getNextCardId(); break;
+                case DrawType.RESOURCE: this.resourceDeckNextId = drawCard.getNextCardId(); break;
                 case null : break;
             }
         }
@@ -428,13 +430,13 @@ public class ViewModelState extends ModelObservable {
 
         switch (DrawType.fromInteger(takeCard.getType())) {
             case DrawType.GOLD : {
-                this.goldDeck = !takeCard.isEmpty();
+                this.goldDeckNextId = takeCard.getNextCardId();
                 this.visibleGoldCards.remove((Integer) takeCard.getTakenCardId());
                 this.visibleGoldCards.add(takeCard.getShownCardId());
                 break;
             }
             case DrawType.RESOURCE: {
-                this.resourceDeck = !takeCard.isEmpty();
+                this.resourceDeckNextId = takeCard.getNextCardId();
                 this.visibleResourceCards.remove((Integer) takeCard.getTakenCardId());
                 this.visibleResourceCards.add(takeCard.getShownCardId());
                 break;
@@ -553,15 +555,15 @@ public class ViewModelState extends ModelObservable {
     /**
      * @return  True if the resource deck has available cards, otherwise False
      */
-    public boolean getResourceDeck() {
-        return resourceDeck;
+    public int getResourceDeckNextId() {
+        return resourceDeckNextId;
     }
 
     /**
      * @return  True if the gold deck has available cards, otherwise False
      */
-    public boolean getGoldDeck() {
-        return goldDeck;
+    public int getGoldDeckNextId() {
+        return goldDeckNextId;
     }
 
     /**

@@ -209,28 +209,11 @@ public class GameController {
         }
 
         //Notify the success of the action
-        boolean isEmpty = false;
-        switch (DrawType.fromInteger(deck)) {
-            case DrawType.RESOURCE -> {
-                if (this.game.getResourceDeckCount() == 0) {
-                    isEmpty = true;
-                }
-            }
-            case DrawType.GOLD -> {
-                if (this.game.getGoldDeckCount() == 0) {
-                    isEmpty = true;
-                }
-            }
-            case null -> {
-                return new DrawCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 1, "Invalid deck"));
-            }
-        }
-
         return new DrawCardResponseData(
                 new ResponseStatus(this.game.getStatusResponse()),
                 this.game.getPlayer(this.getNickname(clientId)).getHand().toList().getLast().getCardId(),
                 deck,
-                isEmpty
+                this.game.peekNextCard(DrawType.fromInteger(deck))
         );
     }
 
@@ -251,7 +234,9 @@ public class GameController {
                     this.game.getVisibleGoldCards(),
                     this.game.getPlayer(nickname).getHand().stream().map(Card::getCardId).toList(),
                     this.game.getPlayerObjectiveOptions(nickname).stream().map(Objective::getObjectiveId).toList(),
-                    this.game.getPlayer(nickname).getStarterCard().getCardId()
+                    this.game.getPlayer(nickname).getStarterCard().getCardId(),
+                    this.game.peekNextCard(DrawType.RESOURCE),
+                    this.game.peekNextCard(DrawType.GOLD)
             );
         } catch (Exception e) {
             // TODO: better logging
@@ -285,18 +270,11 @@ public class GameController {
             }
 
             int shownCard;
-            boolean isEmpty = false;
 
             if (drawType == DrawType.RESOURCE){
                 shownCard = this.game.takeResourceCard(cardId);
-                if (this.game.getResourceDeckCount() == 0) {
-                    isEmpty = true;
-                }
             } else if (drawType == DrawType.GOLD) {
                 shownCard = this.game.takeGoldCard(cardId);
-                if (this.game.getGoldDeckCount() == 0) {
-                    isEmpty = true;
-                }
             } else {
                 return new TakeCardResponseData(new ResponseStatus(this.game.getStatusResponse(),400, "Bad request type"));
             }
@@ -306,8 +284,8 @@ public class GameController {
                     cardId,
                     shownCard,
                     type,
-                    isEmpty
-                    );
+                    this.game.peekNextCard(drawType)
+            );
         } catch (Exception ex) {
             return new TakeCardResponseData(new ResponseStatus(this.game.getStatusResponse(),503, "Exception on take card"));
         }
