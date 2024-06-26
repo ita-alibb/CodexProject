@@ -19,6 +19,7 @@ public abstract class Strategy {
             System.out.println("Connection Error");
         } else if (networkResult.getErrorCode() != 0) {
             System.out.println("Error: " + networkResult.getErrorMessage());
+            System.out.print("> ");
         }
         //if the call goes right the ViewModelState handles it
     }

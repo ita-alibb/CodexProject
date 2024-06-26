@@ -33,7 +33,9 @@ public class InputReader implements Runnable {
 
             this.executeCommand(input);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println("Error: incorrect command");
+            System.out.print("> ");
+            readLine();
         }
     }
 
@@ -53,6 +55,8 @@ public class InputReader implements Runnable {
 
         if (!TuiPrinter.checkValidCommand(input.toUpperCase().charAt(0))){
             // Command not valid, run new scanner thread and end current thread
+            System.out.println("Unknown command: " + input + " retry:");
+            System.out.print("> ");
             readLine();
             return;
         }

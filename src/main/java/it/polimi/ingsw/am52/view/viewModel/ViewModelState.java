@@ -383,7 +383,7 @@ public class ViewModelState extends ModelObservable {
             opponent.addCard(placeCard.getPlacedSlot(), new CardIds(placeCard.getCardId(), placeCard.getFace()));
         }
 
-        this.scoreboard.put(placeCard.getPlayer(), this.scoreboard.get(placeCard.getPlayer()) + placeCard.getScore());
+        this.scoreboard.put(placeCard.getPlayer(), placeCard.getScore());
 
         this.phase = placeCard.getStatus().getGamePhase();
 

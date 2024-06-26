@@ -48,6 +48,7 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
             this.serverIp = serverIp;
             this.rmiPort = rmiPort;
 
+            System.out.printf("Client started with host %s and port %d %n", getServerIp(),getRmiPort());
             // establish connection to server
             Registry registry = LocateRegistry.getRegistry(getServerIp(),getRmiPort());
             Accepter stub = (Accepter) registry.lookup(ServerConnection.STUB_NAME);
@@ -58,9 +59,6 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
             // Get the server's virtual view so client can call it directly
             // set the Proxy virtualView in client side connection (so client can call it)
             this.view = (ActionsRMI) registry.lookup(ServerConnection.REGISTRY_ROOT+id);
-
-            //TODO: Evitare di crivere a scermo messaggi di "log" nell'applicazione client.
-            System.out.println("initialized");
         } catch (NotBoundException e) {
             throw new RuntimeException(e);
         }

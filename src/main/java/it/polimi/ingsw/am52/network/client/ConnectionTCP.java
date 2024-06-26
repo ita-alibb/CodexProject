@@ -44,6 +44,7 @@ public class ConnectionTCP implements Connection, Runnable{
     private final SynchronousQueue<JsonMessage<BaseResponseData>> responseQueue;
 
     public ConnectionTCP(String serverIp, int tcpPort) throws IOException {
+        System.out.printf("Client started with host %s and port %d %n", serverIp,tcpPort);
         // establish connection to server
         this.socket = new Socket(serverIp,tcpPort);
 
@@ -51,9 +52,6 @@ public class ConnectionTCP implements Connection, Runnable{
         this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
 
         this.responseQueue = new SynchronousQueue<>();
-
-        // TODO: debug log
-        System.out.println("initialized");
     }
 
     /**

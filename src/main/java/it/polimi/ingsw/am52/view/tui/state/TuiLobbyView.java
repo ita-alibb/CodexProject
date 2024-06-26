@@ -50,8 +50,8 @@ public class TuiLobbyView extends TuiView {
         System.out.printf("│%30s%21s%25s│%n","LOBBY", "ID:" + ViewModelState.getInstance().getCurrentLobbyId(), "");
         System.out.println("├────────────────────────────────────────────────────────────────────────────┤");
         players.forEach(p -> {
-            int padding = (16 - p.length()) / 2;
-            System.out.printf("│                              %16s                              │%n", String.format("%" + padding + "s%s%" + padding + "s", "", p, ""));
+            int padding = (18 - p.length()) / 2;
+            System.out.printf("│                              %18s                              │%n", String.format("%" + padding + "s%s%" + padding + "s", "", p, ""));
         });
         System.out.println("└────────────────────────────────────────────────────────────────────────────┘");
     }

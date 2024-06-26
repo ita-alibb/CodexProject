@@ -32,7 +32,7 @@ public class MenuViewController extends ModelObserver {
 
     @FXML
     public void initialize() {
-        ViewModelState.getInstance().registerObserver(this, EventType.PLACE_CARD,EventType.TAKE_CARD);
+        ViewModelState.getInstance().registerObserver(this, EventType.LIST_LOBBY);
 
         var lobbies = ViewModelState.getInstance().getLobbies();
         List<String> list = lobbies.entrySet()

@@ -23,7 +23,7 @@ public class CardIds {
             "┌─────┬─────────┬─────┐",
             "│  %c  │  %-5s  │  %c  │",
             "├─────┘         └─────┤",
-            "│          %c          │",
+            "│        %-5s        │",
             "├─────┐         ┌─────┤",
             "│  %c  │  %-5s  │  %c  │",
             "└─────┴─────────┴─────┘"
@@ -317,20 +317,20 @@ public class CardIds {
      * @return              The array completely formatted
      */
     private String[] getResourceCardAsArrayString(boolean coveredTL, boolean coveredTR, boolean coveredBR, boolean coveredBL, String[] result){
-        result[3] = result[3].formatted(this.getSymbol(this.face.getPermanentResources()));
-
         if (this.cardFace == 0) {
             result[1] = result[1].formatted(
                     getSymbol(this.face.getTopLeftCorner(), coveredTL),
                     KingdomCard.getCardWithId(this.cardId).getFrontFace().getPoints(),
                     getSymbol(this.face.getTopRightCorner(), coveredTR)
             );
+            result[3] = result[3].formatted("");
         } else {
             result[1] = result[1].formatted(
                     getSymbol(this.face.getTopLeftCorner(), coveredTL),
                     KingdomCard.getCardWithId(this.cardId).getBackFace().getPoints(),
                     getSymbol(this.face.getTopRightCorner(), coveredTR)
             );
+            result[3] = result[3].formatted(getTotalRequiredResources(this.face.getPermanentResources()));
         }
 
         result[5] = result[5].formatted(
