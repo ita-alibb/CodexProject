@@ -66,15 +66,19 @@ public class PlayingBoardController extends ModelObserver {
     private ImageView pickedCard;
 
     private static CardSide startercardside ;
+
     private CardSide selectedCardSide = CardSide.FRONT;
+
+    private ImageView selected;
+
+    private BoardSlot selectedBoardSlot;
 
     @FXML
     public void initialize() {
-        ViewModelState.getInstance().registerObserver(this, EventType.PLACE_CARD,EventType.TAKE_CARD,EventType.DRAW_CARD);
+        ViewModelState.getInstance().registerObserver(this, EventType.PLACE_CARD,EventType.TAKE_CARD,EventType.DRAW_CARD, EventType.END_GAME);
 
-        ClientConnection.placeStarterCard(ViewModelState.getInstance().getStarterCard(), startercardside);
         String side= startercardside == CardSide.FRONT ? "fronts" : "backs";
-        selected = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/%s/%s.png".formatted(side,ViewModelState.getInstance().getStarterCard()+1)))));
+        selected = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/cards/%s/%s.png".formatted(side,ViewModelState.getInstance().getStarterCard()+1)))));
         placeCard(5,5);
         setVisibleGoldCards();
         setVisibleResourceCards();
@@ -89,9 +93,6 @@ public class PlayingBoardController extends ModelObserver {
     public static void setStartercardside(CardSide startercardside) {
         PlayingBoardController.startercardside = startercardside;
     }
-
-    private ImageView selected;
-    private String  selectedSide;
 
     public void cardSelection(MouseEvent event){
             setSelectedCardSide(event);
@@ -161,26 +162,30 @@ public class PlayingBoardController extends ModelObserver {
         if (pickedCard == event.getSource()) {
             List<Integer> resourceCards = ViewModelState.getInstance().getVisibleResourceCards();
             List<Integer> goldCards = ViewModelState.getInstance().getVisibleGoldCards();
+            ResponseStatus response = null;
             if (pickedCard== visibleResourceCard1){
-                ClientConnection.takeCard(resourceCards.get(0), DrawType.RESOURCE );
-                System.out.println(ViewModelState.getInstance().getPlayerHand().getFirst());
+                response = ClientConnection.takeCard(resourceCards.get(0), DrawType.RESOURCE );
                 setVisibleResourceCards();
-                System.out.println(resourceCards.getFirst());
             } else if (pickedCard== visibleResourceCard2) {
-                ClientConnection.takeCard(resourceCards.get(1), DrawType.RESOURCE );
+                response = ClientConnection.takeCard(resourceCards.get(1), DrawType.RESOURCE );
                 setVisibleResourceCards();
             } else if (pickedCard== visibleGoldCard1) {
-                ClientConnection.takeCard(goldCards.get(0), DrawType.GOLD );
+                response = ClientConnection.takeCard(goldCards.get(0), DrawType.GOLD );
                 setVisibleGoldCards();
             } else if (pickedCard== visibleGoldCard2) {
-                ClientConnection.takeCard(goldCards.get(1), DrawType.GOLD );
+                response = ClientConnection.takeCard(goldCards.get(1), DrawType.GOLD );
                 setVisibleGoldCards();
             } else if (pickedCard== resourceCardsDeck) {
-                ClientConnection.drawCard(DrawType.RESOURCE );
+                response = ClientConnection.drawCard(DrawType.RESOURCE );
             } else if (pickedCard== goldCardsDeck) {
-                ClientConnection.drawCard(DrawType.GOLD );
+                response = ClientConnection.drawCard(DrawType.GOLD );
             }
-            setPlayerCards();
+
+            if (response == null || response.getErrorCode() != 0) {
+                Alert alertBox = new Alert(Alert.AlertType.ERROR);
+                alertBox.setContentText("Error on draw phase");
+                alertBox.show();
+            }
         }
     }
 
@@ -190,7 +195,7 @@ public class PlayingBoardController extends ModelObserver {
             int rowIndex = GridPane.getRowIndex((ImageView) event.getSource());
             int colIndex = GridPane.getColumnIndex((ImageView) event.getSource());
             BoardSlot boardSlot = new BoardSlot(colIndex-5,rowIndex*-1+5);
-            BoardSlot selectedBoardSlot = boardSlot.getSlotAt(getCorner(event));
+            selectedBoardSlot = boardSlot.getSlotAt(getCorner(event));
             System.out.println(getCorner(event));
             System.out.println(selectedBoardSlot.getVert());
             System.out.println(selectedBoardSlot.getHoriz());
@@ -206,13 +211,14 @@ public class PlayingBoardController extends ModelObserver {
                     response = ClientConnection.placeCard(playerHand.get(2),selectedCardSide,selectedBoardSlot);
                 }
 
-                if (response.getErrorCode() == 0) {
-                    placeCard(selectedBoardSlot.getVert()* -1 +5, selectedBoardSlot.getHoriz()+5);
-                } else {
-                    System.out.println(response.getErrorCode());
-                    System.out.println(response.getErrorMessage());
+                if (response == null) {
                     Alert alertBox = new Alert(Alert.AlertType.ERROR);
-                    alertBox.setContentText("Can't place: " + response.getErrorMessage());
+                    alertBox.setContentText("Error on placeCard phase");
+                    alertBox.show();
+                } else if (response.getErrorCode() != 0) {
+                    Alert alertBox = new Alert(Alert.AlertType.ERROR);
+                    alertBox.setContentText("Error on placeCard: " + response.getErrorMessage());
+                    alertBox.show();
                 }
             }
         }
@@ -221,23 +227,18 @@ public class PlayingBoardController extends ModelObserver {
     public void setPlayerCards(){
         List<Integer> playerHand = ViewModelState.getInstance().getPlayerHand();
         System.out.println(playerHand);
+        playerCard1.setImage(null);
+        playerCard2.setImage(null);
+        playerCard3.setImage(null);
 
-        if (playerHand.size() > 0) {
+        if (!playerHand.isEmpty()) {
             playerCard1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(playerHand.get(0)+1)))));
-        } else {
-            playerCard1.setImage(null);
         }
-
         if (playerHand.size() > 1) {
             playerCard2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(playerHand.get(1)+1)))));
-        } else {
-            playerCard2.setImage(null);
         }
-
         if (playerHand.size() > 2) {
             playerCard3.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/fronts/%s.png".formatted(playerHand.get(2)+1)))));
-        } else {
-            playerCard3.setImage(null);
         }
     }
 
@@ -310,7 +311,7 @@ public class PlayingBoardController extends ModelObserver {
         modalStage.initModality(Modality.APPLICATION_MODAL);
         modalStage.setTitle("Opponent Board");
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/opponent-board.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(GuiApplication.class.getResource("fxml/opponent-board.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         OpponentBardController controller = fxmlLoader.getController();
         controller.setOpponentBoard(nickname);
@@ -361,6 +362,7 @@ public class PlayingBoardController extends ModelObserver {
     @Override
     protected void updatePlaceCard() {
         Platform.runLater(() -> {
+            placeCard(selectedBoardSlot.getVert()* -1 +5, selectedBoardSlot.getHoriz()+5);
             setScoringBoard();
             setPlayerCards();
             if (ViewModelState.getInstance().getPhase() != GamePhase.PLACING) if (selected!=null)selected.setEffect(null);
@@ -383,6 +385,13 @@ public class PlayingBoardController extends ModelObserver {
             setVisibleDecks();
             setPlayerCards();
             setScoringBoard();
+        });
+    }
+
+    @Override
+    protected void updateEndGame() {
+        Platform.runLater(() -> {
+            StageController.changeScene("fxml/end-game.fxml","Winners" , secretObjective);
         });
     }
 }

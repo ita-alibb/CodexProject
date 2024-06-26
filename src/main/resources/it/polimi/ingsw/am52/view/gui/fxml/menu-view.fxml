@@ -1,26 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<StackPane fx:id="stackPane" prefHeight="400.0" prefWidth="488.0" styleClass="background" stylesheets="@../css/menu-view.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.am52.view.gui.guiControllers.MenuViewController">
-   <children>
-      <ListView fx:id="guiLobbies" maxWidth="200.0" prefHeight="200.0" prefWidth="200.0" />
-      <Button fx:id="newLobby" alignment="CENTER" mnemonicParsing="false" onAction="#createLobby" text="New Lobby">
-         <font>
-            <Font name="Arial" size="12.0" />
-         </font>
-      </Button>
-      <Button fx:id="joinLobbyButton" mnemonicParsing="false" onAction="#joinLobby" text="Join Lobby" visible="false" />
-      <Button fx:id="updateLobbyButton" mnemonicParsing="false" onAction="#updateLobby" text="Update lobby" />
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1500.0" styleClass="background" stylesheets="@../css/menu-view.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.am52.view.gui.guiControllers.MenuViewController">
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>
    <opaqueInsets>
       <Insets />
    </opaqueInsets>
-</StackPane>
+   <ListView fx:id="guiLobbies" layoutX="584.0" layoutY="47.0" maxWidth="306.0" prefHeight="642.0" prefWidth="306.0" />
+   <Button fx:id="newLobby" alignment="CENTER" layoutX="987.0" layoutY="47.0" mnemonicParsing="false" onMouseClicked="#createLobby" text="New Lobby" />
+   <Button fx:id="joinLobbyButton" layoutX="1025.0" layoutY="722.0" mnemonicParsing="false" onMouseClicked="#joinLobby" text="Join Lobby" visible="false" />
+   <Button fx:id="updateLobbyButton" layoutX="684.0" layoutY="696.0" mnemonicParsing="false" onMouseClicked="#updateLobby" text="Update lobby" />
+</AnchorPane>

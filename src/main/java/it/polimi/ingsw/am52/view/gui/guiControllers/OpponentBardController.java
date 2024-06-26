@@ -9,15 +9,14 @@ import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
 import java.util.Objects;
 
 public class OpponentBardController {
-
     @FXML
     private GridPane playingBoardGrid;
+
     private void placeCard(BoardSlot slot, CardIds card){
         String side = card.cardFace == 0? "fronts" : "backs";
         ImageView image = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("cards/%s/%s.png".formatted(side,card.cardId+1)))));
@@ -27,7 +26,6 @@ public class OpponentBardController {
         GridPane.setHalignment(image, HPos.CENTER);
         GridPane.setValignment(image, VPos.CENTER);
     }
-
 
     public void setOpponentBoard(String nickname){
         BoardMap<BoardSlot, CardIds> board = ViewModelState.getInstance().getBoard(nickname);

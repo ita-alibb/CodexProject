@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="950.0" prefWidth="1561.0" styleClass="background" stylesheets="@../css/menu-view.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.am52.view.gui.guiControllers.EndGameController">
+   <Label fx:id="winnerLabel" alignment="CENTER" layoutX="255.0" layoutY="132.0" prefHeight="94.0" prefWidth="914.0" text="Winners">
+      <font>
+         <Font size="64.0" />
+      </font>
+   </Label>
+   <VBox fx:id="winnersBox" layoutX="666.0" layoutY="255.0" prefHeight="386.0" prefWidth="187.0" />
+   <Button fx:id="endGameButton" layoutX="1001.0" layoutY="629.0" mnemonicParsing="false" onMouseClicked="#leaveGame" prefHeight="50.0" prefWidth="128.0" text="Leave Game" />
+</AnchorPane>

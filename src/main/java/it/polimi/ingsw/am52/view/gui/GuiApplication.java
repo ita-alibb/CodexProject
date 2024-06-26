@@ -23,13 +23,15 @@ public class GuiApplication extends Application {
             scene.getStylesheets().add(getClass().getResource("css/menu-view.css").toExternalForm());
 
             stage.setTitle("Codex Naturalis");
-            stage.setFullScreen(true);
+            stage.setResizable(false);
+            stage.setMaximized(true);
             stage.setScene(scene);
             stage.show();
         }
         catch (Exception e) {
             Alert alertBox = new Alert(Alert.AlertType.ERROR);
             alertBox.setContentText("Cant load the game due to error " + e.getMessage());
+            alertBox.show();
         }
     }
 

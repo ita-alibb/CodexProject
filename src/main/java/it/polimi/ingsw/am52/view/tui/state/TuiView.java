@@ -67,7 +67,7 @@ public abstract class TuiView {
     /**
      * Generic method to update the TUI
      */
-    public void print(){
+    public final void print(){
         //clear console
         clearConsole();
 

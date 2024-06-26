@@ -1,32 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<StackPane fx:id="joinButton" prefHeight="420.0" prefWidth="537.0" styleClass="background" stylesheets="@../css/menu-view.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.am52.view.gui.guiControllers.JoinLobbyController">
-   <children>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-         <children>
-            <Label text="Insert Nickname:">
-               <font>
-                  <Font name="Arial" size="18.0" />
-               </font>
-            </Label>
-            <TextField fx:id="nickNameTextField" />
-         </children>
-      </VBox>
-      <Button fx:id="joinLobbyButton" mnemonicParsing="false" onAction="#joinLobby" text="Join">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Button>
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1500.0" styleClass="background" stylesheets="@../css/menu-view.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.am52.view.gui.guiControllers.JoinLobbyController">
    <padding>
       <Insets bottom="100.0" left="100.0" right="100.0" top="100.0" />
    </padding>
-</StackPane>
+   <VBox alignment="CENTER" layoutX="373.0" layoutY="163.0" prefHeight="299.0" prefWidth="736.0">
+      <Label text="Insert Nickname:">
+         <font>
+            <Font name="Arial" size="18.0" />
+         </font>
+      </Label>
+      <TextField fx:id="nickNameTextField" />
+   </VBox>
+   <Button fx:id="joinLobbyButton" layoutX="1065.0" layoutY="568.0" mnemonicParsing="false" onMouseClicked="#joinLobby" text="Join">
+      <font>
+         <Font size="14.0" />
+      </font>
+   </Button>
+</AnchorPane>

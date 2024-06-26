@@ -176,7 +176,7 @@ public class ViewModelState extends ModelObservable {
         currentPlayer = "";
         opponents = new ArrayList<>();
         availableSlots = new ArrayList<>();
-        turn = 1;
+        turn = 0;
         chatRecords = new ArrayList<>();
         disconnectedPlayer = "";
     }
@@ -276,7 +276,7 @@ public class ViewModelState extends ModelObservable {
             this.goldDeck = true;
             this.currentPlayer = "";
             this.availableSlots = new ArrayList<>();
-            this.turn = 1;
+            this.turn = 0;
             this.secretObjective = -1;
             this.disconnectedPlayer = "";
 

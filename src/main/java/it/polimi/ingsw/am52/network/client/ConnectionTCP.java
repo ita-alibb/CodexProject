@@ -69,7 +69,7 @@ public class ConnectionTCP implements Connection, Runnable{
 
         try {
             while((jsonResponse = in.readLine()) != null){
-                System.out.println("received: " + jsonResponse);
+                /*System.out.println("received: " + jsonResponse);*/
 
                 try {
                     var res = JsonDeserializer.deserializeResponse(jsonResponse);

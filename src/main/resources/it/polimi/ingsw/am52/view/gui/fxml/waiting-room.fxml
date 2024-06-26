@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="950.0" prefWidth="1561.0" styleClass="background" stylesheets="@../css/menu-view.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.am52.view.gui.guiControllers.WaitingRoomController">
-   <children>
-      <Label layoutX="626.0" layoutY="178.0" prefHeight="100.0" prefWidth="426.0" text="Number of players">
-         <font>
-            <Font size="48.0" />
-         </font>
-      </Label>
-      <Label fx:id="numberOfPlayers" layoutX="762.0" layoutY="290.0" prefHeight="39.0" prefWidth="64.0">
-         <font>
-            <Font size="36.0" />
-         </font>
-      </Label>
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1500.0" styleClass="background" stylesheets="@../css/menu-view.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.am52.view.gui.guiControllers.WaitingRoomController">
+   <Label layoutX="626.0" layoutY="178.0" prefHeight="100.0" prefWidth="426.0" text="Number of players">
+      <font>
+         <Font size="48.0" />
+      </font>
+   </Label>
+   <Button layoutX="122.0" layoutY="112.0" mnemonicParsing="false" onMouseClicked="#leaveLobby" prefHeight="65.0" prefWidth="159.0" text="Leave lobby">
+      <font>
+         <Font size="24.0" />
+      </font>
+   </Button>
+   <VBox fx:id="playersNickname" layoutX="695.0" layoutY="273.0" prefHeight="447.0" prefWidth="240.0" />
 </AnchorPane>

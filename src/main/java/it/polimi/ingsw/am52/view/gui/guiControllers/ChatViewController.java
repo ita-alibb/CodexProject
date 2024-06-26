@@ -23,8 +23,6 @@ public class ChatViewController extends ModelObserver {
     public TextArea messageBox;
     public ListView<Text> chatPane;
     public Button buttonSend;
-    @FXML
-    private GridPane playingBoardGrid;
 
     @FXML
     public void initialize() {
