@@ -10,7 +10,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
 
 public class JoinLobbyController extends ModelObserver {
     private static int id;
@@ -23,9 +22,7 @@ public class JoinLobbyController extends ModelObserver {
 
     @FXML
     public void initialize() {
-        ViewModelState.getInstance().registerObserver(this, EventType.JOIN_LOBBY);
-
-        StackPane.setAlignment(joinLobbyButton, javafx.geometry.Pos.BOTTOM_RIGHT);
+        ViewModelState.getInstance().registerObserver(this, EventType.JOIN_LOBBY, EventType.INIT_GAME);
     }
 
     public void joinLobby() {
@@ -44,6 +41,13 @@ public class JoinLobbyController extends ModelObserver {
     protected void updateJoinLobby() {
         Platform.runLater(()-> {
             StageController.changeScene("fxml/waiting-room.fxml", "Waiting room", this);
+        });
+    }
+
+    @Override
+    protected void updateInitGame() {
+        Platform.runLater(() -> {
+            StageController.changeScene("fxml/select-objective.fxml","Select secret objective" , this);
         });
     }
 }

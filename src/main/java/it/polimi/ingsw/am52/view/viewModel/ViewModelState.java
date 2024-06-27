@@ -250,10 +250,11 @@ public class ViewModelState extends ModelObservable {
 
         // Change automatically the view displayed
         this.type = ViewType.LOBBY;
-        this.notifyObservers(EventType.JOIN_LOBBY);
 
         if (this.phase == GamePhase.INIT) {
             ClientConnection.initGame();
+        } else {
+            this.notifyObservers(EventType.JOIN_LOBBY);
         }
     }
 

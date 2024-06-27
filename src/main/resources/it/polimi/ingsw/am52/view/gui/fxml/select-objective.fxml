@@ -6,7 +6,7 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="900.0" prefWidth="1500.0" styleClass="background"
+            prefHeight="900.0" prefWidth="1550.0" styleClass="background"
             stylesheets="@../css/menu-view.css" xmlns="http://javafx.com/javafx/17.0.2-ea"
             fx:controller="it.polimi.ingsw.am52.view.gui.guiControllers.SelectObjectiveController">
    <ImageView fx:id="secretObjective1" fitHeight="246.0" fitWidth="353.0" layoutX="229.0" layoutY="355.0" onMouseClicked="#setSelected" pickOnBounds="true" preserveRatio="true">

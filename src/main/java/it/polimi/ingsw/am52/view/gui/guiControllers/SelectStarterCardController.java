@@ -8,8 +8,8 @@ import it.polimi.ingsw.am52.view.viewModel.EventType;
 import it.polimi.ingsw.am52.view.viewModel.ModelObserver;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
@@ -45,14 +45,23 @@ public class SelectStarterCardController extends ModelObserver {
     }
 
     public void continueClicked(){
+        ResponseStatus res = null;
         if(selected == frontStarterCard){
-            ClientConnection.placeStarterCard(ViewModelState.getInstance().getStarterCard(), CardSide.FRONT);
-            PlayingBoardController.setStartercardside(CardSide.FRONT);
+            res = ClientConnection.placeStarterCard(ViewModelState.getInstance().getStarterCard(), CardSide.FRONT);
+            PlayingBoardController.setStarterCardSide(CardSide.FRONT);
         }else if(selected == backStarterCard){
-            ClientConnection.placeStarterCard(ViewModelState.getInstance().getStarterCard(), CardSide.BACK);
-            PlayingBoardController.setStartercardside(CardSide.BACK);
+            res = ClientConnection.placeStarterCard(ViewModelState.getInstance().getStarterCard(), CardSide.BACK);
+            PlayingBoardController.setStarterCardSide(CardSide.BACK);
         }
-        StageController.changeScene("fxml/playing-board.fxml", "Game", this);
+
+        if (res == null || res.getErrorCode() != 0) {
+            Alert alertBox = new Alert(Alert.AlertType.ERROR);
+            alertBox.setContentText("Cant load the game due to error: " + (res == null ? "Select a card" : res.getErrorMessage()));
+            alertBox.show();
+            StageController.changeScene("fxml/menu-view.fxml", "Codex Naturalis", this);
+        } else {
+            StageController.changeScene("fxml/playing-board.fxml", "Game", this);
+        }
     }
 
     @Override

@@ -8,8 +8,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
 public class StageController {
     private static Stage appStage;
     public static Scene activeScene;
@@ -34,6 +32,7 @@ public class StageController {
 
         appStage.setScene(activeScene);
         appStage.setTitle(title);
+        appStage.setMaximized(true);
         appStage.show();
     }
 }

@@ -9,6 +9,7 @@ import it.polimi.ingsw.am52.model.game.GamePhase;
 import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
 import it.polimi.ingsw.am52.network.client.ClientConnection;
 import it.polimi.ingsw.am52.view.gui.GuiApplication;
+import it.polimi.ingsw.am52.view.viewModel.CardIds;
 import it.polimi.ingsw.am52.view.viewModel.EventType;
 import it.polimi.ingsw.am52.view.viewModel.ModelObserver;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
@@ -32,6 +33,10 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * The controller for the PlayingBoard view
+ * Uses {@link ModelObserver} to be updated with the {@link ViewModelState}
+ */
 public class PlayingBoardController extends ModelObserver {
     public Button chatButton;
     @FXML
@@ -65,21 +70,33 @@ public class PlayingBoardController extends ModelObserver {
 
     private ImageView pickedCard;
 
-    private static CardSide startercardside ;
+    private static CardSide starterCardSide;
 
     private CardSide selectedCardSide = CardSide.FRONT;
 
     private ImageView selected;
 
-    private BoardSlot selectedBoardSlot;
+    /**
+     * Static method to set the initial card on the playerBoard, used by the {@link SelectStarterCardController}
+     * @param starterCardSide the card side of the starter card
+     */
+    public static void setStarterCardSide(CardSide starterCardSide) {
+        PlayingBoardController.starterCardSide = starterCardSide;
+    }
 
+    /**
+     * Default initialization method. Called every time the FXML view is shown.
+     * FXML playing-board.fxml
+     * Initialize all board with data present on {@link ViewModelState}
+     */
     @FXML
     public void initialize() {
         ViewModelState.getInstance().registerObserver(this, EventType.PLACE_CARD,EventType.TAKE_CARD,EventType.DRAW_CARD, EventType.END_GAME);
 
-        String side= startercardside == CardSide.FRONT ? "fronts" : "backs";
-        selected = new ImageView(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/%s/%s.png".formatted(side,ViewModelState.getInstance().getStarterCard()+1)))));
-        placeCard(5,5);
+        String side= starterCardSide == CardSide.FRONT ? "fronts" : "backs";
+        var selected = new ImageView(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/%s/%s.png".formatted(side,ViewModelState.getInstance().getStarterCard()+1)))));
+        placeCard(5,5, selected);
+
         setVisibleGoldCards();
         setVisibleResourceCards();
         setCommonObjectives();
@@ -90,17 +107,138 @@ public class PlayingBoardController extends ModelObserver {
         setScoringBoard();
     }
 
-    public static void setStartercardside(CardSide startercardside) {
-        PlayingBoardController.startercardside = startercardside;
-    }
-
+    /**
+     * Method used to manage the currently selected card and side
+     * @param event The event bound with the click of one of the 3 player's hand card {@link #playerCard1} {@link #playerCard2} {@link #playerCard3}
+     */
     public void cardSelection(MouseEvent event){
+            //select the card side if the card is the same
             setSelectedCardSide(event);
+
+            //select the selected card if the card is different
             setSelected(event);
-            getCorner(event);
-            System.out.println(ViewModelState.getInstance().getPhase());
     }
 
+    /**
+     * Method used to change the side of the selected card
+     * @param event The event of click on card, if the card clicked is already selected then the {@link #selectedCardSide} will be toggled
+     */
+    public void setSelectedCardSide(MouseEvent event){
+        ImageView selectedCard = (ImageView) event.getSource();
+
+        // We re-selected the same card?
+        if(selectedCard == selected){
+            selectedCardSide = selectedCardSide == CardSide.FRONT ? CardSide.BACK : CardSide.FRONT;
+            String cardSide = selectedCardSide == CardSide.FRONT ? "fronts": "backs";
+            System.out.println(cardSide);
+            List<Integer> playerHand = ViewModelState.getInstance().getPlayerHand();
+
+            //Change only the image for selected card
+            if (selectedCard == playerCard1){
+                playerCard1.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/%s/%s.png".formatted(cardSide, playerHand.get(0)+1)))));
+            } else if (selectedCard == playerCard2) {
+                playerCard2.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/%s/%s.png".formatted(cardSide, playerHand.get(1)+1)))));
+            } else if (selectedCard == playerCard3) {
+                playerCard3.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/%s/%s.png".formatted(cardSide, playerHand.get(2)+1)))));
+            }
+        }else{
+            //if we select another card than we reload the default view for the cards in hand
+            setPlayerCards();
+        }
+    }
+
+    /**
+     * Set the selected card. If the card is the same nothing is done
+     * @param event The click event on the card
+     */
+    public void setSelected(MouseEvent event){
+        //if the card is the same then no need to set effect
+        if(selected != (ImageView) event.getSource()){
+            // remove effect on the previously selected
+            if (selected!=null) {
+                selected.setEffect(null);
+            }
+
+            //add effect to the new selected
+            Glow glow = new Glow(0.8);
+            selected = (ImageView) event.getSource();
+            selected.setEffect(glow);
+            selectedCardSide = CardSide.FRONT;
+        }
+    }
+
+    /**
+     * Method used to add one card image to the {@link #playingBoardGrid}
+     * @param row the row of the boardSlot in which place the card
+     * @param column the column of the board slot in which place the card
+     * @param newCard the image of the card placed
+     */
+    public void placeCard(int row, int column, ImageView newCard){
+        //add the card in the grid
+        ImageView image = new ImageView(newCard.getImage());
+        image.setFitHeight(64);
+        image.setFitWidth(87);
+        playingBoardGrid.add(image, column, row);
+        GridPane.setHalignment(image, HPos.CENTER);
+        GridPane.setValignment(image, VPos.CENTER);
+
+        //add the event on the new card to trigger the server call
+        image.addEventHandler(MouseEvent.MOUSE_CLICKED, this::placeCardServer);
+    }
+
+    /**
+     * Method bound to every new card placed. Fires the placeCard on server side via {@link ClientConnection#placeCard(int, CardSide, BoardSlot)}
+     * Gets the new boardSlot from the click event and the card to place is the currently selected
+     * After execution reset the selected card
+     * @param event The click event on one particular card
+     */
+    public void placeCardServer(MouseEvent event){
+        if(ViewModelState.getInstance().isClientTurn() && ViewModelState.getInstance().getPhase() == GamePhase.PLACING && selected!=null){
+            List<Integer> playerHand = ViewModelState.getInstance().getPlayerHand();
+            int rowIndex = GridPane.getRowIndex((ImageView) event.getSource());
+            int colIndex = GridPane.getColumnIndex((ImageView) event.getSource());
+            BoardSlot boardSlot = new BoardSlot(colIndex-5,rowIndex*-1+5);
+            BoardSlot selectedBoardSlot = boardSlot.getSlotAt(getCorner(event));
+
+            ResponseStatus response;
+            if (ViewModelState.getInstance().getAvailableSlots().contains(selectedBoardSlot)) {
+                if (selected == playerCard1){
+                    response = ClientConnection.placeCard(playerHand.get(0), selectedCardSide, selectedBoardSlot);
+                } else if (selected == playerCard2) {
+                    response = ClientConnection.placeCard(playerHand.get(1),selectedCardSide, selectedBoardSlot);
+                }else if (selected == playerCard3){
+                    response = ClientConnection.placeCard(playerHand.get(2),selectedCardSide, selectedBoardSlot);
+                } else {
+                    Alert alertBox = new Alert(Alert.AlertType.ERROR);
+                    alertBox.setContentText("Select a card!");
+                    alertBox.show();
+                    return;
+                }
+
+                if (response == null) {
+                    Alert alertBox = new Alert(Alert.AlertType.ERROR);
+                    alertBox.setContentText("Error on placeCard phase");
+                    alertBox.show();
+                    return;
+                } else if (response.getErrorCode() != 0) {
+                    Alert alertBox = new Alert(Alert.AlertType.ERROR);
+                    alertBox.setContentText("Error on placeCard: " + response.getErrorMessage());
+                    alertBox.show();
+                    return;
+                }
+
+                // reset the selected card if everything goes right
+                selected.setEffect(null);
+                selected = null;
+            }
+        }
+    }
+
+    /**
+     * Method used to get the relative location of the board with respect to the selected corner
+     * @param event the click event on the corner
+     * @return the relative location of the boardSlot
+     */
     public CornerLocation getCorner(MouseEvent event){
         ImageView selectedBoardCard = (ImageView) event.getSource();
         double x = event.getX();
@@ -121,43 +259,39 @@ public class PlayingBoardController extends ModelObserver {
         }
     }
 
-    public void setSelectedCardSide(MouseEvent event){
-        ImageView selectedCard = (ImageView) event.getSource();
-        if(selectedCard == selected){
-            selectedCardSide = selectedCardSide == CardSide.FRONT ? CardSide.BACK : CardSide.FRONT;
-            String cardSide = selectedCardSide == CardSide.FRONT ? "fronts": "backs";
-            System.out.println(cardSide);
-            List<Integer> playerHand = ViewModelState.getInstance().getPlayerHand();
-            if (selectedCard == playerCard1){
-                playerCard1.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/%s/%s.png".formatted(cardSide, playerHand.get(0)+1)))));
-            } else if (selectedCard == playerCard2) {
-                playerCard2.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/%s/%s.png".formatted(cardSide, playerHand.get(1)+1)))));
-            } else if (selectedCard == playerCard3) {
-                playerCard3.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/%s/%s.png".formatted(cardSide, playerHand.get(2)+1)))));
-            }
-        }else{
-            setPlayerCards();
-        }
-    }
-
+    /**
+     * Method used to pick up a card.
+     * If the turn is correct it triggers the pickup on server if it is the second time clicking the same card
+     * @param event The event bounded to all possible drawable cards {@link #visibleGoldCard1} {@link #visibleGoldCard2} {@link #goldCardsDeck} {@link #resourceCardsDeck} {@link #visibleResourceCard2} {@link #visibleResourceCard2}
+     */
     public void pickupCard(MouseEvent event){
         if (ViewModelState.getInstance().isClientTurn() && ViewModelState.getInstance().getPhase() == GamePhase.DRAWING) {
-            pickUpCardServer(event);
-            setPickedCard(event);
-            System.out.println(ViewModelState.getInstance().getPhase());
+            if(pickedCard == event.getSource()) {
+                pickUpCardServer(event);
+            } else {
+                setPickedCard(event);
+            }
         }
     }
 
+    /**
+     * Method needed to add double-click picking
+     * If the card is clicked for the second time nothing happens, otherwise it is selected
+     * @param event The event on one of the drawable cards.
+     */
     public void setPickedCard(MouseEvent event){
-        if(pickedCard != event.getSource()){
-            Glow glow = new Glow(0.8);
-            if (pickedCard!=null)pickedCard.setEffect(null);
-            pickedCard = (ImageView) event.getSource();
-            pickedCard.setEffect(glow);
-            System.out.println(pickedCard.getId());
-        }
+        Glow glow = new Glow(0.8);
+        if (pickedCard!=null)pickedCard.setEffect(null);
+        pickedCard = (ImageView) event.getSource();
+        pickedCard.setEffect(glow);
     }
 
+    /**
+     * Method to fire the draw or take card on server side via {@link ClientConnection#drawCard(DrawType)} or {@link ClientConnection#takeCard(int, DrawType)}
+     * Gets the type of draw from the input event
+     * After execution reset the picked card
+     * @param event The click event on one particular drawable  card
+     */
     public void pickUpCardServer(MouseEvent event){
         if (pickedCard == event.getSource()) {
             List<Integer> resourceCards = ViewModelState.getInstance().getVisibleResourceCards();
@@ -185,45 +319,18 @@ public class PlayingBoardController extends ModelObserver {
                 Alert alertBox = new Alert(Alert.AlertType.ERROR);
                 alertBox.setContentText("Error on draw phase");
                 alertBox.show();
+                return;
             }
+
+            // reset the picked card if everything goes right
+            pickedCard.setEffect(null);
+            pickedCard = null;
         }
     }
 
-    public void placeCardServer(MouseEvent event){
-        if(ViewModelState.getInstance().isClientTurn() && ViewModelState.getInstance().getPhase() == GamePhase.PLACING && selected!=null){
-            List<Integer> playerHand = ViewModelState.getInstance().getPlayerHand();
-            int rowIndex = GridPane.getRowIndex((ImageView) event.getSource());
-            int colIndex = GridPane.getColumnIndex((ImageView) event.getSource());
-            BoardSlot boardSlot = new BoardSlot(colIndex-5,rowIndex*-1+5);
-            selectedBoardSlot = boardSlot.getSlotAt(getCorner(event));
-            System.out.println(getCorner(event));
-            System.out.println(selectedBoardSlot.getVert());
-            System.out.println(selectedBoardSlot.getHoriz());
-            selected.setEffect(null);
-
-            ResponseStatus response;
-            if (ViewModelState.getInstance().getAvailableSlots().contains(selectedBoardSlot)) {
-                if (selected == playerCard1){
-                    response = ClientConnection.placeCard(playerHand.get(0), selectedCardSide, selectedBoardSlot);
-                } else if (selected == playerCard2) {
-                    response = ClientConnection.placeCard(playerHand.get(1),selectedCardSide,selectedBoardSlot);
-                }else{
-                    response = ClientConnection.placeCard(playerHand.get(2),selectedCardSide,selectedBoardSlot);
-                }
-
-                if (response == null) {
-                    Alert alertBox = new Alert(Alert.AlertType.ERROR);
-                    alertBox.setContentText("Error on placeCard phase");
-                    alertBox.show();
-                } else if (response.getErrorCode() != 0) {
-                    Alert alertBox = new Alert(Alert.AlertType.ERROR);
-                    alertBox.setContentText("Error on placeCard: " + response.getErrorMessage());
-                    alertBox.show();
-                }
-            }
-        }
-    }
-
+    /**
+     * Method to show the correct Image for all cards in player hand
+     */
     public void setPlayerCards(){
         List<Integer> playerHand = ViewModelState.getInstance().getPlayerHand();
         System.out.println(playerHand);
@@ -242,18 +349,27 @@ public class PlayingBoardController extends ModelObserver {
         }
     }
 
+    /**
+     * Method to set the image of the visible gold cards
+     */
     public void setVisibleGoldCards(){
         List<Integer> visibleGoldCards = ViewModelState.getInstance().getVisibleGoldCards();
         visibleGoldCard1.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/fronts/%s.png".formatted(visibleGoldCards.get(0)+1)))));
         visibleGoldCard2.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/fronts/%s.png".formatted(visibleGoldCards.get(1)+1)))));
     }
 
+    /**
+     * Method to set the image of the visible resource cards
+     */
     public void setVisibleResourceCards(){
         List<Integer> visibleResourceCards = ViewModelState.getInstance().getVisibleResourceCards();
         visibleResourceCard1.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/fronts/%s.png".formatted(visibleResourceCards.get(0)+1)))));
         visibleResourceCard2.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/fronts/%s.png".formatted(visibleResourceCards.get(1)+1)))));
     }
 
+    /**
+     * Method to set the visible top card on decks
+     */
     private void setVisibleDecks() {
         var idResource = ViewModelState.getInstance().getResourceDeckNextId();
         if (idResource == -1) {
@@ -270,27 +386,27 @@ public class PlayingBoardController extends ModelObserver {
         }
     }
 
+    /**
+     * Method to set the correct image on common objectives
+     */
     public void setCommonObjectives(){
         List<Integer> commonObjectives = ViewModelState.getInstance().getCommonObjectives();
         commonObjective1.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/fronts/%s.png".formatted(commonObjectives.get(0)+87)))));
         commonObjective2.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/fronts/%s.png".formatted(commonObjectives.get(1)+87)))));
     }
 
+    /**
+     * Method to set the correct image on secret objective
+     */
     public void setSecretObjective(){
         int secretObjectiveCard = ViewModelState.getInstance().getSecretObjective();
         secretObjective.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/fronts/%s.png".formatted(secretObjectiveCard+87)))));
     }
 
-    public void placeCard(int row, int column){
-        ImageView image = new ImageView(selected.getImage());
-        image.setFitHeight(64);
-        image.setFitWidth(87);
-        playingBoardGrid.add(image, column, row);
-        GridPane.setHalignment(image, HPos.CENTER);
-        GridPane.setValignment(image, VPos.CENTER);
-        image.addEventHandler(MouseEvent.MOUSE_CLICKED, this::placeCardServer);
-    }
 
+    /**
+     * Method to update the Scoring Board
+     */
     public void setScoringBoard(){
         Map<String, Integer> scores = ViewModelState.getInstance().getScoreboard();
         scoringBoard.getChildren().clear();
@@ -313,6 +429,11 @@ public class PlayingBoardController extends ModelObserver {
         });
     }
 
+    /**
+     * Method bound to "ShowBoard" button to open the board of an opponent
+     * @param nickname the nickname of the opponent board
+     * @throws IOException if it is impossible to load the fxml
+     */
     private void openOpponentBoard(String nickname) throws IOException {
         Stage modalStage = new Stage();
         modalStage.initModality(Modality.APPLICATION_MODAL);
@@ -331,6 +452,9 @@ public class PlayingBoardController extends ModelObserver {
         modalStage.showAndWait();
     }
 
+    /**
+     * Method bound to "Chat" button, used to open the chat Modal
+     */
     @FXML
     private void toggleChat() {
         Stage modalStage = new Stage();
@@ -354,28 +478,33 @@ public class PlayingBoardController extends ModelObserver {
         modalStage.showAndWait();
     }
 
-    public void setSelected(MouseEvent event){
-        if(selected != (ImageView) event.getSource()){
-            Glow glow = new Glow(0.8);
-            if (selected!=null)selected.setEffect(null);
-            selected = (ImageView) event.getSource();
-            selected.setEffect(glow);
-            selectedCardSide = CardSide.FRONT;
-            System.out.println(selected.getId());
-            System.out.println(ViewModelState.getInstance().getPhase());
-        }
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void updatePlaceCard() {
         Platform.runLater(() -> {
-            placeCard(selectedBoardSlot.getVert()* -1 +5, selectedBoardSlot.getHoriz()+5);
+            if (ViewModelState.getInstance().isClientTurn()) {
+                Map.Entry<BoardSlot, CardIds> newCard = ViewModelState.getInstance().getBoard().lastEntry();
+                String cardSide = (newCard.getValue().cardFace == 0) ? "fronts" : "backs";
+
+                ImageView cardImage = new ImageView(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/%s/%s.png".formatted(cardSide,newCard.getValue().cardId+1)))));
+
+                placeCard(newCard.getKey().getVert() * -1 + 5,
+                        newCard.getKey().getHoriz() + 5,
+                        cardImage
+                        );
+
+                setPlayerCards();
+            }
+
             setScoringBoard();
-            setPlayerCards();
-            if (ViewModelState.getInstance().getPhase() != GamePhase.PLACING) if (selected!=null)selected.setEffect(null);
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void updateTakeCard() {
         Platform.runLater(() -> {
@@ -386,6 +515,9 @@ public class PlayingBoardController extends ModelObserver {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void updateDrawCard() {
         Platform.runLater(() -> {
@@ -395,6 +527,9 @@ public class PlayingBoardController extends ModelObserver {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void updateEndGame() {
         Platform.runLater(() -> {

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am52.view.gui.guiControllers;
 
+import it.polimi.ingsw.am52.json.response.ResponseStatus;
 import it.polimi.ingsw.am52.network.client.ClientConnection;
 import it.polimi.ingsw.am52.view.gui.GuiApplication;
 import it.polimi.ingsw.am52.view.viewModel.EventType;
@@ -7,6 +8,7 @@ import it.polimi.ingsw.am52.view.viewModel.ModelObserver;
 import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
@@ -45,11 +47,19 @@ public class SelectObjectiveController extends ModelObserver {
     }
 
     public void continueClicked(){
+        ResponseStatus res = null;
         if(selected== secretObjective1){
-            ClientConnection.selectObjective(ViewModelState.getInstance().getPlayerObjectives().get(0));
-            StageController.changeScene("fxml/select-starter-card.fxml", "Select start Card", this);
+            res =ClientConnection.selectObjective(ViewModelState.getInstance().getPlayerObjectives().get(0));
         }else if(selected== secretObjective2){
-            ClientConnection.selectObjective(ViewModelState.getInstance().getPlayerObjectives().get(1));
+            res = ClientConnection.selectObjective(ViewModelState.getInstance().getPlayerObjectives().get(1));
+        }
+
+        if (res == null || res.getErrorCode() != 0) {
+            Alert alertBox = new Alert(Alert.AlertType.ERROR);
+            alertBox.setContentText("Cant load the game due to error: " + (res == null ? "Select a card" : res.getErrorMessage()));
+            alertBox.show();
+            StageController.changeScene("fxml/menu-view.fxml", "Codex Naturalis", this);
+        } else {
             StageController.changeScene("fxml/select-starter-card.fxml", "Select start Card", this);
         }
     }
