@@ -1,5 +1,6 @@
 package it.polimi.ingsw.modelTests.gameTests;
 
+import it.polimi.ingsw.am52.exceptions.PhaseException;
 import it.polimi.ingsw.am52.model.game.*;
 import org.junit.jupiter.api.*;
 
@@ -75,5 +76,28 @@ public class PhaseTest {
         //We call the method to change the phase, which now should be again PLACING
         phase.next(manager);
         assertEquals(GamePhase.PLACING, manager.getStatus());
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("ENDING phase test")
+    public void endingPhaseTest() {
+        assertEquals(GamePhase.PLACING, manager.getStatus());
+        //Update the used phase
+        phase = new PlacingPhase(phase);
+        phase.next(manager);
+        assertEquals(GamePhase.DRAWING, manager.getStatus());
+        //Only from the drawing phase we can reach the EndingPhase
+        phase = new DrawingPhase(phase);
+        phase.next(manager);
+        //Now we will obtain the placing phase, because the game in GameManager is not over yet
+        assertEquals(GamePhase.PLACING, manager.getStatus());
+        //If we try to update to an Ending Phase, we will receive an exception
+        phase = new EndingPhase(phase);
+        PhaseException exception = assertThrows(PhaseException.class, () -> phase.next(manager));
+        //EXCEPTION: The Ending phase isn't reachable yet
+        String expectedMessage = "Incorrect phase";
+        String actualMessage = exception.getMessage();
+        assertEquals(expectedMessage, actualMessage);
     }
 }
