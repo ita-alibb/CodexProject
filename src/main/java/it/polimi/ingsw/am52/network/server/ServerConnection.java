@@ -52,6 +52,10 @@ public class ServerConnection extends UnicastRemoteObject implements Accepter, R
      * The TCP port number of the server.
      */
     private final int tcpPort;
+    /**
+     * The RMI port number of the server.
+     */
+    private final int rmiPort;
 
     /**
      * The registry in which the RMI objects are exposed
@@ -90,7 +94,10 @@ public class ServerConnection extends UnicastRemoteObject implements Accepter, R
             // Store the tcp port number (it may be automatically allocated).
             this.tcpPort = this.serverSocket.getLocalPort();
 
-            this.registry = LocateRegistry.createRegistry(settings.getRmiPort());
+            // Store the rmi port number.
+            this.rmiPort = settings.getRmiPort();
+            this.registry = LocateRegistry.createRegistry(getRmiPort());
+
 
             // Bind the remote object's stub in the registry
             this.registry.rebind(STUB_NAME, this);
@@ -100,7 +107,12 @@ public class ServerConnection extends UnicastRemoteObject implements Accepter, R
 
             // Display TCP port number (this is not a log message, but an application output).
             System.out.println(
-                    String.format("Server TCP listening on port n. %d", this.tcpPort)
+                    String.format("Server TCP listening on port n. %d", getTcpPort())
+            );
+
+            // Display RMI port number (this is not a log message, but an application output).
+            System.out.println(
+                    String.format("Server RMI listening on port n. %d", getRmiPort())
             );
 
         } catch (Exception e) {
@@ -232,6 +244,22 @@ public class ServerConnection extends UnicastRemoteObject implements Accepter, R
 
         System.out.println("Client " + newId + " connected via RMI");
         return newId;
+    }
+
+    /**
+     *
+     * @return The TCP port number of this server.
+     */
+    public int getTcpPort() {
+        return this.tcpPort;
+    }
+
+    /**
+     *
+     * @return The RMI port number of this server.
+     */
+    public int getRmiPort() {
+        return this.rmiPort;
     }
 
     /**
