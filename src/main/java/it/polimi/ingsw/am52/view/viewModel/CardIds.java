@@ -124,22 +124,22 @@ public class CardIds {
         secondFront.loadFace();
         secondBack.loadFace();
 
-        System.out.printf( "│ %-68s │%n", "Card Id: " + firstFront.cardId);
-        System.out.printf( "│ %-23s   %-43s│%n", "Front face:", "Back face:");
+        System.out.printf( "│ %-68s%n", "Card Id: " + firstFront.cardId);
+        System.out.printf( "│ %-23s   %-43s%n", "Front face:", "Back face:");
         var resListFront1 = firstFront.getCardAsArrayString(false, false, false, false);
         var resListBack1 = firstBack.getCardAsArrayString(false, false, false, false);
 
         for (int i = 0; i < resListFront1.length; i++) {
-            System.out.printf("│ " + resListFront1[i] + "   " + resListBack1[i] + "%20s│%n", "");
+            System.out.printf("│ " + resListFront1[i] + "   " + resListBack1[i] + "%20s%n", "");
         }
 
-        System.out.printf( "│ %-68s │%n", "Card Id: " + secondFront.cardId);
-        System.out.printf( "│ %-23s   %-43s│%n", "Front face:", "Back face:");
+        System.out.printf( "│ %-68s %n", "Card Id: " + secondFront.cardId);
+        System.out.printf( "│ %-23s   %-43s%n", "Front face:", "Back face:");
         var resListFront2 = secondFront.getCardAsArrayString(false, false, false, false);
         var resListBack2 = secondBack.getCardAsArrayString(false, false, false, false);
 
         for (int i = 0; i < resListFront1.length; i++) {
-            System.out.printf("│ " + resListFront2[i] + "   " + resListBack2[i] + "%20s│%n", "");
+            System.out.printf("│ " + resListFront2[i] + "   " + resListBack2[i] + "%20s%n", "");
         }
     }
 
@@ -157,22 +157,22 @@ public class CardIds {
         secondFront.loadFace();
         secondBack.loadFace();
 
-        System.out.printf( "│ %-68s │%n", "Card Id: " + firstFront.cardId);
-        System.out.printf( "│ %-23s   %-43s│%n", "Front face:", "Back face:");
+        System.out.printf( "│ %-68s%n", "Card Id: " + firstFront.cardId);
+        System.out.printf( "│ %-23s   %-43s%n", "Front face:", "Back face:");
         var goldListFront1 = firstFront.getCardAsArrayString(false, false, false, false);
         var goldListBack1 = firstBack.getCardAsArrayString(false, false, false, false);
 
         for (int i = 0; i < goldListFront1.length; i++) {
-            System.out.printf("│ " + goldListFront1[i] + "   " + goldListBack1[i] + "%20s│%n", "");
+            System.out.printf("│ " + goldListFront1[i] + "   " + goldListBack1[i] + "%20s%n", "");
         }
 
-        System.out.printf( "│ %-68s │%n", "Card Id: " + secondFront.cardId);
-        System.out.printf( "│ %-23s   %-43s│%n", "Front face:", "Back face:");
+        System.out.printf( "│ %-68s %n", "Card Id: " + secondFront.cardId);
+        System.out.printf( "│ %-23s   %-43s%n", "Front face:", "Back face:");
         var goldListFront2 = secondFront.getCardAsArrayString(false, false, false, false);
         var goldListBack2 = secondBack.getCardAsArrayString(false, false, false, false);
 
         for (int i = 0; i < goldListFront1.length; i++) {
-            System.out.printf("│ " + goldListFront2[i] + "   " + goldListBack2[i] + "%20s│%n", "");
+            System.out.printf("│ " + goldListFront2[i] + "   " + goldListBack2[i] + "%20s%n", "");
         }
     }
 
@@ -310,7 +310,7 @@ public class CardIds {
                 "",
                 getSymbol(this.face.getTopRightCorner(), coveredTR));
 
-        result[3] = result[3].formatted(getTotalRequiredResources(this.face.getPermanentResources()));
+        result[3] = result[3].formatted(getResourceCounterString(this.face.getPermanentResources()));
 
         result[5] = result[5].formatted(
                 getSymbol(this.face.getBottomLeftCorner(), coveredBL),
@@ -344,7 +344,7 @@ public class CardIds {
                     KingdomCard.getCardWithId(this.cardId).getBackFace().getPoints(),
                     getSymbol(this.face.getTopRightCorner(), coveredTR)
             );
-            result[3] = result[3].formatted(getTotalRequiredResources(this.face.getPermanentResources()));
+            result[3] = result[3].formatted(getResourceCounterString(this.face.getPermanentResources()));
         }
 
         result[5] = result[5].formatted(
@@ -365,10 +365,10 @@ public class CardIds {
      * @return              The array completely formatted
      */
     private String[] getGoldCardAsArrayString(boolean coveredTL, boolean coveredTR, boolean coveredBR, boolean coveredBL, String[] result){
-        result[3] = result[3].formatted(this.getSymbol(this.face.getPermanentResources()));
+        result[3] = result[3].formatted(getResourceCounterString(this.face.getPermanentResources()));
 
         if (this.cardFace == 0) {
-            String totalRequiredResources = getTotalRequiredResources(GoldCard.getCardWithId(this.cardId).getFrontFace().getRequiredResources());
+            String totalRequiredResources = getResourceCounterString(GoldCard.getCardWithId(this.cardId).getFrontFace().getRequiredResources());
 
             result[1] = result[1].formatted(
                     getSymbol(this.face.getTopLeftCorner(), coveredTL),
@@ -488,7 +488,7 @@ public class CardIds {
      * @param requiredResources     The required resources associated to the card
      * @return                      The String formatted
      */
-    private static String getTotalRequiredResources(ResourcesCounter requiredResources) {
+    private static String getResourceCounterString(ResourcesCounter requiredResources) {
         int plantRequired = requiredResources.getPlantCount();
         int animalRequired = requiredResources.getAnimalCount();
         int insectRequired = requiredResources.getInsectCount();

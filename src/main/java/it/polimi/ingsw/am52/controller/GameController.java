@@ -239,7 +239,6 @@ public class GameController {
                     this.game.peekNextCard(DrawType.GOLD)
             );
         } catch (Exception e) {
-            // TODO: better logging
             System.out.println("Exception thrown on GameController.initGame: " + e.getMessage());
             response = new InitGameResponseData(new ResponseStatus(this.game.getStatusResponse(), 503, "Method not working"));
         }
@@ -309,7 +308,6 @@ public class GameController {
             this.game = new GameManager(this.lobby.getPlayersNickname());
             return true;
         } catch (Exception e) {
-            //TODO: better logging
             System.out.println("Exception on startGame: " + e.getMessage());
             return false;
         }

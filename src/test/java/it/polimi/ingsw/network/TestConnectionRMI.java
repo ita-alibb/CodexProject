@@ -7,7 +7,6 @@ import it.polimi.ingsw.am52.network.client.Connection;
 import it.polimi.ingsw.am52.network.client.RemoteConnection;
 import it.polimi.ingsw.am52.network.server.rmi.Accepter;
 import it.polimi.ingsw.am52.network.server.rmi.ActionsRMI;
-import it.polimi.ingsw.am52.view.viewModel.ViewModelState;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -86,7 +85,6 @@ public class TestConnectionRMI extends UnicastRemoteObject implements RemoteConn
         try {
             return this.view.createLobby(data);
         } catch (RemoteException e) {
-            // TODO: handle remote exception
             return null;
         }
     }
@@ -101,7 +99,6 @@ public class TestConnectionRMI extends UnicastRemoteObject implements RemoteConn
         try {
             return this.view.joinLobby(data);
         } catch (RemoteException e) {
-            // TODO: handle remote exception
             return null;
         }
     }
@@ -114,7 +111,6 @@ public class TestConnectionRMI extends UnicastRemoteObject implements RemoteConn
         try {
             return this.view.listLobby();
         } catch (RemoteException e) {
-            // TODO: handle remote exception
             return null;
         }
     }
@@ -127,7 +123,6 @@ public class TestConnectionRMI extends UnicastRemoteObject implements RemoteConn
         try {
             return this.view.leaveGame();
         } catch (RemoteException e) {
-            // TODO: handle remote exception
             return null;
         }
     }
@@ -140,7 +135,6 @@ public class TestConnectionRMI extends UnicastRemoteObject implements RemoteConn
         try {
             return this.view.initGame();
         } catch (RemoteException e) {
-            // TODO: handle remote exception
             return null;
         }
     }
@@ -155,7 +149,6 @@ public class TestConnectionRMI extends UnicastRemoteObject implements RemoteConn
         try {
             return this.view.selectObjective(data);
         } catch (RemoteException e) {
-            // TODO: handle remote exception
             return null;
         }
     }
@@ -169,7 +162,6 @@ public class TestConnectionRMI extends UnicastRemoteObject implements RemoteConn
         try {
             return this.view.placeStarterCard(data);
         } catch (RemoteException e) {
-            // TODO: handle remote exception
             return null;
         }
     }
@@ -183,7 +175,6 @@ public class TestConnectionRMI extends UnicastRemoteObject implements RemoteConn
         try {
             return this.view.placeCard(data);
         } catch (RemoteException e) {
-            //TODO: handle remote exception
             return null;
         }
     }
@@ -197,7 +188,6 @@ public class TestConnectionRMI extends UnicastRemoteObject implements RemoteConn
         try {
             return this.view.drawCard(data);
         } catch (RemoteException e) {
-            //TODO: handle remote exception
             return null;
         }
     }
@@ -212,7 +202,6 @@ public class TestConnectionRMI extends UnicastRemoteObject implements RemoteConn
         try {
             return this.view.takeCard(data);
         } catch (RemoteException e) {
-            //TODO: handle remote exception
             return null;
         }
     }
@@ -225,7 +214,6 @@ public class TestConnectionRMI extends UnicastRemoteObject implements RemoteConn
         try {
             return this.view.endGame();
         } catch (RemoteException e) {
-            //TODO: handle remote exception
             return null;
         }
     }
@@ -240,7 +228,6 @@ public class TestConnectionRMI extends UnicastRemoteObject implements RemoteConn
         try {
             return this.view.chat(data);
         } catch (RemoteException e) {
-            //TODO: handle remote exception
             return null;
         }
     }

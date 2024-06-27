@@ -13,7 +13,6 @@ import it.polimi.ingsw.am52.settings.ServerSettings;
 import it.polimi.ingsw.am52.settings.VerbosityLevel;
 
 import java.io.IOException;
-import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.rmi.RemoteException;
@@ -189,7 +188,7 @@ public class ServerConnection extends UnicastRemoteObject implements Accepter, R
     /**
      * Endless loop method, listening to client to connect to the ServerSocket.
      * When a client tries to connect to the server a new unique ID is generated and a new ClientHandlerTCP is created.
-     * The Handler object is on server side, TODO: on client side there is another class that handles the send of request and response.
+     * The Handler object is on server side.
      */
     @Override
     public void run() {

@@ -86,7 +86,7 @@ public class ClientHandlerTCP implements ClientHandler {
                             try {
                                 this.sendMessage(res);
                             } catch (Exception e) {
-                                throw new RuntimeException(e); // TODO: Error handling
+                                throw new RuntimeException(e);
                             }
                         }
                     } catch (NoSuchMethodException e) {

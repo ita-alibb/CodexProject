@@ -67,22 +67,21 @@ public class TuiCommonBoardView extends TuiView {
     protected void printView() {
         System.out.println("┌────────────────────────────────────────────────────────────────────────────┐");
         System.out.printf( "│ Current turn:%3d                          %32s │%n", ViewModelState.getInstance().getTurn(), "Current player: " + ViewModelState.getInstance().getCurrentPlayer());
-        System.out.println("├────────────────────────────────────────────────────────────────────────────┤");
-        System.out.printf( "│ %-74s │%n", "Resource card deck: ");
+        System.out.println("└────────────────────────────────────────────────────────────────────────────┘");
+        System.out.printf( "│ %-75s%n", "Resource card deck: ");
         CardIds.printBack(ViewModelState.getInstance().getResourceDeckNextId());
-        System.out.printf( "│ %-74s │%n", "Gold card deck: ");
+        System.out.printf( "│ %-75s%n", "Gold card deck: ");
         CardIds.printBack(ViewModelState.getInstance().getGoldDeckNextId());
-        System.out.printf( "│ %-74s │%n", "Visible resource cards: ");
+        System.out.printf( "│ %-75s%n", "Visible resource cards: ");
         CardIds.printVisibleResourceCards();
-        System.out.printf( "│ %-74s │%n", "Visible gold cards: ");
+        System.out.printf( "│ %-75s%n", "Visible gold cards: ");
         CardIds.printVisibleGoldCards();
-        System.out.printf( "│ %-74s │%n", "Common objectives: ");
+        System.out.printf( "│ %-75s%n", "Common objectives: ");
         CardIds.printTwoObjectives(
                 new CardIds(ViewModelState.getInstance().getCommonObjectives().getFirst()),
                 new CardIds(ViewModelState.getInstance().getCommonObjectives().getLast())
         );
         System.out.printf( "│ %-74s │%n", "Scores: " + ViewModelState.getInstance().getScoreboard().toString());
-        System.out.println("└────────────────────────────────────────────────────────────────────────────┘");
     }
 
     /**

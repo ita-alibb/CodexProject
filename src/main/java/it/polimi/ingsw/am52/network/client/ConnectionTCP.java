@@ -33,7 +33,7 @@ public class ConnectionTCP implements Connection, Runnable{
 
     private final ExecutorService broadcastThread = Executors.newSingleThreadExecutor();
 
-    private final LinkedBlockingQueue<BaseResponseData> broadcastQueue = new LinkedBlockingQueue<BaseResponseData>();
+    private final LinkedBlockingQueue<BaseResponseData> broadcastQueue = new LinkedBlockingQueue<>();
 
     /**
      * The object needed to pass the response between two threads
@@ -59,7 +59,6 @@ public class ConnectionTCP implements Connection, Runnable{
      */
     @Override
     public void run() {
-        // TODO: debug log
         System.out.println("Listening Thread started");
 
         // Start thread to send broadcast messages

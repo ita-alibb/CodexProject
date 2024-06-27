@@ -2,8 +2,6 @@ package it.polimi.ingsw.am52.model.game;
 
 import it.polimi.ingsw.am52.exceptions.*;
 import it.polimi.ingsw.am52.json.dto.DrawType;
-import it.polimi.ingsw.am52.json.response.DrawCardResponseData;
-import it.polimi.ingsw.am52.json.response.ResponseStatus;
 import it.polimi.ingsw.am52.model.cards.*;
 import it.polimi.ingsw.am52.model.decks.Deck;
 import it.polimi.ingsw.am52.model.decks.RandomDealer;
@@ -162,7 +160,6 @@ public class GameManager {
         try{
             return this.players.stream().filter(p -> p.getNickname().equals(nickname)).findFirst().get();
         } catch (Exception e){
-            //TODO: maybe better handling
             return null;
         }
     }
@@ -175,7 +172,6 @@ public class GameManager {
         try{
             return this.players.stream().filter(p -> p.getNickname().equals(nickname)).findFirst().get();
         } catch (Exception e){
-            //TODO: maybe better handling
             return null;
         }
     }
@@ -188,7 +184,6 @@ public class GameManager {
         try{
             return this.players.stream().filter(p -> p.getNickname().equals(nickname)).findFirst().get();
         } catch (Exception e){
-            //TODO: maybe better handling
             return null;
         }
     }
@@ -201,7 +196,6 @@ public class GameManager {
         try{
             return this.players.stream().filter(p -> p.getNickname().equals(nickname)).findFirst().get();
         } catch (Exception e){
-            //TODO: maybe better handling
             return null;
         }
     }
@@ -218,7 +212,6 @@ public class GameManager {
             var index = (this.players.indexOf(currPlayer) + 1) % this.players.size();
             return this.players.get(index).getNickname();
         } catch (Exception e){
-            //TODO: maybe better handling
             return null;
         }
     }
@@ -264,13 +257,6 @@ public class GameManager {
     }
 
     /**
-     * @return true if it's the last turn, false otherwise
-     */
-    public boolean isLastTurn() {
-        return this.phase.isLastTurn();
-    }
-
-    /**
      * Method used to show to player the two objective to choose
      * @param nickname the player
      * @return the player's objectives options
@@ -279,7 +265,6 @@ public class GameManager {
         try{
             return this.players.stream().filter(p -> p.getNickname().equals(nickname)).findFirst().get().getObjectiveOptions();
         } catch (Exception e){
-            //TODO: maybe better handling
             return null;
         }
     }
@@ -369,7 +354,7 @@ public class GameManager {
     }
 
     /**
-     * TODO: must be improved, not send the actual object
+     * @return The phase of the game
      */
     public Phase getStatusResponse() {
         return this.phase;

@@ -55,13 +55,19 @@ public class TuiChatView extends TuiView {
     @Override
     protected void printView() {
         var chatRecords = ViewModelState.getInstance().getChatRecords();
-        var opponents = String.join(" ", ViewModelState.getInstance().getNicknames().stream().filter(n -> !n.equals(ViewModelState.getInstance().getClientNickname())).toList());
+        //var players = String.join(", ", ViewModelState.getInstance().getNicknames().stream().filter(n -> !n.equals(ViewModelState.getInstance().getClientNickname())).toList());
+        var players = String.join(", ", ViewModelState.getInstance().getNicknames().stream().map(n -> {
+            if (n.equals(ViewModelState.getInstance().getClientNickname())) {
+                n = n + " (YOU)";
+            }
+            return n;
+        }).toList());
 
-        System.out.println("┌────────────────────────────────────────────────────────────────────────────┐");
-        System.out.println("│                                 CHAT                                       │");
-        System.out.println("├────────────────────────────────────────────────────────────────────────────┤");
-        System.out.printf("│Nicks: %-69s│%n", opponents);
-        System.out.println("├────────────────────────────────────────────────────────────────────────────┘");
+        System.out.println("┌──────────────────────────────────────────────────────────────────────────────────┐");
+        System.out.println("│                                    CHAT                                          │");
+        System.out.println("├──────────────────────────────────────────────────────────────────────────────────┤");
+        System.out.printf( "│Nicks: %-75s│%n", players);
+        System.out.println("└──────────────────────────────────────────────────────────────────────────────────┘");
 
 
         for (var chatRecord : chatRecords) {
@@ -74,15 +80,15 @@ public class TuiChatView extends TuiView {
      */
     @Override
     protected void printCommands() {
-        System.out.println("┌──────────────────────────────────────────────────────────────────────┐");
-        System.out.println("│                             COMMANDS                                 │");
-        System.out.println("├──────────────────────────────────────────────────────────────────────┤");
-        System.out.println("│ - (O) see opponent board -> see the board of a specific opponent     │");
-        System.out.println("│ - (C) common board -> switch to the common board view                │");
-        System.out.println("│ - (B) board -> show your game board                                  │");
-        System.out.println("│ - (M) message -> send message to EVERYONE                            │");
-        System.out.println("│ - (W) whisper -> send message to specific player                     │");
-        System.out.println("└──────────────────────────────────────────────────────────────────────┘");
+        System.out.println("┌────────────────────────────────────────────────────────────────────────────┐");
+        System.out.println("│                                COMMANDS                                    │");
+        System.out.println("├────────────────────────────────────────────────────────────────────────────┤");
+        System.out.println("│ - (O) see opponent board -> see the board of a specific opponent           │");
+        System.out.println("│ - (C) common board -> switch to the common board view                      │");
+        System.out.println("│ - (B) board -> show your game board                                        │");
+        System.out.println("│ - (M) message -> send message to EVERYONE                                  │");
+        System.out.println("│ - (W) whisper -> send message to specific player                           │");
+        System.out.println("└────────────────────────────────────────────────────────────────────────────┘");
     }
 
     //endregion

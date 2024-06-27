@@ -333,7 +333,6 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
                 try {
                     handler.sendMessage(response);
                 } catch (Exception e) {
-                    // TODO: Better logging
                     System.out.println("Exception:" + e.getMessage());
                 }
             }
@@ -355,7 +354,6 @@ public class VirtualView extends UnicastRemoteObject implements ActionsRMI {
             try {
                 handler.sendMessage(response);
             } catch (Exception e) {
-                // TODO: Better logging
                 System.out.println("Exception:" + e.getMessage());
             }
         }

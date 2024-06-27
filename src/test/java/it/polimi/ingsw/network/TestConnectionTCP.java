@@ -39,7 +39,7 @@ public class TestConnectionTCP implements Connection, Runnable {
 
     private final ExecutorService broadcastThread = Executors.newSingleThreadExecutor();
 
-    private final LinkedBlockingQueue<BaseResponseData> broadcastQueue = new LinkedBlockingQueue<BaseResponseData>();
+    private final LinkedBlockingQueue<BaseResponseData> broadcastQueue = new LinkedBlockingQueue<>();
 
     /**
      * The object needed to pass the response between two threads
@@ -58,7 +58,6 @@ public class TestConnectionTCP implements Connection, Runnable {
 
         this.responseQueue = new SynchronousQueue<>();
 
-        // TODO: debug log
         System.out.println("initialized");
     }
 
@@ -67,7 +66,6 @@ public class TestConnectionTCP implements Connection, Runnable {
      */
     @Override
     public void run() {
-        // TODO: debug log
         System.out.println("Listening Thread started");
 
         /* Thread not start to use it in test

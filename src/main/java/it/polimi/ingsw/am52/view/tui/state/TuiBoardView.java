@@ -67,14 +67,15 @@ public class TuiBoardView extends TuiView {
         if (ViewModelState.getInstance().getViewTypeNickname().equals(ViewModelState.getInstance().getClientNickname())) {
             System.out.println("│                                 Your Board                                 │");
         } else {
-            System.out.printf("│                     %16s's board                             │%n", ViewModelState.getInstance().getViewTypeNickname());
+            System.out.printf("│                       %16s's board                             │%n", ViewModelState.getInstance().getViewTypeNickname());
         }
         System.out.println("└────────────────────────────────────────────────────────────────────────────┘");
 
         printBoard();
         if (ViewModelState.getInstance().isClientView()) {
+            System.out.println("├────────────────────────────────────────────────────────────────────────────");
             printHand();
-            System.out.printf("│ %-74s │%n", "Your secret objective: " + secretObjectiveId);
+            System.out.printf("│ %-75s%n", "Your secret objective: " + secretObjectiveId);
             CardIds.printSingleObjective(new CardIds(ViewModelState.getInstance().getSecretObjective()));
         }
     }
@@ -176,7 +177,7 @@ public class TuiBoardView extends TuiView {
             }
 
             for (String r : row) {
-                System.out.println(r);
+                System.out.println("│ " + r);
             }
         }
     }
@@ -187,11 +188,11 @@ public class TuiBoardView extends TuiView {
     private void printHand() {
         var hand = ViewModelState.getInstance().getPlayerHand();
 
-        System.out.print("│Your hand: ");
+        System.out.print("│ Your hand: ");
         for (int index : hand ){
-            System.out.printf("%-20s ", index);
+            System.out.printf("%-23s ", index);
         }
-        System.out.printf("│%n");
+        System.out.printf("%n");
 
         var frontHand = hand.stream()
                 .map(c -> new CardIds(c, 0))
@@ -209,23 +210,18 @@ public class TuiBoardView extends TuiView {
                 .map(c -> c.getCardAsArrayString(false, false, false, false))
                 .toList();
 
-        System.out.printf("│ %-74s │%n", "Front:");
+        System.out.printf("│ %-75s%n", "Front:");
+        printHandCards(frontHandList);
+
+        System.out.printf("│ %-75s%n", "Back:");
+        printHandCards(backHandList);
+    }
+
+    private void printHandCards(List<String[]> frontHandList) {
         for (int i = 0; i < CardIds.TEMPLATE.length; i++) {
             StringBuilder row = new StringBuilder();
 
             for (String[] card : frontHandList) {
-                row.append(" ");
-                row.append(card[i]);
-                row.append(" ");
-            }
-            System.out.printf("│%s %n", row);
-        }
-
-        System.out.printf("│ %-74s │%n", "Back:");
-        for (int i = 0; i < CardIds.TEMPLATE.length; i++) {
-            StringBuilder row = new StringBuilder();
-
-            for (String[] card : backHandList) {
                 row.append(" ");
                 row.append(card[i]);
                 row.append(" ");

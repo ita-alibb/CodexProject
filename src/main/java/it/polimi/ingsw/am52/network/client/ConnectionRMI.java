@@ -117,7 +117,6 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
         try {
             return this.view.createLobby(data);
         } catch (RemoteException e) {
-            // TODO: handle remote exception
             return null;
         }
     }
@@ -132,7 +131,6 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
         try {
             return this.view.joinLobby(data);
         } catch (RemoteException e) {
-            // TODO: handle remote exception
             return null;
         }
     }
@@ -145,7 +143,6 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
         try {
             return this.view.listLobby();
         } catch (RemoteException e) {
-            // TODO: handle remote exception
             return null;
         }
     }
@@ -158,7 +155,6 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
         try {
             return this.view.leaveGame();
         } catch (RemoteException e) {
-            // TODO: handle remote exception
             return null;
         }
     }
@@ -171,7 +167,6 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
         try {
             return this.view.initGame();
         } catch (RemoteException e) {
-            // TODO: handle remote exception
             return null;
         }
     }
@@ -186,7 +181,6 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
         try {
             return this.view.selectObjective(data);
         } catch (RemoteException e) {
-            // TODO: handle remote exception
             return null;
         }
     }
@@ -200,7 +194,6 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
         try {
             return this.view.placeStarterCard(data);
         } catch (RemoteException e) {
-            // TODO: handle remote exception
             return null;
         }
     }
@@ -214,7 +207,6 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
         try {
             return this.view.placeCard(data);
         } catch (RemoteException e) {
-            //TODO: handle remote exception
             return null;
         }
     }
@@ -228,7 +220,6 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
         try {
             return this.view.drawCard(data);
         } catch (RemoteException e) {
-            //TODO: handle remote exception
             return null;
         }
     }
@@ -243,7 +234,6 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
         try {
             return this.view.takeCard(data);
         } catch (RemoteException e) {
-            //TODO: handle remote exception
             return null;
         }
     }
@@ -256,7 +246,6 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
         try {
             return this.view.endGame();
         } catch (RemoteException e) {
-            //TODO: handle remote exception
             return null;
         }
     }
@@ -271,7 +260,6 @@ public class ConnectionRMI extends UnicastRemoteObject implements RemoteConnecti
         try {
             return this.view.chat(data);
         } catch (RemoteException e) {
-            //TODO: handle remote exception
             return null;
         }
     }

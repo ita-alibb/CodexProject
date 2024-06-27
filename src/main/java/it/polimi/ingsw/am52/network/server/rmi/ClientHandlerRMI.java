@@ -30,7 +30,7 @@ public class ClientHandlerRMI implements ClientHandler,Runnable {
 
     private final ExecutorService sendingThread = Executors.newSingleThreadExecutor();
 
-    private final LinkedBlockingQueue<BaseResponseData> responseQueue = new LinkedBlockingQueue<BaseResponseData>();
+    private final LinkedBlockingQueue<BaseResponseData> responseQueue = new LinkedBlockingQueue<>();
 
     /**
      * Class constructor
@@ -66,7 +66,6 @@ public class ClientHandlerRMI implements ClientHandler,Runnable {
                 this.client.heartBeat();
                 Thread.sleep(10000);
             } catch (RemoteException | InterruptedException e) {
-                // TODO: disconnection
                 System.out.println("Client disconnected: " + this.clientId);
                 break;
             }
@@ -86,7 +85,6 @@ public class ClientHandlerRMI implements ClientHandler,Runnable {
         try {
             this.responseQueue.put(response.getData());
         } catch (Exception e) {
-            // TODO: better logging
             System.out.println("Error on adding response in queue for client " + this.clientId + "exception: " + e.getMessage());
         }
     }
