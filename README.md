@@ -66,3 +66,10 @@ The behaviour of the application can be modify based on the following options
 | -r        | --rmi           | client | none          | Run client with RMI connection |
 | -t        | --tui           | client | none          | Run client in textual mode |
 </p>
+
+### Contribution
+![image](https://github.com/LivioBordignon/IS24-AM52/assets/162186641/b62aded9-6a45-49e4-ae8f-734c48ab4c4f)
+```
+git log --stat --author "author" | grep "files\? changed"     | awk '{files+=$1; inserted+=$4; deleted+=$6} END \
+           {print "files changed", files, "lines inserted:", inserted, "lines deleted:", deleted}'
+```
