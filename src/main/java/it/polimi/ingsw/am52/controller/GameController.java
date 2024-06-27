@@ -182,42 +182,6 @@ public class GameController {
     }
 
     /**
-     * Method to draw a card
-     * @param clientId  The ID of the client
-     * @param deck      The deck to draw from
-     */
-    public DrawCardResponseData drawCard(int clientId, int deck) {
-        if (!Objects.equals(this.getNickname(clientId), this.game.getCurrentPlayer().getNickname())) {
-            return new DrawCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 3, "Not your turn!"));
-        }
-        try {
-            switch (DrawType.fromInteger(deck)) {
-                case DrawType.RESOURCE -> this.game.drawResourceCard();
-                case DrawType.GOLD -> this.game.drawGoldCard();
-                case null, default -> {
-                    return new DrawCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 1, "Invalid deck"));
-                }
-            }
-        } catch (PlayerException e) {
-            return new DrawCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 32, e.getMessage()));
-        } catch (DeckException e) {
-            return new DrawCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 70, e.getMessage()));
-        } catch (IllegalStateException e) {
-            return new DrawCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 99, e.getMessage()));
-        } catch (GameException e) {
-            return new DrawCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 3, e.getMessage()));
-        }
-
-        //Notify the success of the action
-        return new DrawCardResponseData(
-                new ResponseStatus(this.game.getStatusResponse()),
-                this.game.getPlayer(this.getNickname(clientId)).getHand().toList().getLast().getCardId(),
-                deck,
-                this.game.peekNextCard(DrawType.fromInteger(deck))
-        );
-    }
-
-    /**
      * Method to get the init game data
      *
      */
@@ -254,6 +218,47 @@ public class GameController {
             return new EndGameResponseData(new ResponseStatus(this.game.getStatusResponse()), this.game.getWinners());
         } catch (GameException e) {
             return new EndGameResponseData(new ResponseStatus(this.game.getStatusResponse(), 3, e.getMessage()));
+        }
+    }
+
+    /**
+     * Method to draw a card
+     * @param clientId  The ID of the client
+     * @param deck      The deck to draw from
+     */
+    public DrawCardResponseData drawCard(int clientId, int deck) {
+        if (!Objects.equals(this.getNickname(clientId), this.game.getCurrentPlayer().getNickname())) {
+            return new DrawCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 3, "Not your turn!"));
+        }
+        try {
+            var nextCard = this.game.peekNextCard(DrawType.fromInteger(deck));
+            switch (DrawType.fromInteger(deck)) {
+                case DrawType.RESOURCE -> this.game.drawResourceCard();
+                case DrawType.GOLD -> this.game.drawGoldCard();
+                case null, default -> {
+                    return new DrawCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 1, "Invalid deck"));
+                }
+            }
+
+            if (!this.game.getPlayer(this.getNickname(clientId)).getHand().stream().map(Card::getCardId).toList().contains(nextCard)) {
+                throw new DeckException("Deck failed to draw");
+            }
+
+            //Notify the success of the action
+            return new DrawCardResponseData(
+                    new ResponseStatus(this.game.getStatusResponse()),
+                    nextCard,
+                    deck,
+                    this.game.peekNextCard(DrawType.fromInteger(deck))
+            );
+        } catch (PlayerException e) {
+            return new DrawCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 32, e.getMessage()));
+        } catch (DeckException e) {
+            return new DrawCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 70, e.getMessage()));
+        } catch (IllegalStateException e) {
+            return new DrawCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 99, e.getMessage()));
+        } catch (GameException e) {
+            return new DrawCardResponseData(new ResponseStatus(this.game.getStatusResponse(), 3, e.getMessage()));
         }
     }
 

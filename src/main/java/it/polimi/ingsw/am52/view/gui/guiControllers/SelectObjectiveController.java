@@ -18,6 +18,10 @@ import javafx.scene.input.MouseEvent;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * The controller for the Select Objective view
+ * Uses {@link ModelObserver} to be updated with the {@link ViewModelState}
+ */
 public class SelectObjectiveController extends ModelObserver {
     public Button continueButton;
     @FXML
@@ -28,6 +32,11 @@ public class SelectObjectiveController extends ModelObserver {
 
     private ImageView selected;
 
+    /**
+     * Default initialization method. Called every time the FXML view is shown.
+     * FXML chat-view.fxml
+     * Initialize all board with data present on {@link ViewModelState}
+     */
     @FXML
     public void initialize() {
         ViewModelState.getInstance().registerObserver(this, EventType.END_GAME);
@@ -38,6 +47,10 @@ public class SelectObjectiveController extends ModelObserver {
         secretObjective2.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/fronts/%s.png".formatted(objectives.get(1)+87)))));
     }
 
+    /**
+     * Method to select the face
+     * @param event the clieck event on one of the image view
+     */
     public void setSelected(MouseEvent event){
         Glow glow = new Glow(0.8);
         if (selected!=null)selected.setEffect(null);
@@ -46,6 +59,9 @@ public class SelectObjectiveController extends ModelObserver {
         System.out.println(selected.getId());
     }
 
+    /**
+     * Action bound to Continue Button click
+     */
     public void continueClicked(){
         ResponseStatus res = null;
         if(selected== secretObjective1){
@@ -64,6 +80,9 @@ public class SelectObjectiveController extends ModelObserver {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void updateEndGame() {
         Platform.runLater(() -> {

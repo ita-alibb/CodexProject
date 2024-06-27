@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am52.view.viewModel;
 
+import it.polimi.ingsw.am52.model.cards.KingdomColor;
 import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
 
 /**
@@ -15,7 +16,7 @@ public class OpponentModel {
     /**
      * The order in the game
      */
-    private final int turnOrder;
+    private KingdomColor color;
 
     /**
      * This player's board
@@ -25,11 +26,10 @@ public class OpponentModel {
     /**
      * The constructor of OpponentModel class.
      * @param nickname      The nickname of the opponent
-     * @param turnOrder     The order of the opponent in the lobby
      */
-    public OpponentModel(String nickname, int turnOrder) {
+    public OpponentModel(String nickname, KingdomColor color) {
         this.nickname = nickname;
-        this.turnOrder = turnOrder;
+        this.color = color;
         this.board = new BoardMap<>();
     }
 
@@ -57,9 +57,9 @@ public class OpponentModel {
     }
 
     /**
-     * @return  The turn order in the game of this opponent
+     * @return  The color of this opponent pawn
      */
-    public int getTurnOrder() {
-        return turnOrder;
+    public KingdomColor getColor() {
+        return this.color;
     }
 }

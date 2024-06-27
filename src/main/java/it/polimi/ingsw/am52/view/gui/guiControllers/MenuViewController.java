@@ -14,6 +14,10 @@ import java.util.List;
 
 import static java.lang.Integer.parseInt;
 
+/**
+ * The controller for the Menu view
+ * Uses {@link ModelObserver} to be updated with the {@link ViewModelState}
+ */
 public class MenuViewController extends ModelObserver {
     public Button newLobby;
     public Button joinLobbyButton;
@@ -21,6 +25,11 @@ public class MenuViewController extends ModelObserver {
     @FXML
     private ListView<String> guiLobbies;
 
+    /**
+     * Default initialization method. Called every time the FXML view is shown.
+     * FXML chat-view.fxml
+     * Initialize all board with data present on {@link ViewModelState}
+     */
     @FXML
     public void initialize() {
         ViewModelState.getInstance().registerObserver(this, EventType.LIST_LOBBY);
@@ -37,10 +46,16 @@ public class MenuViewController extends ModelObserver {
         });
     }
 
+    /**
+     * Action bound to the new lobby button
+     */
     public void createLobby(){
        StageController.changeScene("fxml/create-lobby.fxml", "Create Lobby", this);
     }
 
+    /**
+     * Action bound to the join lobby button
+     */
     public void joinLobby(){
         String id = guiLobbies.getSelectionModel().getSelectedItem().split(" ")[1];
         StageController.changeScene("fxml/join-lobby.fxml", "Join Lobby", this);
@@ -48,6 +63,9 @@ public class MenuViewController extends ModelObserver {
         JoinLobbyController.setId(parseInt(id));
     }
 
+    /**
+     * Action bound to the updateLobby button
+     */
     public void updateLobby(){
         var res = ClientConnection.getLobbyList();
         if (res.getErrorCode() != 0) {
@@ -57,6 +75,9 @@ public class MenuViewController extends ModelObserver {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void updateListLobby() {
         Platform.runLater(() -> {

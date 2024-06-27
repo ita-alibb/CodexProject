@@ -3,6 +3,7 @@ package it.polimi.ingsw.am52.view.viewModel;
 import it.polimi.ingsw.am52.json.BaseResponseData;
 import it.polimi.ingsw.am52.json.dto.DrawType;
 import it.polimi.ingsw.am52.json.response.*;
+import it.polimi.ingsw.am52.model.cards.KingdomColor;
 import it.polimi.ingsw.am52.model.game.GamePhase;
 import it.polimi.ingsw.am52.model.playingBoards.BoardSlot;
 import it.polimi.ingsw.am52.network.client.ClientConnection;
@@ -57,6 +58,11 @@ public class ViewModelState extends ModelObservable {
      * My nickname in the lobby
      */
     private String clientNickname;
+
+    /**
+     * My pawn color
+     */
+    private KingdomColor clientColor;
 
     /**
      * The current turn in the game
@@ -162,14 +168,15 @@ public class ViewModelState extends ModelObservable {
         lobbies = new HashMap<>();
         nicknames = new ArrayList<>();
         clientNickname = "";
+        clientColor = null;
         commonObjectives = new ArrayList<>();
         visibleResourceCards = new ArrayList<>();
         visibleGoldCards = new ArrayList<>();
         playerHand = new ArrayList<>();
         playerObjectives = new ArrayList<>();
         board = new BoardMap<>();
-        resourceDeckNextId = 1;
-        goldDeckNextId = 1;
+        resourceDeckNextId = -1;
+        goldDeckNextId = -1;
         scoreboard = new HashMap<>();
         secretObjective = -1;
         phase = GamePhase.LOBBY;
@@ -266,14 +273,15 @@ public class ViewModelState extends ModelObservable {
         if (!leaveGame.getIsBroadcast()) {
             this.currentLobbyId = -1;
             this.clientNickname = "";
+            this.clientColor = null;
             this.nicknames = new ArrayList<>();
             this.phase = leaveGame.getStatus().getGamePhase();
             this.chatRecords.clear();
 
             //reset
             this.board = new BoardMap<>();
-            this.resourceDeckNextId = 1;
-            this.goldDeckNextId = 1;
+            this.resourceDeckNextId = -1;
+            this.goldDeckNextId = -1;
             this.currentPlayer = "";
             this.availableSlots = new ArrayList<>();
             this.turn = 1;
@@ -299,9 +307,13 @@ public class ViewModelState extends ModelObservable {
         this.nicknames = initGame.getPlayersNickname();
         //init opponent representation
         int i = 0;
+        var colors = Arrays.stream(KingdomColor.values()).toList();
+
         for (String nickname : this.nicknames){
             if (!Objects.equals(nickname, this.clientNickname)) {
-                this.opponents.add(new OpponentModel(nickname, i++));
+                this.opponents.add(new OpponentModel(nickname, colors.get(i++)));
+            } else {
+                this.clientColor = colors.get(i++);
             }
         }
 
@@ -399,12 +411,12 @@ public class ViewModelState extends ModelObservable {
     public void updateDrawCard(DrawCardResponseData drawCard) {
         if (!drawCard.getIsBroadcast()) {
             this.playerHand.add(drawCard.getCardId());
+        }
 
-            switch (DrawType.fromInteger(drawCard.getDeck())) {
-                case DrawType.GOLD : this.goldDeckNextId = drawCard.getNextCardId(); break;
-                case DrawType.RESOURCE: this.resourceDeckNextId = drawCard.getNextCardId(); break;
-                case null : break;
-            }
+        switch (DrawType.fromInteger(drawCard.getDeck())) {
+            case DrawType.GOLD : this.goldDeckNextId = drawCard.getNextCardId(); break;
+            case DrawType.RESOURCE : this.resourceDeckNextId = drawCard.getNextCardId(); break;
+            case null : break;
         }
 
         this.phase = drawCard.getStatus().getGamePhase();
@@ -436,7 +448,7 @@ public class ViewModelState extends ModelObservable {
                 this.visibleGoldCards.add(takeCard.getShownCardId());
                 break;
             }
-            case DrawType.RESOURCE: {
+            case DrawType.RESOURCE : {
                 this.resourceDeckNextId = takeCard.getNextCardId();
                 this.visibleResourceCards.remove((Integer) takeCard.getTakenCardId());
                 this.visibleResourceCards.add(takeCard.getShownCardId());
@@ -679,6 +691,13 @@ public class ViewModelState extends ModelObservable {
     }
 
     /**
+     * @return  True if the current view is of the currentPlayer, otherwise False
+     */
+    public boolean isCurrentPlayerView() {
+        return Objects.equals(this.currentPlayer, this.viewTypeNickname);
+    }
+
+    /**
      * @return  The nickname of this client
      */
     public String getClientNickname() {
@@ -720,6 +739,18 @@ public class ViewModelState extends ModelObservable {
      */
     public int getTurn() {
         return turn;
+    }
+
+    /**
+     *
+     * @return The client color in the lobby
+     */
+    public KingdomColor getClientColor(String nickname) {
+        if (Objects.equals(this.clientNickname,nickname)){
+            return this.clientColor;
+        } else {
+            return this.opponents.stream().filter(o -> Objects.equals(o.getNickname(), nickname)).findFirst().get().getColor();
+        }
     }
 
     //endregion

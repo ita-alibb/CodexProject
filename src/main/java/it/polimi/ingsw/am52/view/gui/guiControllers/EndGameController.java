@@ -14,12 +14,21 @@ import javafx.scene.layout.VBox;
 
 import java.util.List;
 
+/**
+ * The controller for the End Game view
+ * Uses {@link ModelObserver} to be updated with the {@link ViewModelState}
+ */
 public class EndGameController extends ModelObserver {
     public Button endGameButton;
     public Label winnerLabel;
     @FXML
     private VBox winnersBox;
 
+    /**
+     * Default initialization method. Called every time the FXML view is shown.
+     * FXML chat-view.fxml
+     * Initialize all board with data present on {@link ViewModelState}
+     */
     @FXML
     public void initialize() {
         ViewModelState.getInstance().registerObserver(this, EventType.LEAVE_GAME);
@@ -36,6 +45,9 @@ public class EndGameController extends ModelObserver {
         }
     }
 
+    /**
+     * Action bound to the leave game button
+     */
     public void leaveGame() {
         ResponseStatus res = ClientConnection.leaveLobby();
         if (res.getErrorCode() != 0) {
@@ -45,6 +57,9 @@ public class EndGameController extends ModelObserver {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateLeaveGame() {
         if (ViewModelState.getInstance().getCurrentLobbyId() == -1) {

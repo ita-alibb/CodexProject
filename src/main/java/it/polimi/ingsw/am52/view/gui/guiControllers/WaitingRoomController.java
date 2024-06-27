@@ -14,16 +14,28 @@ import javafx.scene.layout.VBox;
 
 import java.util.List;
 
+/**
+ * The controller for the Waiting Room view
+ * Uses {@link ModelObserver} to be updated with the {@link ViewModelState}
+ */
 public class WaitingRoomController extends ModelObserver {
     @FXML
     private VBox playersNickname;
 
+    /**
+     * Default initialization method. Called every time the FXML view is shown.
+     * FXML chat-view.fxml
+     * Initialize all board with data present on {@link ViewModelState}
+     */
     @FXML
     public void initialize() {
         ViewModelState.getInstance().registerObserver(this, EventType.JOIN_LOBBY, EventType.LEAVE_GAME, EventType.INIT_GAME, EventType.END_GAME);
         setNicknames();
     }
 
+    /**
+     * Method used to update the nicknames
+     */
     public void setNicknames(){
         Platform.runLater(() -> {
             playersNickname.getChildren().clear();
@@ -36,6 +48,9 @@ public class WaitingRoomController extends ModelObserver {
         });
     }
 
+    /**
+     * Method bound to the leave game button
+     */
     public void leaveLobby() {
         ResponseStatus res = ClientConnection.leaveLobby();
         if (res.getErrorCode() != 0) {
@@ -45,6 +60,9 @@ public class WaitingRoomController extends ModelObserver {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void updateInitGame() {
         Platform.runLater(() -> {
@@ -52,6 +70,9 @@ public class WaitingRoomController extends ModelObserver {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void updateLeaveGame() {
         if (ViewModelState.getInstance().getCurrentLobbyId() != -1) {
@@ -63,11 +84,17 @@ public class WaitingRoomController extends ModelObserver {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void updateJoinLobby() {
         setNicknames();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void updateEndGame() {
         Platform.runLater(() -> {

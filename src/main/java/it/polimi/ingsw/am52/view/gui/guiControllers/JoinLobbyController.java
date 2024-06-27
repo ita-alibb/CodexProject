@@ -11,6 +11,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
+/**
+ * The controller for the Join Lobby view
+ * Uses {@link ModelObserver} to be updated with the {@link ViewModelState}
+ */
 public class JoinLobbyController extends ModelObserver {
     private static int id;
     public TextField nickNameTextField;
@@ -20,11 +24,19 @@ public class JoinLobbyController extends ModelObserver {
         JoinLobbyController.id = id;
     }
 
+    /**
+     * Default initialization method. Called every time the FXML view is shown.
+     * FXML chat-view.fxml
+     * Initialize all board with data present on {@link ViewModelState}
+     */
     @FXML
     public void initialize() {
         ViewModelState.getInstance().registerObserver(this, EventType.JOIN_LOBBY, EventType.INIT_GAME);
     }
 
+    /**
+     * Action bound to the koin lobby button
+     */
     public void joinLobby() {
         if (ViewModelState.getInstance().getLobbies().containsKey(id)) {
             ResponseStatus networkResponse = ClientConnection.joinLobby(nickNameTextField.getText(), id);
@@ -37,6 +49,9 @@ public class JoinLobbyController extends ModelObserver {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void updateJoinLobby() {
         Platform.runLater(()-> {
@@ -44,6 +59,9 @@ public class JoinLobbyController extends ModelObserver {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void updateInitGame() {
         Platform.runLater(() -> {

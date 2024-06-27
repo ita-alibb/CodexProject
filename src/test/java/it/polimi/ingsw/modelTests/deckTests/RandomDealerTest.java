@@ -127,7 +127,7 @@ public class RandomDealerTest
     public void testPeek() {
 
         // Create a list of integers.
-        List<Integer> ints = new ArrayList<>(Arrays.stream((new Integer[] {1,2,3,4,5})).toList());
+        List<Integer> ints = new ArrayList<>(Arrays.stream((new Integer[] {1,2,3,4,5,6,7,8,9,10})).toList());
 
         // Create a RandomDealer object.
         RandomDealer<Integer> dealer = new RandomDealer<Integer>(ints);

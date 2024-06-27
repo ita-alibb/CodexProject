@@ -2,6 +2,7 @@ package it.polimi.ingsw.modelTests.gameTests;
 
 import it.polimi.ingsw.am52.exceptions.GameException;
 import it.polimi.ingsw.am52.exceptions.PlayingBoardException;
+import it.polimi.ingsw.am52.json.dto.DrawType;
 import it.polimi.ingsw.am52.model.cards.CardSide;
 import it.polimi.ingsw.am52.model.game.GameManager;
 import it.polimi.ingsw.am52.model.game.GamePhase;

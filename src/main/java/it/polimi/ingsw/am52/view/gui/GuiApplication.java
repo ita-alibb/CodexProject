@@ -13,7 +13,15 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Gui main class. Initializes the connection, data in ViewModelState and show the first scene.
+ */
 public class GuiApplication extends Application {
+    /**
+     * The start method for the application
+     * @param stage the stage of the application
+     * @throws IOException if load of file fails
+     */
     @Override
     public void start(Stage stage) throws IOException {
         try {
@@ -35,6 +43,12 @@ public class GuiApplication extends Application {
         }
     }
 
+    /**
+     * Create the connection and then launches the GUI application
+     * @param serverIp the server to which connect
+     * @param port the port to which connect
+     * @param connectionMode the type of connection RMI/TCP
+     */
     public static void run(String serverIp, int port, NetworkMode connectionMode) {
         try {
             ClientConnection.setConnection(serverIp, port, connectionMode );

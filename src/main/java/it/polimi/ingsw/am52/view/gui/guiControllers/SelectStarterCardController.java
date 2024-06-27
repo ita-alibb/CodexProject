@@ -18,6 +18,10 @@ import javafx.scene.input.MouseEvent;
 
 import java.util.Objects;
 
+/**
+ * The controller for the Select Starter Card view
+ * Uses {@link ModelObserver} to be updated with the {@link ViewModelState}
+ */
 public class SelectStarterCardController extends ModelObserver {
     public Button continueButton;
     @FXML
@@ -27,6 +31,11 @@ public class SelectStarterCardController extends ModelObserver {
 
     private ImageView selected;
 
+    /**
+     * Default initialization method. Called every time the FXML view is shown.
+     * FXML chat-view.fxml
+     * Initialize all board with data present on {@link ViewModelState}
+     */
     @FXML
     public void initialize() {
         ViewModelState.getInstance().registerObserver(this, EventType.END_GAME);
@@ -36,6 +45,10 @@ public class SelectStarterCardController extends ModelObserver {
         backStarterCard.setImage(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/backs/%s.png".formatted(starterCard+1)))));
     }
 
+    /**
+     * Method to set the selected objective
+     * @param event the mouse event
+     */
     public void setSelected(MouseEvent event){
         Glow glow = new Glow(0.8);
         if (selected!=null)selected.setEffect(null);
@@ -44,6 +57,9 @@ public class SelectStarterCardController extends ModelObserver {
         System.out.println(selected.getId());
     }
 
+    /**
+     * Action bound to the continue button click
+     */
     public void continueClicked(){
         ResponseStatus res = null;
         if(selected == frontStarterCard){
@@ -64,6 +80,9 @@ public class SelectStarterCardController extends ModelObserver {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void updateEndGame() {
         Platform.runLater(() -> {

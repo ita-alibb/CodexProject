@@ -5,11 +5,11 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1550.0" styleClass="background" stylesheets="@../css/menu-view.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.am52.view.gui.guiControllers.EndGameController">
-   <Label fx:id="winnerLabel" alignment="CENTER" layoutX="49.0" layoutY="75.0" prefHeight="244.0" prefWidth="1435.0" text="Winners" wrapText="true">
+   <Label fx:id="winnerLabel" alignment="CENTER" layoutX="39.0" layoutY="25.0" prefHeight="419.0" prefWidth="1435.0" text="Winners" wrapText="true">
       <font>
          <Font size="64.0" />
       </font>
    </Label>
-   <VBox fx:id="winnersBox" layoutX="643.0" layoutY="326.0" prefHeight="386.0" prefWidth="248.0" />
+   <VBox fx:id="winnersBox" layoutX="620.0" layoutY="315.0" prefHeight="386.0" prefWidth="248.0" />
    <Button fx:id="endGameButton" layoutX="1001.0" layoutY="629.0" mnemonicParsing="false" onMouseClicked="#leaveGame" prefHeight="50.0" prefWidth="128.0" text="Leave Game" />
 </AnchorPane>

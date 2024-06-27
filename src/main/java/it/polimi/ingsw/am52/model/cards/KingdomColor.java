@@ -20,5 +20,18 @@ public enum KingdomColor {
     /**
      * The color of the Insect kingdom.
      */
-    VIOLET
+    VIOLET;
+
+    /**
+     * Static method to convert to an integer a KingdomColor object
+     * @return The int value
+     */
+    public String toString() {
+        return switch (this) {
+            case GREEN -> "green";
+            case BLUE -> "blue";
+            case RED -> "red";
+            case VIOLET -> "violet";
+        };
+    }
 }

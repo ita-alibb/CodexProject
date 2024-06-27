@@ -39,6 +39,48 @@ import java.util.*;
  */
 public class PlayingBoardController extends ModelObserver {
     public Button chatButton;
+
+    public static final BoardSlot CENTER_SLOT = new BoardSlot(8, 10);
+
+    // region Pins
+    private static final int[][] pinPos = {{1335,439},
+        {1390,439},
+        {1445,439},
+        {1472,390},
+        {1417,390},
+        {1367,390},
+        {1308,390},
+        {1308,341},
+        {1367,339},
+        {1417,339},
+        {1472,339},
+        {1472,291},
+        {1417,291},
+        {1367,291},
+        {1308,291},
+        {1308,244},
+        {1367,244},
+        {1417,244},
+        {1472,244},
+        {1463,194},
+        {1387,175},
+        {1308,193},
+        {1308,142},
+        {1308,93},
+        {1337,56},
+        {1387,44},
+        {1445,56},
+        {1472,93},
+        {1463,142},
+        {1390,105},
+    };
+
+    public ImageView redPin;
+    public ImageView greenPin;
+    public ImageView bluePin;
+    public ImageView violetPin;
+    // endregion
+
     @FXML
     private ImageView resourceCardsDeck;
     @FXML
@@ -95,15 +137,14 @@ public class PlayingBoardController extends ModelObserver {
 
         String side= starterCardSide == CardSide.FRONT ? "fronts" : "backs";
         var selected = new ImageView(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/%s/%s.png".formatted(side,ViewModelState.getInstance().getStarterCard()+1)))));
-        placeCard(5,5, selected);
+        placeCard(CENTER_SLOT.getHoriz(),CENTER_SLOT.getVert(), selected);
 
+        setVisibleDecks();
         setVisibleGoldCards();
         setVisibleResourceCards();
         setCommonObjectives();
         setSecretObjective();
         setPlayerCards();
-        System.out.println(ViewModelState.getInstance().getVisibleResourceCards());
-        System.out.println(ViewModelState. getInstance().getVisibleGoldCards());
         setScoringBoard();
     }
 
@@ -130,7 +171,6 @@ public class PlayingBoardController extends ModelObserver {
         if(selectedCard == selected){
             selectedCardSide = selectedCardSide == CardSide.FRONT ? CardSide.BACK : CardSide.FRONT;
             String cardSide = selectedCardSide == CardSide.FRONT ? "fronts": "backs";
-            System.out.println(cardSide);
             List<Integer> playerHand = ViewModelState.getInstance().getPlayerHand();
 
             //Change only the image for selected card
@@ -173,7 +213,7 @@ public class PlayingBoardController extends ModelObserver {
      * @param column the column of the board slot in which place the card
      * @param newCard the image of the card placed
      */
-    public void placeCard(int row, int column, ImageView newCard){
+    public void placeCard(int column, int row, ImageView newCard){
         //add the card in the grid
         ImageView image = new ImageView(newCard.getImage());
         image.setFitHeight(64);
@@ -197,7 +237,7 @@ public class PlayingBoardController extends ModelObserver {
             List<Integer> playerHand = ViewModelState.getInstance().getPlayerHand();
             int rowIndex = GridPane.getRowIndex((ImageView) event.getSource());
             int colIndex = GridPane.getColumnIndex((ImageView) event.getSource());
-            BoardSlot boardSlot = new BoardSlot(colIndex-5,rowIndex*-1+5);
+            BoardSlot boardSlot = new BoardSlot(colIndex-CENTER_SLOT.getHoriz(),rowIndex*-1+CENTER_SLOT.getVert());
             BoardSlot selectedBoardSlot = boardSlot.getSlotAt(getCorner(event));
 
             ResponseStatus response;
@@ -230,6 +270,10 @@ public class PlayingBoardController extends ModelObserver {
                 // reset the selected card if everything goes right
                 selected.setEffect(null);
                 selected = null;
+            } else {
+                Alert alertBox = new Alert(Alert.AlertType.ERROR);
+                alertBox.setContentText("Not a valid slot selected!");
+                alertBox.show();
             }
         }
     }
@@ -333,7 +377,6 @@ public class PlayingBoardController extends ModelObserver {
      */
     public void setPlayerCards(){
         List<Integer> playerHand = ViewModelState.getInstance().getPlayerHand();
-        System.out.println(playerHand);
         playerCard1.setImage(null);
         playerCard2.setImage(null);
         playerCard3.setImage(null);
@@ -405,7 +448,7 @@ public class PlayingBoardController extends ModelObserver {
 
 
     /**
-     * Method to update the Scoring Board
+     * Method to update the Scoring Board and the plateau
      */
     public void setScoringBoard(){
         Map<String, Integer> scores = ViewModelState.getInstance().getScoreboard();
@@ -425,6 +468,29 @@ public class PlayingBoardController extends ModelObserver {
                         throw new RuntimeException(e);
                     }
                 });
+            }
+
+            switch (ViewModelState.getInstance().getClientColor(k)) {
+                case RED : {
+                    redPin.setLayoutX(pinPos[v][0]+7);
+                    redPin.setLayoutY(pinPos[v][1]+7);
+                    break;
+                }
+                case BLUE : {
+                    bluePin.setLayoutX(pinPos[v][0]-7);
+                    bluePin.setLayoutY(pinPos[v][1]+7);
+                    break;
+                }
+                case GREEN : {
+                    greenPin.setLayoutX(pinPos[v][0]+7);
+                    greenPin.setLayoutY(pinPos[v][1]-7);
+                    break;
+                }
+                case VIOLET : {
+                    violetPin.setLayoutX(pinPos[v][0]-7);
+                    violetPin.setLayoutY(pinPos[v][1]-7);
+                    break;
+                }
             }
         });
     }
@@ -490,8 +556,8 @@ public class PlayingBoardController extends ModelObserver {
 
                 ImageView cardImage = new ImageView(new Image(Objects.requireNonNull(GuiApplication.class.getResourceAsStream("images/cards/%s/%s.png".formatted(cardSide,newCard.getValue().cardId+1)))));
 
-                placeCard(newCard.getKey().getVert() * -1 + 5,
-                        newCard.getKey().getHoriz() + 5,
+                placeCard(newCard.getKey().getHoriz() + PlayingBoardController.CENTER_SLOT.getHoriz(),
+                        newCard.getKey().getVert()* -1 + PlayingBoardController.CENTER_SLOT.getVert(),
                         cardImage
                         );
 
@@ -508,6 +574,7 @@ public class PlayingBoardController extends ModelObserver {
     @Override
     protected void updateTakeCard() {
         Platform.runLater(() -> {
+            setVisibleDecks();
             setVisibleResourceCards();
             setVisibleGoldCards();
             setPlayerCards();

@@ -107,7 +107,7 @@ public class TuiPrinter extends ModelObserver {
     @Override
     protected void updateTakeCard() {
         var type = ViewModelState.getInstance().getViewTypeShown();
-        if (type == ViewType.COMMON_BOARD) {
+        if (type == ViewType.COMMON_BOARD || ViewModelState.getInstance().isClientTurn()) {
             this.reprint(type);
         }
     }
@@ -118,7 +118,7 @@ public class TuiPrinter extends ModelObserver {
     @Override
     protected void updateDrawCard() {
         var type = ViewModelState.getInstance().getViewTypeShown();
-        if (type == ViewType.COMMON_BOARD) {
+        if (type == ViewType.COMMON_BOARD || ViewModelState.getInstance().isClientTurn()) {
             this.reprint(type);
         }
     }
@@ -129,7 +129,7 @@ public class TuiPrinter extends ModelObserver {
     @Override
     protected void updatePlaceCard() {
         var type = ViewModelState.getInstance().getViewTypeShown();
-        if (type == ViewType.BOARD) {
+        if ((type == ViewType.BOARD && ViewModelState.getInstance().isCurrentPlayerView()) || ViewModelState.getInstance().isClientTurn()) {
             this.reprint(type);
         }
     }

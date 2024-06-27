@@ -9,11 +9,20 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+/**
+ * The controller for the Create Lobby view
+ * Uses {@link ModelObserver} to be updated with the {@link ViewModelState}
+ */
 public class CreateLobbyController extends ModelObserver {
    public TextField nicknameTextField;
    public Spinner<Integer> playerNumberSpinner;
    public Button createLobbyButton;
 
+   /**
+    * Default initialization method. Called every time the FXML view is shown.
+    * FXML chat-view.fxml
+    * Initialize all board with data present on {@link ViewModelState}
+    */
    @FXML
    public void initialize() {
       ViewModelState.getInstance().registerObserver(this, EventType.JOIN_LOBBY);
@@ -27,6 +36,9 @@ public class CreateLobbyController extends ModelObserver {
       });
    }
 
+   /**
+    * Action bound to the create lobby button
+    */
    public void createLobby(){
       ResponseStatus res = ClientConnection.createLobby(nicknameTextField.getText(), playerNumberSpinner.getValue());
       if (res.getErrorCode() != 0) {
@@ -37,6 +49,9 @@ public class CreateLobbyController extends ModelObserver {
       }
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    protected void updateJoinLobby() {
       Platform.runLater(()-> {
