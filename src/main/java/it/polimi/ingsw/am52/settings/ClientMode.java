@@ -13,6 +13,11 @@ public enum ClientMode {
      */
     TEXTUAL;
 
+    /**
+     * Method to select the type of UI
+     * @param value     The selected UI type
+     * @return          The converted UI type
+     */
     public static ClientMode parse(String value) {
         return switch (value.toLowerCase()) {
             case "gui" -> ClientMode.GRAPHICAL;

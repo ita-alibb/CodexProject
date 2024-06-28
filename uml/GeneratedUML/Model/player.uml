@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>it.polimi.ingsw.am52.model.player</OriginalElement>
+  <nodes>
+    <node x="-93.5" y="106.0">it.polimi.ingsw.am52.model.player.Score</node>
+    <node x="766.5" y="154.5">it.polimi.ingsw.am52.model.player.PlayerSetup</node>
+    <node x="548.5" y="-13.5">it.polimi.ingsw.am52.model.player.PlayerBoardSetup</node>
+    <node x="184.0" y="70.5">it.polimi.ingsw.am52.model.player.PlayerInfo</node>
+    <node x="39.5" y="424.0">it.polimi.ingsw.am52.model.player.Player</node>
+    <node x="87.5" y="4.0">it.polimi.ingsw.am52.model.player.PlayerDrawing</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="it.polimi.ingsw.am52.model.player.Player" target="it.polimi.ingsw.am52.model.player.PlayerSetup" relationship="REALIZATION">
+      <point x="32.33333333333333" y="-14.0" />
+      <point x="120.33333333333331" y="398.0" />
+      <point x="348.0" y="398.0" />
+      <point x="348.0" y="338.0" />
+      <point x="928.0" y="338.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.model.player.Player" target="it.polimi.ingsw.am52.model.player.PlayerBoardSetup" relationship="REALIZATION">
+      <point x="32.33333333333333" y="-14.0" />
+      <point x="120.33333333333331" y="398.0" />
+      <point x="348.0" y="398.0" />
+      <point x="348.0" y="338.0" />
+      <point x="728.0" y="338.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.model.player.Player" target="it.polimi.ingsw.am52.model.player.PlayerDrawing" relationship="REALIZATION">
+      <point x="32.33333333333333" y="-14.0" />
+      <point x="120.33333333333331" y="398.0" />
+      <point x="348.0" y="398.0" />
+      <point x="348.0" y="338.0" />
+      <point x="168.0" y="338.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.model.player.Player" target="it.polimi.ingsw.am52.model.player.Score" relationship="CREATE">
+      <point x="-32.33333333333333" y="-14.0" />
+      <point x="55.666666666666686" y="398.0" />
+      <point x="-32.75" y="398.0" />
+      <point x="-60.75" y="92.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.model.player.Player" target="it.polimi.ingsw.am52.model.player.Score" relationship="TO_ONE">
+      <point x="0.0" y="-14.0" />
+      <point x="88.0" y="398.0" />
+      <point x="88.75" y="398.0" />
+      <point x="60.75" y="92.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.model.player.Player" target="it.polimi.ingsw.am52.model.player.PlayerInfo" relationship="REALIZATION">
+      <point x="32.33333333333333" y="-14.0" />
+      <point x="120.33333333333331" y="398.0" />
+      <point x="348.0" y="398.0" />
+      <point x="0.0" y="127.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="1.5" showDependencies="true" x="508.0" y="229.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

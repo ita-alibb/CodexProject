@@ -89,6 +89,9 @@ public class ClientHandlerRMI implements ClientHandler,Runnable {
         }
     }
 
+    /**
+     * Send the response from the server in an async way
+     */
     private void sendAsync() {
         while (true) {
             try {

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>it.polimi.ingsw.am52.exceptions</OriginalElement>
+  <nodes>
+    <node x="-114.5" y="246.5">it.polimi.ingsw.am52.exceptions.PlayingBoardException</node>
+    <node x="2066.5" y="246.5">it.polimi.ingsw.am52.exceptions.PhaseException</node>
+    <node x="1650.0" y="246.5">it.polimi.ingsw.am52.exceptions.DeckException</node>
+    <node x="1231.0" y="246.5">it.polimi.ingsw.am52.exceptions.CardException</node>
+    <node x="772.5" y="246.5">it.polimi.ingsw.am52.exceptions.ObjectivesException</node>
+    <node x="-92.5" y="-13.5">it.polimi.ingsw.am52.exceptions.GameException</node>
+    <node x="346.5" y="246.5">it.polimi.ingsw.am52.exceptions.PlayerException</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="it.polimi.ingsw.am52.exceptions.ObjectivesException" target="it.polimi.ingsw.am52.exceptions.GameException" relationship="GENERALIZATION">
+      <point x="0.0" y="-79.5" />
+      <point x="981.0" y="226.0" />
+      <point x="101.0" y="226.0" />
+      <point x="0.0" y="79.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.exceptions.PlayerException" target="it.polimi.ingsw.am52.exceptions.GameException" relationship="GENERALIZATION">
+      <point x="0.0" y="-79.5" />
+      <point x="541.0" y="226.0" />
+      <point x="101.0" y="226.0" />
+      <point x="0.0" y="79.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.exceptions.PlayingBoardException" target="it.polimi.ingsw.am52.exceptions.GameException" relationship="GENERALIZATION">
+      <point x="0.0" y="-79.5" />
+      <point x="0.0" y="79.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.exceptions.CardException" target="it.polimi.ingsw.am52.exceptions.GameException" relationship="GENERALIZATION">
+      <point x="0.0" y="-79.5" />
+      <point x="1421.0" y="226.0" />
+      <point x="101.0" y="226.0" />
+      <point x="0.0" y="79.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.exceptions.DeckException" target="it.polimi.ingsw.am52.exceptions.GameException" relationship="GENERALIZATION">
+      <point x="0.0" y="-79.5" />
+      <point x="1841.0" y="226.0" />
+      <point x="101.0" y="226.0" />
+      <point x="0.0" y="79.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.exceptions.PhaseException" target="it.polimi.ingsw.am52.exceptions.GameException" relationship="GENERALIZATION">
+      <point x="0.0" y="-79.5" />
+      <point x="2261.0" y="226.0" />
+      <point x="101.0" y="226.0" />
+      <point x="0.0" y="79.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="0.798533384793516" showDependencies="true" x="1180.5" y="206.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

@@ -18,9 +18,19 @@ import java.io.IOException;
 public class ClientConnection {
     private static Connection INSTANCE;
 
+    /**
+     * The constructor of the class
+     */
     public ClientConnection() {
     }
 
+    /**
+     * Set the connection to the server
+     * @param serverIp          The IP address of the server
+     * @param port              The port to communicate
+     * @param type              The type of Network protocol
+     * @throws IOException      The connection has already been instantiated
+     */
     public static void setConnection(String serverIp, int port, NetworkMode type) throws IOException {
         if (INSTANCE != null) {
             throw new IllegalArgumentException ("The connection has already been initialized");
@@ -38,6 +48,10 @@ public class ClientConnection {
     }
 
     // region STATIC (singleton pattern) Methods called by the view to update the ViewModel
+
+    /**
+     * @return  The existing lobbies in the server
+     */
     public static ResponseStatus getLobbyList() {
         try {
             var result = INSTANCE.listLobby();
@@ -54,6 +68,12 @@ public class ClientConnection {
         }
     }
 
+    /**
+     * The method to create a lobby
+     * @param nickname      The nickname of the player who creates the lobby
+     * @param maxPlayers    The max number of player
+     * @return              The response from the server
+     */
     public static ResponseStatus createLobby(String nickname, int maxPlayers) {
         try {
             var result = INSTANCE.createLobby(new CreateLobbyData(nickname, maxPlayers));
@@ -71,6 +91,12 @@ public class ClientConnection {
         }
     }
 
+    /**
+     * The method to join an existing lobby
+     * @param nickname      The nickname of the player who joins the lobby
+     * @param lobbyId       The ID of the lobby
+     * @return              The response from the server
+     */
     public static ResponseStatus joinLobby(String nickname, int lobbyId) {
         try {
             var result = INSTANCE.joinLobby(new JoinLobbyData(nickname, lobbyId));
@@ -88,7 +114,10 @@ public class ClientConnection {
         }
     }
 
-
+    /**
+     * Method to leave a lobby
+     * @return      The response from the server
+     */
     public static ResponseStatus leaveLobby() {
         try  {
             var result = INSTANCE.leaveGame();
@@ -105,6 +134,10 @@ public class ClientConnection {
         }
     }
 
+    /**
+     * Method to initialize a game
+     * @return      The response from the server
+     */
     public static ResponseStatus initGame() {
         try  {
             var result = INSTANCE.initGame();
@@ -121,6 +154,10 @@ public class ClientConnection {
         }
     }
 
+    /**
+     * Method to end a started game
+     * @return      The response from the server
+     */
     public static ResponseStatus endGame() {
         try  {
             var result = INSTANCE.endGame();
@@ -137,6 +174,11 @@ public class ClientConnection {
         }
     }
 
+    /**
+     * Method to select an objective card
+     * @param objectiveId       The ID of the objective card
+     * @return                  The response from the server
+     */
     public static ResponseStatus selectObjective(int objectiveId) {
         try  {
             var result = INSTANCE.selectObjective(new SelectObjectiveData(objectiveId));
@@ -153,6 +195,12 @@ public class ClientConnection {
         }
     }
 
+    /**
+     * Method to select a starter card and place it on the board
+     * @param cardId        The ID of the starter card
+     * @param visibleFace   The visible face of the card
+     * @return              The response from the server
+     */
     public static ResponseStatus placeStarterCard(int cardId, CardSide visibleFace) {
         try  {
             var result = INSTANCE.placeStarterCard(new PlaceStarterCardData(cardId, visibleFace.toInteger()));
@@ -169,6 +217,13 @@ public class ClientConnection {
         }
     }
 
+    /**
+     * Method to place a card in a certain position
+     * @param cardId            The ID of the card to be placed
+     * @param visibleFace       The visible face of the card
+     * @param position          The position where this card is going to be placed
+     * @return                  The response from the server
+     */
     public static ResponseStatus placeCard(int cardId, CardSide visibleFace, BoardSlot position) {
         try  {
             var result = INSTANCE.placeCard(new PlaceCardData(cardId, visibleFace.toInteger(), position));
@@ -185,6 +240,11 @@ public class ClientConnection {
         }
     }
 
+    /**
+     * Method to draw a card
+     * @param drawType      The deck from which the player draws the card
+     * @return              The response from the server
+     */
     public static ResponseStatus drawCard(DrawType drawType) {
         try  {
             var result = INSTANCE.drawCard(new DrawCardData(drawType.toInteger()));
@@ -201,6 +261,12 @@ public class ClientConnection {
         }
     }
 
+    /**
+     * Method to take a visible card
+     * @param cardId        The ID of the taken card
+     * @param drawType      The type of the card
+     * @return              The response from the server
+     */
     public static ResponseStatus takeCard(int cardId, DrawType drawType) {
         try {
             var result = INSTANCE.takeCard(new TakeCardData(cardId, drawType.toInteger()));
@@ -217,6 +283,12 @@ public class ClientConnection {
         }
     }
 
+    /**
+     * The method to communicate with the Server
+     * @param message   The message sent
+     * @param recipient The recipient
+     * @return          The response from the server
+     */
     public static ResponseStatus chat(String message, String recipient) {
         try {
             var result = INSTANCE.chat(new ChatData(ViewModelState.getInstance().getClientNickname(), message, recipient));

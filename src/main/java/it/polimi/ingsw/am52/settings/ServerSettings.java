@@ -120,12 +120,13 @@ public class ServerSettings {
      * </ul>
      * If a field is missing, or it has an invalid value, the default value of that setting
      * is used.
+     * <P>
+     * The json text can have duplicate fields and in that case the value assigned for
+     * the duplicated setting is one of the specified values. If the json text has extra fields,
+     * they are ignored.
      * @param json The json text with the server settings.
      * @return The object containing the specified server settings.
      * @throws JsonProcessingException If the text is not a valid json-formatted text.
-     * @implNote The json text can have duplicate fields and in that case the value assigned for
-     * the duplicated setting is one of the specified values. If the json text has extra fields,
-     * they are ignored.
      * @author Livio B.
      */
     public static ServerSettings parseFromJson(String json) throws JsonProcessingException {
@@ -195,13 +196,14 @@ public class ServerSettings {
      * </ul>
      * If a field is missing, or it has an invalid value, the default value of that setting
      ** is used.
+     * <P>
+     * The json text can have duplicate fields and in that case the value assigned for
+     * the duplicated setting is one of the specified values. If the json text has extra fields,
+     * they are ignored.
      * @param fileName The name of the file to load.
      * @return The object containing the server settings specified n the file.
      * @throws IOException If the file does not exist.
      * @throws JsonProcessingException If the text is not a valid json-formatted text.
-     * @implNote The json text can have duplicate fields and in that case the value assigned for
-     * the duplicated setting is one of the specified values. If the json text has extra fields,
-     * they are ignored.
      * @author Livio B.
      */
     public static ServerSettings loadJsonFile(String fileName) throws IOException {
@@ -220,13 +222,14 @@ public class ServerSettings {
      * </ul>
      * If a field is missing, or it has an invalid value, the default value of that setting
      ** is used.
+     * <P>
+     * The json text can have duplicate fields and in that case the value assigned for
+     * the duplicated setting is one of the specified values. If the json text has extra fields,
+     * they are ignored.
      * @param filePath The path of the file to load.
      * @return The object containing the server settings specified n the file.
      * @throws IOException If the file does not exist.
      * @throws JsonProcessingException If the text is not a valid json-formatted text.
-     * @implNote The json text can have duplicate fields and in that case the value assigned for
-     * the duplicated setting is one of the specified values. If the json text has extra fields,
-     * they are ignored.
      * @author Livio B.
      */
     public static ServerSettings loadJsonFile(Path filePath) throws IOException{
@@ -453,7 +456,7 @@ public class ServerSettings {
      *
      * @return The text representation of this server settings instance, formatted as:
      * <ul>
-     *         [setting1:value1;setting2:value2;...]
+     *         <li>[setting1:value1;setting2:value2;...]</li>
      * </ul>
      * @author Livio B.
      */

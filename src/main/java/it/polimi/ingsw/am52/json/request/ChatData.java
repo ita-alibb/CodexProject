@@ -65,14 +65,23 @@ public class ChatData implements Serializable {
 
     //region Getters
 
+    /**
+     * @return  The sender of a message in the chat
+     */
     public String getSender() {
         return sender;
     }
 
+    /**
+     * @return  The message of the chat
+     */
     public String getMessage() {
         return message;
     }
 
+    /**
+     * @return  The recipient of the chat
+     */
     public String getRecipient() {
         return recipient;
     }

@@ -19,7 +19,7 @@ public class LeaveGameResponseData extends BaseResponseData implements Serializa
     private final String username;
 
     /**
-     * The map with < lobbyID, playersToStart >
+     * The map with &lt;lobbyID, playersToStart&gt;
      */
     private final Map<Integer,Integer> lobbies;
     //endregion

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>it.polimi.ingsw.am52.network.server</OriginalElement>
+  <nodes>
+    <node x="-22.461949363650177" y="234.62548352999227">it.polimi.ingsw.am52.network.server.tcp.ClientHandlerTCP</node>
+    <node x="691.8794024850812" y="86.38842570186628">it.polimi.ingsw.am52.network.server.rmi.Accepter</node>
+    <node x="7.220494244404904" y="527.5720670984299">it.polimi.ingsw.am52.network.server.ServerConnection</node>
+    <node x="151.9994014801158" y="-13.313556032433624">it.polimi.ingsw.am52.network.server.Sender</node>
+    <node x="439.2154721124816" y="370.1841049927237">it.polimi.ingsw.am52.network.server.rmi.ActionsRMI</node>
+    <node x="996.4507477852751" y="204.43770356527713">it.polimi.ingsw.am52.network.server.rmi.ClientHandlerRMI</node>
+    <node x="439.3084579469765" y="149.5144140287882">it.polimi.ingsw.am52.network.server.logging.LogMessage</node>
+    <node x="-208.1057456354003" y="21.82236764643195">it.polimi.ingsw.am52.network.server.logging.Log</node>
+    <node x="189.5106751974369" y="110.70291484529946">it.polimi.ingsw.am52.network.server.ClientHandler</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="it.polimi.ingsw.am52.network.server.ServerConnection" target="it.polimi.ingsw.am52.network.server.logging.Log" relationship="TO_ONE">
+      <point x="-185.5" y="15.0" />
+      <point x="-79.6057456354003" y="814.5720670984299" />
+      <point x="-15.0" y="68.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.network.server.tcp.ClientHandlerTCP" target="it.polimi.ingsw.am52.network.server.ClientHandler" relationship="REALIZATION">
+      <point x="200.4999493636502" y="27.05851647000776" />
+      <point x="421.715" y="377.684" />
+      <point x="421.715" y="340.0" />
+      <point x="421.808" y="340.0" />
+      <point x="421.808" y="157.014" />
+      <point x="78.50032480256307" y="14.811085154700528" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.network.server.ServerConnection" target="it.polimi.ingsw.am52.network.server.logging.Log" relationship="CREATE">
+      <point x="-185.5" y="0.0" />
+      <point x="-64.6057456354003" y="799.5720670984299" />
+      <point x="0.0" y="68.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.network.server.ClientHandler" target="it.polimi.ingsw.am52.network.server.Sender" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-31.5" />
+      <point x="-84.48872628267888" y="31.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.network.server.ServerConnection" target="it.polimi.ingsw.am52.network.server.rmi.ClientHandlerRMI" relationship="CREATE">
+      <point x="185.5" y="-15.0" />
+      <point x="1209.450747785275" y="784.5720670984299" />
+      <point x="0.0" y="128.00000000000003" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.network.server.ServerConnection" target="it.polimi.ingsw.am52.network.server.rmi.Accepter" relationship="REALIZATION">
+      <point x="185.5" y="15.0" />
+      <point x="1454.950747785275" y="814.5720670984299" />
+      <point x="1454.950747785275" y="117.88842570186628" />
+      <point x="120.0" y="0.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.network.server.rmi.ClientHandlerRMI" target="it.polimi.ingsw.am52.network.server.ClientHandler" relationship="REALIZATION">
+      <point x="-212.99974778527508" y="45.24629643472289" />
+      <point x="951.715" y="377.684" />
+      <point x="951.715" y="340.0" />
+      <point x="421.808" y="340.0" />
+      <point x="421.808" y="157.014" />
+      <point x="78.50032480256307" y="14.811085154700528" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.network.server.ServerConnection" target="it.polimi.ingsw.am52.network.server.logging.LogMessage" relationship="CREATE">
+      <point x="185.5" y="0.0" />
+      <point x="1439.950747785275" y="799.5720670984299" />
+      <point x="1439.950747785275" y="186.93770356527713" />
+      <point x="92.0" y="-42.57671046351106" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.network.server.ServerConnection" target="it.polimi.ingsw.am52.network.server.tcp.ClientHandlerTCP" relationship="CREATE">
+      <point x="-14.682443608055081" y="-272.0" />
+      <point x="0.0" y="116.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="1.166365280289331" showDependencies="true" x="633.0" y="539.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>C:/Users/Admin/IdeaProjects/IS24-AM52/src/main/java/it/polimi/ingsw/am52/view/gui</OriginalElement>
+  <nodes>
+    <node x="610.5" y="122.0">it.polimi.ingsw.am52.view.gui.guiControllers.ChatViewController</node>
+    <node x="-126.5" y="962.0">it.polimi.ingsw.am52.view.gui.guiControllers.PlayingBoardController</node>
+    <node x="-130.0" y="-13.5">it.polimi.ingsw.am52.view.gui.GuiApplication</node>
+    <node x="584.0" y="1502.0">it.polimi.ingsw.am52.view.gui.guiControllers.StageController</node>
+    <node x="431.5" y="474.0">it.polimi.ingsw.am52.view.gui.guiControllers.OpponentBardController</node>
+    <node x="289.5" y="134.0">it.polimi.ingsw.am52.view.gui.guiControllers.JoinLobbyController</node>
+    <node x="461.5" y="718.0">it.polimi.ingsw.am52.view.gui.guiControllers.EndGameController</node>
+    <node x="140.0" y="414.0">it.polimi.ingsw.am52.view.gui.guiControllers.SelectObjectiveController</node>
+    <node x="234.5" y="1478.0">it.polimi.ingsw.am52.view.gui.guiControllers.CreateLobbyController</node>
+    <node x="10.0" y="122.0">it.polimi.ingsw.am52.view.gui.guiControllers.MenuViewController</node>
+    <node x="-131.5" y="414.0">it.polimi.ingsw.am52.view.gui.guiControllers.WaitingRoomController</node>
+    <node x="71.5" y="694.0">it.polimi.ingsw.am52.view.gui.guiControllers.SelectStarterCardController</node>
+  </nodes>
+  <notes />
+  <edges />
+  <settings layout="Hierarchic Compact" zoom="0.5877034358047016" showDependencies="true" x="416.0" y="1092.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

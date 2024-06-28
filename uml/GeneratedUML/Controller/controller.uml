@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>it.polimi.ingsw.am52.controller</OriginalElement>
+  <nodes>
+    <node x="-87.5" y="106.0">it.polimi.ingsw.am52.controller.User</node>
+    <node x="313.0" y="-14.0">it.polimi.ingsw.am52.controller.GameController</node>
+    <node x="-87.0" y="634.0">it.polimi.ingsw.am52.controller.ServerController</node>
+    <node x="378.5" y="598.0">it.polimi.ingsw.am52.controller.VirtualView</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="it.polimi.ingsw.am52.controller.VirtualView" target="it.polimi.ingsw.am52.controller.GameController" relationship="TO_ONE">
+      <point x="0.0" y="-236.0" />
+      <point x="626.0" y="514.0" />
+      <point x="632.5" y="514.0" />
+      <point x="106.5" y="248.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.controller.ServerController" target="it.polimi.ingsw.am52.controller.GameController" relationship="CREATE">
+      <point x="-106.5" y="-200.0" />
+      <point x="19.5" y="614.0" />
+      <point x="26.0" y="614.0" />
+      <point x="26.0" y="514.0" />
+      <point x="419.5" y="514.0" />
+      <point x="-106.5" y="248.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.controller.ServerController" target="it.polimi.ingsw.am52.controller.User" relationship="CREATE">
+      <point x="-106.5" y="-200.0" />
+      <point x="19.5" y="614.0" />
+      <point x="26.0" y="614.0" />
+      <point x="0.0" y="128.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.controller.ServerController" target="it.polimi.ingsw.am52.controller.GameController" relationship="TO_MANY">
+      <point x="106.5" y="-200.0" />
+      <point x="232.5" y="574.0" />
+      <point x="626.0" y="574.0" />
+      <point x="626.0" y="514.0" />
+      <point x="632.5" y="514.0" />
+      <point x="106.5" y="248.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="1.1684782608695652" showDependencies="true" x="403.0000000000001" y="538.0000000000001" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

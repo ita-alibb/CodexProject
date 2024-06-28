@@ -134,14 +134,15 @@ public class ClientSettings {
      *     <li>"network": string, the network connection ("socket", or "rmi")</li>
      * </ul>
      * If a field is missing, or it has an invalid value, the default value of that setting
-     ** is used.
+     * is used.
+     * <P>
+     * The json text can have duplicate fields and in that case the value assigned for
+     * the duplicated setting is one of the specified values. If the json text has extra fields,
+     * they are ignored.
      * @param fileName The name of the file to load.
      * @return The object containing the server settings specified n the file.
      * @throws IOException If the file does not exist.
      * @throws JsonProcessingException If the text is not a valid json-formatted text.
-     * @implNote The json text can have duplicate fields and in that case the value assigned for
-     * the duplicated setting is one of the specified values. If the json text has extra fields,
-     * they are ignored.
      * @author Livio B.
      */
     public static ClientSettings loadJsonFile(String fileName) throws IOException {
@@ -160,13 +161,14 @@ public class ClientSettings {
      * </ul>
      * If a field is missing, or it has an invalid value, the default value of that setting
      ** is used.
+     * <P>
+     * The json text can have duplicate fields and in that case the value assigned for
+     * the duplicated setting is one of the specified values. If the json text has extra fields,
+     * they are ignored.
      * @param filePath The path of the file to load.
      * @return The object containing the server settings specified n the file.
      * @throws IOException If the file does not exist.
      * @throws JsonProcessingException If the text is not a valid json-formatted text.
-     * @implNote The json text can have duplicate fields and in that case the value assigned for
-     * the duplicated setting is one of the specified values. If the json text has extra fields,
-     * they are ignored.
      * @author Livio B.
      */
     public static ClientSettings loadJsonFile(Path filePath) throws IOException{
@@ -186,13 +188,13 @@ public class ClientSettings {
      * The fields "serverIp" and "port" are mandatory, "mode" and "network" are optional.
      * If an optional field is missing, or it has an invalid value, the default value of that setting
      * is used.
+     * The json text can have duplicate fields and in that case the value assigned for
+     * the duplicated setting is one of the specified values. If the json text has extra fields,
+     * they are ignored.
      * @param json The json text with the client settings.
      * @return The object containing the specified client settings.
      * @throws IllegalArgumentException If "port" or "serverIp" fields are missing or invalid.
      * @throws JsonProcessingException If the text is not a valid json-formatted text.
-     * @implNote The json text can have duplicate fields and in that case the value assigned for
-     * the duplicated setting is one of the specified values. If the json text has extra fields,
-     * they are ignored.
      * @author Livio B.
      */
     public static ClientSettings parseFromJson(String json) throws JsonProcessingException, IllegalArgumentException {
@@ -349,7 +351,7 @@ public class ClientSettings {
      *
      * @return The text representation of this server settings instance, formatted as:
      * <ul>
-     *         [setting1:value1;setting2:value2;...]
+     *         <li>[setting1:value1;setting2:value2;...]</li>
      * </ul>
      * @author Livio B.
      */

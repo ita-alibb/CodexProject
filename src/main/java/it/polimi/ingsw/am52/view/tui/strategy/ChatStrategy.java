@@ -5,12 +5,16 @@ import it.polimi.ingsw.am52.network.client.ClientConnection;
 
 import java.util.Scanner;
 
+/**
+ * The class from Strategy to implement the behaviour of the chat of the lobby
+ */
 public class ChatStrategy extends Strategy {
     //region Constructor
     private final boolean isWhisper;
 
     /**
      * The Constructor of the class, which is empty because there are no private fields
+     * @param isWhisper True if it's a whisper, otherwise false
      */
     public ChatStrategy(boolean isWhisper) {
         this.isWhisper = isWhisper;

@@ -14,7 +14,7 @@ public class ListLobbyResponseData extends BaseResponseData implements Serializa
     //region Private Fields
 
     /**
-     * The map with < lobbyID, playersToStart >
+     * The map with &lt;lobbyID, playersToStart&gt;
      */
     private final Map<Integer,Integer> lobbies;
 

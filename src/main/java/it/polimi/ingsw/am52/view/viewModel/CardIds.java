@@ -88,25 +88,39 @@ public class CardIds {
      * The method to print to different objective cards, used to abstract two different methods with different purpose, in Setup and Common boards
      * @param first     The first objective
      * @param second    The second objective
+     * @param isClosed  True if after the card a closing character is needed, otherwise false
      */
-    public static void printTwoObjectives(CardIds first, CardIds second) {
+    public static void printTwoObjectives(CardIds first, CardIds second, boolean isClosed) {
         var objList1 = first.getObjectiveAsArrayString();
         var objList2 = second.getObjectiveAsArrayString();
 
-        for (int i = 0; i < 7; i++) {
-            System.out.printf("│ " + objList1[i] + "   " + objList2[i] + "%20s│%n", "");
+        if (isClosed) {
+            for (int i = 0; i < 7; i++) {
+                System.out.printf("│ " + objList1[i] + "   " + objList2[i] + "%20s│%n", "");
+            }
+        } else {
+            for (int i = 0; i < 7; i++) {
+                System.out.printf("│ " + objList1[i] + "   " + objList2[i] + "%n", "");
+            }
         }
     }
 
     /**
      * The method to print a single objective card
      * @param first     The first and only objective
+     * @param isClosed  True if after the card a closing character is needed, otherwise false
      */
-    public static void printSingleObjective (CardIds first) {
+    public static void printSingleObjective (CardIds first, boolean isClosed) {
         var objList = first.getObjectiveAsArrayString();
 
-        for (int i = 0; i < 7; i++) {
-            System.out.printf("│ " + objList[i] + "%46s│%n", "");
+        if (isClosed) {
+            for (int i = 0; i < 7; i++) {
+                System.out.printf("│ " + objList[i] + "%46s│%n", "");
+            }
+        } else {
+            for (int i = 0; i < 7; i++) {
+                System.out.printf("│ " + objList[i] + "%n", "");
+            }
         }
     }
 
@@ -232,6 +246,10 @@ public class CardIds {
         return card;
     }
 
+    /**
+     * Print the back of the top card of the deck
+     * @param deckTopId     The ID of the top card in the deck
+     */
     public static void printBack(int deckTopId) {
         var stringRep = getEmptyTemplate();
 

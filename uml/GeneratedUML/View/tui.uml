@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>it.polimi.ingsw.am52.view.tui</OriginalElement>
+  <nodes>
+    <node x="-17.5" y="1592.5">it.polimi.ingsw.am52.view.tui.strategy.ShowChatStrategy</node>
+    <node x="-12.0" y="488.5">it.polimi.ingsw.am52.view.tui.state.TuiCommonBoardView</node>
+    <node x="-189.0" y="932.0">it.polimi.ingsw.am52.view.tui.TuiPrinter</node>
+    <node x="341.0" y="620.5">it.polimi.ingsw.am52.view.tui.state.TuiBoardView</node>
+    <node x="162.5" y="1692.5">it.polimi.ingsw.am52.view.tui.strategy.ReloadLobbyStrategy</node>
+    <node x="-131.0" y="244.0">it.polimi.ingsw.am52.view.tui.state.TuiView</node>
+    <node x="1228.0" y="488.5">it.polimi.ingsw.am52.view.tui.state.TuiSetupView</node>
+    <node x="128.0" y="1932.5">it.polimi.ingsw.am52.view.tui.TuiApplication</node>
+    <node x="342.5" y="1592.5">it.polimi.ingsw.am52.view.tui.strategy.ShowCommonBoardStrategy</node>
+    <node x="-192.0" y="668.5">it.polimi.ingsw.am52.view.tui.state.TuiChatView</node>
+    <node x="522.5" y="1692.5">it.polimi.ingsw.am52.view.tui.strategy.PlaceStarterCardStrategy</node>
+    <node x="702.5" y="1592.5">it.polimi.ingsw.am52.view.tui.strategy.LeaveLobbyStrategy</node>
+    <node x="882.5" y="1692.5">it.polimi.ingsw.am52.view.tui.strategy.DrawCardStrategy</node>
+    <node x="1062.5" y="1592.5">it.polimi.ingsw.am52.view.tui.strategy.TakeCardStrategy</node>
+    <node x="1242.5" y="1692.5">it.polimi.ingsw.am52.view.tui.strategy.JoinLobbyStrategy</node>
+    <node x="1422.5" y="1592.5">it.polimi.ingsw.am52.view.tui.strategy.CreateLobbyStrategy</node>
+    <node x="868.0" y="488.5">it.polimi.ingsw.am52.view.tui.state.TuiEndView</node>
+    <node x="1782.5" y="1680.0">it.polimi.ingsw.am52.view.tui.strategy.ShowBoardStrategy</node>
+    <node x="1048.0" y="668.5">it.polimi.ingsw.am52.view.tui.state.TuiMenuView</node>
+    <node x="-166.0" y="1884.0">it.polimi.ingsw.am52.view.tui.InputReader</node>
+    <node x="1408.0" y="668.5">it.polimi.ingsw.am52.view.tui.state.TuiLobbyView</node>
+    <node x="-197.5" y="1400.5">it.polimi.ingsw.am52.view.tui.strategy.Strategy</node>
+    <node x="-142.5" y="-104.0">it.polimi.ingsw.am52.view.tui.state.ViewType</node>
+    <node x="2142.5" y="1592.5">it.polimi.ingsw.am52.view.tui.strategy.SelectObjectiveStrategy</node>
+    <node x="2502.5" y="1680.0">it.polimi.ingsw.am52.view.tui.strategy.ChatStrategy</node>
+    <node x="-197.5" y="1692.5">it.polimi.ingsw.am52.view.tui.strategy.PlaceCardStrategy</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="it.polimi.ingsw.am52.view.tui.InputReader" target="it.polimi.ingsw.am52.view.tui.strategy.JoinLobbyStrategy" relationship="CREATE">
+      <point x="0.0" y="-80.0" />
+      <point x="-38.0" y="1864.0" />
+      <point x="1402.0" y="1864.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.InputReader" target="it.polimi.ingsw.am52.view.tui.strategy.ShowCommonBoardStrategy" relationship="CREATE">
+      <point x="0.0" y="-80.0" />
+      <point x="-38.0" y="1864.0" />
+      <point x="502.0" y="1864.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.InputReader" target="it.polimi.ingsw.am52.view.tui.strategy.ReloadLobbyStrategy" relationship="CREATE">
+      <point x="0.0" y="-80.0" />
+      <point x="-38.0" y="1864.0" />
+      <point x="322.0" y="1864.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.TuiPrinter" target="it.polimi.ingsw.am52.view.tui.state.TuiLobbyView" relationship="CREATE">
+      <point x="0.0" y="-212.0" />
+      <point x="-38.0" y="904.0" />
+      <point x="1562.0" y="904.0" />
+      <point x="0.0" y="55.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.state.TuiEndView" target="it.polimi.ingsw.am52.view.tui.state.TuiView" relationship="GENERALIZATION">
+      <point x="0.0" y="-55.5" />
+      <point x="1022.0" y="464.0" />
+      <point x="-38.0" y="464.0" />
+      <point x="0.0" y="80.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.strategy.PlaceStarterCardStrategy" target="it.polimi.ingsw.am52.view.tui.strategy.Strategy" relationship="GENERALIZATION">
+      <point x="0.0" y="-31.5" />
+      <point x="682.0" y="1564.0" />
+      <point x="-38.0" y="1564.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.TuiPrinter" target="it.polimi.ingsw.am52.view.tui.state.TuiBoardView" relationship="CREATE">
+      <point x="0.0" y="-212.0" />
+      <point x="-38.0" y="904.0" />
+      <point x="582.0" y="904.0" />
+      <point x="0.0" y="103.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.strategy.ShowCommonBoardStrategy" target="it.polimi.ingsw.am52.view.tui.strategy.Strategy" relationship="GENERALIZATION">
+      <point x="0.0" y="-31.5" />
+      <point x="502.0" y="1564.0" />
+      <point x="-38.0" y="1564.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.InputReader" target="it.polimi.ingsw.am52.view.tui.strategy.DrawCardStrategy" relationship="CREATE">
+      <point x="0.0" y="-80.0" />
+      <point x="-38.0" y="1864.0" />
+      <point x="1042.0" y="1864.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.InputReader" target="it.polimi.ingsw.am52.view.tui.strategy.ShowChatStrategy" relationship="CREATE">
+      <point x="0.0" y="-80.0" />
+      <point x="-38.0" y="1864.0" />
+      <point x="142.0" y="1864.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.InputReader" target="it.polimi.ingsw.am52.view.tui.strategy.SelectObjectiveStrategy" relationship="CREATE">
+      <point x="0.0" y="-80.0" />
+      <point x="-38.0" y="1864.0" />
+      <point x="2302.0" y="1864.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.InputReader" target="it.polimi.ingsw.am52.view.tui.strategy.TakeCardStrategy" relationship="CREATE">
+      <point x="0.0" y="-80.0" />
+      <point x="-38.0" y="1864.0" />
+      <point x="1222.0" y="1864.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.InputReader" target="it.polimi.ingsw.am52.view.tui.strategy.CreateLobbyStrategy" relationship="CREATE">
+      <point x="0.0" y="-80.0" />
+      <point x="-38.0" y="1864.0" />
+      <point x="1582.0" y="1864.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.InputReader" target="it.polimi.ingsw.am52.view.tui.strategy.ShowBoardStrategy" relationship="CREATE">
+      <point x="0.0" y="-80.0" />
+      <point x="-38.0" y="1864.0" />
+      <point x="1942.0" y="1864.0" />
+      <point x="0.0" y="44.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.InputReader" target="it.polimi.ingsw.am52.view.tui.strategy.LeaveLobbyStrategy" relationship="CREATE">
+      <point x="0.0" y="-80.0" />
+      <point x="-38.0" y="1864.0" />
+      <point x="862.0" y="1864.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.state.TuiMenuView" target="it.polimi.ingsw.am52.view.tui.state.TuiView" relationship="GENERALIZATION">
+      <point x="0.0" y="-55.5" />
+      <point x="1202.0" y="464.0" />
+      <point x="-38.0" y="464.0" />
+      <point x="0.0" y="80.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.TuiPrinter" target="it.polimi.ingsw.am52.view.tui.state.TuiSetupView" relationship="CREATE">
+      <point x="0.0" y="-212.0" />
+      <point x="-38.0" y="904.0" />
+      <point x="1382.0" y="904.0" />
+      <point x="0.0" y="55.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.state.TuiSetupView" target="it.polimi.ingsw.am52.view.tui.state.TuiView" relationship="GENERALIZATION">
+      <point x="0.0" y="-55.5" />
+      <point x="1382.0" y="464.0" />
+      <point x="-38.0" y="464.0" />
+      <point x="0.0" y="80.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.strategy.TakeCardStrategy" target="it.polimi.ingsw.am52.view.tui.strategy.Strategy" relationship="GENERALIZATION">
+      <point x="0.0" y="-31.5" />
+      <point x="1222.0" y="1564.0" />
+      <point x="-38.0" y="1564.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.strategy.PlaceCardStrategy" target="it.polimi.ingsw.am52.view.tui.strategy.Strategy" relationship="GENERALIZATION">
+      <point x="0.0" y="-31.5" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.state.TuiView" target="it.polimi.ingsw.am52.view.tui.state.ViewType" relationship="TO_ONE">
+      <point x="0.0" y="-80.0" />
+      <point x="0.0" y="128.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.strategy.LeaveLobbyStrategy" target="it.polimi.ingsw.am52.view.tui.strategy.Strategy" relationship="GENERALIZATION">
+      <point x="0.0" y="-31.5" />
+      <point x="862.0" y="1564.0" />
+      <point x="-38.0" y="1564.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.strategy.DrawCardStrategy" target="it.polimi.ingsw.am52.view.tui.strategy.Strategy" relationship="GENERALIZATION">
+      <point x="0.0" y="-31.5" />
+      <point x="1042.0" y="1564.0" />
+      <point x="-38.0" y="1564.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.InputReader" target="it.polimi.ingsw.am52.view.tui.strategy.ChatStrategy" relationship="CREATE">
+      <point x="0.0" y="-80.0" />
+      <point x="-38.0" y="1864.0" />
+      <point x="2662.0" y="1864.0" />
+      <point x="0.0" y="44.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.TuiPrinter" target="it.polimi.ingsw.am52.view.tui.state.TuiMenuView" relationship="CREATE">
+      <point x="0.0" y="-212.0" />
+      <point x="-38.0" y="904.0" />
+      <point x="1202.0" y="904.0" />
+      <point x="0.0" y="55.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.state.TuiBoardView" target="it.polimi.ingsw.am52.view.tui.state.TuiView" relationship="GENERALIZATION">
+      <point x="0.0" y="-103.5" />
+      <point x="582.0" y="464.0" />
+      <point x="-38.0" y="464.0" />
+      <point x="0.0" y="80.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.TuiPrinter" target="it.polimi.ingsw.am52.view.tui.state.TuiCommonBoardView" relationship="CREATE">
+      <point x="0.0" y="-212.0" />
+      <point x="-38.0" y="904.0" />
+      <point x="142.0" y="904.0" />
+      <point x="0.0" y="55.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.strategy.ShowChatStrategy" target="it.polimi.ingsw.am52.view.tui.strategy.Strategy" relationship="GENERALIZATION">
+      <point x="0.0" y="-31.5" />
+      <point x="142.0" y="1564.0" />
+      <point x="-38.0" y="1564.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.strategy.JoinLobbyStrategy" target="it.polimi.ingsw.am52.view.tui.strategy.Strategy" relationship="GENERALIZATION">
+      <point x="0.0" y="-31.5" />
+      <point x="1402.0" y="1564.0" />
+      <point x="-38.0" y="1564.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.state.TuiLobbyView" target="it.polimi.ingsw.am52.view.tui.state.TuiView" relationship="GENERALIZATION">
+      <point x="0.0" y="-55.5" />
+      <point x="1562.0" y="464.0" />
+      <point x="-38.0" y="464.0" />
+      <point x="0.0" y="80.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.strategy.ShowBoardStrategy" target="it.polimi.ingsw.am52.view.tui.strategy.Strategy" relationship="GENERALIZATION">
+      <point x="0.0" y="-44.0" />
+      <point x="1942.0" y="1564.0" />
+      <point x="-38.0" y="1564.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.strategy.ReloadLobbyStrategy" target="it.polimi.ingsw.am52.view.tui.strategy.Strategy" relationship="GENERALIZATION">
+      <point x="0.0" y="-31.5" />
+      <point x="322.0" y="1564.0" />
+      <point x="-38.0" y="1564.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.InputReader" target="it.polimi.ingsw.am52.view.tui.strategy.PlaceCardStrategy" relationship="CREATE">
+      <point x="0.0" y="-80.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.state.TuiChatView" target="it.polimi.ingsw.am52.view.tui.state.TuiView" relationship="GENERALIZATION">
+      <point x="0.0" y="-55.5" />
+      <point x="0.0" y="80.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.InputReader" target="it.polimi.ingsw.am52.view.tui.strategy.PlaceStarterCardStrategy" relationship="CREATE">
+      <point x="0.0" y="-80.0" />
+      <point x="-38.0" y="1864.0" />
+      <point x="682.0" y="1864.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.strategy.ChatStrategy" target="it.polimi.ingsw.am52.view.tui.strategy.Strategy" relationship="GENERALIZATION">
+      <point x="0.0" y="-44.0" />
+      <point x="2662.0" y="1564.0" />
+      <point x="-38.0" y="1564.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.TuiPrinter" target="it.polimi.ingsw.am52.view.tui.state.TuiChatView" relationship="CREATE">
+      <point x="0.0" y="-212.0" />
+      <point x="0.0" y="55.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.state.TuiCommonBoardView" target="it.polimi.ingsw.am52.view.tui.state.TuiView" relationship="GENERALIZATION">
+      <point x="0.0" y="-55.5" />
+      <point x="142.0" y="464.0" />
+      <point x="-38.0" y="464.0" />
+      <point x="0.0" y="80.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.TuiPrinter" target="it.polimi.ingsw.am52.view.tui.state.TuiEndView" relationship="CREATE">
+      <point x="0.0" y="-212.0" />
+      <point x="-38.0" y="904.0" />
+      <point x="1022.0" y="904.0" />
+      <point x="0.0" y="55.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.strategy.SelectObjectiveStrategy" target="it.polimi.ingsw.am52.view.tui.strategy.Strategy" relationship="GENERALIZATION">
+      <point x="0.0" y="-31.5" />
+      <point x="2302.0" y="1564.0" />
+      <point x="-38.0" y="1564.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.view.tui.strategy.CreateLobbyStrategy" target="it.polimi.ingsw.am52.view.tui.strategy.Strategy" relationship="GENERALIZATION">
+      <point x="0.0" y="-31.5" />
+      <point x="1582.0" y="1564.0" />
+      <point x="-38.0" y="1564.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="0.5950184501845018" showDependencies="true" x="1322.0" y="1079.4031007751937" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

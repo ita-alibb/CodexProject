@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>it.polimi.ingsw.am52.network.client</OriginalElement>
+  <nodes>
+    <node x="-66.0" y="862.0">it.polimi.ingsw.am52.network.client.ClientConnection</node>
+    <node x="553.0" y="-13.5">it.polimi.ingsw.am52.network.client.RemoteConnection</node>
+    <node x="-99.0" y="186.0">it.polimi.ingsw.am52.network.client.ConnectionTCP</node>
+    <node x="51.0" y="16.0">it.polimi.ingsw.am52.network.client.Connection</node>
+    <node x="453.5" y="210.0">it.polimi.ingsw.am52.network.client.ConnectionRMI</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="it.polimi.ingsw.am52.network.client.ConnectionRMI" target="it.polimi.ingsw.am52.network.client.Connection" relationship="REALIZATION">
+      <point x="0.0" y="-260.0" />
+      <point x="701.0" y="170.0" />
+      <point x="161.0" y="170.0" />
+      <point x="161.0" y="70.0" />
+      <point x="156.0" y="70.0" />
+      <point x="35.0" y="14.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.network.client.ClientConnection" target="it.polimi.ingsw.am52.network.client.ConnectionTCP" relationship="CREATE">
+      <point x="93.5" y="-188.0" />
+      <point x="214.5" y="830.0" />
+      <point x="221.0" y="830.0" />
+      <point x="221.0" y="790.0" />
+      <point x="161.0" y="790.0" />
+      <point x="0.0" y="284.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.network.client.ConnectionTCP" target="it.polimi.ingsw.am52.network.client.Connection" relationship="REALIZATION">
+      <point x="0.0" y="-284.0" />
+      <point x="161.0" y="70.0" />
+      <point x="156.0" y="70.0" />
+      <point x="35.0" y="14.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.network.client.ConnectionRMI" target="it.polimi.ingsw.am52.network.client.RemoteConnection" relationship="REALIZATION">
+      <point x="0.0" y="-260.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.network.client.ClientConnection" target="it.polimi.ingsw.am52.network.client.Connection" relationship="TO_ONE">
+      <point x="-93.5" y="-188.0" />
+      <point x="27.5" y="830.0" />
+      <point x="-119.0" y="830.0" />
+      <point x="-119.0" y="170.0" />
+      <point x="86.0" y="170.0" />
+      <point x="-35.0" y="14.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.network.client.ClientConnection" target="it.polimi.ingsw.am52.network.client.ConnectionRMI" relationship="CREATE">
+      <point x="93.5" y="-188.0" />
+      <point x="214.5" y="830.0" />
+      <point x="221.0" y="830.0" />
+      <point x="221.0" y="790.0" />
+      <point x="701.0" y="790.0" />
+      <point x="0.0" y="260.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="1.0220125786163523" showDependencies="true" x="425.0" y="622.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

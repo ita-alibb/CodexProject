@@ -31,6 +31,7 @@ public class ChatResponseData extends BaseResponseData implements Serializable {
 
     /**
      * Constructor for error response
+     * @param status The status of the response
      */
     public ChatResponseData(ResponseStatus status) {
         // Assign private fields.
@@ -41,6 +42,7 @@ public class ChatResponseData extends BaseResponseData implements Serializable {
     /**
      * Constructor for success response
      * @param message the message
+     * @param status The status of the response
      */
     public ChatResponseData(ResponseStatus status, String message) {
         // Assign private fields.
@@ -52,6 +54,9 @@ public class ChatResponseData extends BaseResponseData implements Serializable {
 
     //region Getters
 
+    /**
+     * @return  The message sent in the chat
+     */
     public String getMessage() {
         return message;
     }

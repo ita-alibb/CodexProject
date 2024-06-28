@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>it.polimi.ingsw.am52.model.objectives</OriginalElement>
+  <nodes>
+    <node x="459.5" y="610.0">it.polimi.ingsw.am52.model.objectives.ItemPattern</node>
+    <node x="257.0" y="10.5">it.polimi.ingsw.am52.model.objectives.PatternFinder</node>
+    <node x="643.5" y="250.0">it.polimi.ingsw.am52.model.objectives.ResourcePattern</node>
+    <node x="937.0" y="598.0">it.polimi.ingsw.am52.model.objectives.DiagonalPattern</node>
+    <node x="-88.5" y="526.0">it.polimi.ingsw.am52.model.objectives.Objective</node>
+    <node x="977.5" y="-14.0">it.polimi.ingsw.am52.model.objectives.DiagonalHand</node>
+    <node x="126.0" y="214.0">it.polimi.ingsw.am52.model.objectives.TowerPattern</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="it.polimi.ingsw.am52.model.objectives.Objective" target="it.polimi.ingsw.am52.model.objectives.PatternFinder" relationship="TO_ONE">
+      <point x="0.0" y="-188.0" />
+      <point x="94.0" y="174.0" />
+      <point x="375.5" y="174.0" />
+      <point x="-118.5" y="43.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.model.objectives.TowerPattern" target="it.polimi.ingsw.am52.model.objectives.PatternFinder" relationship="GENERALIZATION">
+      <point x="0.0" y="-140.0" />
+      <point x="354.0" y="194.0" />
+      <point x="614.0" y="194.0" />
+      <point x="614.0" y="134.0" />
+      <point x="612.5" y="134.0" />
+      <point x="118.5" y="43.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.model.objectives.DiagonalPattern" target="it.polimi.ingsw.am52.model.objectives.PatternFinder" relationship="GENERALIZATION">
+      <point x="-68.5" y="-116.0" />
+      <point x="1005.5" y="194.0" />
+      <point x="614.0" y="194.0" />
+      <point x="614.0" y="134.0" />
+      <point x="612.5" y="134.0" />
+      <point x="118.5" y="43.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.model.objectives.ItemPattern" target="it.polimi.ingsw.am52.model.objectives.PatternFinder" relationship="GENERALIZATION">
+      <point x="0.0" y="-104.0" />
+      <point x="614.0" y="134.0" />
+      <point x="612.5" y="134.0" />
+      <point x="118.5" y="43.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.model.objectives.ResourcePattern" target="it.polimi.ingsw.am52.model.objectives.PatternFinder" relationship="GENERALIZATION">
+      <point x="0.0" y="-104.0" />
+      <point x="814.0" y="194.0" />
+      <point x="614.0" y="194.0" />
+      <point x="614.0" y="134.0" />
+      <point x="612.5" y="134.0" />
+      <point x="118.5" y="43.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.model.objectives.DiagonalPattern" target="it.polimi.ingsw.am52.model.objectives.DiagonalHand" relationship="TO_ONE">
+      <point x="68.5" y="-116.0" />
+      <point x="1142.5" y="574.0" />
+      <point x="1094.0" y="574.0" />
+      <point x="0.0" y="68.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="1.3782051282051282" showDependencies="true" x="570.9999999999999" y="454.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

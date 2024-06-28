@@ -10,12 +10,12 @@ import java.util.List;
 /**
  * The class to visualize the TUI view representing the common board of the current game.
  * In the common board, there are the following elements:
- * <lu>
+ * <ul>
  *     <li>Resource and Gold card decks</li>
  *     <li>Visible Resource and Gold cards</li>
  *     <li>Common objectives</li>
  *     <li>Scoreboard</li>
- * </lu>
+ * </ul>
  */
 public class TuiCommonBoardView extends TuiView {
 
@@ -79,9 +79,10 @@ public class TuiCommonBoardView extends TuiView {
         System.out.printf( "│ %-75s%n", "Common objectives: ");
         CardIds.printTwoObjectives(
                 new CardIds(ViewModelState.getInstance().getCommonObjectives().getFirst()),
-                new CardIds(ViewModelState.getInstance().getCommonObjectives().getLast())
+                new CardIds(ViewModelState.getInstance().getCommonObjectives().getLast()),
+                false
         );
-        System.out.printf( "│ %-74s │%n", "Scores: " + ViewModelState.getInstance().getScoreboard().toString());
+        System.out.printf( "│ %-76s%n", "Scores: " + ViewModelState.getInstance().getScoreboard().toString());
     }
 
     /**

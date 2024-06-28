@@ -14,7 +14,6 @@ import java.util.List;
  *          <li>Sending a private message (whisper) to a single player</li>
  *          <li>Going back to other views</li>
  *      </ul>
- * </P>
  */
 public class TuiChatView extends TuiView {
 

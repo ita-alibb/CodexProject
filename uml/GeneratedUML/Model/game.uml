@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>it.polimi.ingsw.am52.model.game</OriginalElement>
+  <nodes>
+    <node x="296.4530121690998" y="743.1757142528936">it.polimi.ingsw.am52.model.game.GameManager</node>
+    <node x="162.2748328006851" y="547.5805893906631">it.polimi.ingsw.am52.model.game.InitPhase</node>
+    <node x="505.7022092196943" y="164.63018492551427">it.polimi.ingsw.am52.model.game.GamePhase</node>
+    <node x="691.8826315467049" y="494.2542760628464">it.polimi.ingsw.am52.model.game.DrawingPhase</node>
+    <node x="1056.7050041403004" y="-13.959123357155534">it.polimi.ingsw.am52.model.game.Phase</node>
+    <node x="1243.155978837142" y="660.1984849508651">it.polimi.ingsw.am52.model.game.PlacingPhase</node>
+    <node x="755.4060173147398" y="714.1995743096587">it.polimi.ingsw.am52.model.game.GameLobby</node>
+    <node x="-80.0250682447612" y="366.4253146894835">it.polimi.ingsw.am52.model.game.EndingPhase</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="it.polimi.ingsw.am52.model.game.GameManager" target="it.polimi.ingsw.am52.model.game.Phase" relationship="TO_ONE">
+      <point x="199.0" y="0.0" />
+      <point x="1734.655978837142" y="1255.1757142528936" />
+      <point x="1734.655978837142" y="210.04087664284447" />
+      <point x="259.5" y="0.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.model.game.DrawingPhase" target="it.polimi.ingsw.am52.model.game.EndingPhase" relationship="CREATE">
+      <point x="-245.5" y="-43.67368667218324" />
+      <point x="164.475" y="530.0805893906631" />
+      <point x="-14.999931755238805" y="31.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.model.game.GameManager" target="it.polimi.ingsw.am52.model.game.InitPhase" relationship="CREATE">
+      <point x="-98.6781793684147" y="-512.0" />
+      <point x="0.0" y="67.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.model.game.PlacingPhase" target="it.polimi.ingsw.am52.model.game.Phase" relationship="GENERALIZATION">
+      <point x="2.1162858047318878E-5" y="-43.50048495086514" />
+      <point x="1480.156" y="465.0" />
+      <point x="1316.205" y="465.0" />
+      <point x="-4.140300461585866E-6" y="224.00012335715553" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.model.game.EndingPhase" target="it.polimi.ingsw.am52.model.game.Phase" relationship="GENERALIZATION">
+      <point x="6.824476119504652E-5" y="31.499685310516497" />
+      <point x="179.475" y="465.0" />
+      <point x="1316.205" y="465.0" />
+      <point x="-4.140300461585866E-6" y="224.00012335715553" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.model.game.DrawingPhase" target="it.polimi.ingsw.am52.model.game.Phase" relationship="GENERALIZATION">
+      <point x="3.684532950956054E-4" y="-79.50027606284635" />
+      <point x="937.383" y="465.0" />
+      <point x="1316.205" y="465.0" />
+      <point x="-4.140300461585866E-6" y="224.00012335715553" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.model.game.InitPhase" target="it.polimi.ingsw.am52.model.game.PlacingPhase" relationship="CREATE">
+      <point x="234.5001671993149" y="4.1060933688186196E-4" />
+      <point x="674.383" y="615.081" />
+      <point x="674.383" y="683.0" />
+      <point x="1092.906" y="683.0" />
+      <point x="1092.906" y="721.7" />
+      <point x="-236.99997883714195" y="18.001515049134923" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.model.game.InitPhase" target="it.polimi.ingsw.am52.model.game.Phase" relationship="GENERALIZATION">
+      <point x="1.6719931488751172E-4" y="-67.49958939066312" />
+      <point x="396.775" y="465.0" />
+      <point x="1316.205" y="465.0" />
+      <point x="-4.140300461585866E-6" y="224.00012335715553" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.model.game.Phase" target="it.polimi.ingsw.am52.model.game.GamePhase" relationship="TO_ONE">
+      <point x="-259.5" y="70.5893082826698" />
+      <point x="110.5" y="0.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.model.game.DrawingPhase" target="it.polimi.ingsw.am52.model.game.PlacingPhase" relationship="CREATE">
+      <point x="3.684532950956054E-4" y="79.49972393715365" />
+      <point x="937.383" y="683.0" />
+      <point x="1092.906" y="683.0" />
+      <point x="1092.906" y="721.7" />
+      <point x="-236.99997883714195" y="18.001515049134923" />
+    </edge>
+    <edge source="it.polimi.ingsw.am52.model.game.PlacingPhase" target="it.polimi.ingsw.am52.model.game.DrawingPhase" relationship="CREATE">
+      <point x="-14.999978837141953" y="-43.5" />
+      <point x="1465.156" y="573.7542760628464" />
+      <point x="245.5" y="0.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="0.7214206437291898" showDependencies="true" x="837.0000000000002" y="887.0000000000001" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

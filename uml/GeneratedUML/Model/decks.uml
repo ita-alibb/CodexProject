@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>it.polimi.ingsw.am52.model.decks</OriginalElement>
+  <nodes>
+    <node x="112.9472135954999" y="374.894427191">it.polimi.ingsw.am52.model.decks.RandomDealer</node>
+    <node x="-115.0" y="-14.0">it.polimi.ingsw.am52.model.decks.Deck</node>
+  </nodes>
+  <notes />
+  <edges />
+  <settings layout="Hierarchic Compact" zoom="1.5" showDependencies="false" x="144.5" y="330.5" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>packageLocal</VISIBILITY>
+</Diagram>
+

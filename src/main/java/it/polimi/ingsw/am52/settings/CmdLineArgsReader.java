@@ -71,10 +71,13 @@ public class CmdLineArgsReader {
      * To ask for help without running the application, the user must
      * enter only the help flag (-h/--help), without any parameter or
      * additional options.
-     * <ul> Show help/usage:
+     * <P>
+     * Show help/usage:
+     * <ul>
      *     <li>-h/--help</li>
      * </ul>
-     * <ul>Server args:
+     * Server args:
+     * <ul>
      *     <li>port: optional argument, the port number.</li>
      *     <li>-a/--auto: automatic selection of the port number. If the port number
      *     has been passed as an argument, the server first try to open the connection
@@ -86,7 +89,8 @@ public class CmdLineArgsReader {
      *     <li>-v/--verbosity lvl: set the verbosity of the server logging, to the value lvl,
      *     in range [1,4]</li>
      * </ul>
-     * <ul>Client args:
+     * Client args:
+     * <ul>
      *     <li>ip: the ip address of the server (required).</li>
      *     <li>port: the port number (required).</li>
      *     <li>-t/--tui: run in textual mode, instead of default graphical mode</li>

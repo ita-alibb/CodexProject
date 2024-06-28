@@ -33,7 +33,8 @@ public class PlayingBoard implements BoardInfo {
      * The hash map that keep track of all placed cards. Each time a card is placed
      * on the playing bord, the card must be added to this map together with its
      * location (BoardSlot).
-     * @implNote This collection does not contain the starter card.
+     * <P>
+     * This collection does not contain the starter card.
      */
     private final Map<BoardSlot, KingdomCardFace> placedCards = new HashMap<>();
     
@@ -69,12 +70,13 @@ public class PlayingBoard implements BoardInfo {
      * card placed at the specified neighbor position relative to the specified reference
      * board slot. If there isn't any card at the neighbor slot position, the method returns
      * an Optional.empty() instance.
+     * <P>
+     * This method is static because it is used also by the nexted class PlayingBoardInfo.
      * @param cards A Map of placed cards and their slot position.
      * @param refSlot The reference slot position.
      * @param location The location of the card to get, relative to the reference slot.
      * @return The card placed at the specified location. If there is non cord at the specified
      * location, the method returns an Optional.Empty().
-     * @implNote This method is static because it is used also by the nexted class PlayingBoardInfo.
      */
     private static Optional<KingdomCardFace> getNeighborCard(Map<BoardSlot, KingdomCardFace> cards, BoardSlot refSlot, RelativeLocation location) {
         
@@ -92,12 +94,13 @@ public class PlayingBoard implements BoardInfo {
      * card placed at the specified neighbor position at the corner relative to the specified reference
      * board slot. If there isn't any card at the neighbor slot position, the method returns
      * an Optional.empty() instance.
+     * <P>
+     * This method is static because it is used also by the nexted class PlayingBoardInfo.
      * @param cards A Map of placed cards and their slot position.
      * @param refSlot The reference slot position.
      * @param location The corner location of the card to get, relative to the reference slot.
      * @return The card placed at the specified location. If there is non cord at the specified
      * location, the method returns an Optional.Empty().
-     * @implNote This method is static because it is used also by the nexted class PlayingBoardInfo.
      */
     private static Optional<KingdomCardFace> getNeighborCard(Map<BoardSlot, KingdomCardFace> cards, BoardSlot refSlot, CornerLocation location) {
         
@@ -414,13 +417,14 @@ public class PlayingBoard implements BoardInfo {
      * Checks if the specified location of this playing board can be linked
      * to all its neighbor location, i.e. if it is possible to place a card
      * on that location.
-     * @param location The board location to check.
-     * @return True if it is possible to place a card on the specified location,
-     * false otherwise.
-     * @implNote This method does not check the absolute meaning of 'linkable',
+     * <P>
+     * This method does not check the absolute meaning of 'linkable',
      * because it does NOT if there is at least one card placed at the corner of the location,
      * in order to link the placed card to that card. For this method, an empty
      * location that does not have any card placed around it is linkable.
+     * @param location The board location to check.
+     * @return True if it is possible to place a card on the specified location,
+     * false otherwise.
      */
     private boolean isLinkable(BoardSlot location) {
 
@@ -504,7 +508,8 @@ public class PlayingBoard implements BoardInfo {
      * of another card at the specified corner. If there isn't a card on
      * the slot linked to the specified corner, the method returns an
      * Optional.empty() value.
-     * @implNote If there is a card on the linked slot, its corner is visible
+     * <P>
+     * If there is a card on the linked slot, its corner is visible
      * due to the rules of card placement. Thus, the getXxxCorner() method
      * on the card instance return a non-empty value.
      * @param refSlot The slot where the card is placed.

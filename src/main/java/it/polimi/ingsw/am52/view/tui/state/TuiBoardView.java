@@ -76,7 +76,7 @@ public class TuiBoardView extends TuiView {
             System.out.println("├────────────────────────────────────────────────────────────────────────────");
             printHand();
             System.out.printf("│ %-75s%n", "Your secret objective: " + secretObjectiveId);
-            CardIds.printSingleObjective(new CardIds(ViewModelState.getInstance().getSecretObjective()));
+            CardIds.printSingleObjective(new CardIds(ViewModelState.getInstance().getSecretObjective()), false);
         }
     }
 

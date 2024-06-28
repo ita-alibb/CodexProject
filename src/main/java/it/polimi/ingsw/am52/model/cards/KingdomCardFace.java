@@ -88,10 +88,11 @@ public abstract class KingdomCardFace extends CardFace implements ItemsProvider 
     /**
      * Check if available resources (from the playing board) are enough
      * to fulfill the resources required by this card face.
+     * <P>
+     * The default implementation always return true. If a subclass has
+     * different behavior, it must override this method.
      * @param availableResources The available resources (from the playing board).
      * @return True if the card can be placed, false otherwise.
-     * @apiNote The default implementation always return true. If a subclass has
-     * different behavior, it must override this method.
      */
     public boolean canPlace(ResourcesProvider availableResources) {
         return true;

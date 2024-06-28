@@ -75,12 +75,13 @@ public class TuiSetupView extends TuiView {
 
             CardIds.printTwoObjectives(
                     new CardIds(objectiveIds.getFirst()),
-                    new CardIds(objectiveIds.getLast())
+                    new CardIds(objectiveIds.getLast()),
+                    true
             );
         } else {
             System.out.printf( "│ %-68s │%n", "Your secret objective: " + ViewModelState.getInstance().getSecretObjective());
 
-            CardIds.printSingleObjective(new CardIds(ViewModelState.getInstance().getSecretObjective()));
+            CardIds.printSingleObjective(new CardIds(ViewModelState.getInstance().getSecretObjective()), true);
         }
         System.out.println("└──────────────────────────────────────────────────────────────────────┘");
     }

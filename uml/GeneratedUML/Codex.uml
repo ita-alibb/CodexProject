@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>it.polimi.ingsw.am52.Codex</OriginalElement>
+  <nodes>
+    <node x="-75.0" y="-14.0">it.polimi.ingsw.am52.PlayingBoard</node>
+    <node x="-75.5" y="142.0">it.polimi.ingsw.am52.Codex</node>
+  </nodes>
+  <notes />
+  <edges />
+  <settings layout="Hierarchic Compact" zoom="1.5" showDependencies="true" x="97.0" y="214.0" />
+  <SelectedNodes>
+    <node>it.polimi.ingsw.am52.PlayingBoard</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
