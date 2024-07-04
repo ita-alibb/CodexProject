@@ -68,8 +68,17 @@ The behaviour of the application can be modify based on the following options
 </p>
 
 ### Contribution
-![image](https://github.com/LivioBordignon/IS24-AM52/assets/162186641/b62aded9-6a45-49e4-ae8f-734c48ab4c4f)
+![contribution](https://github.com/LivioBordignon/IS24-AM52/assets/162186641/a3c4379d-2b0f-4e86-97a8-c64495652d5e)
+
 ```
 git log --stat --author "author" | grep "files\? changed"     | awk '{files+=$1; inserted+=$4; deleted+=$6} END \
            {print "files changed", files, "lines inserted:", inserted, "lines deleted:", deleted}'
 ```
+
+### Final Feedback
+**Mark: ** 30/30
+
+**Small remarks:**
+- Even if due to the architecture of the whole application it is impossible that there are concurrent Thread inside ViewModelState it would be better to add a synchronized to all method signature of the class because the reading thread is different from the writing thread.
+
+- Even if we do not support reconnection, so shut down the application if the connection is lost is ok, it would be better to ping in both direction (in the code is the server that pings the client). In this way when the server is down we do not have to wait for an action of the client to notify him that the server is down, so we should've doubled the same logic of the server in the client.
