@@ -82,3 +82,6 @@ git log --stat --author "author" | grep "files\? changed"     | awk '{files+=$1;
 - Even if due to the architecture of the whole application it is impossible that there are concurrent Thread inside ViewModelState it would be better to add a synchronized to all method signature of the class because the reading thread is different from the writing thread.
 
 - Even if we do not support reconnection, so shut down the application if the connection is lost is ok, it would be better to ping in both direction (in the code is the server that pings the client). In this way when the server is down we do not have to wait for an action of the client to notify him that the server is down, so we should've doubled the same logic of the server in the client.
+
+# Copyright
+NOTA: Codex Naturalis è un gioco da tavolo sviluppato ed edito da Cranio Creations Srl. I contenuti grafici di questo progetto riconducibili al prodotto editoriale da tavolo sono utilizzati previa approvazione di Cranio Creations Srl a solo scopo didattico. È vietata la distribuzione, la copia o la riproduzione dei contenuti e immagini in qualsiasi forma al di fuori del progetto, così come la redistribuzione e la pubblicazione dei contenuti e immagini a fini diversi da quello sopracitato. È inoltre vietato l'utilizzo commerciale di suddetti contenuti.
